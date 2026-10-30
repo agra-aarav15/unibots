@@ -3,6 +3,7 @@
 [English](./README.md) | [简体中文](./README.zh-CN.md) | [日本語](./README.ja.md)
 
 [![GitHub stars](https://img.shields.io/github/stars/agra-aarav15/unibots?labelColor=black&style=for-the-badge&color=2563EB)](https://github.com/agra-aarav15/unibots/stargazers)
+[![Download for Windows](https://img.shields.io/badge/Windows-Download%20installer-black?labelColor=black&style=for-the-badge&logo=windows&logoColor=white)](https://github.com/agra-aarav15/unibots/releases/latest/download/Unibots-Setup-0.3.6.exe)
 [![Download the Android APK](https://img.shields.io/badge/Android-Download%20APK-black?labelColor=black&style=for-the-badge&logo=android&logoColor=white)](https://github.com/agra-aarav15/unibots/releases/latest/download/unibots.apk)
 
 > **Unibots is owned and developed by agra-aarav15.** It is a fork of the Apache-2.0 licensed
