@@ -52,7 +52,7 @@ describe("passkeysSupported", () => {
       },
     });
     await expect(passkeysSupported("app.unibots.example", mac(["app.unibots.example"]))).resolves.toBe(true);
-    await expect(passkeysSupported("App.Unibots.com", mac(["app.unibots.example"]))).resolves.toBe(true);
+    await expect(passkeysSupported("App.Unibots.example", mac(["app.unibots.example"]))).resolves.toBe(true);
     await expect(passkeysSupported("app.unibots.example", mac([]))).resolves.toBe(false);
     await expect(passkeysSupported("app.unibots.example", mac())).resolves.toBe(false);
     await expect(passkeysSupported("app.unibots.example", mac(new Error("ipc")))).resolves.toBe(false);

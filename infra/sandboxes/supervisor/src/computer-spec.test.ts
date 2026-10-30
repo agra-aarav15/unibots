@@ -381,7 +381,7 @@ describe("graphical computer spec", () => {
   it("derives deterministic host bridge names within the 15-byte interface limit", () => {
     for (const botId of ["bot", "a/b", "bot with spaces", "x".repeat(80)]) {
       const name = computerBridgeNameFor(botId);
-      expect(name).toMatch(/^unibots-c[0-9a-f]{7}$/);
+      expect(name).toMatch(/^unibots-c[0-9a-f]{6}$/);
       expect(Buffer.byteLength(name)).toBeLessThanOrEqual(15);
       expect(computerBridgeNameFor(botId)).toBe(name);
     }

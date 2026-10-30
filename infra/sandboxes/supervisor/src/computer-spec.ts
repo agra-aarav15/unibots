@@ -413,11 +413,11 @@ export function computerMountsMatch(
 
 /**
  * Host bridge interface name for a computer network. Linux caps interface names
- * at 15 bytes (IFNAMSIZ), so "unibots-c" gets a 7-hex-char suffix derived from the
+ * at 15 bytes (IFNAMSIZ), so "unibots-c" gets a 6-hex-char suffix derived from the
  * same digest as the network name — deterministic across recreate, unique per bot.
  */
 export function computerBridgeNameFor(botId: string) {
-  const hash = createHash("sha256").update(botId).digest("hex").slice(0, 7);
+  const hash = createHash("sha256").update(botId).digest("hex").slice(0, 6);
   return `unibots-c${hash}`;
 }
 

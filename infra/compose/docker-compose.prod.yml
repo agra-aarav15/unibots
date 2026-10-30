@@ -313,7 +313,7 @@ services:
     profiles: [pitr]
     # Tagged with a hash of Dockerfile.pitr and pitr-agent.sh, so a deploy builds it once per change
     # instead of on every run (compose-service.test.ts checks the hash).
-    image: unibots-pitr:aa7cf1bde2aa8051
+    image: unibots-pitr:64e13c784833b1c6
     build:
       context: .
       dockerfile: Dockerfile.pitr
