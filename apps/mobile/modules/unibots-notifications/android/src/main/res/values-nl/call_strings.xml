@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="unibots_call_channel">Actief gesprek</string>
+  <string name="unibots_call_title">Unibots-gesprek</string>
+  <string name="unibots_call_text">Microfoon is actief</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="unibots_call_channel">通話中</string>
+  <string name="unibots_call_title">Unibotsの通話</string>
+  <string name="unibots_call_text">マイクがオンです</string>
+</resources>

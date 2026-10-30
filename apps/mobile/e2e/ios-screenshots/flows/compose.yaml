@@ -1,0 +1,24 @@
+appId: com.unibots.app
+name: Compose
+---
+- runFlow:
+    file: ../subflows/sign-in.yaml
+    env:
+      UNIBOTS_ACTIVE_EMAIL: ${UNIBOTS_SCREENSHOT_EMAIL}
+- openLink: "unibots:///new-space"
+- extendedWaitUntil:
+    visible: "Customer support|Create space"
+    timeout: 15000
+- takeScreenshot: 02-new-space
+- tapOn: "Cancel"
+- openLink: "unibots:///new-group"
+- extendedWaitUntil:
+    visible: "Search bots"
+    timeout: 15000
+- tapOn: "Researcher"
+- tapOn: "Writer"
+- takeScreenshot: 03-new-group
+- tapOn: "Next"
+- assertVisible: "Skip"
+- takeScreenshot: 04-new-group-name
+- openLink: "unibots:///"

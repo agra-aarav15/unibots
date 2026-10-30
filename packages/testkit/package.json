@@ -1,0 +1,31 @@
+{
+  "name": "@unibots/testkit",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --root ../.. packages/testkit/src"
+  },
+  "dependencies": {
+    "@hono/node-server": "2.1.5",
+    "@unibots/adapter-kit": "workspace:*",
+    "@unibots/adapters": "workspace:*",
+    "@unibots/contracts": "workspace:*",
+    "@unibots/core": "workspace:*",
+    "@unibots/db": "workspace:*",
+    "@testcontainers/postgresql": "12.2.1",
+    "pngjs": "7.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@unibots/api": "workspace:*",
+    "@unibots/sandbox-supervisor": "workspace:*",
+    "@types/pngjs": "6.0.5",
+    "typescript": "7.0.2",
+    "vitest": "4.1.12"
+  }
+}

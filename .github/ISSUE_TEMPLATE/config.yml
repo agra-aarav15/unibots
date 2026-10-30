@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerabilities
+    url: https://github.com/agra-aarav15/unibots/blob/main/SECURITY.md
+    about: Report security issues to security@unibots.example — do not open a public issue.
+  - name: User support
+    url: mailto:support@unibots.example
+    about: Questions about using Unibots or self-hosting help.
+  - name: Maintainer
+    url: mailto:maintainer@unibots.example
+    about: Reach the maintainer directly.
