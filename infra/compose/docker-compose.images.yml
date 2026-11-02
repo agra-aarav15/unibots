@@ -114,6 +114,9 @@ x-app-environment: &app-environment
   MEDIA_GENERATION_API_KEY:
   MEDIA_GENERATION_IMAGE_MODEL:
   MEDIA_GENERATION_VIDEO_MODEL:
+  # Automatic MEMORY.md / USER.md curation after a direct chat
+  MEMORY_CURATION:
+  MEMORY_CURATION_MODEL:
   # Provider keys Pi reads itself when a model has no stored credential
   AI_GATEWAY_API_KEY:
   ANTHROPIC_AUTH_TOKEN:
@@ -284,7 +287,7 @@ services:
 
   # Pull-only stub so `compose up` fetches the published desktop image without a checkout.
   computer:
-    image: ${RAKAZO_COMPUTER_IMAGE:-ghcr.io/elie222/rakazo/computer}:${RAKAZO_COMPUTER_IMAGE_TAG:-edge}
+    image: ${RAKAZO_COMPUTER_IMAGE:-ghcr.io/agra-aarav15/unibots/computer}:${RAKAZO_COMPUTER_IMAGE_TAG:-edge}
     command: ["true"]
     network_mode: none
     restart: "no"
@@ -301,7 +304,7 @@ services:
   # Runs from the app image. Not published as its own image and not exposed on the host:
   # access to the supervisor is equivalent to control of the Docker host.
   supervisor:
-    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-edge}
+    image: ${RAKAZO_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${RAKAZO_IMAGE_TAG:-edge}
     restart: unless-stopped
     command: ["pnpm", "--filter", "@rakazo/sandbox-supervisor", "start"]
     init: true
@@ -317,7 +320,7 @@ services:
       SUPERVISOR_HOST: "0.0.0.0"
       SUPERVISOR_PORT: "7091"
       DOCKER_SOCKET: /var/run/docker.sock
-      RAKAZO_COMPUTER_IMAGE: ${RAKAZO_COMPUTER_IMAGE:-ghcr.io/elie222/rakazo/computer}:${RAKAZO_COMPUTER_IMAGE_TAG:-edge}
+      RAKAZO_COMPUTER_IMAGE: ${RAKAZO_COMPUTER_IMAGE:-ghcr.io/agra-aarav15/unibots/computer}:${RAKAZO_COMPUTER_IMAGE_TAG:-edge}
       RAKAZO_COMPUTER_MEMORY: ${RAKAZO_COMPUTER_MEMORY:-2g}
       RAKAZO_COMPUTER_CPUS: ${RAKAZO_COMPUTER_CPUS:-2}
       RAKAZO_COMPUTER_PIDS_LIMIT: ${RAKAZO_COMPUTER_PIDS_LIMIT:-2048}
@@ -360,7 +363,7 @@ services:
   # container gets the owner login: the API and worker connect as rakazo_app, which row-level
   # security binds, so code running in either cannot find a login that bypasses it.
   migrate:
-    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-edge}
+    image: ${RAKAZO_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${RAKAZO_IMAGE_TAG:-edge}
     working_dir: /app/apps/api
     command: ["pnpm", "db:deploy"]
     restart: "no"
@@ -380,7 +383,7 @@ services:
         condition: service_healthy
 
   api:
-    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-edge}
+    image: ${RAKAZO_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${RAKAZO_IMAGE_TAG:-edge}
     restart: unless-stopped
     # Node runs directly, not through pnpm: pnpm does not pass SIGTERM on, so a stop would kill the
     # process before its graceful shutdown finishes in-flight requests and jobs.
@@ -433,7 +436,6 @@ services:
       STRIPE_SECRET_KEY:
       STRIPE_WEBHOOK_SECRET:
       STRIPE_PRICE_ID:
-      CRISP_WEBSITE_ID:
       INTEGRATIONS_CATALOG_URL:
       TEAM_CHAT_BOT_ID:
       SLACK_RAKAZO_BOT_ID:
@@ -471,7 +473,7 @@ services:
       retries: 20
 
   worker:
-    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-edge}
+    image: ${RAKAZO_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${RAKAZO_IMAGE_TAG:-edge}
     restart: unless-stopped
     # Directly, not through pnpm, so a stop reaches it (see the api command).
     working_dir: /app/apps/worker
@@ -510,7 +512,7 @@ services:
         condition: service_healthy
 
   web:
-    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-edge}
+    image: ${RAKAZO_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${RAKAZO_IMAGE_TAG:-edge}
     restart: unless-stopped
     # Directly, not through pnpm, so a stop reaches it (see the api command).
     working_dir: /app/apps/web
@@ -539,7 +541,6 @@ services:
       SCREEN_PROXY_SECRET: ${SCREEN_PROXY_SECRET:?Set SCREEN_PROXY_SECRET in .env}
       RAKAZO_CSP_SCRIPT_SRC: ${RAKAZO_CSP_SCRIPT_SRC:-}
       RAKAZO_CSP_CONNECT_SRC: ${RAKAZO_CSP_CONNECT_SRC:-}
-      CRISP_WEBSITE_ID:
     ports:
       - "127.0.0.1:${RAKAZO_WEB_PORT:-5173}:5173"
     networks:

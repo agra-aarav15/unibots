@@ -1,0 +1,7 @@
+# Phone access overlay, used only while "Phone on this network" is on.
+# Publishes the API on the private network. The web UI, Postgres, supervisor and
+# computer ports stay on loopback from the base file.
+services:
+  api:
+    ports:
+      - "${RAKAZO_LAN_BIND:-0.0.0.0}:${RAKAZO_LAN_PORT:-3100}:3100"

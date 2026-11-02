@@ -23,6 +23,7 @@ const payloadSchemas = {
   "skill.teaching-expire": z.object({ skillId: z.string().min(1) }),
   "call.expire": z.object({ threadId: z.string().min(1), callId: z.string().min(1) }),
   "history.compact": z.object({ threadId: z.string().min(1) }),
+  "memory.curate": z.object({ runId: z.string().min(1) }),
   "messaging.deliver": z.object({ runId: z.string().min(1).optional() }),
   "messaging.credential-cleanup": z.object({
     installationId: z.string().min(1),
@@ -175,6 +176,30 @@ export function historyCompactJob(threadId: string): BackgroundJob {
     payload: { threadId },
     replaceKey: historyCompactJobKey(threadId),
     maxAttempts: HISTORY_COMPACT_MAX_ATTEMPTS,
+  };
+}
+
+/** Wait long enough that the person's next message can join the same curation window. */
+export const MEMORY_CURATE_DELAY_MS = 30_000;
+
+/** One pending curation per bot; a newer run replaces the waiting job. */
+export function memoryCurateJobKey(botId: string): string {
+  return `memory-curate:${botId}`;
+}
+
+/**
+ * Curation makes one paid model call, so a death loop is not worth many retries: a
+ * transient provider error is retried once, and the next conversation window tries again.
+ */
+export const MEMORY_CURATE_MAX_ATTEMPTS = 2;
+
+export function memoryCurateJob(runId: string, botId: string, availableAt: Date): BackgroundJob {
+  return {
+    name: "memory.curate",
+    payload: { runId },
+    availableAt,
+    replaceKey: memoryCurateJobKey(botId),
+    maxAttempts: MEMORY_CURATE_MAX_ATTEMPTS,
   };
 }
 

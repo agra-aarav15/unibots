@@ -214,6 +214,24 @@ model RateLimit {
   @@map("rateLimit")
 }
 
+/// A one-time, five-minute code that lets a phone on the owner's network get the
+/// owner's session. Only an HMAC of the code is stored.
+model DevicePairing {
+  id        String    @id @default(cuid())
+  userId    String
+  spaceId   String
+  codeHash  String    @unique
+  /// The LAN URL the phone should use; the desktop supplies it.
+  apiUrl    String
+  expiresAt DateTime
+  attempts  Int       @default(0)
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([expiresAt])
+  @@map("device_pairings")
+}
+
 model Organization {
   id           String              @id
   name         String
@@ -642,6 +660,7 @@ model Bot {
   scratchpadItems   ScratchpadItem[]
   taughtSkills      TaughtSkill[]
   memoryDocuments   MemoryDocument[]
+  memoryState       BotMemoryState?
   agentHome         AgentHome?
   browserProfile    BrowserProfile?
   artifacts         Artifact[]
@@ -1257,6 +1276,20 @@ model MemoryRevision {
   @@map("memory_revisions")
 }
 
+/// Cursor for the automatic memory curator: which messages were last considered.
+model BotMemoryState {
+  id             String   @id @default(cuid())
+  botId          String   @unique
+  bot            Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+  lastCuratedSeq Int      @default(-1)
+  lastCuratedAt  DateTime @default(now())
+  lastRunId      String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("bot_memory_states")
+}
+
 model AgentHome {
   id        String   @id @default(cuid())
   spaceId   String
@@ -1313,7 +1346,7 @@ model Computer {
   homeRevision            String                   @default("empty")
   /// When the sandbox was read for `homeRevision`; null when an older release saved it.
   homeRevisionAt          DateTime?
-  /// When a damaged system last made Rakazo stop and start the computer by itself. Tried once
+  /// When a damaged system last made Unibots stop and start the computer by itself. Tried once
   /// until a later save shows the computer works again.
   autoRecoveredAt         DateTime?
   /// The machine at `providerRef` came from a start whose restore never finished, so it holds no

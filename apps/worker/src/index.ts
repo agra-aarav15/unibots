@@ -88,6 +88,7 @@ import {
   runAsSystem,
   securityEventRetentionDays,
   verifyContentKeys,
+  withPostgresAdvisoryLock,
 } from "@rakazo/db";
 import { SERVICE_NAMES } from "@rakazo/logging";
 import { createRootLogger } from "@rakazo/logging/axiom";
@@ -247,6 +248,14 @@ async function main() {
     jobs,
     accessToken: process.env.EXPO_ACCESS_TOKEN,
   });
+  const memory = new MarkdownMemoryStore(prisma);
+  // Curation is on by default; MEMORY_CURATION=off stops new writes and keeps old memory readable.
+  const memoryCuration = {
+    enabled: process.env.MEMORY_CURATION !== "off",
+    ...(process.env.MEMORY_CURATION_MODEL
+      ? { model: process.env.MEMORY_CURATION_MODEL }
+      : {}),
+  };
   const executor = createRunExecutor({
     maxUploadSizeBytes: uploadSizeFromEnv(process.env),
     prisma,
@@ -254,8 +263,9 @@ async function main() {
     // Live per-account Codex catalog; never refreshes or writes credentials.
     codexCatalog: new CodexCatalogCache(),
     sandbox,
-    memory: new MarkdownMemoryStore(prisma),
+    memory,
     memoryProviders,
+    memoryCuration,
     home,
     artifacts,
     connector: stack.connector,
@@ -325,7 +335,11 @@ async function main() {
     workerId: `${hostname()}:${process.pid}`,
     runtime,
     secretStore: secrets,
+    memory,
     memoryProviders,
+    memoryCuration,
+    withUserMemoryLock: (userId, fn) =>
+      withPostgresAdvisoryLock(pool, `memory-curate:user:${userId}`, fn),
     deploymentModelKey,
     deploymentModelConfigured,
     messaging,

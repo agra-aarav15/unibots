@@ -113,6 +113,9 @@ x-app-environment: &app-environment
   MEDIA_GENERATION_API_KEY:
   MEDIA_GENERATION_IMAGE_MODEL:
   MEDIA_GENERATION_VIDEO_MODEL:
+  # Automatic MEMORY.md / USER.md curation after a direct chat
+  MEMORY_CURATION:
+  MEMORY_CURATION_MODEL:
   # Provider keys Pi reads itself when a model has no stored credential
   AI_GATEWAY_API_KEY:
   ANTHROPIC_AUTH_TOKEN:
@@ -362,7 +365,7 @@ services:
   # container gets the owner login: the API and worker connect as rakazo_app, which row-level
   # security binds, so code running in either cannot find a login that bypasses it.
   migrate:
-    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-local}
+    image: ${RAKAZO_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${RAKAZO_IMAGE_TAG:-local}
     build:
       context: ../..
       dockerfile: infra/compose/Dockerfile
@@ -394,7 +397,7 @@ services:
     # The default tag is `local`, which no registry serves, so a fresh install builds from the
     # checkout via `up -d --build` instead of failing on a `pull` of an image that does not exist
     # yet. Once a release is published, pin RAKAZO_IMAGE_TAG to it and the pull path takes over.
-    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-local}
+    image: ${RAKAZO_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${RAKAZO_IMAGE_TAG:-local}
     build:
       context: ../..
       dockerfile: infra/compose/Dockerfile
@@ -451,7 +454,6 @@ services:
       STRIPE_SECRET_KEY:
       STRIPE_WEBHOOK_SECRET:
       STRIPE_PRICE_ID:
-      CRISP_WEBSITE_ID:
       INTEGRATIONS_CATALOG_URL:
       TEAM_CHAT_BOT_ID:
       SLACK_RAKAZO_BOT_ID:
@@ -489,7 +491,7 @@ services:
       start_interval: 1s
 
   worker:
-    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-local}
+    image: ${RAKAZO_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${RAKAZO_IMAGE_TAG:-local}
     build:
       context: ../..
       dockerfile: infra/compose/Dockerfile
@@ -530,7 +532,7 @@ services:
         condition: service_healthy
 
   web:
-    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-local}
+    image: ${RAKAZO_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${RAKAZO_IMAGE_TAG:-local}
     build:
       context: ../..
       dockerfile: infra/compose/Dockerfile
@@ -561,7 +563,6 @@ services:
       SCREEN_PROXY_SECRET: ${SCREEN_PROXY_SECRET:?Set SCREEN_PROXY_SECRET in .env}
       RAKAZO_CSP_SCRIPT_SRC: ${RAKAZO_CSP_SCRIPT_SRC:-}
       RAKAZO_CSP_CONNECT_SRC: ${RAKAZO_CSP_CONNECT_SRC:-}
-      CRISP_WEBSITE_ID:
     expose:
       - "5173"
     networks:
@@ -592,7 +593,7 @@ services:
     profiles: [updater]
     # Pinned separately from the application image: the updater does not recreate itself, so moving
     # its own version is an operator action, not something an update can do underneath itself.
-    image: ${RAKAZO_UPDATER_IMAGE:-ghcr.io/elie222/rakazo/updater}:${RAKAZO_UPDATER_IMAGE_TAG:-local}
+    image: ${RAKAZO_UPDATER_IMAGE:-ghcr.io/agra-aarav15/unibots/updater}:${RAKAZO_UPDATER_IMAGE_TAG:-local}
     build:
       context: ../..
       dockerfile: infra/updater/Dockerfile
@@ -613,7 +614,7 @@ services:
       RAKAZO_UPDATER_TOKEN: ${RAKAZO_UPDATER_TOKEN:-}
       RAKAZO_UPDATER_HOST: "0.0.0.0"
       RAKAZO_UPDATER_PORT: "7092"
-      RAKAZO_IMAGE: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}
+      RAKAZO_IMAGE: ${RAKAZO_IMAGE:-ghcr.io/agra-aarav15/unibots/app}
       # `-p` is available to Compose interpolation but is not injected into containers unless it is
       # declared here. The sidecar must target the project the operator actually started.
       COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME:-rakazo-prod}
