@@ -150,41 +150,6 @@ jobs:
           umask 077
           printf '%s\n' "$APPLE_API_KEY_P8" > "$APPLE_API_KEY"
           chmod 600 "$APPLE_API_KEY"
-      - name: Prepare system passkey association
-        id: passkeys
-        if: runner.os == 'macOS'
-        shell: bash
-        env:
-          # Optional: without it the release still ships and hides passkeys on macOS.
-          PROVISIONING_PROFILE: ${{ secrets.DESKTOP_MAC_PROVISIONING_PROFILE }}
-          PROFILE_PATH: ${{ runner.temp }}/rakazo.provisionprofile
-          ENTITLEMENTS_PATH: ${{ runner.temp }}/entitlements.passkeys.plist
-        run: |
-          set -euo pipefail
-          if [[ -z "$PROVISIONING_PROFILE" ]]; then
-            echo "::notice::Building without system passkeys; DESKTOP_MAC_PROVISIONING_PROFILE is not set."
-            exit 0
-          fi
-          printf '%s' "$PROVISIONING_PROFILE" | base64 --decode > "$PROFILE_PATH"
-          profile="$(mktemp)"
-          security cms -D -i "$PROFILE_PATH" > "$profile"
-          if ! /usr/libexec/PlistBuddy -c "Print :Entitlements:com.apple.developer.associated-domains" "$profile" > /dev/null 2>&1; then
-            echo "::error::The provisioning profile's App ID lacks the Associated Domains capability."
-            exit 1
-          fi
-          APPLE_TEAM_ID="$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" "$profile")"
-          app_id="$(/usr/libexec/PlistBuddy -c "Print :Entitlements:com.apple.application-identifier" "$profile")"
-          bundle_id="$(node -p "require('./apps/desktop/package.json').build.appId")"
-          rm -f "$profile"
-          # macOS refuses to launch an app whose entitlements its profile does not authorize.
-          if [[ "$app_id" != "$APPLE_TEAM_ID.$bundle_id" ]]; then
-            echo "::error::The provisioning profile is not for $bundle_id."
-            exit 1
-          fi
-          APPLE_TEAM_ID="$APPLE_TEAM_ID" pnpm exec tsx apps/desktop/scripts/passkey-entitlements.ts > "$ENTITLEMENTS_PATH"
-          plutil -lint "$ENTITLEMENTS_PATH"
-          echo "profile=$PROFILE_PATH" >> "$GITHUB_OUTPUT"
-          echo "entitlements=$ENTITLEMENTS_PATH" >> "$GITHUB_OUTPUT"
       - name: Package signed and notarized universal macOS app
         if: runner.os == 'macOS'
         shell: bash
@@ -194,17 +159,10 @@ jobs:
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_API_KEY: ${{ runner.temp }}/apple-api-key.p8
-          PASSKEY_PROFILE: ${{ steps.passkeys.outputs.profile }}
-          PASSKEY_ENTITLEMENTS: ${{ steps.passkeys.outputs.entitlements }}
         run: |
           set -eo pipefail
-          passkeys=()
-          if [[ -n "$PASSKEY_ENTITLEMENTS" ]]; then
-            # The main app alone gets the association; helpers keep entitlementsInherit.
-            passkeys=("-c.mac.entitlements=$PASSKEY_ENTITLEMENTS" "-c.mac.provisioningProfile=$PASSKEY_PROFILE")
-          fi
           pnpm --filter @rakazo/desktop exec electron-builder \
-            --mac --universal --publish never -c.forceCodeSigning=true "${passkeys[@]}"
+            --mac --universal --publish never -c.forceCodeSigning=true
       - name: Remove the App Store Connect API key from the runner
         if: always() && runner.os == 'macOS'
         shell: bash
@@ -214,8 +172,6 @@ jobs:
       - name: Verify macOS signature, notarization ticket, and update feed
         if: runner.os == 'macOS'
         shell: bash
-        env:
-          PASSKEY_ENTITLEMENTS: ${{ steps.passkeys.outputs.entitlements }}
         run: |
           set -euo pipefail
           app="apps/desktop/out/mac-universal/Rakazo.app"
@@ -231,25 +187,12 @@ jobs:
               exit 1
             fi
           done < <(find "$app" -type d -name "*.app" -print0)
-          if [[ -n "$PASSKEY_ENTITLEMENTS" ]]; then
-            # The signed app must carry exactly the generated association and its profile.
-            codesign -d --entitlements :- "$app" > "$entitlements" 2>/dev/null
-            for key in com.apple.application-identifier com.apple.developer.associated-domains; do
-              expected="$(/usr/libexec/PlistBuddy -c "Print :$key" "$PASSKEY_ENTITLEMENTS")"
-              actual="$(/usr/libexec/PlistBuddy -c "Print :$key" "$entitlements" 2>/dev/null || true)"
-              if [[ "$actual" != "$expected" ]]; then
-                echo "::error::$app is missing the $key passkey entitlement"
-                exit 1
-              fi
-            done
-            test -f "$app/Contents/embedded.provisionprofile"
-          fi
           rm -f "$entitlements"
           xcrun stapler validate "$app"
           spctl --assess --type execute --verbose=2 "$app"
           grep -Fqx "provider: github" "$app/Contents/Resources/app-update.yml"
-          grep -Fqx "owner: elie222" "$app/Contents/Resources/app-update.yml"
-          grep -Fqx "repo: rakazo" "$app/Contents/Resources/app-update.yml"
+          grep -Fqx "owner: agra-aarav15" "$app/Contents/Resources/app-update.yml"
+          grep -Fqx "repo: unibots" "$app/Contents/Resources/app-update.yml"
 
       - name: Verify packaged native dependencies
         if: runner.os == 'macOS'
@@ -342,7 +285,7 @@ jobs:
           if ($executables.Count -lt 2) { throw "Windows installer or application was not created." }
           $config = "apps/desktop/out/win-unpacked/resources/app-update.yml"
           $feed = Get-Content -Raw $config
-          foreach ($expected in @("provider: github", "owner: elie222", "repo: rakazo")) {
+          foreach ($expected in @("provider: github", "owner: agra-aarav15", "repo: unibots")) {
             if ($feed -notmatch "(?m)^$([regex]::Escape($expected))\r?$") {
               throw "Windows update config missing '$expected'."
             }
@@ -385,8 +328,8 @@ jobs:
           test -n "$config"
           test -f "$config"
           grep -Fqx "provider: github" "$config"
-          grep -Fqx "owner: elie222" "$config"
-          grep -Fqx "repo: rakazo" "$config"
+          grep -Fqx "owner: agra-aarav15" "$config"
+          grep -Fqx "repo: unibots" "$config"
           test -f apps/desktop/out/latest-linux.yml
           grep -Fqx "version: $RELEASE_VERSION" apps/desktop/out/latest-linux.yml
 
@@ -473,7 +416,7 @@ jobs:
           RELEASE_TAG: ${{ needs.validate.outputs.tag }}
         run: >-
           gh release create "$RELEASE_TAG" release-artifacts/*
-          --draft --generate-notes --title "Rakazo $RELEASE_TAG" --verify-tag
+          --draft --generate-notes --title "Unibots $RELEASE_TAG" --verify-tag
       - name: Publish the completed release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

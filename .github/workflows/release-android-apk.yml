@@ -26,7 +26,24 @@ jobs:
         with:
           persist-credentials: false
 
+      # With the release keystore in secrets, build and sign here so the APK depends on
+      # no hosted service. Without it the EAS project's managed keystore is used instead.
+      - name: Decide how to build the APK
+        id: build-mode
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$ANDROID_KEYSTORE_BASE64" ]]; then
+            echo "signed=true" >> "$GITHUB_OUTPUT"
+            echo "Building with the repository's release keystore."
+          else
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::ANDROID_KEYSTORE_BASE64 is unset; building on EAS instead."
+          fi
+
       - name: Require Expo automation token
+        if: steps.build-mode.outputs.signed != 'true'
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
@@ -40,6 +57,7 @@ jobs:
         with:
           node-version: 24
       - name: Set up Expo
+        if: steps.build-mode.outputs.signed != 'true'
         uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # v9
         with:
           eas-version: latest
@@ -50,8 +68,50 @@ jobs:
       - name: Verify mobile project
         run: pnpm --filter @rakazo/mobile check
 
+      - name: Decode the release keystore
+        if: steps.build-mode.outputs.signed == 'true'
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          install -d -m 700 "$RUNNER_TEMP/keystore"
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/keystore/release.jks"
+          test -s "$RUNNER_TEMP/keystore/release.jks"
+          echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/keystore/release.jks" >> "$GITHUB_ENV"
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        if: steps.build-mode.outputs.signed == 'true'
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@48b5f213c81028ace310571dc5ec0fbbca0b2947 # v4.4.3
+        if: steps.build-mode.outputs.signed == 'true'
+      - name: Build and sign the APK
+        if: steps.build-mode.outputs.signed == 'true'
+        id: gradle-build
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          pnpm --filter @rakazo/mobile exec expo prebuild --platform android --no-install
+          (cd apps/mobile/android && ./gradlew app:assembleRelease --no-daemon)
+          apk="apps/mobile/android/app/build/outputs/apk/release/app-release.apk"
+          test -s "$apk"
+          apksigner="$(find "${ANDROID_SDK_ROOT:-$ANDROID_HOME}/build-tools" -name apksigner -type f | sort -V | tail -1)"
+          test -n "$apksigner"
+          "$apksigner" verify --print-certs "$apk"
+          cp "$apk" "$RUNNER_TEMP/unibots.apk"
+          version="$(jq -r '.expo.version' apps/mobile/app.json)"
+          version_code="$(jq -r '.expo.android.versionCode' apps/mobile/app.json)"
+          test -n "$version"
+          test -n "$version_code"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "version_code=$version_code" >> "$GITHUB_OUTPUT"
+
       # Without Firebase config the APK never registers for push, and an OTA update can't add it.
       - name: Require Firebase config
+        if: steps.build-mode.outputs.signed != 'true'
         working-directory: apps/mobile
         run: |
           set -euo pipefail
@@ -64,6 +124,7 @@ jobs:
       # EAS signs with the project's managed Android keystore and bakes in the production update
       # channel, so installed APKs receive the same OTA updates as store builds.
       - name: Build APK on EAS
+        if: steps.build-mode.outputs.signed != 'true'
         id: build
         working-directory: apps/mobile
         run: |
@@ -76,8 +137,8 @@ jobs:
             echo "EAS did not return an APK download URL." >&2
             exit 1
           fi
-          curl --fail --location --silent --show-error --output "$RUNNER_TEMP/rakazo.apk" "$url"
-          if [[ "$(head -c 2 "$RUNNER_TEMP/rakazo.apk")" != "PK" ]]; then
+          curl --fail --location --silent --show-error --output "$RUNNER_TEMP/unibots.apk" "$url"
+          if [[ "$(head -c 2 "$RUNNER_TEMP/unibots.apk")" != "PK" ]]; then
             echo "The downloaded artifact is not an APK." >&2
             exit 1
           fi
@@ -85,37 +146,37 @@ jobs:
           echo "version_code=$version_code" >> "$GITHUB_OUTPUT"
 
       # One rolling release keeps a stable download URL:
-      # https://github.com/<owner>/<repo>/releases/download/android/rakazo.apk
+      # https://github.com/<owner>/<repo>/releases/download/android/unibots.apk
       # It never becomes GitHub's "latest" release, which the desktop updater reads. An existing
       # release is updated in place: the new APK is uploaded under a temporary name before the old
       # one is removed, so a failed run leaves the previous download working.
       - name: Publish rolling release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ steps.build.outputs.version }}
-          VERSION_CODE: ${{ steps.build.outputs.version_code }}
+          VERSION: ${{ steps.gradle-build.outputs.version || steps.build.outputs.version }}
+          VERSION_CODE: ${{ steps.gradle-build.outputs.version_code || steps.build.outputs.version_code }}
         run: |
           set -euo pipefail
-          title="Rakazo for Android $VERSION ($VERSION_CODE)"
+          title="Unibots for Android $VERSION ($VERSION_CODE)"
           if ! gh release view "$RELEASE_TAG" --json tagName > /dev/null 2> "$RUNNER_TEMP/view.err"; then
             if ! grep -q "release not found" "$RUNNER_TEMP/view.err"; then
               cat "$RUNNER_TEMP/view.err" >&2
               exit 1
             fi
-            gh release create "$RELEASE_TAG" "$RUNNER_TEMP/rakazo.apk" \
+            gh release create "$RELEASE_TAG" "$RUNNER_TEMP/unibots.apk" \
               --target "$GITHUB_SHA" \
               --title "$title" \
-              --notes "Install rakazo.apk on your Android phone. It updates itself over the air." \
+              --notes "Install unibots.apk on your Android phone. On a desktop-managed stack, pair with a code from Settings." \
               --latest=false
             exit 0
           fi
 
-          staged="rakazo-$VERSION_CODE.apk"
-          cp "$RUNNER_TEMP/rakazo.apk" "$RUNNER_TEMP/$staged"
+          staged="unibots-$VERSION_CODE.apk"
+          cp "$RUNNER_TEMP/unibots.apk" "$RUNNER_TEMP/$staged"
           gh release upload "$RELEASE_TAG" "$RUNNER_TEMP/$staged" --clobber
           assets="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" --jq '.assets')"
           staged_id="$(jq -r --arg name "$staged" '.[] | select(.name == $name) | .id' <<< "$assets")"
-          old_id="$(jq -r '.[] | select(.name == "rakazo.apk") | .id' <<< "$assets")"
+          old_id="$(jq -r '.[] | select(.name == "unibots.apk") | .id' <<< "$assets")"
           if [[ -z "$staged_id" ]]; then
             echo "The uploaded $staged is missing from the release; leaving the previous APK in place." >&2
             exit 1
@@ -124,11 +185,11 @@ jobs:
             gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/assets/$old_id"
           fi
           for attempt in 1 2 3; do
-            if gh api -X PATCH "repos/$GITHUB_REPOSITORY/releases/assets/$staged_id" -f name=rakazo.apk > /dev/null; then
+            if gh api -X PATCH "repos/$GITHUB_REPOSITORY/releases/assets/$staged_id" -f name=unibots.apk > /dev/null; then
               break
             fi
             if [[ "$attempt" == 3 ]]; then
-              echo "Could not rename $staged to rakazo.apk; rename it on the release page." >&2
+              echo "Could not rename $staged to unibots.apk; rename it on the release page." >&2
               exit 1
             fi
             sleep 5

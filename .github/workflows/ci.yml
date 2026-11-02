@@ -102,6 +102,9 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # The product no longer ships a hosted service; a reintroduced claim fails here.
+      - name: No hosted-service references
+        run: node scripts/check-no-cloud.mjs
       - name: Lint
         if: github.event_name == 'pull_request'
         run: pnpm lint
@@ -542,7 +545,8 @@ jobs:
       queue: max
     environment:
       name: production
-      url: https://app.rakazo.com
+      # The operator's own deployment; there is no hosted Unibots service to link to.
+      url: ${{ vars.PRODUCTION_URL || 'http://127.0.0.1:5173' }}
     steps:
       - name: Configure production SSH identity
         env:
