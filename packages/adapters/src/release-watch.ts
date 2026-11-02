@@ -30,11 +30,11 @@ export type EmulatedGithubRelease = {
   htmlUrl: string;
 };
 
-/** Seeded rakazo releases so evals succeed without the public internet. */
-export const DEFAULT_RAKAZO_EMULATED_RELEASES: readonly EmulatedGithubRelease[] = [
+/** Seeded Unibots releases so evals succeed without the public internet. */
+export const DEFAULT_UNIBOTS_EMULATED_RELEASES: readonly EmulatedGithubRelease[] = [
   {
-    owner: "elie222",
-    repo: "rakazo",
+    owner: "agra-aarav15",
+    repo: "unibots",
     tag: "v0.4.2",
     name: "v0.4.2 — routine tools + connector emulators",
     body: "Routines can bind connector tools. Composio emulator covers GitHub releases offline.",
@@ -42,8 +42,8 @@ export const DEFAULT_RAKAZO_EMULATED_RELEASES: readonly EmulatedGithubRelease[] 
     htmlUrl: "https://github.com/agra-aarav15/unibots/releases/tag/v0.4.2",
   },
   {
-    owner: "elie222",
-    repo: "rakazo",
+    owner: "agra-aarav15",
+    repo: "unibots",
     tag: "v0.4.1",
     name: "v0.4.1 — computer + plugin guidance",
     body: "Prefer connected plugins over browsing when reading app data.",
@@ -85,7 +85,7 @@ export function assessReleaseWatchRoutinePrompt(prompt: string): {
     };
   }
 
-  const mentionsRepo = /rakazo|elie222/i.test(text);
+  const mentionsRepo = /unibots|agra-aarav15/i.test(text);
   const mentionsReleases = /release/i.test(text);
   const mentionsGithubTool =
     /GITHUB_LIST_RELEASES|GITHUB_GET_RELEASE|list(?:\s+\w+){0,4}\s+releases|github\s+(tool|integration|plugin|connector|api)/i.test(
