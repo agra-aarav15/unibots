@@ -845,7 +845,7 @@ const TESTIMONIALS: HomeCopy["testimonials"]["items"] = [
   },
   {
     quote:
-      "Im a co-founder and cto, loving rakazo, we have it running against private on qwen 3.8 with strong hw/gpus - all private.",
+      "Im a co-founder and cto, loving Unibots, we have it running against private on qwen 3.8 with strong hw/gpus - all private.",
     attribution: "@bc101101",
   },
   {
@@ -859,12 +859,12 @@ const TESTIMONIALS: HomeCopy["testimonials"]["items"] = [
     attribution: "@notabot_92732",
   },
   {
-    quote: "ive been using rakazo for 1 month in claude oauth no problems yet",
+    quote: "ive been using Unibots for 1 month in claude oauth no problems yet",
     attribution: "@hey_cabron",
   },
   {
     quote:
-      "I set up the mobile app today with expo, first time using expo but was easy with rakazo walking me through",
+      "I set up the mobile app today with expo, first time using expo but was easy with Unibots walking me through",
     attribution: "@mithril0x",
   },
 ];

@@ -23,7 +23,7 @@ related:
   - href: "/hermes-alternative/"
     title: "Open source Hermes alternative"
     description: "Desktop and CLI setup next to Unibots's installer."
-  - href: "/blog/openclaw-vs-hermes-vs-rakazo/"
+  - href: "/blog/openclaw-vs-hermes-vs-unibots/"
     title: "OpenClaw vs Hermes Agent vs Unibots"
     description: "Which shape is simplest depends on the product you want."
   - href: "/alternatives/"
@@ -89,7 +89,7 @@ A source checkout is different. It wants Node.js 22.22.2 or newer on the 22.x li
 From an empty directory on the machine that should run Unibots:
 
 ```bash
-mkdir -p rakazo && cd rakazo &&
+mkdir -p unibots && cd unibots &&
 curl -fsSLO https://raw.githubusercontent.com/agra-aarav15/unibots/main/infra/compose/install-images.sh &&
 bash install-images.sh
 ```
@@ -180,6 +180,6 @@ The desktop app's **This computer** option is the same published images, started
 
 ## How this sits next to other agents
 
-OpenClaw and Hermes Agent are also open source and can run on hardware you control. Their install docs describe a gateway or a desktop app and a CLI, plus config files under a home directory. Unibots's published-image path is the script above, then chat. The [comparison of those three](/blog/openclaw-vs-hermes-vs-rakazo/) is about that difference in shape, not a race.
+OpenClaw and Hermes Agent are also open source and can run on hardware you control. Their install docs describe a gateway or a desktop app and a CLI, plus config files under a home directory. Unibots's published-image path is the script above, then chat. The [comparison of those three](/blog/openclaw-vs-hermes-vs-unibots/) is about that difference in shape, not a race.
 
 If the first chat on loopback is the goal, stay on the published images, create the owner account, and connect one model. If the goal is a public URL, budget time for TLS and the secrets checklist after the installer finishes.

@@ -210,7 +210,7 @@ The plugin must be a public GitHub repository with a plugin manifest (\`plugin.j
 \`\`\`sh
 curl -X POST ${PLUGIN_SUBMISSIONS_URL} \\
   -H 'content-type: application/json' \\
-  -d '{"email":"you@example.com","name":"Acme","logo":"https://example.com/logo.svg","source":"https://github.com/acme/rakazo-plugin","description":"Search Acme tickets.","testing":"Install it and ask a bot to find ticket 42.","tested":true}'
+  -d '{"email":"you@example.com","name":"Acme","logo":"https://example.com/logo.svg","source":"https://github.com/acme/unibots-plugin","description":"Search Acme tickets.","testing":"Install it and ask a bot to find ticket 42.","tested":true}'
 \`\`\`
 
 A new submission returns \`201\` with \`{"id","status":"pending"}\`. Resubmitting the same source URL with the same email while it waits updates it and returns \`200\`. Invalid input returns \`400\` with an \`issues\` list naming each field.

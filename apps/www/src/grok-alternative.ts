@@ -69,7 +69,7 @@ export const GROK_SOURCES = [
   { label: "OpenMuse source", href: "https://github.com/CopilotKit/openmuse" },
 ] as const;
 
-export const INSTALL_COMMAND = `mkdir -p rakazo && cd rakazo &&
+export const INSTALL_COMMAND = `mkdir -p unibots && cd unibots &&
 curl -fsSLO https://raw.githubusercontent.com/agra-aarav15/unibots/main/infra/compose/install-images.sh &&
 bash install-images.sh`;
 
@@ -172,7 +172,7 @@ export const GROK_SECTIONS = [
 ] as const;
 
 export const GROK_OTHER_LEAD =
-  "Hosted assistants and open source agents are both on the [alternatives roundup](/alternatives/). [OpenClaw vs Hermes Agent vs Unibots](/blog/openclaw-vs-hermes-vs-rakazo/) compares the three you run yourself, and [best open source AI agents in 2026](/blog/best-open-source-ai-agents-2026/) includes libraries as well as apps.";
+  "Hosted assistants and open source agents are both on the [alternatives roundup](/alternatives/). [OpenClaw vs Hermes Agent vs Unibots](/blog/openclaw-vs-hermes-vs-unibots/) compares the three you run yourself, and [best open source AI agents in 2026](/blog/best-open-source-ai-agents-2026/) includes libraries as well as apps.";
 
 function altShot(file: string, alt: string) {
   return {
