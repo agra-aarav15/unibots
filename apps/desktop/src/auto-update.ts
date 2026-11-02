@@ -5,6 +5,21 @@ import { reportDesktopError } from "./monitoring.js";
 export const LAUNCH_CHECK_DELAY_MS = 8_000;
 /** A connected server drives the renderer, so a manual check cannot become a request loop. */
 export const MIN_CHECK_INTERVAL_MS = 60_000;
+export const BACKGROUND_CHECK_INTERVAL_MS = 60 * 60 * 1_000;
+
+/**
+ * Background update checks are opt-in, so a local-first install makes no periodic
+ * network request. `RAKAZO_AUTO_UPDATE=on` restores the launch and hourly checks;
+ * "Check for Updates..." in the menu works either way.
+ */
+export function backgroundUpdateChecks(env: { RAKAZO_AUTO_UPDATE?: string }): {
+  launchDelayMs: number;
+  intervalMs: number;
+} | null {
+  const setting = env.RAKAZO_AUTO_UPDATE?.trim().toLowerCase();
+  if (setting !== "on" && setting !== "auto") return null;
+  return { launchDelayMs: LAUNCH_CHECK_DELAY_MS, intervalMs: BACKGROUND_CHECK_INTERVAL_MS };
+}
 
 export interface UpdaterEnvironment {
   packaged: boolean;
@@ -80,7 +95,7 @@ export function classifyUpdaterFailure(error: unknown): UpdaterFailure {
     return { kind: "offline", message: null };
   }
   if (READ_ONLY.some((needle) => text.includes(needle))) {
-    return { kind: "read-only", message: "Move Rakazo to Applications to install updates." };
+    return { kind: "read-only", message: "Move Unibots to Applications to install updates." };
   }
   // Ahead of signatures: a full disk also leaves ditto unable to read the archive's signature.
   if (DISK_FULL.some((needle) => text.includes(needle))) {
@@ -89,7 +104,7 @@ export function classifyUpdaterFailure(error: unknown): UpdaterFailure {
   if (SIGNATURE.some((needle) => text.includes(needle))) {
     return {
       kind: "signature",
-      message: "This update could not be verified. Reinstall Rakazo from a trusted download.",
+      message: "This update could not be verified. Reinstall Unibots from a trusted download.",
     };
   }
   return {

@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
-import { copyFile, lstat, mkdir, readFile } from "node:fs/promises";
+import { copyFile, lstat, mkdir, readFile, statfs } from "node:fs/promises";
 import { createServer } from "node:net";
+import { totalmem } from "node:os";
 import path from "node:path";
 import type { DesktopLocalStackState } from "@rakazo/contracts";
 import type { DockerFailureKind, RunDocker, RunDockerResult } from "./docker-cli.js";
@@ -15,6 +16,8 @@ import { readPrivateFile, writePrivateFile } from "./setup-store.js";
 export const STACK_DIR_NAME = "stack";
 export const STACK_PROJECT_NAME = "rakazo-desktop";
 export const STACK_COMPOSE_FILE = "docker-compose.images.yml";
+/** Overlay that publishes only the API on the private network. */
+export const STACK_LAN_COMPOSE_FILE = "docker-compose.lan.yml";
 export const STACK_ENV_TEMPLATE = ".env.images.example";
 export const STACK_ENV_FILE = ".env";
 export const STACK_WEB_URL_FILE = ".desktop-web-url";
@@ -44,6 +47,22 @@ export async function allocateLoopbackPort(): Promise<number> {
         if (error) reject(error);
         else if (address && typeof address !== "string") resolve(address.port);
         else reject(new Error("No loopback port allocated."));
+      });
+    });
+  });
+}
+
+/** A port free on every interface, for the phone-access overlay. */
+export async function allocatePrivateNetworkPort(): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const server = createServer();
+    server.once("error", reject);
+    server.listen(0, "0.0.0.0", () => {
+      const address = server.address();
+      server.close((error) => {
+        if (error) reject(error);
+        else if (address && typeof address !== "string") resolve(address.port);
+        else reject(new Error("No private network port allocated."));
       });
     });
   });
@@ -189,6 +208,7 @@ export async function ensureStackToken(
 
 export type LocalStackEvent =
   | { type: "check-start" }
+  | { type: "warning"; message: string }
   | { type: "docker-missing"; message: string }
   | { type: "docker-not-running"; message: string }
   | { type: "prepare" }
@@ -200,7 +220,7 @@ export type LocalStackEvent =
   | { type: "failed"; message: string };
 
 export function initialStackState(imageTag: string): DesktopLocalStackState {
-  return { phase: "idle", message: null, output: [], layerBytes: {}, imageTag };
+  return { phase: "idle", message: null, warning: null, output: [], layerBytes: {}, imageTag };
 }
 
 /** `COMPOSE_PROGRESS=plain` reports a layer's downloaded size and never its total. */
@@ -223,11 +243,20 @@ export function reduceStackState(
   event: LocalStackEvent,
 ): DesktopLocalStackState {
   if (event.type === "check-start") {
-    return { ...state, phase: "checking-docker", message: null, output: [], layerBytes: {} };
+    return {
+      ...state,
+      phase: "checking-docker",
+      message: null,
+      warning: null,
+      output: [],
+      layerBytes: {},
+    };
   }
   // Terminal phases only leave through the next check-start.
   if (state.phase === "ready" || state.phase === "failed") return state;
   switch (event.type) {
+    case "warning":
+      return { ...state, warning: event.message };
     case "docker-missing":
       return { ...state, phase: "docker-missing", message: event.message };
     case "docker-not-running":
@@ -265,6 +294,27 @@ const DOCKER_GROUP_HINT =
 const STOP_FAILED = "Could not stop the local stack. Check that Docker is running, then try again.";
 const START_INTERRUPTED = "The start was interrupted. Retry to continue.";
 
+/** Compose 2.20 is the first release with the `--wait` and progress behavior the start relies on. */
+export const MIN_COMPOSE_VERSION = [2, 20, 0] as const;
+/** Images plus volumes need room; below this the pull fails halfway and leaves a broken stack. */
+export const MIN_FREE_DISK_BYTES = 8 * 1024 ** 3;
+/** Below this the stack starts but is slow; only a warning, never a block. */
+export const RECOMMENDED_RAM_BYTES = 8 * 1024 ** 3;
+
+export function composeVersionAtLeast(
+  raw: string,
+  minimum: readonly [number, number, number] = MIN_COMPOSE_VERSION,
+): boolean {
+  const match = /(\d+)\.(\d+)(?:\.(\d+))?/.exec(raw.trim().replace(/^v/i, ""));
+  if (!match) return false;
+  const parts = [Number(match[1]), Number(match[2]), Number(match[3] ?? 0)];
+  for (let index = 0; index < 3; index += 1) {
+    if (parts[index]! > minimum[index]!) return true;
+    if (parts[index]! < minimum[index]!) return false;
+  }
+  return true;
+}
+
 /** Docker output may contain paths and hostnames, so the person only ever sees these. */
 export function stackFailureMessage(
   kind: DockerFailureKind,
@@ -288,8 +338,8 @@ export function stackFailureMessage(
       return "Docker Compose is missing. Install Docker Desktop or the docker-compose-plugin, then retry.";
     case "other":
       return phase === "pulling"
-        ? "Downloading Rakazo images failed. Check the output below, then retry."
-        : "Rakazo services did not start. Check the output below, then retry.";
+        ? "Downloading Unibots images failed. Check the output below, then retry."
+        : "Unibots services did not start. Check the output below, then retry.";
   }
 }
 
@@ -320,6 +370,10 @@ export interface LocalStackDeps {
   onState?: (state: DesktopLocalStackState) => void;
   sleep?: (ms: number, signal: AbortSignal) => Promise<void>;
   healthTimeoutMs?: number;
+  /** Free bytes on the stack directory's filesystem; defaults to fs.statfs. */
+  freeDiskBytes?: () => Promise<number | null>;
+  /** Total host memory; defaults to os.totalmem. */
+  totalMemoryBytes?: () => number;
 }
 
 /** Resolves early on abort so a stop never waits out a health poll. */
@@ -436,6 +490,33 @@ export class LocalStackController {
     return this.current;
   }
 
+  /** Phone access for this computer's network; null keeps API on loopback only. */
+  private lan: { port: number; url: string } | null = null;
+
+  /** The next start publishes the API on the private network at this address. */
+  setLan(lan: { port: number; url: string } | null): void {
+    this.lan = lan;
+  }
+
+  lanAddress(): { port: number; url: string } | null {
+    return this.lan;
+  }
+
+  private async freeDiskBytes(): Promise<number | null> {
+    if (this.deps.freeDiskBytes) return this.deps.freeDiskBytes();
+    try {
+      const stats = await statfs(this.deps.stackDir);
+      return stats.bavail * stats.bsize;
+    } catch {
+      // A filesystem that cannot report free space must not block a start.
+      return null;
+    }
+  }
+
+  private totalMemoryBytes(): number {
+    return this.deps.totalMemoryBytes?.() ?? totalmem();
+  }
+
   private push(event: LocalStackEvent) {
     this.setState(reduceStackState(this.current, event));
   }
@@ -485,6 +566,13 @@ export class LocalStackController {
       });
       return;
     }
+    if (!composeVersionAtLeast(version.stdout)) {
+      this.push({
+        type: "docker-missing",
+        message: `Docker Compose ${version.stdout.trim()} is too old. Update Docker Desktop or the compose plugin to 2.20 or newer, then check again.`,
+      });
+      return;
+    }
     const info = await this.docker(
       binary,
       ["info", "--format", "{{.ServerVersion}}"],
@@ -502,11 +590,32 @@ export class LocalStackController {
       });
       return;
     }
+    const freeDisk = await this.freeDiskBytes();
+    if (freeDisk !== null && freeDisk < MIN_FREE_DISK_BYTES) {
+      this.push({
+        type: "failed",
+        message:
+          "The local stack needs at least 8 GB of free disk space for images and data. Free up space, then retry.",
+      });
+      return;
+    }
+    if (this.totalMemoryBytes() < RECOMMENDED_RAM_BYTES) {
+      // A warning only: the stack runs, just slowly, and blocking would strand smaller machines.
+      this.push({
+        type: "warning",
+        message:
+          "This computer has less than 8 GB of memory. The local stack may be slow while multiple bots run.",
+      });
+    }
 
     this.push({ type: "prepare" });
     await copyFile(
       path.join(this.deps.resourceDir, STACK_COMPOSE_FILE),
       path.join(this.deps.stackDir, STACK_COMPOSE_FILE),
+    );
+    await copyFile(
+      path.join(this.deps.resourceDir, STACK_LAN_COMPOSE_FILE),
+      path.join(this.deps.stackDir, STACK_LAN_COMPOSE_FILE),
     );
     const template = await readFile(path.join(this.deps.resourceDir, STACK_ENV_TEMPLATE), "utf8");
     await ensureStackEnv(this.deps.stackDir, template, this.deps.randomHex);
@@ -626,6 +735,13 @@ export class LocalStackController {
         ...(this.currentStackToken === null
           ? {}
           : { RAKAZO_DESKTOP_STACK_TOKEN: this.currentStackToken }),
+        ...(this.lan === null
+          ? {}
+          : {
+              RAKAZO_LAN_PORT: String(this.lan.port),
+              // A phone on the network must not be able to create an account.
+              SIGNUPS_ENABLED: "false",
+            }),
         RAKAZO_WEB_PORT: new URL(this.currentWebUrl).port || "80",
         // Only web needs a stable host address. Docker allocates the API host port.
         RAKAZO_API_PORT: "0",
@@ -649,6 +765,7 @@ export class LocalStackController {
         STACK_ENV_FILE,
         "-f",
         STACK_COMPOSE_FILE,
+        ...(this.lan === null ? [] : ["-f", STACK_LAN_COMPOSE_FILE]),
         "--project-name",
         STACK_PROJECT_NAME,
         ...args,

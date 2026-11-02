@@ -25,10 +25,10 @@
   const PHASE_LABELS = {
     "checking-docker": "Getting ready…",
     preparing: "Getting ready…",
-    pulling: "Downloading Rakazo…",
-    starting: "Starting Rakazo…",
+    pulling: "Downloading Unibots…",
+    starting: "Starting Unibots…",
     "waiting-healthy": "Almost ready…",
-    ready: "Rakazo is ready.",
+    ready: "Unibots is ready.",
   };
   const TERMINAL_PHASES = new Set([
     "idle",
@@ -50,7 +50,6 @@
   const PULL_SCALE_BYTES = 1.2e9;
 
   let defaultLocalUrl = "";
-  let cloudUrl = "";
   /** Bumped on user edits, mode switches, and new async runs; a run left behind is stale. */
   let requestGeneration = 0;
   /** Generation of the check in flight; an edit or mode switch retires it and releases its lock. */
@@ -66,7 +65,7 @@
 
   function selectedMode() {
     const checked = form.querySelector('input[name="mode"]:checked');
-    return checked === null ? "cloud" : checked.value;
+    return checked === null ? "new" : checked.value;
   }
 
   function setStatus(message, tone) {
@@ -137,7 +136,10 @@
 
   function renderDetails(stack) {
     const bytes = stack.phase === "pulling" ? downloadedBytes(stack) : 0;
-    stackDetail.textContent = bytes > 0 ? `${formatBytes(bytes)} downloaded` : "";
+    const detail = [stack.warning, bytes > 0 ? `${formatBytes(bytes)} downloaded` : ""];
+    stackDetail.textContent = detail.filter(Boolean).join(" · ");
+    if (stack.warning) stackDetail.setAttribute("data-tone", "warning");
+    else stackDetail.removeAttribute("data-tone");
 
     // A new attempt clears the output, so drop an expansion the person did not ask for.
     if (stack.phase === "checking-docker" && detailsOpenedByFailure) {
@@ -310,7 +312,7 @@
       if (generation !== requestGeneration) return result;
       if (result.ok) {
         serverUrl.value = result.url;
-        setStatus(`Rakazo answered at ${result.url}.`, "ok");
+        setStatus(`Unibots answered at ${result.url}.`, "ok");
       } else {
         setStatus(result.error ?? "Could not reach that address.", "error");
       }
@@ -379,8 +381,6 @@
     event.preventDefault();
     const mode = selectedMode();
     if (mode === "new") void runStack();
-    // Cloud is an existing server at a fixed address.
-    else if (mode === "cloud") void save("existing", cloudUrl);
     else {
       const headers = readHeaders();
       if (headers === null) setStatus("Invalid custom headers", "error");
@@ -409,20 +409,19 @@
     }
 
     watchStack();
-    // Continue needs the Cloud address and any saved choice before it can submit.
+    // Continue needs any saved choice before it can submit.
     setBusy(true);
     try {
       const state = await bridge.state();
       if (state === null) throw new Error("Setup is not active");
       defaultLocalUrl = state.defaultLocalUrl;
-      cloudUrl = state.cloudUrl;
       if (state.saved !== null) {
-        const savedCloud = state.saved.mode === "existing" && state.saved.serverUrl === cloudUrl;
-        const mode = savedCloud ? "cloud" : state.saved.mode;
-        const modeInput = document.querySelector(`input[name="mode"][value="${mode}"]`);
+        const modeInput = document.querySelector(
+          `input[name="mode"][value="${state.saved.mode}"]`,
+        );
         if (modeInput !== null) modeInput.checked = true;
-        if (mode === "existing") serverUrl.value = state.saved.serverUrl;
-        if (mode === "existing" && state.saved.headers) {
+        if (state.saved.mode === "existing") serverUrl.value = state.saved.serverUrl;
+        if (state.saved.mode === "existing" && state.saved.headers) {
           serverHeaders.value = Object.entries(state.saved.headers)
             .map(([name, value]) => `${name}: ${value}`)
             .join("\n");
@@ -446,7 +445,7 @@
         continueButton.focus();
       }
     } catch {
-      setStatus("Setup could not start. Quit Rakazo and try again.", "error");
+      setStatus("Setup could not start. Quit Unibots and try again.", "error");
       setBusy(true);
     }
   }

@@ -51,6 +51,7 @@ describe("desktop preload bridge", () => {
       "nativeWindowFrame",
       "oauth",
       "passkeys",
+      "phoneAccess",
       "platform",
       "update",
       "window",

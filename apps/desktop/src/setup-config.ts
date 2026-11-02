@@ -5,8 +5,6 @@ import { isLoopbackHost, isPrivateNetworkHost } from "@rakazo/contracts/network-
 
 /** Managed desktop origin; development keeps its usual web/API ports. */
 export const DEFAULT_LOCAL_WEB_URL = "http://127.0.0.1:45173";
-/** Hosted Rakazo; setup saves it as an `existing` server so it opens like any other. */
-export const RAKAZO_CLOUD_URL = "https://app.rakazo.com";
 export const PROBE_RESPONSE_LIMIT_BYTES = 64 * 1024;
 
 export const SETUP_FILE_NAME = "setup.json";
@@ -20,7 +18,7 @@ const SCHEME = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//;
 /**
  * Accepts what a person would actually type ("localhost:5173", "rakazo.example.com")
  * and returns a canonical http(s) origin, or null when the input can never
- * securely address a Rakazo server.
+ * securely address a Unibots server.
  */
 export function normalizeServerUrl(input: string): string | null {
   const trimmed = input.trim();
@@ -45,7 +43,7 @@ export function normalizeServerUrl(input: string): string | null {
   // Public login cookies and API traffic must never cross a cleartext connection.
   if (url.protocol === "http:" && !isPrivateNetworkHost(url.hostname)) return null;
 
-  // Rakazo serves its renderer, RPC, and auth routes from one origin. Keeping a
+  // Unibots serves its renderer, RPC, and auth routes from one origin. Keeping a
   // user-supplied path would make the setup probe and the loaded app disagree.
   return url.origin;
 }
@@ -175,7 +173,7 @@ export function servesBundledRenderer(targetUrl: string, managedLocalStack: bool
   }
 }
 
-/** Each Rakazo origin gets its own persistent cookie and storage partition. */
+/** Each Unibots origin gets its own persistent cookie and storage partition. */
 export function sessionPartitionForServerUrl(targetUrl: string): string | null {
   try {
     const url = new URL(targetUrl);
@@ -207,6 +205,15 @@ export function isRakazoHealth(value: unknown): boolean {
     (json as { ok?: unknown }).ok === true &&
     typeof (json as { version?: unknown }).version === "string"
   );
+}
+
+/** A fresh local stack opens sign-up; once an account exists, sign-in. */
+export function firstRunAuthPath(value: unknown): "/sign-up" | "/sign-in" {
+  return typeof value === "object" &&
+    value !== null &&
+    (value as { needsFirstUser?: unknown }).needsFirstUser === true
+    ? "/sign-up"
+    : "/sign-in";
 }
 
 export function desktopStackImageTag(value: unknown): string | null {

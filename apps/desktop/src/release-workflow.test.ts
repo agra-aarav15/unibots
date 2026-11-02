@@ -93,28 +93,20 @@ describe("desktop release workflow", () => {
 
   it("pins every platform update feed to the official GitHub owner and repo", () => {
     expect(workflow).toContain('grep -Fqx "provider: github"');
-    expect(workflow).toContain('grep -Fqx "owner: elie222"');
-    expect(workflow).toContain('grep -Fqx "repo: rakazo"');
+    expect(workflow).toContain('grep -Fqx "owner: agra-aarav15"');
+    expect(workflow).toContain('grep -Fqx "repo: unibots"');
     expect(workflow).toContain("Verify Linux update feed is pinned to the official GitHub channel");
     expect(workflow).toContain("Windows update config missing");
     expect(workflow).toContain("RELEASE_VERSION:");
     expect(workflow).toContain('grep -Fqx "version: $RELEASE_VERSION"');
   });
 
-  it("adds the system passkey association only when a provisioning profile is configured", () => {
-    expect(workflow).toContain(
-      `PROVISIONING_PROFILE: ${expression("secrets.DESKTOP_MAC_PROVISIONING_PROFILE")}`,
-    );
-    expect(workflow).toMatch(/if \[\[ -z "\$PROVISIONING_PROFILE" \]\]; then\n.*\n\s+exit 0/);
-    expect(workflow).toContain("pnpm exec tsx apps/desktop/scripts/passkey-entitlements.ts");
-    expect(workflow).toContain('if [[ "$app_id" != "$APPLE_TEAM_ID.$bundle_id" ]]; then');
-    // Helpers keep entitlementsInherit; only the main app is associated.
-    expect(workflow).toContain(
-      '"-c.mac.entitlements=$PASSKEY_ENTITLEMENTS" "-c.mac.provisioningProfile=$PASSKEY_PROFILE"',
-    );
-    expect(workflow).not.toContain("entitlementsInherit=");
-    expect(workflow).toContain('test -f "$app/Contents/embedded.provisionprofile"');
-    expect(workflow).not.toMatch(/secrets\.APPLE_TEAM_ID/);
+  it("does not associate the macOS build with a hosted passkey domain", () => {
+    expect(workflow).not.toContain("DESKTOP_MAC_PROVISIONING_PROFILE");
+    expect(workflow).not.toContain("passkey-entitlements");
+    expect(workflow).not.toContain("PASSKEY_ENTITLEMENTS");
+    expect(workflow).not.toContain("webcredentials:");
+    expect(workflow).not.toContain("embedded.provisionprofile");
   });
 
   it("publishes only a complete stable, upgrade-only feed", () => {

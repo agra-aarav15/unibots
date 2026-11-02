@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   DEFAULT_LOCAL_WEB_URL,
   desktopStackImageTag,
+  firstRunAuthPath,
   isRakazoHealth,
   managedLocalOpenUrl,
   maySendDesktopStackToken,
@@ -10,7 +11,6 @@ import {
   parseSetupInput,
   parseStoredSetup,
   probeFailureMessage,
-  RAKAZO_CLOUD_URL,
   readProbeJson,
   resolveStartupTarget,
   safeExternalUrl,
@@ -19,6 +19,15 @@ import {
   servesBundledRenderer,
   sessionPartitionForServerUrl,
 } from "./setup-config.js";
+
+describe("first run", () => {
+  it("opens sign-up only while the deployment has no account", () => {
+    expect(firstRunAuthPath({ needsFirstUser: true })).toBe("/sign-up");
+    expect(firstRunAuthPath({ needsFirstUser: false })).toBe("/sign-in");
+    expect(firstRunAuthPath({})).toBe("/sign-in");
+    expect(firstRunAuthPath(null)).toBe("/sign-in");
+  });
+});
 
 describe("server address normalization", () => {
   it("assumes http locally and https for a bare public host", () => {
@@ -58,12 +67,12 @@ describe("server address normalization", () => {
     expect(normalizeServerUrl("http://[fd00:ec2::254]")).toBeNull();
     // fd::1 is 00fd::1, not unique-local.
     expect(normalizeServerUrl("http://[fd::1]:3100")).toBeNull();
-    // HTTPS to link-local still normalizes; the health probe must match Rakazo.
+    // HTTPS to link-local still normalizes; the health probe must match Unibots.
     expect(normalizeServerUrl("https://169.254.169.254")).toBe("https://169.254.169.254");
   });
 
   it.each(["", "   ", "not a url", "ftp://example.com", "file:///etc/passwd", "http://"])(
-    "rejects an address that cannot reach a Rakazo server (%s)",
+    "rejects an address that cannot reach a Unibots server (%s)",
     (value) => {
       expect(normalizeServerUrl(value)).toBeNull();
     },
@@ -137,15 +146,15 @@ describe("saved setup", () => {
     });
   });
 
-  it("saves Rakazo Cloud as an existing server under the exact origin setup matches", () => {
-    // The setup window recognizes a saved Cloud choice by comparing against this constant.
-    expect(normalizeServerUrl(RAKAZO_CLOUD_URL)).toBe(RAKAZO_CLOUD_URL);
-    expect(parseSetupInput({ mode: "existing", serverUrl: RAKAZO_CLOUD_URL })).toEqual({
+  it("keeps an existing HTTPS instance as a normalized origin", () => {
+    const instance = "https://rakazo.example.com";
+    expect(normalizeServerUrl(instance)).toBe(instance);
+    expect(parseSetupInput({ mode: "existing", serverUrl: instance })).toEqual({
       mode: "existing",
-      serverUrl: RAKAZO_CLOUD_URL,
+      serverUrl: instance,
     });
-    expect(parseSetupInput({ mode: "new", serverUrl: RAKAZO_CLOUD_URL })).toBeNull();
-    expect(servesBundledRenderer(RAKAZO_CLOUD_URL, false)).toBe(false);
+    expect(parseSetupInput({ mode: "new", serverUrl: instance })).toBeNull();
+    expect(servesBundledRenderer(instance, false)).toBe(false);
   });
 });
 
@@ -164,7 +173,7 @@ describe("server request headers", () => {
     ).toEqual({ mode: "existing", serverUrl: "https://rakazo.example.com" });
   });
 
-  it("refuses headers Rakazo owns and headers for a new local instance", () => {
+  it("refuses headers Unibots owns and headers for a new local instance", () => {
     expect(parseSetupInput({ ...setup, headers: { Cookie: "a=b" } })).toBeNull();
     expect(parseSetupInput({ ...setup, headers: "x: y" })).toBeNull();
     expect(
@@ -265,7 +274,7 @@ describe("remote-content isolation", () => {
   });
 });
 
-describe("Rakazo health response", () => {
+describe("Unibots health response", () => {
   it("requires the public RPC health contract", () => {
     expect(isRakazoHealth({ json: { ok: true, version: "0.1.0" } })).toBe(true);
     expect(isRakazoHealth({ json: { ok: true } })).toBe(false);

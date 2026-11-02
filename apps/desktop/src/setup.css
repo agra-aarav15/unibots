@@ -261,6 +261,10 @@ html[data-platform="darwin"] .titlebar {
   font-variant-numeric: tabular-nums;
 }
 
+.stack-detail[data-tone="warning"] {
+  color: var(--warning);
+}
+
 /* No size to report (a failure, or before the first layer): take no room. */
 .stack-detail:empty {
   margin: 0;

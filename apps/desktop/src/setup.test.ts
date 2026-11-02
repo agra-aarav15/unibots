@@ -15,7 +15,6 @@ import { afterEach, describe, expect, it } from "vitest";
 type DesktopSetupResult = Awaited<ReturnType<RakazoSetup["save"]>>;
 
 const DEFAULT_LOCAL_URL = "http://127.0.0.1:6130";
-const CLOUD_URL = "https://cloud.rakazo.example";
 
 // The jsdom environment replaces the global URL, so resolve the sibling files via Node's.
 const srcDir = path.dirname(fileURLToPath(import.meta.url));
@@ -40,8 +39,19 @@ function deferred<T>(): Deferred<T> {
   return { promise, resolve, reject };
 }
 
-function stackState(phase: DesktopLocalStackState["phase"]): DesktopLocalStackState {
-  return { phase, message: null, output: [], layerBytes: {}, imageTag: "v0.0.0" };
+function stackState(
+  phase: DesktopLocalStackState["phase"],
+  overrides: Partial<DesktopLocalStackState> = {},
+): DesktopLocalStackState {
+  return {
+    phase,
+    message: null,
+    warning: null,
+    output: [],
+    layerBytes: {},
+    imageTag: "v0.0.0",
+    ...overrides,
+  };
 }
 
 function element<T extends HTMLElement>(id: string): T {
@@ -55,7 +65,7 @@ async function flush(ticks = 30): Promise<void> {
   for (let i = 0; i < ticks; i += 1) await Promise.resolve();
 }
 
-function selectMode(mode: "cloud" | "new" | "existing"): void {
+function selectMode(mode: "new" | "existing"): void {
   const input = document.querySelector<HTMLInputElement>(`input[name="mode"][value="${mode}"]`);
   if (input === null) throw new Error(`setup.html is missing the ${mode} mode input`);
   input.checked = true;
@@ -134,7 +144,7 @@ function mount(saved: DesktopSetup | null): Harness {
   new Function(setupScript)();
 
   const initState = stateCalls.shift();
-  initState?.resolve({ defaultLocalUrl: DEFAULT_LOCAL_URL, cloudUrl: CLOUD_URL, saved });
+  initState?.resolve({ defaultLocalUrl: DEFAULT_LOCAL_URL, saved });
   return {
     nextCheck: () => {
       const call = checkCalls.shift();
@@ -146,7 +156,7 @@ function mount(saved: DesktopSetup | null): Harness {
     resolveAppState: (next) =>
       stateCalls
         .shift()
-        ?.resolve({ defaultLocalUrl: DEFAULT_LOCAL_URL, cloudUrl: CLOUD_URL, saved: next }),
+        ?.resolve({ defaultLocalUrl: DEFAULT_LOCAL_URL, saved: next }),
     resolveStackState: (state) => stackStateCalls.shift()?.resolve(state),
     pushStackState: (state) => {
       for (const listener of pushListeners) listener(state);
@@ -222,7 +232,7 @@ describe("setup", () => {
     currentCheck.resolve({ ok: true, url: "https://two.example" });
     await flush();
     expect(field.value).toBe("https://two.example");
-    expect(element("status").textContent).toBe("Rakazo answered at https://two.example.");
+    expect(element("status").textContent).toBe("Unibots answered at https://two.example.");
     expect(element("status").getAttribute("data-tone")).toBe("ok");
     expect(element<HTMLButtonElement>("check").disabled).toBe(false);
     expect(element<HTMLButtonElement>("continue").disabled).toBe(false);
@@ -235,7 +245,7 @@ describe("setup", () => {
     await flush();
     expect(element<HTMLButtonElement>("continue").disabled).toBe(true);
 
-    selectMode("cloud");
+    selectMode("existing");
     await flush();
     expect(element<HTMLButtonElement>("continue").disabled).toBe(false);
 
@@ -251,7 +261,7 @@ describe("setup", () => {
     selectMode("new");
     submitForm();
     await flush();
-    selectMode("cloud");
+    selectMode("existing");
     await flush();
 
     ui.startResult.reject(new Error("renderer closed"));
@@ -266,7 +276,7 @@ describe("setup", () => {
     selectMode("new");
     submitForm();
     await flush();
-    selectMode("cloud");
+    selectMode("existing");
     await flush();
     ui.startResult.resolve(stackState("starting"));
     await flush();
@@ -279,7 +289,24 @@ describe("setup", () => {
     await flush();
 
     expect(element("stack").hidden).toBe(false);
-    expect(element("stack-phase").textContent).toBe("Downloading Rakazo…");
+    expect(element("stack-phase").textContent).toBe("Downloading Unibots…");
+  });
+
+  it("shows a low-memory warning without blocking the start", async () => {
+    const ui = await boot(null);
+    selectMode("new");
+    submitForm();
+    ui.startResult.resolve(
+      stackState("pulling", {
+        warning:
+          "This computer has less than 8 GB of memory. The local stack may be slow while multiple bots run.",
+      }),
+    );
+    await flush();
+
+    expect(element("stack-detail").textContent).toContain("less than 8 GB of memory");
+    expect(element("stack-detail").getAttribute("data-tone")).toBe("warning");
+    expect(element<HTMLButtonElement>("continue").disabled).toBe(true);
   });
 
   it("locks the address while it is being saved and unlocks it when the save fails", async () => {
@@ -334,7 +361,7 @@ describe("setup", () => {
     await flush();
 
     expect(element<HTMLInputElement>("server-url").value).toBe("https://one.example");
-    expect(element("status").textContent).toBe("Rakazo answered at https://one.example.");
+    expect(element("status").textContent).toBe("Unibots answered at https://one.example.");
     expect(element("status").getAttribute("data-tone")).toBe("ok");
     expect(element<HTMLButtonElement>("check").disabled).toBe(false);
   });
@@ -385,7 +412,7 @@ describe("setup", () => {
     ui.startResult.resolve(stackState("pulling"));
     await flush();
     expect(element("stack").hidden).toBe(false);
-    expect(element("stack-phase").textContent).toBe("Downloading Rakazo…");
+    expect(element("stack-phase").textContent).toBe("Downloading Unibots…");
     expect(element<HTMLButtonElement>("continue").disabled).toBe(true);
 
     ui.resolveStackState(stackState("ready"));
@@ -395,7 +422,7 @@ describe("setup", () => {
     ui.resolveSave({ ok: true });
     await flush();
 
-    expect(element("stack-phase").textContent).toBe("Rakazo is ready.");
+    expect(element("stack-phase").textContent).toBe("Unibots is ready.");
     expect(element("stack-phase").getAttribute("data-tone")).toBe("ok");
     expect(ui.saves).toEqual([{ mode: "new", serverUrl: DEFAULT_LOCAL_URL }]);
     expect(element<HTMLButtonElement>("continue").disabled).toBe(false);

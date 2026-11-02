@@ -1,9 +1,9 @@
 {
   "name": "@rakazo/desktop",
-  "productName": "Rakazo",
-  "version": "0.3.6",
+  "productName": "Unibots",
+  "version": "0.4.0",
   "author": {
-    "name": "Rakazo"
+    "name": "agra-aarav15"
   },
   "license": "Apache-2.0",
   "type": "module",
@@ -37,7 +37,7 @@
     "yaml": "2.9.1"
   },
   "build": {
-    "appId": "dev.rakazo.desktop",
+    "appId": "dev.unibots.desktop",
     "directories": {
       "output": "out",
       "buildResources": "assets"
@@ -56,6 +56,10 @@
         "to": "stack/docker-compose.images.yml"
       },
       {
+        "from": "../../infra/compose/docker-compose.lan.yml",
+        "to": "stack/docker-compose.lan.yml"
+      },
+      {
         "from": "../../infra/compose/.env.images.example",
         "to": "stack/.env.images.example"
       }
@@ -65,14 +69,14 @@
       "main": "dist/main.js"
     },
     "mac": {
-      "icon": "../../packages/ui-tokens/assets/Rakazo.icon",
+      "icon": "../../packages/ui-tokens/assets/Unibots.icon",
       "category": "public.app-category.productivity",
       "x64ArchFiles": "{**/node_modules/@koromix/koffi-darwin-*/darwin_*/koffi.node,**/node_modules/@oxc-parser/binding-darwin-*/parser.darwin-*.node}",
       "entitlements": "assets/entitlements.mac.plist",
       "entitlementsInherit": "assets/entitlements.mac.plist",
       "extendInfo": {
-        "NSMicrophoneUsageDescription": "Rakazo uses the microphone for dictation and voice calls with your bots.",
-        "NSSpeechRecognitionUsageDescription": "Rakazo turns what you say into text for dictation and voice calls with your bots."
+        "NSMicrophoneUsageDescription": "Unibots uses the microphone for dictation and voice calls with your bots.",
+        "NSSpeechRecognitionUsageDescription": "Unibots turns what you say into text for dictation and voice calls with your bots."
       },
       "extraResources": [
         {
@@ -115,7 +119,7 @@
       "verifyUpdateCodeSignature": true
     },
     "linux": {
-      "executableName": "rakazo",
+      "executableName": "unibots",
       "icon": "assets/icon.png",
       "target": [
         "AppImage"
@@ -124,8 +128,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "elie222",
-        "repo": "rakazo"
+        "owner": "agra-aarav15",
+        "repo": "unibots"
       }
     ]
   }

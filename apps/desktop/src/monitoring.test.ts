@@ -74,6 +74,15 @@ describe("desktop monitoring", () => {
     expect(initialized.beforeSend({}, {})).toBeNull();
   });
 
+  it("stays inert without a server DSN and sends nothing", async () => {
+    const monitor = await import("./monitoring.js");
+    monitor.reportDesktopError(new Error("silent"), "desktop.startup");
+    await monitor.configureDesktopMonitoring(config({ dsn: null }), options);
+    expect(sdk.init).not.toHaveBeenCalled();
+    expect(sdk.makeElectronTransport).not.toHaveBeenCalled();
+    expect(transport.send).not.toHaveBeenCalled();
+  });
+
   it("accepts only the latest identity response when cookies change", async () => {
     const monitor = await import("./monitoring.js");
     await monitor.configureDesktopMonitoring(

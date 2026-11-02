@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { existsSync } from "node:fs";
 import { readFile, stat, writeFile } from "node:fs/promises";
+import { networkInterfaces } from "node:os";
 import path from "node:path";
 import { startUserDeviceClient } from "@rakazo/adapters/user-device-client";
 import type { DesktopReachability, DesktopSetup, RakazoDesktopDevice } from "@rakazo/contracts";
@@ -23,13 +24,18 @@ import type { AppDocumentState } from "./app-document-state.js";
 import { waitForMountedAppDocument } from "./app-document-state.js";
 import { createAppOpener } from "./app-opener.js";
 import type { ElectronAutoUpdater } from "./auto-update.js";
-import { DesktopUpdateController, LAUNCH_CHECK_DELAY_MS, updaterSupport } from "./auto-update.js";
+import {
+  backgroundUpdateChecks,
+  DesktopUpdateController,
+  updaterSupport,
+} from "./auto-update.js";
 import { createBadgeHandler } from "./badge.js";
 import { openBrowserAuth } from "./browser-auth.js";
 import { DOCKER_INSTALL_LINKS, isDesktopSetupLink, runDocker } from "./docker-cli.js";
 import { prepareHostComputer } from "./host-computer.js";
 import { saveLocalComputerHost } from "./local-settings.js";
 import {
+  allocatePrivateNetworkPort,
   LocalStackController,
   readStackToken,
   readStackWebUrl,
@@ -44,8 +50,8 @@ import {
   refreshDesktopMonitoringUser,
   reportDesktopError,
 } from "./monitoring.js";
+import { lanIpv4, lanUrl } from "./phone-access.js";
 import { oauthCallbackFrom } from "./oauth-callback.js";
-import { associatedPasskeyRpIds } from "./passkeys.js";
 import {
   bundledRendererCandidates,
   bundledRendererHeaders,
@@ -58,13 +64,13 @@ import { installSessionPermissions } from "./session-permissions.js";
 import {
   DEFAULT_LOCAL_WEB_URL,
   desktopStackImageTag,
+  firstRunAuthPath,
   isRakazoHealth,
   managedLocalOpenUrl,
   maySendDesktopStackToken,
   normalizeServerUrl,
   parseSetupInput,
   probeFailureMessage,
-  RAKAZO_CLOUD_URL,
   readProbeJson,
   resolveStartupTarget,
   safeExternalUrl,
@@ -152,14 +158,8 @@ app.once("ready", () => markOnce("rk:main:ready"));
 // Includes fresh partitions and popup-created sessions, before they load remote content.
 app.on("session-created", (value) => installSessionPermissions(value, permissionTarget));
 
-const passkeyRpIds = associatedPasskeyRpIds({
-  platform: process.platform,
-  packaged: app.isPackaged,
-  resourcesPath: process.resourcesPath,
-  exists: existsSync,
-});
-// Routes WebAuthn to the system passkey sheet (iCloud Keychain and other providers).
-if (passkeyRpIds.length > 0) app.configureWebAuthn({ platformPasskeys: true });
+/** macOS system passkeys need an associated domain; this build ships none. */
+const passkeyRpIds: string[] = [];
 
 function permissionTarget() {
   if (mainWindow === null || mainWindow.isDestroyed()) return null;
@@ -169,6 +169,39 @@ function permissionTarget() {
 
 function markOnce(name: string) {
   if (performance.getEntriesByName(name).length === 0) performance.mark(name);
+}
+
+/** Set while phone access is on; the web page reads it to show the address and code. */
+let phoneAccessUrl: string | null = null;
+
+/**
+ * Publishes the API on this computer's private network so a phone can pair with a code.
+ * Off by default, and only possible while this app runs the local stack.
+ */
+async function enablePhoneAccess(): Promise<
+  { ok: true; url: string } | { ok: false; error: string }
+> {
+  if (currentSetup?.mode !== "new") {
+    return { ok: false, error: "Phone access needs this app to run the local stack." };
+  }
+  const host = lanIpv4(networkInterfaces());
+  if (host === null) {
+    return { ok: false, error: "This computer is not on a network a phone can reach." };
+  }
+  const port = await allocatePrivateNetworkPort().catch(() => null);
+  if (port === null) {
+    return { ok: false, error: "Could not reserve a port for phone access." };
+  }
+  const url = lanUrl(host, port);
+  localStack.setLan({ port, url });
+  const state = await localStack.start();
+  if (state.phase !== "ready") {
+    localStack.setLan(null);
+    phoneAccessUrl = null;
+    return { ok: false, error: "Could not start phone access. Check Docker, then try again." };
+  }
+  phoneAccessUrl = url;
+  return { ok: true, url };
 }
 
 function windowFrom(event: Electron.IpcMainInvokeEvent) {
@@ -392,10 +425,11 @@ function createWindow(url: string, partition: string | null) {
       throw error;
     },
   );
-  if (!launchUpdateCheckScheduled) {
+  const updateSchedule = backgroundUpdateChecks(process.env);
+  if (!launchUpdateCheckScheduled && updateSchedule !== null) {
     launchUpdateCheckScheduled = true;
-    setTimeout(() => void desktopUpdater.check(false), LAUNCH_CHECK_DELAY_MS).unref();
-    setInterval(() => void desktopUpdater.check(false), 60 * 60 * 1_000).unref();
+    setTimeout(() => void desktopUpdater.check(false), updateSchedule.launchDelayMs).unref();
+    setInterval(() => void desktopUpdater.check(false), updateSchedule.intervalMs).unref();
   }
   return { loaded, win };
 }
@@ -637,7 +671,7 @@ async function runMenuUpdateCheck() {
       : dialog.showMessageBox(options);
   if (state.phase === "ready") {
     const { response } = await alert({
-      message: `Rakazo ${state.availableVersion} is ready to install.`,
+      message: `Unibots ${state.availableVersion} is ready to install.`,
       buttons: ["Restart", "Later"],
       defaultId: 0,
       cancelId: 1,
@@ -660,7 +694,7 @@ async function runMenuUpdateCheck() {
       detail: state.message,
     });
   } else if (state.phase === "idle") {
-    await alert({ message: "Rakazo is up to date.", detail: `Version ${state.currentVersion}` });
+    await alert({ message: "Unibots is up to date.", detail: `Version ${state.currentVersion}` });
   }
 }
 
@@ -697,7 +731,7 @@ function installApplicationMenu() {
   };
   const changeServer: Electron.MenuItemConstructorOptions = {
     id: "change-rakazo-server",
-    label: "Change Rakazo Server…",
+    label: "Change Unibots Server…",
     accelerator: "CmdOrCtrl+Shift+K",
     click: () => showSetupWindow(),
   };
@@ -783,7 +817,7 @@ function installApplicationMenu() {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
-/** Setup IPC must only answer the setup window, never a connected Rakazo server. */
+/** Setup IPC must only answer the setup window, never a connected Unibots server. */
 function fromSetupWindow(event: Electron.IpcMainInvokeEvent) {
   return (
     setupWindow !== null && !setupWindow.isDestroyed() && event.sender === setupWindow.webContents
@@ -814,7 +848,7 @@ async function probeServer(
         ok: false,
         status: response.status,
         url,
-        error: "That address redirects elsewhere. Enter the final Rakazo server address.",
+        error: "That address redirects elsewhere. Enter the final Unibots server address.",
       };
     }
     if (!response.ok) {
@@ -831,7 +865,7 @@ async function probeServer(
         ok: false,
         status: response.status,
         url,
-        error: "That address did not respond like a Rakazo server.",
+        error: "That address did not respond like a Unibots server.",
       };
     }
     return {
@@ -841,6 +875,21 @@ async function probeServer(
     };
   } catch (error) {
     return { ok: false, url, error: probeFailureMessage(error) };
+  }
+}
+
+/** First run opens sign-up while the managed stack has no account yet. */
+async function readFirstRunAuthPath(url: string): Promise<"/sign-up" | "/sign-in"> {
+  try {
+    const response = await net.fetch(new URL("/api/auth/capabilities", url).href, {
+      cache: "no-store",
+      credentials: "omit",
+      redirect: "manual",
+      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+    });
+    return response.ok ? firstRunAuthPath(await readProbeJson(response)) : "/sign-in";
+  } catch {
+    return "/sign-in";
   }
 }
 
@@ -1391,6 +1440,20 @@ app.whenReady().then(async () => {
   }
   ipcMain.handle("desktop.platform", () => process.platform);
   ipcMain.handle("desktop.passkeys.rpIds", () => passkeyRpIds);
+  ipcMain.handle("desktop.phoneAccess.state", (event) =>
+    fromMainWindow(event) ? { url: phoneAccessUrl } : { url: null },
+  );
+  ipcMain.handle("desktop.phoneAccess.enable", (event) =>
+    fromMainWindow(event) ? enablePhoneAccess() : { ok: false, error: "Phone access is unavailable." },
+  );
+  ipcMain.handle("desktop.phoneAccess.disable", async (event) => {
+    if (!fromMainWindow(event)) return { ok: false };
+    phoneAccessUrl = null;
+    localStack.setLan(null);
+    // Recreate the API without its published port; loopback access is unaffected.
+    await localStack.start().catch(() => undefined);
+    return { ok: true };
+  });
   ipcMain.handle("desktop.window.close", (event) => {
     windowFrom(event)?.close();
   });
@@ -1429,7 +1492,6 @@ app.whenReady().then(async () => {
     if (!fromSetupWindow(event)) return null;
     return {
       defaultLocalUrl: localStack.webUrl(),
-      cloudUrl: RAKAZO_CLOUD_URL,
       saved: currentSetup,
       error: setupError ?? undefined,
     };
@@ -1463,15 +1525,17 @@ app.whenReady().then(async () => {
 
       // Only open the exact origin selected and authenticated by the managed stack.
       let openSetup = setup;
+      let firstRunPath: "/sign-up" | "/sign-in" | null = null;
       if (setup.mode === "new") {
         const managedUrl = managedLocalOpenUrl(setup.serverUrl, localStack.webUrl());
         if (managedUrl === null || !(await localStack.matchesDesiredStack())) {
           return {
             ok: false,
-            error: "The app-managed Rakazo services are not ready. Retry setup.",
+            error: "The app-managed Unibots services are not ready. Retry setup.",
           };
         }
         openSetup = { mode: "new", serverUrl: managedUrl };
+        firstRunPath = await readFirstRunAuthPath(managedUrl);
       }
 
       const reachability = await probeServer(openSetup.serverUrl, undefined, openSetup.headers);
@@ -1480,6 +1544,12 @@ app.whenReady().then(async () => {
       // Open before persisting so a failed renderer load keeps the last working setup.
       currentSetup = openSetup;
       const opened = await appOpener.open(openSetup.serverUrl, { switching: true });
+      if (opened && firstRunPath !== null) {
+        // Keep the origin as the app target; only the first page starts on auth.
+        void mainWindow?.webContents
+          .loadURL(new URL(firstRunPath, openSetup.serverUrl).href)
+          .catch(() => undefined);
+      }
       if (!opened) {
         currentSetup = previousSetup;
         configureHeaderSession(mainWindow?.webContents.session);

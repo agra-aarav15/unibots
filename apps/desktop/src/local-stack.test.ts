@@ -6,6 +6,7 @@ import type { RunDocker, RunDockerResult } from "./docker-cli.js";
 import type { LocalStackDeps } from "./local-stack.js";
 import {
   COMPOSE_WAIT_TIMEOUT_S,
+  composeVersionAtLeast,
   ensureStackEnv,
   ensureStackToken,
   initialStackState,
@@ -17,6 +18,7 @@ import {
   STACK_COMPOSE_FILE,
   STACK_ENV_FILE,
   STACK_ENV_TEMPLATE,
+  STACK_LAN_COMPOSE_FILE,
   STACK_OUTPUT_LINES,
   STACK_PROJECT_NAME,
   STACK_TOKEN_FILE,
@@ -80,7 +82,7 @@ describe("renderStackEnv", () => {
     expect(lines.some((line) => line.startsWith("RAKAZO_IMAGE_TAG="))).toBe(false);
     expect(lines.some((line) => line.startsWith("RAKAZO_COMPUTER_IMAGE_TAG="))).toBe(false);
     // Everything else, including the image names and empty optional keys, stays verbatim.
-    expect(lines).toContain("RAKAZO_IMAGE=ghcr.io/elie222/rakazo/app");
+    expect(lines).toContain("RAKAZO_IMAGE=ghcr.io/agra-aarav15/unibots/app");
     expect(lines).toContain("SANDBOX_PROVIDER=docker");
     expect(lines).toContain("OPENROUTER_API_KEY=");
     expect(rendered.endsWith("\n")).toBe(template.endsWith("\n"));
@@ -299,6 +301,19 @@ describe("reduceStackState", () => {
   });
 });
 
+describe("composeVersionAtLeast", () => {
+  it("requires Compose 2.20 or newer", () => {
+    expect(composeVersionAtLeast("2.20.0")).toBe(true);
+    expect(composeVersionAtLeast("v2.20.0-desktop.1")).toBe(true);
+    expect(composeVersionAtLeast("2.29.1")).toBe(true);
+    expect(composeVersionAtLeast("v5.4.0")).toBe(true);
+    expect(composeVersionAtLeast("2.19.9")).toBe(false);
+    expect(composeVersionAtLeast("1.29.2")).toBe(false);
+    expect(composeVersionAtLeast("")).toBe(false);
+    expect(composeVersionAtLeast("not a version")).toBe(false);
+  });
+});
+
 describe("stackFailureMessage", () => {
   it("names the tag when images are not published yet", () => {
     expect(stackFailureMessage("image-not-found", "pulling", "v0.2.0")).toBe(
@@ -414,6 +429,43 @@ describe("LocalStackController", () => {
         hostComputer: { ...hostComputer, token: "cd".repeat(32) },
       }).matchesDesiredStack(),
     ).toBe(false);
+  });
+
+  it("publishes the API on the network only while phone access is on", async () => {
+    const stack = controller();
+    await stack.start();
+    const baseCompose = calls.filter((call) => call.args[0] === "compose");
+    expect(baseCompose.length).toBeGreaterThan(0);
+    for (const call of baseCompose) {
+      expect(call.args).not.toContain(STACK_LAN_COMPOSE_FILE);
+      expect(call.env.RAKAZO_LAN_PORT).toBeUndefined();
+      expect(call.env.SIGNUPS_ENABLED).toBeUndefined();
+    }
+
+    calls.length = 0;
+    stack.setLan({ port: 3199, url: "http://192.168.1.24:3199" });
+    expect((await stack.start()).phase).toBe("ready");
+    const lanCompose = calls.filter(
+      // `compose version --short` probes the CLI itself, so it takes no project files.
+      (call) => call.args[0] === "compose" && call.args[1] !== "version",
+    );
+    expect(lanCompose.length).toBeGreaterThan(0);
+    for (const call of lanCompose) {
+      expect(call.args).toContain(STACK_LAN_COMPOSE_FILE);
+      expect(call.env.RAKAZO_LAN_PORT).toBe("3199");
+      // A phone on the network must not be able to create an account.
+      expect(call.env.SIGNUPS_ENABLED).toBe("false");
+    }
+
+    calls.length = 0;
+    stack.setLan(null);
+    await stack.start();
+    const offCompose = calls.filter((call) => call.args[0] === "compose");
+    expect(offCompose.length).toBeGreaterThan(0);
+    for (const call of offCompose) {
+      expect(call.args).not.toContain(STACK_LAN_COMPOSE_FILE);
+      expect(call.env.RAKAZO_LAN_PORT).toBeUndefined();
+    }
   });
 
   it("pushes every state change so the setup window is never left waiting on a poll", async () => {
@@ -608,12 +660,33 @@ describe("LocalStackController", () => {
     );
   });
 
-  it("uses a plain up -d for Compose plugins older than 2.17", async () => {
+  it("stops with actionable copy when Docker Compose is too old", async () => {
     const stack = controller({}, (args) =>
       args[1] === "version" ? { stdout: "2.12.2\n" } : ok(args),
     );
-    await stack.start();
-    expect(calls.at(-1)?.args.slice(7)).toEqual(["up", "-d"]);
+    const state = await stack.start();
+    expect(state).toMatchObject({ phase: "docker-missing" });
+    expect(state.message).toContain("2.20");
+    expect(calls).toHaveLength(1);
+  });
+
+  it("refuses to start without enough free disk space", async () => {
+    const stack = controller({ freeDiskBytes: async () => 1024 ** 3 });
+    const state = await stack.start();
+    expect(state).toMatchObject({ phase: "failed" });
+    expect(state.message).toContain("8 GB");
+  });
+
+  it("warns about low memory but still starts", async () => {
+    const stack = controller({ totalMemoryBytes: () => 4 * 1024 ** 3 });
+    const state = await stack.start();
+    expect(state.phase).toBe("ready");
+    expect(state.warning).toContain("less than 8 GB of memory");
+  });
+
+  it("stays quiet about memory on a large machine", async () => {
+    const state = await controller({ totalMemoryBytes: () => 32 * 1024 ** 3 }).start();
+    expect(state.warning).toBeNull();
   });
 
   it("stops at docker-missing when no binary exists and touches nothing", async () => {
