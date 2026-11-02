@@ -1616,7 +1616,7 @@ msgstr "Verbind eerst de aanbieder van dit model."
 #. js-lingui-explicit-id
 #: src/lib/run-error.ts
 msgid "Connect your own API key in Models or choose Unibots credits in Billing."
-msgstr "Verbind je eigen API-sleutel bij Modellen of kies Rakazo-tegoed bij Facturatie."
+msgstr "Verbind je eigen API-sleutel bij Modellen of kies Unibots-tegoed bij Facturatie."
 
 #: src/components/ComputerDeviceSettings.tsx
 #: src/components/integrations/IntegrationSetup.tsx
@@ -5625,7 +5625,7 @@ msgstr "Abonneren voor {price} / maand"
 
 #: src/components/ModelCredits.tsx
 msgid "Subscribe to Unibots credits"
-msgstr "Abonneren op Rakazo-tegoed"
+msgstr "Abonneren op Unibots-tegoed"
 
 #: src/components/ModelCredits.tsx
 msgid "Subscribe with your own AI"

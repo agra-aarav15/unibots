@@ -4126,11 +4126,11 @@ msgstr "לא עכשיו"
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/import-status.ts
 msgid "Not supported in Unibots"
-msgstr "לא נתמך ב-Rakazo"
+msgstr "לא נתמך ב-Unibots"
 
 #: src/pages/shell/agent-import.tsx
 msgid "Not used by Unibots"
-msgstr "לא בשימוש ב-Rakazo"
+msgstr "לא בשימוש ב-Unibots"
 
 #: src/components/McpServerHealthLine.tsx
 msgid "Not working"
@@ -4954,7 +4954,7 @@ msgstr ""
 #: src/pages/McpOAuthCallback.tsx
 #: src/pages/SlackInstallCallback.tsx
 msgid "Return to Unibots"
-msgstr "חזרה ל-Rakazo"
+msgstr "חזרה ל-Unibots"
 
 #: src/lib/model-connection-preflight.ts
 msgid "Review provider settings and test again."
@@ -5380,7 +5380,7 @@ msgstr "התחברו ב-<0>{0}</0> והדביקו כאן את הקוד."
 
 #: src/pages/Auth.tsx
 msgid "Sign in to Unibots"
-msgstr "התחברות ל-Rakazo"
+msgstr "התחברות ל-Unibots"
 
 #: src/lib/user-error.ts
 msgid "Sign in to your existing account to link SSO"
@@ -5924,7 +5924,7 @@ msgstr "השרת הזה כבר מחובר. יש לנתק אותו קודם כד�
 
 #: src/pages/model-settings/connection-controls.tsx
 msgid "This subscription sign-in is not available in Unibots yet. Use a deployment credential or choose another provider."
-msgstr "התחברות עם המנוי הזה עדיין לא זמינה ב-Rakazo. אפשר להשתמש בפרטי גישה של ההתקנה או לבחור ספק אחר."
+msgstr "התחברות עם המנוי הזה עדיין לא זמינה ב-Unibots. אפשר להשתמש בפרטי גישה של ההתקנה או לבחור ספק אחר."
 
 #: src/pages/Artifacts.tsx
 msgid "This week"

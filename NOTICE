@@ -1,0 +1,15 @@
+Unibots
+Copyright 2026 agra-aarav15
+
+This product is a derivative work of Rakazo (https://github.com/elie222/rakazo),
+which is licensed under the Apache License, Version 2.0.
+
+Original work: Copyright 2026 Rakazo contributors.
+Modifications and the Unibots product: Copyright 2026 agra-aarav15.
+
+The original Apache-2.0 license text is retained in LICENSE. The upstream Hermes Agent
+runtime (https://github.com/NousResearch/hermes-agent) is MIT-licensed and is used as a
+sidecar service; its license is retained in the container image and in
+infra/hermes/LICENSE.hermes-agent.
+
+Unibots is not affiliated with or endorsed by the Rakazo maintainers or Nous Research.

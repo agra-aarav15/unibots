@@ -105,7 +105,7 @@ export const NL_MESSAGES: Record<string, string> = {
   "Connect a model in Settings before running bots.":
     "Verbind een model in Instellingen voordat je bots uitvoert.",
   "Connect your own API key in Models or choose Unibots credits in Billing.":
-    "Verbind je eigen API-sleutel bij Modellen of kies Rakazo-tegoed bij Facturatie.",
+    "Verbind je eigen API-sleutel bij Modellen of kies Unibots-tegoed bij Facturatie.",
   "The model provider returned an error.": "De modelaanbieder heeft een fout teruggegeven.",
   "{provider} is rate limiting requests. Try again shortly.":
     "{provider} beperkt het aantal verzoeken. Probeer het zo nog eens.",
@@ -801,7 +801,7 @@ export const NL_MESSAGES: Record<string, string> = {
   "Enter a server URL": "Voer een server-URL in",
   "Public servers need https://. HTTP only works on your local network.":
     "Openbare servers vereisen https://. HTTP werkt alleen op je lokale netwerk.",
-  "That URL did not look like a Unibots server": "Die URL leek geen Rakazo-server",
+  "That URL did not look like a Unibots server": "Die URL leek geen Unibots-server",
   "That URL is missing a host": "Die URL mist een host",
   "That doesn’t look like a URL": "Dat lijkt geen URL",
   "Use an http or https URL": "Gebruik een http- of https-URL",
@@ -993,13 +993,13 @@ export const NL_MESSAGES: Record<string, string> = {
   Subscribe: "Abonneren",
   "Monthly credits expire at renewal. Top-ups do not expire.":
     "Maandelijks tegoed vervalt bij verlenging. Los gekocht tegoed verloopt niet.",
-  "Use Unibots credits": "Rakazo-tegoed gebruiken",
+  "Use Unibots credits": "Unibots-tegoed gebruiken",
   "Choose a plan": "Kies een abonnement",
   "Change plan": "Abonnement wijzigen",
   Plan: "Abonnement",
   None: "Geen",
   "Free trial": "Gratis proefperiode",
-  "Unibots credits": "Rakazo-tegoed",
+  "Unibots credits": "Unibots-tegoed",
   "Free until": "Gratis tot",
   Ends: "Eindigt op",
   Renews: "Verlengt op",

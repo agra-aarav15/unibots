@@ -111,7 +111,7 @@ export const DE_MESSAGES: Record<string, string> = {
   "Connect a model in Settings before running bots.":
     "Verbinde ein Modell in den Einstellungen, bevor du Bots ausführst.",
   "Connect your own API key in Models or choose Unibots credits in Billing.":
-    "Verbinde deinen eigenen API-Schlüssel unter Modelle oder wähle Rakazo-Guthaben unter Abrechnung.",
+    "Verbinde deinen eigenen API-Schlüssel unter Modelle oder wähle Unibots-Guthaben unter Abrechnung.",
   "The model provider returned an error.": "Der Modellanbieter hat einen Fehler zurückgegeben.",
   "{provider} is rate limiting requests. Try again shortly.":
     "{provider} begrenzt die Anfragerate. Versuche es gleich noch einmal.",
@@ -808,7 +808,7 @@ export const DE_MESSAGES: Record<string, string> = {
   "Public servers need https://. HTTP only works on your local network.":
     "Öffentliche Server brauchen https://. HTTP funktioniert nur im lokalen Netzwerk.",
   "That URL did not look like a Unibots server":
-    "Diese URL sieht nicht nach einem Rakazo-Server aus",
+    "Diese URL sieht nicht nach einem Unibots-Server aus",
   "That URL is missing a host": "Dieser URL fehlt ein Host",
   "That doesn’t look like a URL": "Das sieht nicht nach einer URL aus",
   "Use an http or https URL": "Verwende eine http- oder https-URL",
@@ -1001,13 +1001,13 @@ export const DE_MESSAGES: Record<string, string> = {
   Subscribe: "Abonnieren",
   "Monthly credits expire at renewal. Top-ups do not expire.":
     "Monatliches Guthaben verfällt bei Verlängerung. Einmalige Aufladungen verfallen nicht.",
-  "Use Unibots credits": "Rakazo-Guthaben verwenden",
+  "Use Unibots credits": "Unibots-Guthaben verwenden",
   "Choose a plan": "Tarif wählen",
   "Change plan": "Tarif ändern",
   Plan: "Tarif",
   None: "Keiner",
   "Free trial": "Kostenlose Testphase",
-  "Unibots credits": "Rakazo-Guthaben",
+  "Unibots credits": "Unibots-Guthaben",
   "Free until": "Kostenlos bis",
   Ends: "Endet am",
   Renews: "Verlängert sich am",
