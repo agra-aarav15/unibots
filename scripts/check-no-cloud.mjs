@@ -38,8 +38,13 @@ const SKIP_DIRS = new Set([
   "migrations",
 ]);
 const TEXT = /\.(ts|tsx|js|jsx|mjs|cjs|json|md|astro|yml|yaml|html|css|prisma|example)$/;
-/** Changelogs, the plan itself, and this guard may name the old hosted service. */
-const ALLOWED = new Set(["CHANGELOG.md", "OPENCODE_PLAN.md", "check-no-cloud.mjs"]);
+/** Changelogs, the plan, this guard, and its test may name the old hosted service. */
+const ALLOWED = new Set([
+  "CHANGELOG.md",
+  "OPENCODE_PLAN.md",
+  "check-no-cloud.mjs",
+  "no-cloud.test.ts",
+]);
 
 /** Text files the guard reads; changelogs, the plan, and this guard are exempt. */
 export function isScannedFile(file) {

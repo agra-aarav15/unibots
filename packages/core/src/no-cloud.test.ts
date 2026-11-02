@@ -50,6 +50,7 @@ describe("no hosted service", () => {
     expect(isScannedFile("CHANGELOG.md")).toBe(false);
     expect(isScannedFile("OPENCODE_PLAN.md")).toBe(false);
     expect(isScannedFile("scripts/check-no-cloud.mjs")).toBe(false);
+    expect(isScannedFile("packages/core/src/no-cloud.test.ts")).toBe(false);
     expect(isScannedFile("docs/media/hero.png")).toBe(false);
   });
 });
