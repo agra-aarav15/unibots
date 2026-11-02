@@ -1,6 +1,7 @@
 {
   "name": "@rakazo/mobile",
   "version": "0.1.0",
+  "author": "agra-aarav15",
   "license": "Apache-2.0",
   "main": "index.ts",
   "expo": {

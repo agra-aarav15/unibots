@@ -2,10 +2,11 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
+// A Windows checkout can rewrite the line endings; the assertions below are about structure.
 const workflow = readFileSync(
   path.resolve(import.meta.dirname, "../../../.github/workflows/release-android-apk.yml"),
   "utf8",
-);
+).replace(/\r\n/g, "\n");
 const easConfig = JSON.parse(
   readFileSync(path.resolve(import.meta.dirname, "../eas.json"), "utf8"),
 ) as { build: Record<string, { extends?: string; android?: { buildType?: string } }> };

@@ -88,8 +88,8 @@ export const ZH_TW_MESSAGES: Record<string, string> = {
   "Your Anthropic": "你的 Anthropic",
   "Your model provider": "你的模型供應商",
   "Connect a model in Settings before running bots.": "執行機器人前，請先在設定中連接模型。",
-  "Connect your own API key in Models or choose Rakazo credits in Billing.":
-    "請在「模型」中連接你自己的 API 金鑰，或在「帳務」中選擇 Rakazo 點數。",
+  "Connect your own API key in Models or choose Unibots credits in Billing.":
+    "請在「模型」中連接你自己的 API 金鑰，或在「帳務」中選擇 Unibots 點數。",
   "The model provider returned an error.": "模型供應商回傳了錯誤。",
   "{provider} is rate limiting requests. Try again shortly.":
     "{provider} 正在限制請求頻率。請稍後重試。",
@@ -557,8 +557,8 @@ export const ZH_TW_MESSAGES: Record<string, string> = {
   "Photo library": "相簿",
   Pin: "置頂",
   "Please try again.": "請重試。",
-  "Point this app at your self-hosted Rakazo origin, the same HTTPS URL you open in a browser.":
-    "將此應用程式連至你自行架設的 Rakazo，網址與你在瀏覽器中開啟的 HTTPS 網址相同。",
+  "Point this app at your self-hosted Unibots origin, the same HTTPS URL you open in a browser.":
+    "將此應用程式連至你自行架設的 Unibots，網址與你在瀏覽器中開啟的 HTTPS 網址相同。",
   Private: "私人",
   Profile: "資料",
   Providers: "供應商",
@@ -620,10 +620,10 @@ export const ZH_TW_MESSAGES: Record<string, string> = {
   "Show more": "顯示更多",
   "Show {label}": "顯示 {label}",
   "Sign in": "登入",
-  "Sign in to Rakazo": "登入 Rakazo",
+  "Sign in to Unibots": "登入 Unibots",
   "Sign out": "登出",
   "Sign up": "註冊",
-  "Sign up for Rakazo": "註冊 Rakazo",
+  "Sign up for Unibots": "註冊 Unibots",
   "Sign-in": "登入",
   "Sign-up": "註冊",
   "Sign-in did not return a session": "登入未返回工作階段",
@@ -656,7 +656,7 @@ export const ZH_TW_MESSAGES: Record<string, string> = {
   Team: "團隊",
   "Team Computer": "團隊電腦",
   "That doesn’t look like a URL": "這看起來不像 URL",
-  "That URL did not look like a Rakazo server": "該地址看起來不是 Rakazo 伺服器",
+  "That URL did not look like a Unibots server": "該地址看起來不是 Unibots 伺服器",
   "That URL is missing a host": "該地址缺少主機名稱",
   "The server changed while starting the request": "請求開始時伺服器已更改",
   "This permanently deletes your account, bots, conversations, memories, files, and saved connections. This cannot be undone.":
@@ -677,7 +677,9 @@ export const ZH_TW_MESSAGES: Record<string, string> = {
   "Use a custom server": "使用自訂伺服器",
   "Use a found model": "使用找到的模型",
   "Use an http or https URL": "請使用 http 或 https 地址",
-  "Use default server": "使用預設伺服器",
+    "Use default server": "使用預設伺服器",
+  "Pair with computer": "與電腦配對",
+  "Pairing code": "配對碼",
   Voice: "語音",
   Webhook: "Webhook",
   "Waiting for sign-in…": "正在等待登入…",
@@ -741,8 +743,8 @@ export const ZH_TW_MESSAGES: Record<string, string> = {
   "Open conversation": "開啟對話",
   "Open in full window": "在全視窗中開啟",
   "OpenAPI JSON": "OpenAPI JSON",
-  "Paste the OpenAI-compatible address from your server. Rakazo adds /v1 if needed.":
-    "貼上你伺服器的 OpenAI 相容地址。如有需要，Rakazo 會自動補上 /v1。",
+  "Paste the OpenAI-compatible address from your server. Unibots adds /v1 if needed.":
+    "貼上你伺服器的 OpenAI 相容地址。如有需要，Unibots 會自動補上 /v1。",
   Paused: "已暫停",
   Prompt: "提示詞",
   "Recording a live demonstration needs desktop or web with the full computer view. You can still ask this bot to run saved skills from chat.":
@@ -755,8 +757,8 @@ export const ZH_TW_MESSAGES: Record<string, string> = {
   "Teach a task": "教一個任務",
   "This removes every message and stops current work. The bot, computer, memory, and routines are kept.":
     "這將刪除所有訊息並停止目前工作。機器人、電腦、記憶和例行任務會保留。",
-  "This subscription sign-in is not available in Rakazo yet. Use a deployment credential or choose another provider.":
-    "Rakazo 暫不支援此訂閱登入。請使用部署憑證或選擇其他供應商。",
+  "This subscription sign-in is not available in Unibots yet. Use a deployment credential or choose another provider.":
+    "Unibots 暫不支援此訂閱登入。請使用部署憑證或選擇其他供應商。",
   Tools: "工具",
   Uninstall: "解除安裝",
   "Verify and add": "驗證並新增",
@@ -862,7 +864,7 @@ export const ZH_TW_MESSAGES: Record<string, string> = {
   "AI models": "AI 模型",
   Memory: "記憶",
   "Privacy policies": "隱私權政策",
-  Rakazo: "Rakazo",
+  Unibots: "Unibots",
   "Withdraw all permissions": "撤回所有權限",
   "Withdraw all permissions?": "要撤回所有權限嗎？",
   "New mobile actions won't send data to these services. Runs already in progress and routines keep going until you stop them.":
@@ -980,13 +982,13 @@ export const ZH_TW_MESSAGES: Record<string, string> = {
   Subscribe: "訂閱",
   "Monthly credits expire at renewal. Top-ups do not expire.":
     "每月額度在續訂時到期。單次加值額度不會過期。",
-  "Use Rakazo credits": "使用 Rakazo 額度",
+  "Use Unibots credits": "使用 Unibots 額度",
   "Choose a plan": "選擇方案",
   "Change plan": "變更方案",
   Plan: "方案",
   None: "無",
   "Free trial": "免費試用",
-  "Rakazo credits": "Rakazo 額度",
+  "Unibots credits": "Unibots 額度",
   "Free until": "免費至",
   Ends: "結束於",
   Renews: "續訂日期",
@@ -1014,7 +1016,7 @@ export const ZH_TW_MESSAGES: Record<string, string> = {
   "Your free trial has started": "你的免費試用已開始",
   "Free until {date}": "{date} 前免費",
   "Connect your AI": "連接你的 AI",
-  "Start using Rakazo": "開始使用 Rakazo",
+  "Start using Unibots": "開始使用 Unibots",
   "1 unread": "1 條未讀",
   "{count} unread": "{count} 條未讀",
   "{count} need attention": "{count} 個需要處理",
@@ -1022,11 +1024,11 @@ export const ZH_TW_MESSAGES: Record<string, string> = {
   "{label}, below": "{label}，下方",
   Work: "工作",
   Both: "兩者都有",
-  "How will you use Rakazo?": "你會如何使用 Rakazo？",
-  "What do you most want Rakazo to help with?": "你最希望 Rakazo 幫你做什麼？",
+  "How will you use Unibots?": "你會如何使用 Unibots？",
+  "What do you most want Unibots to help with?": "你最希望 Unibots 幫你做什麼？",
   "How big is your team?": "你的團隊有多大？",
   "How did you hear about us?": "你是如何知道我們的？",
-  "Welcome to Rakazo": "歡迎使用 Rakazo",
+  "Welcome to Unibots": "歡迎使用 Unibots",
   "Add a model in Settings to use this.": "請先在設定中新增模型再使用。",
   "Add provider": "新增供應商",
   "Always act": "一律處理",

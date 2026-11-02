@@ -17,7 +17,9 @@ import {
   saveApiBase,
   usesCustomApiBase,
 } from "../lib/api";
+import Constants from "expo-constants";
 import { useI18n } from "../lib/i18n";
+import { PAIRING_CODE_LENGTH, pairWithComputer } from "../lib/pair-device";
 import { useMobileTokens } from "../lib/native";
 import { serverHeaders } from "../lib/server-headers";
 import { useSideInsets } from "../lib/side-insets";
@@ -34,6 +36,7 @@ export default function ServerScreen() {
     Object.entries(serverHeaders(current)).map(([name, value]) => ({ name, value })),
   );
   const [error, setError] = useState<string | null>(null);
+  const [code, setCode] = useState("");
   const [pending, setPending] = useState(false);
   const active = useRef(true);
   const saving = useRef(false);
@@ -76,6 +79,31 @@ export default function ServerScreen() {
       const saved = await saveApiBase(probed.url, headers);
       if (!saved.ok) {
         setError(saved.error);
+        return;
+      }
+      close();
+    } finally {
+      saving.current = false;
+      setPending(false);
+    }
+  }
+
+  /** Redeems the code the desktop showed, using the address typed above. */
+  async function pair() {
+    if (saving.current) return;
+    saving.current = true;
+    setPending(true);
+    setError(null);
+    try {
+      const result = await pairWithComputer({
+        url: draft,
+        code,
+        deviceName: Constants.deviceName ?? (Platform.OS === "ios" ? "iPhone" : "Android"),
+        platform: Platform.OS === "ios" ? "ios" : "android",
+      });
+      if (!active.current) return;
+      if (!result.ok) {
+        setError(result.error);
         return;
       }
       close();
@@ -165,6 +193,37 @@ export default function ServerScreen() {
             }}
             disabled={pending}
           />
+          <TextInput
+            testID="pairing-code"
+            accessibilityLabel={t("Pairing code")}
+            autoComplete="off"
+            editable={!pending}
+            keyboardType="number-pad"
+            maxLength={PAIRING_CODE_LENGTH}
+            onChangeText={(value) => {
+              setCode(value.replace(/\D/g, ""));
+              setError(null);
+            }}
+            placeholder={t("Pairing code")}
+            placeholderTextColor={tokens.mutedForeground}
+            style={{
+              backgroundColor: tokens.muted,
+              borderRadius: 13,
+              padding: 16,
+              marginTop: 12,
+              color: tokens.foreground,
+              fontSize: 16,
+            }}
+            value={code}
+          />
+          {code.length === PAIRING_CODE_LENGTH ? (
+            <NativeActionButton
+              disabled={pending}
+              label={t("Pair with computer")}
+              onPress={() => void pair()}
+              style={{ marginTop: 12, alignSelf: "flex-start" }}
+            />
+          ) : null}
           {error ? <Text style={{ color: tokens.destructive, marginTop: 12 }}>{error}</Text> : null}
           {usesCustomApiBase(current) || draft.trim() !== current ? (
             <NativeActionButton

@@ -35,7 +35,7 @@ type RpcPath<T, Prefix extends string = ""> = T extends { "~orpc": unknown }
         [Key in keyof T & string]: RpcPath<T[Key], Prefix extends "" ? Key : `${Prefix}/${Key}`>;
       }[keyof T & string]
     : never;
-type ProtectedRpcPath = Exclude<RpcPath<typeof appContract>, "health">;
+type ProtectedRpcPath = Exclude<RpcPath<typeof appContract>, "health" | "device/pair">;
 
 process.env.WAKEUP_DRIVER = "memory";
 process.env.SANDBOX_PROVIDER = "fake";
@@ -426,6 +426,7 @@ describeWithDatabase("API authorization and resource isolation", () => {
       ["botSecrets/list"],
       ["botSecrets/put"],
       ["botSecrets/remove"],
+      ["pairing/create", { url: "http://192.168.1.2:45173" }],
     ]);
 
     const results = await Promise.all(

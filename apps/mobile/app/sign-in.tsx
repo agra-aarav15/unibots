@@ -248,9 +248,9 @@ export default function SignIn() {
                 {resetSent || codeStep
                   ? t("Check your email")
                   : mode === "in"
-                    ? t("Sign in to Rakazo")
+                    ? t("Sign in to Unibots")
                     : mode === "up"
-                      ? t("Sign up for Rakazo")
+                      ? t("Sign up for Unibots")
                       : t("Reset your password")}
               </Text>
               {resetSent ? (
