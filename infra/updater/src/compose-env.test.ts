@@ -47,6 +47,7 @@ const NOT_PASSED: Record<string, string> = {
   PM2_HOME: "restart-supervisor detection for PM2 hosts; Compose restarts containers",
   INVOCATION_ID: "restart-supervisor detection for systemd hosts; Compose restarts containers",
   RAKAZO_ALLOW_DEV_SECRETS: "development-only escape hatch for placeholder secrets",
+  RAKAZO_NEW_PASSWORD: "reset-password CLI input, passed on its own command line",
   EMAIL_EMULATOR: "ignored when NODE_ENV=production",
   GIT_SHA: "baked into the image at build time; a pass-through entry would unset it",
   SHELL: "host shell for the desktop computer, which only the Electron app runs",

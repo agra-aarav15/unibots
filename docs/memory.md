@@ -10,6 +10,24 @@ indexed in a file called `MEMORY.md`.
 
 You can also just tell it: "remember that invoices go to the finance folder".
 
+## Automatic updates
+
+After a direct conversation the bot reviews the recent messages and rewrites its own notes, so you
+do not have to ask it to remember. Two files grow this way:
+
+- `MEMORY.md` keeps durable facts, decisions, and lessons, up to 2,200 characters.
+- `USER.md` keeps your stable preferences and working style, up to 1,375 characters. Each entry
+  records when it was observed and whether it still applies; a superseded preference is marked as
+  such instead of being silently replaced.
+
+Group chats, messaging channels, routines, and the first introduction never update memory. The
+review is one extra model call on the bot's model, at most once every ten minutes and only after at
+least six new messages. Set `MEMORY_CURATION=off` on the API and worker to stop new writes; existing
+memory stays readable. `MEMORY_CURATION_MODEL` picks a different model for the review.
+
+The files live in your own database. Export them with **Settings → Export data**, and delete a note
+from **Memory** in the bot's settings.
+
 To see what a bot remembers, click its name at the top of the chat and open **Memory**. Each note can
 be downloaded or deleted.
 

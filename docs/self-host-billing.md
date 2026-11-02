@@ -18,9 +18,9 @@ lapsed organization's bots and routines stop until it subscribes.
 
 Configure the managed default model through the existing model connection settings. The default
 OpenRouter model is Luna 6; customers can choose another available model, with its usage deducted
-at model cost. In credit mode, the configured hosted provider uses Rakazo's key even when a personal
+at model cost. In credit mode, the configured hosted provider uses Unibots's key even when a personal
 key for that provider is saved. Switching back to BYOK restores that connection. Personal connections
-to other providers continue to use their own keys and never debit Rakazo credits. Hosted calls reserve an upper cost estimate atomically before starting, then settle
+to other providers continue to use their own keys and never debit Unibots credits. Hosted calls reserve an upper cost estimate atomically before starting, then settle
 to reported or catalog-priced usage. Unknown usage retains its reservation for reconciliation.
 
 `STRIPE_PRICE_ID` is optional and only needed to display the legacy seat price. Existing live seat
@@ -53,8 +53,8 @@ attempts. An hourly, paginated audit rebuilds drifted balance caches from the jo
 repairs. Investigate `Model credit hold requires review` logs using the shared call ID; do not turn
 missing provider evidence into a zero-cost settlement.
 
-OpenRouter inference requests include the normal Rakazo user ID in `user`, `HTTP-Referer`
-(`https://rakazo.com`), and `X-OpenRouter-Title` (`Rakazo`). These values are sent only to OpenRouter's
+OpenRouter inference requests include the normal Unibots user ID in `user`, `HTTP-Referer`
+(`https://github.com/agra-aarav15/unibots`), and `X-OpenRouter-Title` (`Unibots`). These values are sent only to OpenRouter's
 HTTPS inference endpoints, never to compatible custom hosts. Recovery uses the existing configured
 deployment credential; no Redis or external accounting service is required.
 
@@ -72,4 +72,3 @@ from `stripe listen` and test API credentials; keep them in an ignored environme
 
 ## Support chat
 
-`CRISP_WEBSITE_ID` on the API shows a [Crisp](https://crisp.chat) support chat on the paywall.

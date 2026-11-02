@@ -37,8 +37,13 @@ Without email delivery, use the server-side account bootstrap described below; p
 
 ## Installations without email
 
-For an installation without email, first set `SIGNUPS_ENABLED=false` in `.env` and start the stack.
-Create the intended account privately (the password stays in the shell environment):
+The desktop's app-managed stack keeps `SIGNUPS_ENABLED=true` and an empty `SIGNUP_ALLOWLIST`. It is
+reachable only over loopback, so the first person creates the owner account in the app with an
+email-shaped identifier and a password; no mail is sent and no verification step exists. Local
+password recovery uses the reset command in [local-recovery.md](./local-recovery.md).
+
+For a server reachable from other machines, first set `SIGNUPS_ENABLED=false` in `.env` and start
+the stack. Create the intended account privately (the password stays in the shell environment):
 
 ```bash
 read -r -p "Account email: " OWNER_EMAIL
@@ -54,7 +59,7 @@ Keep an installation without email on a trusted local network.
 ## Verification and password recovery email
 
 Password changes for signed-in users require no email configuration. Forgotten-password recovery
-appears on sign-in only when a transactional email provider is available. Rakazo uses a
+appears on sign-in only when a transactional email provider is available. Unibots uses a
 provider-neutral contract with Resend API and SMTP adapters. Templates render locally with React
 Email into HTML and plain text, independent of the sending provider.
 
@@ -64,7 +69,7 @@ to that domain, then configure:
 ```env
 EMAIL_PROVIDER=resend
 EMAIL_API_KEY=replace-with-sending-api-key
-EMAIL_FROM=Rakazo <hello@mail.example.com>
+EMAIL_FROM=Unibots <hello@mail.example.com>
 ```
 
 Disable click and open tracking for account email in the provider's domain settings. Resend delivery
@@ -75,7 +80,7 @@ For Amazon SES or another SMTP server, use:
 
 ```env
 SMTP_URL=smtps://smtp-user:replace-with-password@smtp.example.com:465
-EMAIL_FROM=Rakazo <no-reply@example.com>
+EMAIL_FROM=Unibots <no-reply@example.com>
 ```
 
 Set `EMAIL_REPLY_TO` to send replies somewhere other than `EMAIL_FROM`.
@@ -88,7 +93,7 @@ Resend also supports SMTP: use `smtp.resend.com`, username `resend`, and an API 
 SES, use the regional SMTP endpoint and SES SMTP credentials; these are different from ordinary AWS
 access keys. Verify the sender/domain with the provider before testing delivery. Keep credentials in
 `.env`, never in tracked files. `smtps://` uses implicit TLS; `smtp://` is also supported but requires
-STARTTLS. Rakazo rejects configuration that disables TLS or certificate verification.
+STARTTLS. Unibots rejects configuration that disables TLS or certificate verification.
 
 Local source development can use the offline email emulator instead. It captures email without
 contacting a provider:
@@ -133,7 +138,7 @@ AUTH_PASSWORD_ENABLED=true
 OIDC_ALLOW_SIGNUP_BYPASS=false
 ```
 
-The issuer must be HTTPS and exactly match the discovery document's issuer. Rakazo loads
+The issuer must be HTTPS and exactly match the discovery document's issuer. Unibots loads
 `<issuer>/.well-known/openid-configuration`, verifies ID tokens against discovery JWKS with
 issuer, audience and nonce checks, and uses authorization codes with PKCE. Additional scopes
 may be space- or comma-separated; `openid email profile` are always requested. `OIDC_NAME`
@@ -201,19 +206,19 @@ invalid, expired or wrong-account codes fail. No password needs to be created fo
 
 ## Passkeys
 
-Passkeys are on whenever `WEB_ORIGIN` is an HTTPS domain (or `localhost` in development); the
+Passkeys are on whenever `WEB_ORIGIN` is an HTTPS domain (or a loopback origin in development); the
 relying party is that origin's host, so existing passkeys keep working only while `WEB_ORIGIN`
 stays on the same domain. They are off when password sign-in is disabled for SSO-only
-deployments. On web, a browser offers them where it has a platform authenticator. The macOS
-desktop app uses the system passkey sheet, which only serves the domain the release is
-associated with (`app.rakazo.com`), so it hides passkeys for other servers.
+deployments. On web and the Windows/Linux desktop app, a browser offers them where it has a
+platform authenticator. The macOS desktop app does not offer passkeys: its system sheet serves only
+associated domains, and this build is not associated with one.
 
 Native apps can use a domain's passkeys only when the domain vouches for them and the app was
 built for that domain (the app's associated domain comes from `EXPO_PUBLIC_API_URL` at build
 time). To let a build use this server's passkeys, set:
 
 ```bash
-# iOS and the macOS desktop app (dev.rakazo.desktop): <Apple Team ID>.<bundle id>, comma-separated.
+# iOS app (com.rakazo.app): <Apple Team ID>.<bundle id>, comma-separated.
 # Served as /.well-known/apple-app-site-association.
 PASSKEY_APPLE_APP_IDS=ABCDE12345.com.rakazo.app,ABCDE12345.dev.rakazo.desktop
 # Android: SHA-256 fingerprints of the app signing certificates, comma-separated.

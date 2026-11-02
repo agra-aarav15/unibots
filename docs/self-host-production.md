@@ -1,11 +1,11 @@
 # Production deployment
 
-Run Rakazo on a public server with automatic HTTPS, hardened hosts and zero-downtime deploys.
+Run Unibots on a public server with automatic HTTPS, hardened hosts and zero-downtime deploys.
 
 ## Public single-VM deployment
 
-`infra/compose/docker-compose.prod.yml` runs the hosted product with Postgres, the API, worker, web app,
-and automatic HTTPS through Caddy. It uses E2B for bot computers, so the VM never exposes a Docker
+`infra/compose/docker-compose.prod.yml` runs the production stack with Postgres, the API, worker,
+web app, and automatic HTTPS through Caddy. It uses E2B for bot computers, so the VM never exposes a Docker
 supervisor or browser containers — `infra/compose/docker-compose.prod.docker.yml` is the opt-in
 overlay that runs local Docker computers on the same stack (see below). The root-equivalent updater
 sidecar is an explicit opt-in profile.

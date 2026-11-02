@@ -1,24 +1,25 @@
 # Desktop app
 
-The desktop app for Mac, Windows and Linux runs the same Rakazo as the web, and can also run
+The desktop app for Mac, Windows and Linux runs the same Unibots as the web, and can also run
 everything on your own computer.
 
 ## Install
 
-Download it from [rakazo.com](https://rakazo.com). The Linux AppImage needs FUSE 2.
+Download it from [GitHub releases](https://github.com/agra-aarav15/unibots/releases/latest).
+The Linux AppImage needs FUSE 2. The Windows installer is not code-signed yet, so SmartScreen warns
+on first launch until a certificate is added ([how to sign it later](./windows-signing.md)).
 
 ## Choose a server
 
 The first time it opens, the app asks which server to use:
 
-- **Rakazo Cloud**: sign in to your rakazo.com account.
-- **This computer**: run your own Rakazo locally in Docker. If Docker isn't installed, the app links
+- **This computer**: run your own Unibots locally in Docker. If Docker isn't installed, the app links
   to Docker Desktop, OrbStack and Docker Engine. Everything, including your bots' computers, then
   runs on your machine.
-- **Existing instance**: connect to a Rakazo server you or your team already run. Enter its
+- **Existing instance**: connect to a Unibots server you or your team already run. Enter its
   **Server address** and choose **Check connection**.
 
-To switch later, use **Change Rakazo Server…** in the app menu (Cmd+Shift+K, or Ctrl+Shift+K on
+To switch later, use **Change Unibots Server…** in the app menu (Cmd+Shift+K, or Ctrl+Shift+K on
 Windows and Linux).
 
 > [!NOTE]
@@ -44,11 +45,24 @@ Either way, the app asks **Allow bots to use this computer?** before access is g
 > With **Use this Mac**, bots can run commands without asking. Don't choose it for a server other
 > people use.
 
+## Phone access
+
+With **This computer**, open **Settings → Account → Phone on this network** and choose
+**Turn on**. The app publishes its API on your private network and shows the address and a
+six-digit code. On the phone, enter that address on its server screen, type the code, and
+press **Pair with computer**. The code works once and expires after five minutes.
+
+While it is on, sign-ups are closed, so nobody else on the network can create an account.
+**Turn off** removes the published port. Phone access serves plain HTTP on the private
+network, so use it on a trusted home or office network and use the
+[VPS path](./connect-vps.md) with HTTPS anywhere else.
+
 ## Updates
 
-The app checks for updates and downloads them in the background. When one is ready, an
-**Install update** button appears at the bottom of the sidebar, or choose **Restart** when asked.
-**Check for Updates…** in the app menu checks now.
+The app does not check for updates in the background. **Check for Updates...** in the app
+menu checks now; set `RAKAZO_AUTO_UPDATE=on` on the app's environment to restore the launch
+and hourly checks. When an update is ready, an **Install update** button appears at the
+bottom of the sidebar, or choose **Restart** when asked.
 
 ## Shortcuts
 

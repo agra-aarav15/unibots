@@ -135,9 +135,9 @@ this repository that is:
 
 | Image | Contents |
 | --- | --- |
-| `ghcr.io/elie222/rakazo/app` | api, worker, web, and sandbox supervisor — one image, multiple commands |
-| `ghcr.io/elie222/rakazo/computer` | Linux desktop used as each bot computer |
-| `ghcr.io/elie222/rakazo/updater` | the updater sidecar, plus the Docker CLI |
+| `ghcr.io/agra-aarav15/unibots/app` | api, worker, web, and sandbox supervisor — one image, multiple commands |
+| `ghcr.io/agra-aarav15/unibots/computer` | Linux desktop used as each bot computer |
+| `ghcr.io/agra-aarav15/unibots/updater` | the updater sidecar, plus the Docker CLI |
 
 `infra/compose/docker-compose.images.yml` is the no-checkout path for those app and computer tags
 plus Postgres. The supervisor runs from the app image on the internal network only (not a separate

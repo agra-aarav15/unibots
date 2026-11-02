@@ -1,4 +1,4 @@
-# Self-hosting Rakazo
+# Self-hosting Unibots
 
 Run the API, worker, web app, database and bot computers on a machine you control.
 
@@ -14,12 +14,12 @@ The signed-in product is a long-running API, a Graphile Worker, Postgres, and a 
 
 ## Published images (no checkout)
 
-Pull Postgres and `ghcr.io/elie222/rakazo/app` into any empty folder. No clone or image build.
+Pull Postgres and `ghcr.io/agra-aarav15/unibots/app` into any empty folder. No clone or image build.
 Requires Docker Engine 26+ (API 1.45+ for bot home volume subpaths), the Compose plugin, curl, and OpenSSL.
 
 ```bash
 mkdir -p rakazo && cd rakazo &&
-curl -fsSLO https://raw.githubusercontent.com/elie222/rakazo/main/infra/compose/install-images.sh &&
+curl -fsSLO https://raw.githubusercontent.com/agra-aarav15/unibots/main/infra/compose/install-images.sh &&
 bash install-images.sh
 ```
 
@@ -31,7 +31,7 @@ optional providers before startup, run `bash install-images.sh --prepare-only`, 
 run `bash install-images.sh`. Flags may be combined in either order: `--prepare-only`, `--local`.
 
 `SANDBOX_PROVIDER` defaults to `docker`. The images Compose file runs a sandbox supervisor
-(from the app image, on the internal network only) and pulls `ghcr.io/elie222/rakazo/computer`.
+(from the app image, on the internal network only) and pulls `ghcr.io/agra-aarav15/unibots/computer`.
 Signup and local Docker computers work without an E2B account. Optional remote providers: set
 `SANDBOX_PROVIDER` to `e2b`, `novita`, `daytona`, `createos`, or `boat` and add the matching API key. The published-images
 Compose stack requires `SANDBOX_SUPERVISOR_TOKEN` for every provider; leave it empty and `compose up` fails closed.
@@ -128,7 +128,7 @@ Compose bot homes mount only their own subdirectory of the application volume us
 
 ## Reporting a problem
 
-Attach a diagnostics report to a [self-host issue](https://github.com/elie222/rakazo/issues/new?template=self-host.yml):
+Attach a diagnostics report to a [self-host issue](https://github.com/agra-aarav15/unibots/issues/new?template=self-host.yml):
 
 ```bash
 docker compose -f docker-compose.images.yml exec api node dist/cli/diagnostics.js

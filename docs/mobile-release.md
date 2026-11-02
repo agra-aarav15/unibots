@@ -1,10 +1,10 @@
 # Mobile builds and store releases
 
-Rakazo's public repository does not contain production App Store Connect,
+Unibots's public repository does not contain production App Store Connect,
 Google Play, Apple team, or private EAS submission identifiers. Those values
 belong in the release operator's private configuration.
 
-Self-hosters normally do not need to publish their own mobile app: the Rakazo
+Self-hosters normally do not need to publish their own mobile app: the Unibots
 client can select a compatible server from the sign-in screen. If you distribute
 your own branded build, use your own Expo and store accounts.
 
@@ -62,20 +62,47 @@ alone.
 
 ## Android APK
 
-Until Rakazo is on Google Play, Android users can install an APK.
+Until Unibots is on Google Play, Android users can install an APK.
 `release-mobile` publishes it, or run the `release-android-apk` workflow from
-`main` on its own. It builds the `android-apk` EAS profile, signed with the
-project's managed keystore, and replaces the rolling `android` GitHub release,
-so the download link stays the same:
+`main` on its own. It replaces the rolling `android` GitHub release, so the
+download link stays the same:
 
 ```text
-https://github.com/elie222/rakazo/releases/download/android/rakazo.apk
+https://github.com/agra-aarav15/unibots/releases/download/android/unibots.apk
 ```
 
-The APK uses the production update channel, so JavaScript changes reach it
-through the over-the-air updates below without a new APK. A Google Play install
-is signed with Play's key, so switching from the APK to Play means uninstalling
-the APK first.
+The workflow signs in one of two ways:
+
+- With a repository release keystore, it builds the `android` directory with
+  Gradle and signs it there, so the APK depends on no hosted service. Set these
+  Actions secrets:
+
+  | Secret | Value |
+  | --- | --- |
+  | `ANDROID_KEYSTORE_BASE64` | `base64 -w0 release.jks` |
+  | `ANDROID_KEYSTORE_PASSWORD` | the keystore password |
+  | `ANDROID_KEY_ALIAS` | the key alias, for example `unibots` |
+  | `ANDROID_KEY_PASSWORD` | the key password |
+
+  Create the keystore once with
+  `keytool -genkeypair -v -keystore release.jks -alias unibots -keyalg RSA -keysize 4096 -validity 10000`
+  and keep it and its passwords out of Git. Losing it means a new APK cannot
+  upgrade an installed one.
+
+  Building this APK on Windows needs a short checkout path. pnpm writes package
+  directories long enough to push Android's generated CMake paths past the
+  260-character limit, and Gradle then cannot launch them
+  (`:react-native-worklets:configureCMakeRelWithDebInfo`, `CreateProcess error=2`).
+  Building in CI, on Linux, or from a checkout whose full path is short avoids it.
+
+- Without `ANDROID_KEYSTORE_BASE64`, it builds the `android-apk` EAS profile,
+  signed with the project's managed keystore, as before.
+
+Either way the APK uses the production update channel, so JavaScript changes
+reach it through the over-the-air updates below without a new APK. A Google Play
+install is signed with Play's key, so switching from the APK to Play means
+uninstalling the APK first. This is not a Play Store upload, and push
+notifications are not configured by default.
 
 ## Android push
 

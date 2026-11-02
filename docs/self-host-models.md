@@ -41,7 +41,7 @@ approvals apart from the account.
 
 In **Settings → Models → Approval model**, each user can select a model
 from an existing connection and add ordered backups, independently of their main model. Personal
-connections use their own credentials; hosted calls follow the same Rakazo credit rules as chat.
+connections use their own credentials; hosted calls follow the same Unibots credit rules as chat.
 Backups are tried only when a checker fails. An explicit ask, including an uncertain decision,
 still requires a person.
 
@@ -70,7 +70,7 @@ RAKAZO_LOCAL_MAX_TOKENS=4096
 RAKAZO_LOCAL_VISION_MODELS=qwen3-vl
 ```
 
-The loopback default is suitable when running Rakazo from a source checkout. From containers,
+The loopback default is suitable when running Unibots from a source checkout. From containers,
 prefer a stable LAN RFC1918 address (not Compose service DNS alone). On Docker Desktop,
 `host.docker.internal` also works.
 On Docker Desktop, a bot computer shell can often reach services bound to host `127.0.0.1`
@@ -78,7 +78,7 @@ through that same hostname. Do not run sensitive unauthenticated services on loo
 bots run, or firewall / block that path. Linux does not get `host.docker.internal` the same
 way by default.
 Only configure an endpoint you control: prompts, attachments, and tool results sent to that model
-leave Rakazo through this URL. Leave `RAKAZO_LOCAL_MODELS` blank to disable the provider.
+leave Unibots through this URL. Leave `RAKAZO_LOCAL_MODELS` blank to disable the provider.
 
 ## Ollama Cloud
 
@@ -120,7 +120,7 @@ Existing connections default to disabled. Reconnect former Qwen-list or deployme
 via **Settings → Models** and turn it on; the old environment list is no longer read.
 
 Enabled connections default to medium thinking. Web and desktop expose **Thinking** in a bot's
-advanced settings; mobile inherits the same backend policy. Rakazo sends standard
+advanced settings; mobile inherits the same backend policy. Unibots sends standard
 `reasoning_effort` (`minimal`, `low`, `medium`, `high`, or `none` when off); the server owns
 model-specific translation. Leave **Supports thinking** off when the server lacks standard effort
 support. Existing token limits still apply; effort is not a separate reasoning-token budget.

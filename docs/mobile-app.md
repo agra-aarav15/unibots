@@ -4,15 +4,15 @@ Chat with your bots, answer their questions, watch their computers and take call
 
 ## Install
 
-- iPhone: [App Store](https://apps.apple.com/app/rakazo/id6801531099).
-- Android: [download the APK](https://github.com/elie222/rakazo/releases/download/android/rakazo.apk).
+- Android: [download the APK](https://github.com/agra-aarav15/unibots/releases/download/android/unibots.apk).
+  There is no App Store listing, and the iOS build is not published.
 
 You can also choose **Get the mobile app** from the account menu in the web or desktop app.
 
 ## Sign in
 
-Sign in with your rakazo.com account. To use your own server instead, tap **Use a custom server** on
-the sign-in screen and enter its address. Servers on your local network work too.
+Sign in with the account on your Unibots server. To use a different server, tap **Use a custom
+server** on the sign-in screen and enter its address. Servers on your local network work too.
 
 ## What you can do
 
@@ -43,5 +43,5 @@ working status while a bot runs.
 
 ## Share to a bot
 
-On Android, share text, images, audio, video, PDFs or files from another app to Rakazo and pick the
+On Android, share text, images, audio, video, PDFs or files from another app to Unibots and pick the
 bot to send them to.

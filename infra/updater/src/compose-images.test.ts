@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { PUBLISHED_IMAGE_REPO } from "@rakazo/core";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 
@@ -37,7 +38,11 @@ const publishWorkflow = parse(readFileSync(publishWorkflowFile, "utf8")) as {
 };
 
 const appServices = ["api", "worker", "web", "supervisor", "migrate"] as const;
-const FIRST_PARTY_IMAGE = /ghcr\.io\/elie222\/rakazo\/([a-z0-9][a-z0-9._-]*)/g;
+/** Built from the published namespace so this cannot drift from what CI pushes. */
+const FIRST_PARTY_IMAGE = new RegExp(
+  `ghcr\\.io/${PUBLISHED_IMAGE_REPO.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/([a-z0-9][a-z0-9._-]*)`,
+  "g",
+);
 
 function firstPartyImageNames(value: unknown): string[] {
   if (typeof value !== "string") return [];
@@ -62,10 +67,10 @@ describe("the images compose file", () => {
       "worker",
     ]);
     for (const service of appServices) {
-      expect(compose.services[service]?.image).toContain("ghcr.io/elie222/rakazo/app");
+      expect(compose.services[service]?.image).toContain("ghcr.io/agra-aarav15/unibots/app");
       expect(compose.services[service]?.image).toContain("RAKAZO_IMAGE_TAG");
     }
-    expect(compose.services.computer?.image).toContain("ghcr.io/elie222/rakazo/computer");
+    expect(compose.services.computer?.image).toContain("ghcr.io/agra-aarav15/unibots/computer");
     expect(compose.services.computer?.image).toContain("RAKAZO_COMPUTER_IMAGE_TAG");
     expect(compose.services.postgres?.image).toMatch(
       /^\$\{POSTGRES_IMAGE:-postgres:16@sha256:[0-9a-f]{64}\}$/,
@@ -77,7 +82,7 @@ describe("the images compose file", () => {
     expect(firstPartyImageNames(null)).toEqual([]);
     expect(firstPartyImageNames(true)).toEqual([]);
     expect(firstPartyImageNames(7091)).toEqual([]);
-    expect(firstPartyImageNames("ghcr.io/elie222/rakazo/computer:edge")).toEqual(["computer"]);
+    expect(firstPartyImageNames("ghcr.io/agra-aarav15/unibots/computer:edge")).toEqual(["computer"]);
   });
 
   it("only references first-party images that the publish matrix publishes", () => {
