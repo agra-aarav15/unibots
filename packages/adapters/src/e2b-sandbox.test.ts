@@ -11,7 +11,7 @@ import {
   SandboxNotFoundError,
   TimeoutError,
 } from "@e2b/desktop";
-import type { CommandRequest, ComputerRef, ProcessEvent } from "@unibots/adapter-kit";
+import type { CommandRequest, ComputerRef, ProcessEvent } from "@rakazo/adapter-kit";
 import { describe, expect, it, vi } from "vitest";
 import { sandboxIdleMs } from "./computer-idle.js";
 import { shouldSkipPortableWorkspaceFile } from "./computer-workspace.js";
@@ -58,10 +58,10 @@ describe("E2B computer backend", () => {
 
   it("revokes an extra display's control without starting or waiting for its view", async () => {
     const command = vi.fn(async (value: string) => {
-      if (value.includes("UNIBOTS_SCREEN_INDEX=")) {
-        return { stdout: "UNIBOTS_SCREEN_INDEX=1\n", stderr: "", exitCode: 0 };
+      if (value.includes("RAKAZO_SCREEN_INDEX=")) {
+        return { stdout: "RAKAZO_SCREEN_INDEX=1\n", stderr: "", exitCode: 0 };
       }
-      if (value.includes("UNIBOTS_SCREEN_PASSWORD=") || value.includes("flock 8")) {
+      if (value.includes("RAKAZO_SCREEN_PASSWORD=") || value.includes("flock 8")) {
         throw new Error("extra view is unavailable");
       }
       return { stdout: "", stderr: "", exitCode: 0 };
@@ -91,7 +91,7 @@ describe("E2B computer backend", () => {
 
   it("reconnects concurrent primary viewers without using the SDK's global VNC lifecycle", async () => {
     const command = vi.fn(async (_value: string) => ({
-      stdout: "UNIBOTS_DESKTOP=0:savedkey\n",
+      stdout: "RAKAZO_DESKTOP=0:savedkey\n",
       stderr: "",
       exitCode: 0,
     }));
@@ -237,7 +237,7 @@ describe("E2B computer backend", () => {
     }
   });
 
-  it("creates new computers from the Unibots computer template", async () => {
+  it("creates new computers from the Rakazo computer template", async () => {
     const sdk: E2BSandboxSdk = {
       create: vi.fn().mockResolvedValue({ sandboxId: "fresh" }),
       connect: vi.fn(),
@@ -257,7 +257,7 @@ describe("E2B computer backend", () => {
   });
 
   it("falls back to the stock desktop template when this account has not built it", async () => {
-    const missing = Object.assign(new SandboxError("404: template 'unibots-computer' not found"), {
+    const missing = Object.assign(new SandboxError("404: template 'rakazo-computer' not found"), {
       statusCode: 404,
     });
     const sdk: E2BSandboxSdk = {
@@ -522,7 +522,7 @@ describe("E2B computer backend", () => {
       context,
     );
     expect(command).toHaveBeenLastCalledWith(
-      expect.stringContaining("/home/user/unibots-home/notes/readme.md"),
+      expect.stringContaining("/home/user/rakazo-home/notes/readme.md"),
       expect.anything(),
     );
   });
@@ -552,7 +552,7 @@ describe("E2B computer backend", () => {
 
     const root = await provider.connectTerminal(computer, { controlToken: "lease-1" }, context);
     expect(command).toHaveBeenLastCalledWith(
-      expect.stringContaining("/home/user/unibots-home"),
+      expect.stringContaining("/home/user/rakazo-home"),
       expect.anything(),
     );
     const socket = new URL(root.url).searchParams.get("path");
@@ -565,7 +565,7 @@ describe("E2B computer backend", () => {
       context,
     );
     expect(command).toHaveBeenLastCalledWith(
-      expect.stringContaining("/home/user/unibots-home/bots/bot-1"),
+      expect.stringContaining("/home/user/rakazo-home/bots/bot-1"),
       expect.anything(),
     );
   });
@@ -898,7 +898,7 @@ describe("sandbox-gone detection", () => {
       "stream reset: The sandbox was killed or reached its end of life while the request was in flight.",
     ),
     new Error("bash: x11vnc: command not found"),
-    new Error("Path /home/user/unibots-home/notes.md not found"),
+    new Error("Path /home/user/rakazo-home/notes.md not found"),
     new Error("tar: /home/user/x: No such file or directory"),
     new TimeoutError(
       "canceled: This error is likely due to exceeding 'requestTimeoutMs'. You can pass the request timeout value as an option when making the request.",
@@ -1080,7 +1080,7 @@ describe("E2B sandbox lifecycle", () => {
     const computer = await provider.provision({ botId: "bot-1", homePath: "/unused" }, context);
     return { fake, provider, computer };
   }
-  const notes = "/home/user/unibots-home/notes.txt";
+  const notes = "/home/user/rakazo-home/notes.txt";
 
   it.each([
     ["listFiles", (p: E2BSandboxProvider, c: ComputerRef) => p.listFiles(c, "", context)],

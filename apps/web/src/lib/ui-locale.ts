@@ -1,4 +1,4 @@
-import { matchUiLocale } from "@unibots/core";
+import { matchUiLocale } from "@rakazo/core";
 
 export const UI_LOCALES = [
   "en",
@@ -19,7 +19,7 @@ export const UI_LOCALES = [
 
 export type UiLocale = (typeof UI_LOCALES)[number];
 
-export const UI_LOCALE_STORAGE_KEY = "unibots.uiLocale";
+export const UI_LOCALE_STORAGE_KEY = "rakazo.uiLocale";
 
 export const UI_LOCALE_LABELS: Record<UiLocale, string> = {
   en: "English",

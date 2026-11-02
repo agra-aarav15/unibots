@@ -1,4 +1,4 @@
-import { createComputerUpdates } from "@unibots/core";
+import { createComputerUpdates } from "@rakazo/core";
 import { rpc } from "./rpc";
 export const computerUpdates = createComputerUpdates({
   list: () => rpc.computer.updates(),

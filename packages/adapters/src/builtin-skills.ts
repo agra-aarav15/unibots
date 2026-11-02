@@ -1,4 +1,4 @@
-import { buildSkillMd } from "@unibots/core";
+import { buildSkillMd } from "@rakazo/core";
 
 /**
  * Built-in Agent Skills (SKILL.md recipes) available to every user.

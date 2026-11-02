@@ -1,4 +1,4 @@
-import type { ColorTokens } from "@unibots/ui-tokens";
+import type { ColorTokens } from "@rakazo/ui-tokens";
 
 export type UserBubble = { background: string; foreground: string };
 

@@ -1,8 +1,8 @@
 import { createHash, randomBytes } from "node:crypto";
 import type { Api, Context, Message, Model } from "@earendil-works/pi-ai";
-import type { AdapterContext, AgentRunRequest, AgentUsage } from "@unibots/adapter-kit";
-import { DEFAULT_CONTEXT_STRATEGY } from "@unibots/adapter-kit";
-import { getLogger } from "@unibots/logging";
+import type { AdapterContext, AgentRunRequest, AgentUsage } from "@rakazo/adapter-kit";
+import { DEFAULT_CONTEXT_STRATEGY } from "@rakazo/adapter-kit";
+import { getLogger } from "@rakazo/logging";
 import { imagePartCount, normalizedImageLimit, pruneForRebuild } from "./context-pruning.js";
 import type { CacheRequest, ContextBudget } from "./context-selection.js";
 import {
@@ -87,9 +87,9 @@ interface SentTranscript {
   appends: number;
 }
 interface OriginalMetadata {
-  unibotsHistory?: boolean;
-  unibotsMessageId?: string;
-  unibotsCreatedAt?: string;
+  rakazoHistory?: boolean;
+  rakazoMessageId?: string;
+  rakazoCreatedAt?: string;
 }
 function text(message: Message): string {
   if (typeof message.content === "string") return message.content;
@@ -190,8 +190,8 @@ export function createRuntimeContextPolicy(
   );
   function original(message: Message) {
     const metadata = message as Message & OriginalMetadata;
-    if (metadata.unibotsMessageId) return historyById.get(metadata.unibotsMessageId);
-    if (metadataPresent && !metadata.unibotsHistory) return undefined;
+    if (metadata.rakazoMessageId) return historyById.get(metadata.rakazoMessageId);
+    if (metadataPresent && !metadata.rakazoHistory) return undefined;
     const content = text(message);
     return request.history.find(
       (stored) =>
@@ -273,7 +273,7 @@ export function createRuntimeContextPolicy(
         ? "cache-aware"
         : DEFAULT_CONTEXT_STRATEGY);
     metadataPresent = ctx.messages.some((message) =>
-      Boolean((message as Message & OriginalMetadata).unibotsHistory),
+      Boolean((message as Message & OriginalMetadata).rakazoHistory),
     );
     const fullPrefix = providerContextPrefix(ctx.systemPrompt ?? "", ctx.tools ?? [], ctx.messages);
     const cacheRequest: CacheRequest = cache.stamp({
@@ -427,9 +427,9 @@ export function createRuntimeContextPolicy(
     }
     const summaries = ctx.messages.filter(
       (message) =>
-        (message as Message & OriginalMetadata).unibotsHistory &&
-        !(message as Message & OriginalMetadata).unibotsMessageId &&
-        (text(message).startsWith("Unibots-owned compacted context through message sequence ") ||
+        (message as Message & OriginalMetadata).rakazoHistory &&
+        !(message as Message & OriginalMetadata).rakazoMessageId &&
+        (text(message).startsWith("Rakazo-owned compacted context through message sequence ") ||
           text(message).startsWith(
             "Memory recalled from earlier conversations that fell outside the visible history.",
           )),

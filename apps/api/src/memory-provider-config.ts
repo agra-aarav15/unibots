@@ -1,15 +1,15 @@
 import { ORPCError } from "@orpc/server";
-import type { SecretStore } from "@unibots/adapter-kit";
+import type { SecretStore } from "@rakazo/adapter-kit";
 import {
   classifyMemoryProviderSettings,
   MemoryProviderPrivateEndpointRequiredError,
   memoryProviderRequiresPrivateEndpoint,
   prepareMemoryProviderConnection,
   toStringRecord,
-} from "@unibots/adapters";
-import type { Actor } from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
-import { findSpaceMemoryConfig, Prisma } from "@unibots/db";
+} from "@rakazo/adapters";
+import type { Actor } from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
+import { findSpaceMemoryConfig, Prisma } from "@rakazo/db";
 import { withSerializableRetry } from "./serializable-retry.js";
 
 export interface MemoryProviderConfigDeps {

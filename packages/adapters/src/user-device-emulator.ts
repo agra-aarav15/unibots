@@ -1,4 +1,4 @@
-import type { ProcessEvent } from "@unibots/adapter-kit";
+import type { ProcessEvent } from "@rakazo/adapter-kit";
 import type { HostComputerEnvironment, HostComputerRequest } from "./host-computer-protocol.js";
 import type { UserDevice, UserDeviceGateway } from "./user-device-protocol.js";
 

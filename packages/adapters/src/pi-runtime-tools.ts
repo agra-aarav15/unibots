@@ -8,9 +8,9 @@ import type {
   AgentToolExecutionResult,
   ConnectorTool,
   ModelCallObserver,
-} from "@unibots/adapter-kit";
-import { DEFAULT_CONTEXT_STRATEGY } from "@unibots/adapter-kit";
-import { FLEET_TOOL_NAMES } from "@unibots/contracts";
+} from "@rakazo/adapter-kit";
+import { DEFAULT_CONTEXT_STRATEGY } from "@rakazo/adapter-kit";
+import { FLEET_TOOL_NAMES } from "@rakazo/contracts";
 import { isToolPauseResult } from "./approval-effect.js";
 import {
   connectionIdArgument,

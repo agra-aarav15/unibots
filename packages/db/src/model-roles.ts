@@ -3,13 +3,13 @@ import type {
   ModelRoleChoice,
   ModelRoleSettings,
   SettingsScope,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   backupChoiceKey,
   canonicalPiProviderId,
   modelRoleChoiceKey,
   ThinkingLevelSchema,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import type { PrismaClient } from "./client.js";
 import { Prisma } from "./client.js";
 import { lockSpaceSettings, settingsTarget } from "./space-settings.js";

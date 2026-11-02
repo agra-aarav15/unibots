@@ -23,7 +23,7 @@
 	lb_try_interval 250ms
 }
 
-{$UNIBOTS_HOST:app.example.com} {
+{$RAKAZO_HOST:app.example.com} {
 	import access_log
 	encode zstd gzip
 

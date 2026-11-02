@@ -1,10 +1,10 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { BillingStatus } from "@unibots/contracts";
+import type { BillingStatus } from "@rakazo/contracts";
 import {
   DEFAULT_MONTHLY_CREDIT_AMOUNT,
   MODEL_CREDIT_AMOUNTS,
   ModelCreditAmountSchema,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   Button,
   Card,
@@ -22,7 +22,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import { Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { formatBillingAmount, formatBillingDate, formatBillingPrice } from "../lib/billing";
@@ -148,7 +148,7 @@ export function CreditChoice({
         </Button>
       )}
       <h1 className="text-heading1 font-medium">
-        <Trans>Choose how to use Unibots</Trans>
+        <Trans>Choose how to use Rakazo</Trans>
       </h1>
       <div className="grid gap-4 min-[480px]:grid-cols-2">
         <Card>
@@ -202,7 +202,7 @@ export function CreditChoice({
         <Card>
           <CardHeader>
             <h2 className="text-lg font-medium">
-              <Trans>Unibots credits</Trans>
+              <Trans>Rakazo credits</Trans>
             </h2>
           </CardHeader>
           <CardContent className="flex flex-1 flex-col gap-4">
@@ -223,7 +223,7 @@ export function CreditChoice({
             <Button
               className="w-full"
               disabled={pending || !status.canManage || !status.creditPurchasesEnabled}
-              aria-label={t`Subscribe to Unibots credits`}
+              aria-label={t`Subscribe to Rakazo credits`}
               onClick={() => void choose(false)}
             >
               <Trans>Subscribe</Trans>
@@ -403,7 +403,7 @@ export function ModelCreditsSettings({
             })
           }
         >
-          <Trans>Use Unibots credits</Trans>
+          <Trans>Use Rakazo credits</Trans>
         </Button>
       ) : null}
       {status.canManage && status.funding !== "byok" && (!recurring || status.cancelAtPeriodEnd) ? (

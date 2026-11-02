@@ -5,8 +5,8 @@ import type {
   LoginFieldInput,
   MessageReaction,
   ThreadMessage,
-} from "@unibots/contracts";
-import type { FoldedTranscript } from "@unibots/core";
+} from "@rakazo/contracts";
+import type { FoldedTranscript } from "@rakazo/core";
 import {
   expandPeerReplies,
   groupVoiceChats,
@@ -19,9 +19,9 @@ import {
   timeSeparatorIds,
   unreadDividerMessageId,
   voiceChatHoldsMessage,
-} from "@unibots/core";
-import type { GroupAvatarMember } from "@unibots/ui-web";
-import { Button, cn, Spinner } from "@unibots/ui-web";
+} from "@rakazo/core";
+import type { GroupAvatarMember } from "@rakazo/ui-web";
+import { Button, cn, Spinner } from "@rakazo/ui-web";
 import { ArrowDown } from "lucide-react";
 import type { CSSProperties, RefObject } from "react";
 import {

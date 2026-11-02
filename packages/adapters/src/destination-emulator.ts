@@ -4,7 +4,7 @@ import type {
   ConnectorEvent,
   ConnectorProvider,
   ConnectorTool,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 
 export interface DestinationRecord {
   id: string;

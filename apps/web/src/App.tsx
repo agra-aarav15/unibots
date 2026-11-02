@@ -1,8 +1,8 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { LinkFavicons } from "@unibots/chat-ui/web";
-import { LinkFaviconsContext, RemoteImagesContext } from "@unibots/chat-ui/web";
-import { analyticsScreen } from "@unibots/core";
-import { Button } from "@unibots/ui-web";
+import type { LinkFavicons } from "@rakazo/chat-ui/web";
+import { LinkFaviconsContext, RemoteImagesContext } from "@rakazo/chat-ui/web";
+import { analyticsScreen } from "@rakazo/core";
+import { Button } from "@rakazo/ui-web";
 import {
   Suspense,
   useEffect,
@@ -168,14 +168,14 @@ function SessionApp() {
     return <SessionUnavailable refetch={session.refetch} />;
   }
   if (gate === "loading" && !nextHoldingAnonymous) {
-    return <PageLoading data-unibots-app-state="session-pending" />;
+    return <PageLoading data-rakazo-app-state="session-pending" />;
   }
 
   const user = session.data?.user;
   return (
     <QueryUserProvider value={user?.id ?? null}>
       <MarkdownLinkPrompt>
-        <div className="h-full" data-unibots-app-state="ready">
+        <div className="h-full" data-rakazo-app-state="ready">
           <Suspense fallback={<PageLoading />}>
             <Routes>
               <Route path="/" element={user ? <Navigate to="/app" replace /> : <WelcomePage />} />
@@ -333,7 +333,7 @@ function AppFailed() {
   return (
     <div
       className="grid h-full place-items-center bg-background px-6 text-center"
-      data-unibots-app-state="failed"
+      data-rakazo-app-state="failed"
     >
       <div className="flex flex-col items-center">
         <p className="text-[13.5px] text-muted-foreground/80">

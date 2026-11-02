@@ -22,7 +22,7 @@ export async function continueWithSso(
       if (apiBase !== currentApiBase() || generation !== currentSessionGeneration())
         throw new Error(t("Could not continue"));
     };
-    const callbackURL = action === "sign-in" ? "unibots://sign-in" : "unibots://account";
+    const callbackURL = action === "sign-in" ? "rakazo://sign-in" : "rakazo://account";
     const headers = action === "sign-in" ? {} : await authHeaders();
     requireCurrentSession();
     const previous = action === "reauthenticate" ? await sessionUser(apiBase, headers) : undefined;
@@ -33,7 +33,7 @@ export async function continueWithSso(
         method: "POST",
         headers: {
           "content-type": "application/json",
-          origin: "unibots://",
+          origin: "rakazo://",
           "x-skip-oauth-proxy": "true",
           ...headers,
         },
@@ -68,7 +68,7 @@ export async function continueWithSso(
     if (result.type !== "success") return false;
     const callback = new URL(result.url);
     if (
-      callback.protocol !== "unibots:" ||
+      callback.protocol !== "rakazo:" ||
       callback.host !== new URL(callbackURL).host ||
       (callback.pathname && callback.pathname !== "/")
     )
@@ -103,7 +103,7 @@ export async function continueWithSso(
 async function sessionUser(apiBase: string, headers: Record<string, string>): Promise<string> {
   const { response, body, invalidJson } = await fetchMobileJson<{ user?: { id?: string } }>(
     `${apiBase}/api/auth/get-session`,
-    { headers: { origin: "unibots://", ...headers } },
+    { headers: { origin: "rakazo://", ...headers } },
     {},
   );
   if (!response.ok || typeof body?.user?.id !== "string" || invalidJson)

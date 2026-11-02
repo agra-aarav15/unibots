@@ -19,11 +19,11 @@ import {
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { pipeline } from "node:stream/promises";
-import type { AdapterContext, AgentHomeStore, PortableFile } from "@unibots/adapter-kit";
+import type { AdapterContext, AgentHomeStore, PortableFile } from "@rakazo/adapter-kit";
 import { fileHandlePath } from "./file-handle-path.js";
 import { shouldSkipPortableWorkspaceFile } from "./workspace-save-policy.js";
 
-const STAGING_PREFIX = "unibots-workspace-";
+const STAGING_PREFIX = "rakazo-workspace-";
 /** Staging directories in use are touched this often, so other processes can tell them apart. */
 const STAGING_HEARTBEAT_MS = 30_000;
 /** A staging directory untouched this long belongs to a process that died. */

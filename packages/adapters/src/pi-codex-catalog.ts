@@ -1,8 +1,8 @@
 import type { OAuthCredential } from "@earendil-works/pi-ai";
-import type { SecretStore } from "@unibots/adapter-kit";
-import type { ThinkingLevel } from "@unibots/contracts";
-import { ThinkingLevelSchema } from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
+import type { SecretStore } from "@rakazo/adapter-kit";
+import type { ThinkingLevel } from "@rakazo/contracts";
+import { ThinkingLevelSchema } from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
 import { LiveCatalogCache, liveModelCatalogEnabled } from "./pi-live-cache.js";
 import type { CatalogSpaceAuth } from "./pi-live-catalog.js";
 import { liveCatalogEntry, overlayLiveCatalog } from "./pi-live-catalog.js";
@@ -94,7 +94,7 @@ export async function fetchCodexCatalog(
       headers: {
         authorization: `Bearer ${accessToken}`,
         "chatgpt-account-id": accountId,
-        originator: "unibots",
+        originator: "rakazo",
         accept: "application/json",
       },
       redirect: "error",

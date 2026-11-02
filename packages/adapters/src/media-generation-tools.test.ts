@@ -1,7 +1,7 @@
-import type { AdapterContext } from "@unibots/adapter-kit";
-import { ATTACHMENT_MAX_BYTES } from "@unibots/contracts";
-import { toolRequiresApproval } from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
+import type { AdapterContext } from "@rakazo/adapter-kit";
+import { ATTACHMENT_MAX_BYTES } from "@rakazo/contracts";
+import { toolRequiresApproval } from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
 import { describe, expect, it, vi } from "vitest";
 import { FakeMediaGenerationProvider } from "./media-generation-provider.js";
 import { generateMediaFromTool } from "./media-generation-tools.js";

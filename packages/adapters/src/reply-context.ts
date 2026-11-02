@@ -1,7 +1,7 @@
-import type { MessageBlock } from "@unibots/contracts";
-import { truncateReplyQuote } from "@unibots/contracts";
-import { blocksToAgentHistoryText, messageReaction } from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
+import type { MessageBlock } from "@rakazo/contracts";
+import { truncateReplyQuote } from "@rakazo/contracts";
+import { blocksToAgentHistoryText, messageReaction } from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
 
 type QuotedMessage = {
   id: string;

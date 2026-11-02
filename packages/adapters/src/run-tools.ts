@@ -1,5 +1,5 @@
-import type { AgentToolExecutionObserver } from "@unibots/adapter-kit";
-import { toolResultTaintsRun } from "@unibots/core";
+import type { AgentToolExecutionObserver } from "@rakazo/adapter-kit";
+import { toolResultTaintsRun } from "@rakazo/core";
 import { IMAGE_RETURNING_COMPUTER_TOOLS, MODEL_CANNOT_SEE_MESSAGE } from "./model-vision.js";
 import type { RunContext } from "./run-context.js";
 import { pauseForApproval } from "./run-context.js";

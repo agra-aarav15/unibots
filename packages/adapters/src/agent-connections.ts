@@ -1,21 +1,21 @@
-import type { JobPublisher } from "@unibots/adapter-kit";
-import { messagingDeliverJob, runContinueJob } from "@unibots/adapter-kit";
-import type { MessageBlock } from "@unibots/contracts";
+import type { JobPublisher } from "@rakazo/adapter-kit";
+import { messagingDeliverJob, runContinueJob } from "@rakazo/adapter-kit";
+import type { MessageBlock } from "@rakazo/contracts";
 import {
   botMessageHopExhausted,
   buildBotMessageWakePrompt,
   clampBotMessage,
   nextBotMessageHop,
   sanitizeMessagingLabel,
-} from "@unibots/core";
-import type { PrismaClient, ThreadEvents } from "@unibots/db";
+} from "@rakazo/core";
+import type { PrismaClient, ThreadEvents } from "@rakazo/db";
 import {
   appendEventInTransaction,
   createThreadMessageInTransaction,
   crossSpaceCommunicationAllowed,
   runAsSystem,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { currentBotMessageHop } from "./bot-messages.js";
 import type { ExecutorDeps } from "./executor-deps.js";
 import { runLeaseFor } from "./run-messages.js";

@@ -5,13 +5,13 @@ import type {
   VoiceCredential,
   VoiceInfo,
   VoiceStatus,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   DEFAULT_COMPATIBLE_STT_MODEL,
   DEFAULT_COMPATIBLE_TTS_MODEL,
   OPENAI_COMPATIBLE_PROVIDER_ID,
-} from "@unibots/contracts";
-import { fetchFresh } from "@unibots/core/query";
+} from "@rakazo/contracts";
+import { fetchFresh } from "@rakazo/core/query";
 import {
   Button,
   Dialog,
@@ -24,7 +24,7 @@ import {
   NativeSelect,
   NativeSelectOption,
   Spinner,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import { useQueryClient } from "@tanstack/react-query";
 import { XIcon } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";

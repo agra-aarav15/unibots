@@ -1,4 +1,4 @@
-import type { RunActivityRow } from "@unibots/contracts";
+import type { RunActivityRow } from "@rakazo/contracts";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
 import { Text, View } from "react-native";

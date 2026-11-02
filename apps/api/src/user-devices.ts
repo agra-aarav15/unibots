@@ -1,4 +1,4 @@
-import type { UserDeviceHub, UserDevices } from "@unibots/adapters";
+import type { UserDeviceHub, UserDevices } from "@rakazo/adapters";
 import {
   createUserDeviceToken,
   hashUserDeviceToken,
@@ -7,16 +7,16 @@ import {
   USER_DEVICE_LIMIT,
   userDeviceForwardBody,
   validUserDeviceForwardSecret,
-} from "@unibots/adapters";
-import type { UserDeviceList, UserDevicePairResponse } from "@unibots/contracts";
+} from "@rakazo/adapters";
+import type { UserDeviceList, UserDevicePairResponse } from "@rakazo/contracts";
 import {
   USER_DEVICE_CONNECT_PATH,
   USER_DEVICE_PAIR_PATH,
   USER_DEVICE_PATH,
   userDevicePairRequest,
-} from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
-import { recordSecurityEvent, runAsSystem } from "@unibots/db";
+} from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
+import { recordSecurityEvent, runAsSystem } from "@rakazo/db";
 import type { Hono } from "hono";
 import { readBoundedBody } from "./http-body.js";
 

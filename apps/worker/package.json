@@ -1,5 +1,5 @@
 {
-  "name": "@unibots/worker",
+  "name": "@rakazo/worker",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -11,12 +11,12 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@unibots/adapter-kit": "workspace:*",
-    "@unibots/adapters": "workspace:*",
-    "@unibots/core": "workspace:*",
-    "@unibots/db": "workspace:*",
-    "@unibots/logging": "workspace:*",
-    "@unibots/memory": "workspace:*"
+    "@rakazo/adapter-kit": "workspace:*",
+    "@rakazo/adapters": "workspace:*",
+    "@rakazo/core": "workspace:*",
+    "@rakazo/db": "workspace:*",
+    "@rakazo/logging": "workspace:*",
+    "@rakazo/memory": "workspace:*"
   },
   "devDependencies": {
     "typescript": "7.0.2",

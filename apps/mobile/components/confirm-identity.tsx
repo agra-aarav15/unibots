@@ -1,4 +1,4 @@
-import { runWithIdentityConfirmation } from "@unibots/contracts";
+import { runWithIdentityConfirmation } from "@rakazo/contracts";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Platform } from "react-native";
 import { confirmIdentity, fetchAccountSecurity, requestIdentityCode } from "../lib/api";

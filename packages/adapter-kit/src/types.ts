@@ -4,7 +4,7 @@ import type {
   ModelApiProtocol,
   PurchaseCardField,
   SandboxKind,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 
 export interface AdapterContext {
   operationId: string;
@@ -527,11 +527,6 @@ export interface AgentRunRequest {
   sourceMessageId?: string | null;
   prompt: string;
   instructions: string;
-  /**
-   * Identity and team context without host-app tool guidance. Runtimes that bring their
-   * own tools use this instead of `instructions`; host runtimes may ignore it.
-   */
-  runtimeInstructions?: string;
   history: Array<{
     id?: string;
     createdAt?: string;

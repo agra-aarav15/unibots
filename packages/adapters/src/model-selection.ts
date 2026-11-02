@@ -1,13 +1,13 @@
-import type { SecretStore } from "@unibots/adapter-kit";
-import { SecretStoreUnavailableError } from "@unibots/adapter-kit";
-import type { Actor } from "@unibots/contracts";
+import type { SecretStore } from "@rakazo/adapter-kit";
+import { SecretStoreUnavailableError } from "@rakazo/adapter-kit";
+import type { Actor } from "@rakazo/contracts";
 import {
   canonicalPiProviderId,
   selectCompatibleModelCredential,
   usableModelId,
-} from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
-import { chooseModelCredential, findModelCredential, findModelCredentialById } from "@unibots/db";
+} from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
+import { chooseModelCredential, findModelCredential, findModelCredentialById } from "@rakazo/db";
 import { resolveDeploymentModel } from "./deployment-model.js";
 import { modelCredentialDto } from "./model-connect.js";
 import type { ModelCredentialAuthKind } from "./pi-catalog-availability.js";

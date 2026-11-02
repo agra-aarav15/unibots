@@ -1,9 +1,9 @@
 import { t } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { BotMcpServer, McpServer, McpTransport } from "@unibots/contracts";
-import { MCP_OAUTH_CLIENT_REQUIRED } from "@unibots/contracts";
-import { deriveMcpSlug, isRetryableError } from "@unibots/core";
-import { fetchFresh, writeSaved } from "@unibots/core/query";
+import type { BotMcpServer, McpServer, McpTransport } from "@rakazo/contracts";
+import { MCP_OAUTH_CLIENT_REQUIRED } from "@rakazo/contracts";
+import { deriveMcpSlug, isRetryableError } from "@rakazo/core";
+import { fetchFresh, writeSaved } from "@rakazo/core/query";
 import {
   Badge,
   Button,
@@ -28,8 +28,8 @@ import {
   Textarea,
   Toggle,
   toast,
-} from "@unibots/ui-web";
-import { Disclosure } from "@unibots/ui-web/components/ui/disclosure";
+} from "@rakazo/ui-web";
+import { Disclosure } from "@rakazo/ui-web/components/ui/disclosure";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, LoaderCircle, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -49,7 +49,7 @@ const INSTALL_POLL_MS = 2500;
 
 type EnvRow = { id: number; name: string; value: string; file: boolean };
 
-/** How an env value asks Unibots to inject the granted OAuth access token. */
+/** How an env value asks Rakazo to inject the granted OAuth access token. */
 const oauthEnvReference = "{{oauth.access_token}}";
 
 let nextEnvRowId = 0;

@@ -1,4 +1,4 @@
-import type { Artifact, RpcInput, RpcOutput } from "@unibots/contracts";
+import type { Artifact, RpcInput, RpcOutput } from "@rakazo/contracts";
 import { rpc } from "./api";
 import type { MobileArtifactTarget } from "./artifact-open";
 

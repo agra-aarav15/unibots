@@ -3,10 +3,10 @@ import type {
   ArtifactStore,
   ComputerRef,
   SandboxProvider,
-} from "@unibots/adapter-kit";
-import type { MessageBlock } from "@unibots/contracts";
-import { ATTACHMENT_MAX_COUNT } from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
+} from "@rakazo/adapter-kit";
+import type { MessageBlock } from "@rakazo/contracts";
+import { ATTACHMENT_MAX_COUNT } from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
 import { describe, expect, it, vi } from "vitest";
 import {
   attachWorkspaceFileToThread,

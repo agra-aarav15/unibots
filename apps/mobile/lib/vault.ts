@@ -1,11 +1,11 @@
-import type { BotSecretMetadata, LoginFieldInput } from "@unibots/contracts";
+import type { BotSecretMetadata, LoginFieldInput } from "@rakazo/contracts";
 import {
   BotSecretName,
   commandVariableName,
   commandVariableProblem,
   encodeLoginSecret,
   LoginSecretValue,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import { secretDestinationLabel } from "./secret-destination";
 
 export type CredentialAuth = NonNullable<BotSecretMetadata["auth"]>;

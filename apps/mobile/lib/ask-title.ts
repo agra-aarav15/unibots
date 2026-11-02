@@ -1,4 +1,4 @@
-import { CARD_TITLE_ESCAPED_CHARACTERS } from "@unibots/core";
+import { CARD_TITLE_ESCAPED_CHARACTERS } from "@rakazo/core";
 
 const ESCAPED = new RegExp(`\\\\(${CARD_TITLE_ESCAPED_CHARACTERS})`, "g");
 

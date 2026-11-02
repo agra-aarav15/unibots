@@ -24,7 +24,7 @@ vi.mock("./live-notifications.js", () => ({
 }));
 vi.mock("./network-cache.js", () => ({ clearNetworkCache: vi.fn() }));
 
-const SERVER = "https://unibots.example.test";
+const SERVER = "https://rakazo.example.test";
 const ACCESS = { "CF-Access-Client-Id": "id.access", "CF-Access-Client-Secret": "secret" };
 
 let store: Map<string, string>;
@@ -50,7 +50,7 @@ describe("server request headers", () => {
     const fetchImpl = vi.fn(
       async (_input: RequestInfo | URL, _init?: RequestInit) => new Response("{}"),
     );
-    const init = { method: "POST", headers: { origin: "unibots://" } };
+    const init = { method: "POST", headers: { origin: "rakazo://" } };
     await fetchServer(SERVER, init, SERVER, fetchImpl);
     expect(fetchImpl.mock.calls[0]?.[1]).toBe(init);
     await saveApiBase(SERVER, ACCESS);
@@ -61,7 +61,7 @@ describe("server request headers", () => {
     );
     await fetchServer("https://other.example/rpc", init, SERVER, fetchImpl);
     expect(fetchImpl.mock.calls[2]?.[1]).toBe(init);
-    expect(serverHeadersForUrl("http://unibots.example.test/rpc", SERVER)).toEqual({});
+    expect(serverHeadersForUrl("http://rakazo.example.test/rpc", SERVER)).toEqual({});
     expect(serverHeadersForUrl(`${SERVER}:8443/rpc`, SERVER)).toEqual({});
   });
 
@@ -71,7 +71,7 @@ describe("server request headers", () => {
     expect(serverHeaders(currentApiBase())).toEqual(ACCESS);
     expect(await authHeaders(null)).not.toHaveProperty("CF-Access-Client-Secret");
     expect(serverHeadersForUrl(`${SERVER}/rpc/me`, currentApiBase())).toEqual(ACCESS);
-    expect(serverHeadersForUrl("https://unibots.example.test.evil/rpc", SERVER)).toEqual({});
+    expect(serverHeadersForUrl("https://rakazo.example.test.evil/rpc", SERVER)).toEqual({});
     expect(serverHeadersForUrl("https://other.example.test/rpc", SERVER)).toEqual({});
   });
 
@@ -87,7 +87,7 @@ describe("server request headers", () => {
 
     const headers = new Headers(fetchMock.mock.calls[0]?.[1]?.headers);
     expect(headers.get("cf-access-client-id")).toBe("id.access");
-    expect(headers.get("origin")).toBe("unibots://");
+    expect(headers.get("origin")).toBe("rakazo://");
   });
 
   it("restores saved headers on launch and drops them for another server", async () => {
@@ -97,7 +97,7 @@ describe("server request headers", () => {
 
     await saveApiBase("https://second.example.test");
     expect(await authHeaders(null)).not.toHaveProperty("CF-Access-Client-Id");
-    expect(store.has("unibots.server_headers")).toBe(false);
+    expect(store.has("rakazo.server_headers")).toBe(false);
   });
 
   it("restores headers if saving the endpoint fails", async () => {
@@ -116,7 +116,7 @@ describe("server request headers", () => {
   it("does not claim to reset when deleting headers fails", async () => {
     await saveApiBase(SERVER, ACCESS);
     vi.mocked(SecureStore.deleteItemAsync).mockImplementation(async (key) => {
-      if (key === "unibots.server_headers") throw new Error("Storage unavailable");
+      if (key === "rakazo.server_headers") throw new Error("Storage unavailable");
       store.delete(key);
     });
     await expect(resetApiBase()).resolves.toMatchObject({ ok: false });
@@ -125,9 +125,9 @@ describe("server request headers", () => {
   });
 
   it("ignores a damaged saved value", async () => {
-    store.set("unibots.api_base", SERVER);
+    store.set("rakazo.api_base", SERVER);
     store.set(
-      "unibots.server_headers",
+      "rakazo.server_headers",
       JSON.stringify({ apiBase: SERVER, headers: { origin: "x" } }),
     );
     await loadApiBase();
@@ -142,7 +142,7 @@ describe("server request headers", () => {
     await probeApiBase(SERVER, fetchImpl as typeof fetch, ACCESS);
     expect(fetchImpl.mock.calls[0]?.[1]?.headers).toMatchObject({
       ...ACCESS,
-      origin: "unibots://",
+      origin: "rakazo://",
     });
   });
 });

@@ -10,7 +10,7 @@ import {
   AlertDialogTitle,
   Button,
   Input,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import { Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { authClient } from "../lib/auth";

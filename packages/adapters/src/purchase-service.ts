@@ -8,16 +8,16 @@ import type {
   PurchaseCredentialKind,
   PurchaseSnapshot,
   PurchaseStatus,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   PaymentWalletDisconnected,
   PaymentWalletRequestRejected,
   purchasePollJob,
-} from "@unibots/adapter-kit";
-import type { PurchaseCardField } from "@unibots/contracts";
-import { PurchaseIdInput, PurchaseRequestInput } from "@unibots/contracts";
-import type { Purchase } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/adapter-kit";
+import type { PurchaseCardField } from "@rakazo/contracts";
+import { PurchaseIdInput, PurchaseRequestInput } from "@rakazo/contracts";
+import type { Purchase } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import type { PaymentWalletDeps } from "./payment-wallets.js";
 import { withPaymentWalletCredential } from "./payment-wallets.js";
 import { deleteSecretBestEffort } from "./secret-store-factory.js";

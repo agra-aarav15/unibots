@@ -1,6 +1,6 @@
 import { useLingui } from "@lingui/react/macro";
-import type { AgentSkillCatalogEntry, ThreadMessage } from "@unibots/contracts";
-import type { ComposerMention, ComposerMentionRange, SlashActionId } from "@unibots/core";
+import type { AgentSkillCatalogEntry, ThreadMessage } from "@rakazo/contracts";
+import type { ComposerMention, ComposerMentionRange, SlashActionId } from "@rakazo/core";
 import {
   bindComposerMention,
   clampMentionHighlightIndex,
@@ -16,8 +16,8 @@ import {
   serializeComposerPrompt,
   truncateSlashDescription,
   updateComposerMentionBindings,
-} from "@unibots/core";
-import { Button } from "@unibots/ui-web";
+} from "@rakazo/core";
+import { Button } from "@rakazo/ui-web";
 import { ArrowUp, Box, Paperclip, Plus, Settings, Square, X } from "lucide-react";
 import type { ClipboardEvent, DragEvent, RefObject } from "react";
 import { memo, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";

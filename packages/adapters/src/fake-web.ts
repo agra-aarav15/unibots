@@ -5,7 +5,7 @@ import type {
   WebProvider,
   WebSearchHit,
   WebSearchRequest,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import { clampOffset, pageWindow } from "./web-limits.js";
 
 /** In-memory web provider for offline tests. Never hits the network. */

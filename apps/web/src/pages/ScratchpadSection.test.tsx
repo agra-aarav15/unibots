@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import type { ScratchpadItem } from "@unibots/contracts";
+import type { ScratchpadItem } from "@rakazo/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { act } from "react";

@@ -1,7 +1,7 @@
-import type { McpServerHealth } from "@unibots/contracts";
-import { MCP_OAUTH_CLIENT_REQUIRED } from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+import type { McpServerHealth } from "@rakazo/contracts";
+import { MCP_OAUTH_CLIENT_REQUIRED } from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 
 const HEALTH_MESSAGE_MAX = 2000;
 

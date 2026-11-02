@@ -270,7 +270,7 @@ describe("noVNC frame state report", () => {
 
   it("posts loading at once, then follows noVNC's connection classes", () => {
     const p = page();
-    expect(p.posted).toEqual([{ unibotsScreen: "loading" }]);
+    expect(p.posted).toEqual([{ rakazoScreen: "loading" }]);
     p.classes.add("noVNC_connecting");
     p.mutate();
     p.mutate();
@@ -280,10 +280,10 @@ describe("noVNC frame state report", () => {
     p.classes.clear();
     p.mutate();
     expect(p.posted).toEqual([
-      { unibotsScreen: "loading" },
-      { unibotsScreen: "connecting" },
-      { unibotsScreen: "connected" },
-      { unibotsScreen: "disconnected" },
+      { rakazoScreen: "loading" },
+      { rakazoScreen: "connecting" },
+      { rakazoScreen: "connected" },
+      { rakazoScreen: "disconnected" },
     ]);
   });
 
@@ -297,9 +297,9 @@ describe("noVNC frame state report", () => {
     p.status.textContent = "Failed to connect to wss://screen.example/websockify?token=secret";
     p.mutate();
     expect(p.nativePosted).toEqual([
-      '{"unibotsScreen":"loading"}',
-      '{"unibotsScreen":"connected"}',
-      '{"unibotsScreen":"failed"}',
+      '{"rakazoScreen":"loading"}',
+      '{"rakazoScreen":"connected"}',
+      '{"rakazoScreen":"failed"}',
     ]);
     expect(page().nativePosted).toEqual([]);
   });
@@ -307,12 +307,12 @@ describe("noVNC frame state report", () => {
   it("gives the screen the keyboard back only when the app itself asks", () => {
     const p = page({ canvas: true });
     const message = p.windowListeners.message!;
-    message({ source: {}, data: { unibotsScreenFocus: true } });
-    message({ source: p.parent, data: { unibotsScreenFocus: "yes" } });
+    message({ source: {}, data: { rakazoScreenFocus: true } });
+    message({ source: p.parent, data: { rakazoScreenFocus: "yes" } });
     message({ source: p.parent, data: null });
-    message({ source: p.parent, data: { unibotsScreenFocus: true, extra: "x" } });
+    message({ source: p.parent, data: { rakazoScreenFocus: true, extra: "x" } });
     expect(p.canvas.focused).toBe(0);
-    message({ source: p.parent, data: { unibotsScreenFocus: true } });
+    message({ source: p.parent, data: { rakazoScreenFocus: true } });
     expect(p.canvas.focused).toBe(1);
   });
 
@@ -326,44 +326,44 @@ describe("noVNC frame state report", () => {
     p.status.textContent = "Failed to connect to server";
     p.mutate();
     expect(p.posted.at(-1)).toEqual({
-      unibotsScreen: "failed",
+      rakazoScreen: "failed",
       detail: "Failed to connect to server",
     });
   });
 
   it("reports the embed page's failure attribute, with or without a reason", () => {
     const p = page();
-    p.attributes.set("data-unibots-screen-error", "");
+    p.attributes.set("data-rakazo-screen-error", "");
     p.mutate();
-    expect(p.posted.at(-1)).toEqual({ unibotsScreen: "failed" });
+    expect(p.posted.at(-1)).toEqual({ rakazoScreen: "failed" });
     const reasoned = page();
-    reasoned.attributes.set("data-unibots-screen-error", "Authentication failure");
+    reasoned.attributes.set("data-rakazo-screen-error", "Authentication failure");
     reasoned.mutate();
     expect(reasoned.posted.at(-1)).toEqual({
-      unibotsScreen: "failed",
+      rakazoScreen: "failed",
       detail: "Authentication failure",
     });
   });
 
   it("reports an empty embed failure without a status bar", () => {
     const p = page({ canvas: true, statusBar: false });
-    expect(p.posted.at(-1)).toEqual({ unibotsScreen: "connecting" });
-    p.attributes.set("data-unibots-screen-error", "");
+    expect(p.posted.at(-1)).toEqual({ rakazoScreen: "connecting" });
+    p.attributes.set("data-rakazo-screen-error", "");
     p.mutate();
-    expect(p.posted.at(-1)).toEqual({ unibotsScreen: "failed" });
+    expect(p.posted.at(-1)).toEqual({ rakazoScreen: "failed" });
   });
 
-  it("treats a Unibots embed page that built its viewer as connecting", () => {
+  it("treats a Rakazo embed page that built its viewer as connecting", () => {
     const p = page({ canvas: true });
     p.mutate();
-    expect(p.posted).toEqual([{ unibotsScreen: "loading" }, { unibotsScreen: "connecting" }]);
+    expect(p.posted).toEqual([{ rakazoScreen: "loading" }, { rakazoScreen: "connecting" }]);
   });
 
   it("stays quiet about a page that has not started connecting", () => {
     const p = page({ readyState: "loading" });
-    expect(p.posted).toEqual([{ unibotsScreen: "loading" }]);
+    expect(p.posted).toEqual([{ rakazoScreen: "loading" }]);
     p.listeners.DOMContentLoaded?.();
     p.mutate();
-    expect(p.posted).toEqual([{ unibotsScreen: "loading" }]);
+    expect(p.posted).toEqual([{ rakazoScreen: "loading" }]);
   });
 });

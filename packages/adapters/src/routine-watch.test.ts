@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { RoutineWatchSchema } from "@unibots/contracts";
+import { RoutineWatchSchema } from "@rakazo/contracts";
 import { describe, expect, it, vi } from "vitest";
 import { accountVault, fakeDatabase } from "./bot-secrets.test-support.js";
 import { ComputerBusyError, provisionComputer } from "./computer-lifecycle.js";
@@ -611,7 +611,7 @@ describe("tickRoutineWatch on a computer", () => {
           },
         },
         // Present on purpose: a vm must not switch to this shell.
-        shell: { platform: "win32", shell: "powershell.exe", home: "C:\\Users\\unibots" },
+        shell: { platform: "win32", shell: "powershell.exe", home: "C:\\Users\\rakazo" },
       },
     );
     await checkRoutineWatch(deps, routine);
@@ -858,11 +858,11 @@ describe("tickRoutineWatch on a computer", () => {
     const command = "gh api user";
     const shells = [
       {
-        shell: { platform: "win32", shell: "powershell.exe", home: "C:\\Users\\unibots" },
+        shell: { platform: "win32", shell: "powershell.exe", home: "C:\\Users\\rakazo" },
         argv: ["powershell.exe", "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", command],
       },
       {
-        shell: { platform: "linux", shell: "/bin/bash", home: "/home/unibots" },
+        shell: { platform: "linux", shell: "/bin/bash", home: "/home/rakazo" },
         argv: ["/bin/bash", "-lc", command],
       },
     ];
@@ -933,7 +933,7 @@ describe("tickRoutineWatch on a computer", () => {
     const { deps, routine, updateMany } = setupComputer(
       { kind: "files", paths: ["a", "b"] },
       {
-        stdout: "/home/unibots/bots/bot-1/b/x.txt\t1\t5.25\n",
+        stdout: "/home/rakazo/bots/bot-1/b/x.txt\t1\t5.25\n",
         stderr: "find: a: Permission denied",
         code: 1,
       },
@@ -960,7 +960,7 @@ describe("tickRoutineWatch on a computer", () => {
     });
     const { deps, routine, updateMany } = setupComputer(
       { kind: "files", paths: ["a"] },
-      { stdout: "/home/unibots/bots/bot-1/a/x.txt\t1\t5.25\n" },
+      { stdout: "/home/rakazo/bots/bot-1/a/x.txt\t1\t5.25\n" },
     );
     routine.watchState = {
       checkedAt: "x",
@@ -976,8 +976,8 @@ describe("tickRoutineWatch on a computer", () => {
 describe("watchFolder", () => {
   // A team computer refuses "." as a bot path, which failed every files watch live.
   it("is the bot's own folder on a team computer and the workspace on a private one", () => {
-    expect(watchFolder("team", "bot-1")).toBe("/home/unibots/bots/bot-1");
-    expect(watchFolder("dedicated", "bot-1")).toBe("/home/unibots");
+    expect(watchFolder("team", "bot-1")).toBe("/home/rakazo/bots/bot-1");
+    expect(watchFolder("dedicated", "bot-1")).toBe("/home/rakazo");
   });
 });
 
@@ -1012,12 +1012,12 @@ describe("toolResultText", () => {
 
 describe("file watch boundaries", () => {
   it("allows normalized team paths inside the bot folder", () => {
-    expect(resolveWatchPath("team", "bot-1", "/home/unibots/bots/bot-1/inbox/../notes")).toBe(
-      "/home/unibots/bots/bot-1/notes",
+    expect(resolveWatchPath("team", "bot-1", "/home/rakazo/bots/bot-1/inbox/../notes")).toBe(
+      "/home/rakazo/bots/bot-1/notes",
     );
-    expect(resolveWatchPath("team", "bot-1", "notes")).toBe("/home/unibots/bots/bot-1/notes");
+    expect(resolveWatchPath("team", "bot-1", "notes")).toBe("/home/rakazo/bots/bot-1/notes");
   });
-  it.each(["/etc", "../bot-2", "/home/unibots/bots/bot-1/../../shared", "shared/../../other"])(
+  it.each(["/etc", "../bot-2", "/home/rakazo/bots/bot-1/../../shared", "shared/../../other"])(
     "refuses team escape %s",
     (path) => {
       expect(() => resolveWatchPath("team", "bot-1", path)).toThrow("inside the bot's folder");

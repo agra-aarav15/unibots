@@ -1,4 +1,4 @@
-type ServiceWorkerHost = Pick<Window, "addEventListener" | "navigator" | "unibotsDesktop">;
+type ServiceWorkerHost = Pick<Window, "addEventListener" | "navigator" | "rakazoDesktop">;
 
 /**
  * Production browsers only. Dev must always reach Vite, and Electron serves the
@@ -8,7 +8,7 @@ export function registerServiceWorker(
   target: ServiceWorkerHost = window,
   production: boolean = import.meta.env.PROD,
 ): void {
-  if (!production || target.unibotsDesktop || !("serviceWorker" in target.navigator)) return;
+  if (!production || target.rakazoDesktop || !("serviceWorker" in target.navigator)) return;
   target.addEventListener(
     "load",
     () => {

@@ -13,11 +13,11 @@
   "iconLibrary": "lucide",
   "rtl": false,
   "aliases": {
-    "components": "@unibots/ui-web/components",
-    "utils": "@unibots/ui-web/lib/utils",
-    "ui": "@unibots/ui-web/components/ui",
-    "lib": "@unibots/ui-web/lib",
-    "hooks": "@unibots/ui-web/hooks"
+    "components": "@rakazo/ui-web/components",
+    "utils": "@rakazo/ui-web/lib/utils",
+    "ui": "@rakazo/ui-web/components/ui",
+    "lib": "@rakazo/ui-web/lib",
+    "hooks": "@rakazo/ui-web/hooks"
   },
   "menuColor": "default",
   "menuAccent": "subtle",

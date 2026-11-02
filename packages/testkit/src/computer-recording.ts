@@ -5,7 +5,7 @@ import type {
   BrowserProvider,
   ComputerRef,
   SandboxProvider,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   browserActFromTool,
   browserNavigateFromTool,
@@ -13,7 +13,7 @@ import {
   builtinAgentTools,
   observationToolResult,
   PiAgentRuntime,
-} from "@unibots/adapters";
+} from "@rakazo/adapters";
 import { computerReplayContext, controlsInTree, waitForReplayFile } from "./computer-replay.js";
 import {
   CONTACTS_CSV,

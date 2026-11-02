@@ -1,6 +1,6 @@
-import type { ReplyPreview } from "@unibots/contracts";
-import { replyLabel } from "@unibots/core";
-import { typeScale } from "@unibots/ui-tokens";
+import type { ReplyPreview } from "@rakazo/contracts";
+import { replyLabel } from "@rakazo/core";
+import { typeScale } from "@rakazo/ui-tokens";
 import { Pressable, Text } from "react-native";
 import { mobileTokens } from "../lib/appearance";
 import type { MobileArtifactTarget } from "../lib/artifact-open";

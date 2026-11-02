@@ -4,7 +4,7 @@ import type {
   AgentRunModel,
   AgentRunRequest,
   AgentRuntime,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import type { TranscriptEntry } from "./flow.js";
 
 /** A card the bot is waiting on, as the person would see it. */

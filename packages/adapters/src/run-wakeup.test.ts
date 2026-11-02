@@ -1,8 +1,8 @@
-import type { BackgroundJobHandlers, JobPublisher } from "@unibots/adapter-kit";
-import { runContinueJob } from "@unibots/adapter-kit";
-import type { PrismaClient } from "@unibots/db";
-import { currentDbContext } from "@unibots/db";
-import { createLogger, createTestSink, installLogger } from "@unibots/logging";
+import type { BackgroundJobHandlers, JobPublisher } from "@rakazo/adapter-kit";
+import { runContinueJob } from "@rakazo/adapter-kit";
+import type { PrismaClient } from "@rakazo/db";
+import { currentDbContext } from "@rakazo/db";
+import { createLogger, createTestSink, installLogger } from "@rakazo/logging";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { InMemoryRealtimeFanout } from "./realtime.js";
 import { RunExecutionHost } from "./run-execution.js";

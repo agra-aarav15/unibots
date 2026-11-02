@@ -1,5 +1,5 @@
-export const SKIP_WAITING = "unibots:skip-waiting";
-export const CACHE_PREFIX = "unibots-shell-";
+export const SKIP_WAITING = "rakazo:skip-waiting";
+export const CACHE_PREFIX = "rakazo-shell-";
 
 // Live data, auth callbacks and the screen proxy always go straight to the server.
 const BYPASS_PREFIXES = ["/api", "/rpc", "/novnc", "/.well-known", "/health"];

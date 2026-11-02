@@ -1,6 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { Bot, NavLink } from "@unibots/contracts";
-import { accountDisplay } from "@unibots/core";
+import type { Bot, NavLink } from "@rakazo/contracts";
+import { accountDisplay } from "@rakazo/core";
 import {
   Button,
   InputGroup,
@@ -8,7 +8,7 @@ import {
   InputGroupButton,
   InputGroupInput,
   Sidebar,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import { Search, SlidersHorizontal } from "lucide-react";
 import type { ReactNode } from "react";
 import { useState } from "react";

@@ -5,8 +5,8 @@ import type {
   ComputerStatus,
   Group,
   ThreadSnapshot,
-} from "@unibots/contracts";
-import { Button } from "@unibots/ui-web";
+} from "@rakazo/contracts";
+import { Button } from "@rakazo/ui-web";
 import { X } from "lucide-react";
 import type { ComponentProps, Dispatch, ReactNode, SetStateAction } from "react";
 import { ComputerMaintenanceActions } from "../../components/ComputerMaintenanceActions";

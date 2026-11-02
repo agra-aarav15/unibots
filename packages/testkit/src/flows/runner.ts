@@ -10,10 +10,10 @@ import type {
   ComputerRef,
   JobPublisher,
   SandboxProvider,
-} from "@unibots/adapter-kit";
-import type { MessageBlock } from "@unibots/contracts";
-import { WORKING_RUN_STATUSES } from "@unibots/core";
-import type { createDb } from "@unibots/db";
+} from "@rakazo/adapter-kit";
+import type { MessageBlock } from "@rakazo/contracts";
+import { WORKING_RUN_STATUSES } from "@rakazo/core";
+import type { createDb } from "@rakazo/db";
 import type { EvalJudge, JudgeInput, Judgment } from "../evals/judge.js";
 import { createEvalJudge } from "../evals/judge.js";
 import { sessionCookieHeader } from "../index.js";

@@ -1,6 +1,6 @@
-import { attachmentMaxBytes, attachmentMaxCount } from "@unibots/contracts";
-import * as core from "@unibots/core";
-import { inferAttachmentMimeType } from "@unibots/core";
+import { attachmentMaxBytes, attachmentMaxCount } from "@rakazo/contracts";
+import * as core from "@rakazo/core";
+import { inferAttachmentMimeType } from "@rakazo/core";
 import { describe, expect, it, vi } from "vitest";
 import { filterPickedAttachments } from "./pick-attachments-filter.js";
 

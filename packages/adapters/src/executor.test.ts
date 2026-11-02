@@ -1,15 +1,15 @@
 import { normalizeContext } from "@earendil-works/pi-ai";
-import type { MessageBlock } from "@unibots/contracts";
+import type { MessageBlock } from "@rakazo/contracts";
 import {
   CLOUDFLARE_AI_GATEWAY_CONFIG_MESSAGE,
   CLOUDFLARE_WORKERS_AI_PROVIDER_ID,
   cloudflareModelConfigMessage,
   FLEET_TOOL_NAMES,
-} from "@unibots/contracts";
-import { ONCE_ROUTINE_CRON } from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
-import { RunHistoryWriteError } from "@unibots/db";
-import { createLogger, createTestSink, installLogger } from "@unibots/logging";
+} from "@rakazo/contracts";
+import { ONCE_ROUTINE_CRON } from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
+import { RunHistoryWriteError } from "@rakazo/db";
+import { createLogger, createTestSink, installLogger } from "@rakazo/logging";
 import { describe, expect, it, vi } from "vitest";
 import { builtinAgentTools } from "./builtin-tools.js";
 import { createRunExecutor as createExecutor } from "./executor.js";

@@ -8,7 +8,7 @@ import type {
   SandboxProvider,
   SecretStore,
   TransactionalEmailProvider,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import type {
   CloudAgentConnection,
   CodexLiveCatalog,
@@ -28,10 +28,10 @@ import type {
   RemoteConnectorDependencies,
   TicketChangeNotifier,
   verifyModelServesAgents,
-} from "@unibots/adapters";
-import type { Auth } from "@unibots/auth";
-import type { NavLink } from "@unibots/contracts";
-import type { BoardEvents, PrismaClient, ThreadEvents } from "@unibots/db";
+} from "@rakazo/adapters";
+import type { Auth } from "@rakazo/auth";
+import type { NavLink } from "@rakazo/contracts";
+import type { BoardEvents, PrismaClient, ThreadEvents } from "@rakazo/db";
 import type { BillingService } from "./billing.js";
 import { accountRoutes } from "./routes/account.js";
 import { availabilityRoutes } from "./routes/availability.js";

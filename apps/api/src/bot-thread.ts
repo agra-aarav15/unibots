@@ -1,6 +1,6 @@
-import type { Actor, MessageBlock } from "@unibots/contracts";
-import type { Prisma, PrismaClient, ThreadEvents } from "@unibots/db";
-import { appendEventInTransaction, IsolationError } from "@unibots/db";
+import type { Actor, MessageBlock } from "@rakazo/contracts";
+import type { Prisma, PrismaClient, ThreadEvents } from "@rakazo/db";
+import { appendEventInTransaction, IsolationError } from "@rakazo/db";
 
 export type BotThreadDeps = {
   prisma: PrismaClient;

@@ -8,14 +8,14 @@ import type {
   DesktopReachability,
   DesktopSetup,
   DesktopSetupState,
-  UnibotsSetup,
-} from "@unibots/contracts";
+  RakazoSetup,
+} from "@rakazo/contracts";
 import { afterEach, describe, expect, it } from "vitest";
 
-type DesktopSetupResult = Awaited<ReturnType<UnibotsSetup["save"]>>;
+type DesktopSetupResult = Awaited<ReturnType<RakazoSetup["save"]>>;
 
 const DEFAULT_LOCAL_URL = "http://127.0.0.1:6130";
-const CLOUD_URL = "https://cloud.unibots.example";
+const CLOUD_URL = "https://cloud.rakazo.example";
 
 // The jsdom environment replaces the global URL, so resolve the sibling files via Node's.
 const srcDir = path.dirname(fileURLToPath(import.meta.url));
@@ -97,7 +97,7 @@ function mount(saved: DesktopSetup | null): Harness {
   const saves: DesktopSetup[] = [];
   const saveCalls: Array<Deferred<DesktopSetupResult>> = [];
 
-  const bridge: UnibotsSetup = {
+  const bridge: RakazoSetup = {
     platform: "linux",
     state: () => {
       const call = deferred<DesktopSetupState>();
@@ -129,7 +129,7 @@ function mount(saved: DesktopSetup | null): Harness {
       },
     },
   };
-  (window as { unibotsSetup?: UnibotsSetup }).unibotsSetup = bridge;
+  (window as { rakazoSetup?: RakazoSetup }).rakazoSetup = bridge;
   // Run the plain script the same way setup.html's script tag does.
   new Function(setupScript)();
 
@@ -169,7 +169,7 @@ async function boot(saved: DesktopSetup | null): Promise<Harness> {
 describe("setup", () => {
   afterEach(() => {
     document.body.innerHTML = "";
-    delete (window as { unibotsSetup?: UnibotsSetup }).unibotsSetup;
+    delete (window as { rakazoSetup?: RakazoSetup }).rakazoSetup;
   });
 
   it("keeps an address edited while the connection check is pending", async () => {
@@ -222,7 +222,7 @@ describe("setup", () => {
     currentCheck.resolve({ ok: true, url: "https://two.example" });
     await flush();
     expect(field.value).toBe("https://two.example");
-    expect(element("status").textContent).toBe("Unibots answered at https://two.example.");
+    expect(element("status").textContent).toBe("Rakazo answered at https://two.example.");
     expect(element("status").getAttribute("data-tone")).toBe("ok");
     expect(element<HTMLButtonElement>("check").disabled).toBe(false);
     expect(element<HTMLButtonElement>("continue").disabled).toBe(false);
@@ -279,7 +279,7 @@ describe("setup", () => {
     await flush();
 
     expect(element("stack").hidden).toBe(false);
-    expect(element("stack-phase").textContent).toBe("Downloading Unibots…");
+    expect(element("stack-phase").textContent).toBe("Downloading Rakazo…");
   });
 
   it("locks the address while it is being saved and unlocks it when the save fails", async () => {
@@ -334,7 +334,7 @@ describe("setup", () => {
     await flush();
 
     expect(element<HTMLInputElement>("server-url").value).toBe("https://one.example");
-    expect(element("status").textContent).toBe("Unibots answered at https://one.example.");
+    expect(element("status").textContent).toBe("Rakazo answered at https://one.example.");
     expect(element("status").getAttribute("data-tone")).toBe("ok");
     expect(element<HTMLButtonElement>("check").disabled).toBe(false);
   });
@@ -385,7 +385,7 @@ describe("setup", () => {
     ui.startResult.resolve(stackState("pulling"));
     await flush();
     expect(element("stack").hidden).toBe(false);
-    expect(element("stack-phase").textContent).toBe("Downloading Unibots…");
+    expect(element("stack-phase").textContent).toBe("Downloading Rakazo…");
     expect(element<HTMLButtonElement>("continue").disabled).toBe(true);
 
     ui.resolveStackState(stackState("ready"));
@@ -395,7 +395,7 @@ describe("setup", () => {
     ui.resolveSave({ ok: true });
     await flush();
 
-    expect(element("stack-phase").textContent).toBe("Unibots is ready.");
+    expect(element("stack-phase").textContent).toBe("Rakazo is ready.");
     expect(element("stack-phase").getAttribute("data-tone")).toBe("ok");
     expect(ui.saves).toEqual([{ mode: "new", serverUrl: DEFAULT_LOCAL_URL }]);
     expect(element<HTMLButtonElement>("continue").disabled).toBe(false);

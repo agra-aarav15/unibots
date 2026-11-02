@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
 import { ORPCError } from "@orpc/server";
-import type { AdapterContext, SandboxProvider } from "@unibots/adapter-kit";
-import { computerControlExpireJobKey } from "@unibots/adapter-kit";
-import type { ComputerExecutionLease } from "@unibots/adapters";
+import type { AdapterContext, SandboxProvider } from "@rakazo/adapter-kit";
+import { computerControlExpireJobKey } from "@rakazo/adapter-kit";
+import type { ComputerExecutionLease } from "@rakazo/adapters";
 import {
   acquireComputerExecutionLease,
   applyTeachingDesktopInput,
@@ -34,25 +34,25 @@ import {
   takeoverLeaseMs,
   toComputerRef,
   touchRunningComputer,
-} from "@unibots/adapters";
-import type { Actor, ComputerReleaseReason, ComputerStatus } from "@unibots/contracts";
+} from "@rakazo/adapters";
+import type { Actor, ComputerReleaseReason, ComputerStatus } from "@rakazo/contracts";
 import {
   attachmentMaxBytes,
   attachmentSizeLabel,
   ComputerCommandSchema,
   foldComputerCommands,
-} from "@unibots/contracts";
-import { ACTIVE_RUN_STATUSES, scrollDirection } from "@unibots/core";
-import { addScreenProxyCapability } from "@unibots/core/node/screen-capability";
-import type { ComputerRunEnd, PrismaClient } from "@unibots/db";
+} from "@rakazo/contracts";
+import { ACTIVE_RUN_STATUSES, scrollDirection } from "@rakazo/core";
+import { addScreenProxyCapability } from "@rakazo/core/node/screen-capability";
+import type { ComputerRunEnd, PrismaClient } from "@rakazo/db";
 import {
   createRepos,
   expireComputerExecutionLeases,
   IsolationError,
   parseComputerMode,
   recordComputerRunEnd,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { scrollPoint } from "../computer-input.js";
 import {
   executionBlocksUserTakeover,

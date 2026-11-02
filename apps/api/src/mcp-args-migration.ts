@@ -1,6 +1,6 @@
-import type { SecretStore } from "@unibots/adapter-kit";
-import { persistPreparedSecret } from "@unibots/adapters";
-import type { PrismaClient } from "@unibots/db";
+import type { SecretStore } from "@rakazo/adapter-kit";
+import { persistPreparedSecret } from "@rakazo/adapters";
+import type { PrismaClient } from "@rakazo/db";
 import { serverSecretSpace } from "./availability.js";
 import type { McpSecretMaterial } from "./mcp-material.js";
 import { legacyMcpArgs } from "./mcp-material.js";

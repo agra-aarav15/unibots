@@ -9,11 +9,17 @@ describe("passkeyRelyingParty", () => {
     });
   });
 
-  it("uses localhost for loopback deployments", () => {
+  it("accepts both loopback origins at the same scheme and port", () => {
     for (const origin of ["http://127.0.0.1:5173", "http://localhost:5173", "http://[::1]:5173"]) {
       expect(passkeyRelyingParty(origin), origin).toEqual({
         rpID: "localhost",
-        origins: ["http://localhost:5173"],
+        origins: ["http://localhost:5173", "http://127.0.0.1:5173"],
+      });
+    }
+    for (const origin of ["http://127.0.0.1:45173", "http://localhost:45173", "http://[::1]:45173"]) {
+      expect(passkeyRelyingParty(origin), origin).toEqual({
+        rpID: "localhost",
+        origins: ["http://localhost:45173", "http://127.0.0.1:45173"],
       });
     }
   });

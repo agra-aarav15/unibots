@@ -1,9 +1,9 @@
 import { hostname } from "node:os";
 import { setTimeout as sleep } from "node:timers/promises";
-import type { JobPublisher, JobWorkerHost } from "@unibots/adapter-kit";
-import { ComposioConnector, IntegrationProviderSettings } from "@unibots/adapters";
-import { phoneCallSettings } from "@unibots/core";
-import { loadRootEnv } from "@unibots/core/node/load-root-env";
+import type { JobPublisher, JobWorkerHost } from "@rakazo/adapter-kit";
+import { ComposioConnector, IntegrationProviderSettings } from "@rakazo/adapters";
+import { phoneCallSettings } from "@rakazo/core";
+import { loadRootEnv } from "@rakazo/core/node/load-root-env";
 import { startWorkerHealth } from "./health.js";
 import { createWorkerSecretStore } from "./secret-store.js";
 
@@ -37,7 +37,6 @@ import {
   deploymentModelUsageLookup,
   ExpoPushProvider,
   GraphileJobPublisher,
-  hermesAgentRuntimeFromEnv,
   homeStorageSweeper,
   InMemoryJobQueue,
   InstalledConnectorProvider,
@@ -72,8 +71,8 @@ import {
   userDeviceForwardSecret,
   withRunWorker,
   withSecretPersistence,
-} from "@unibots/adapters";
-import { resolveEncryptionKey, resolveSupervisorToken, uploadSizeFromEnv } from "@unibots/core";
+} from "@rakazo/adapters";
+import { resolveEncryptionKey, resolveSupervisorToken, uploadSizeFromEnv } from "@rakazo/core";
 import {
   createBoardEvents,
   createDb,
@@ -89,10 +88,10 @@ import {
   runAsSystem,
   securityEventRetentionDays,
   verifyContentKeys,
-} from "@unibots/db";
-import { SERVICE_NAMES } from "@unibots/logging";
-import { createRootLogger } from "@unibots/logging/axiom";
-import { MarkdownMemoryStore } from "@unibots/memory";
+} from "@rakazo/db";
+import { SERVICE_NAMES } from "@rakazo/logging";
+import { createRootLogger } from "@rakazo/logging/axiom";
+import { MarkdownMemoryStore } from "@rakazo/memory";
 
 const logger = createRootLogger(SERVICE_NAMES.worker);
 
@@ -109,7 +108,7 @@ async function main() {
   // A larger max competes for Postgres max_connections (53300).
   const created = createDb(databaseUrl, {
     poolMax,
-    applicationName: "unibots-worker",
+    applicationName: "rakazo-worker",
     keyProvider: contentKeyProviderFromEnv(),
   });
   const { pool } = created;
@@ -141,9 +140,7 @@ async function main() {
   const runtime =
     process.env.AGENT_RUNTIME === "scripted"
       ? new ScriptedAgentRuntime()
-      : process.env.AGENT_RUNTIME === "hermes"
-        ? hermesAgentRuntimeFromEnv(process.env)
-        : new PiAgentRuntime({ sessionRoot: resolvePiSessionRoot(dataDir) });
+      : new PiAgentRuntime({ sessionRoot: resolvePiSessionRoot(dataDir) });
   // Same resolver the API uses, so both processes agree on provider, model and key.
   const { key: deploymentModelKey, configured: deploymentModelConfigured } =
     resolveDeploymentModel();

@@ -1,4 +1,4 @@
-import { Button, cn } from "@unibots/ui-web";
+import { Button, cn } from "@rakazo/ui-web";
 import { Check } from "lucide-react";
 import type { ReactNode } from "react";
 

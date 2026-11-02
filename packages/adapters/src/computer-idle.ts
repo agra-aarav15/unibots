@@ -4,22 +4,22 @@ import type {
   ComputerRef,
   JobPublisher,
   SandboxProvider,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   computerSleepJob,
   SandboxRateLimitError,
   SandboxUnavailableError,
   SandboxUnresponsiveError,
   WorkspaceTooLargeError,
-} from "@unibots/adapter-kit";
-import { QUEUE_HOLDING_RUN_STATUSES } from "@unibots/core";
-import type { PrismaClient, ThreadEvents } from "@unibots/db";
+} from "@rakazo/adapter-kit";
+import { QUEUE_HOLDING_RUN_STATUSES } from "@rakazo/core";
+import type { PrismaClient, ThreadEvents } from "@rakazo/db";
 import {
   appendEventInTransaction,
   createThreadMessageInTransaction,
   recordComputerRunEnd,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { expireComputerControl, hasActiveComputerControl } from "./computer-control.js";
 import { toComputerRef } from "./computer-lifecycle.js";
 import { checkpointComputerWorkspace } from "./computer-workspace.js";
@@ -47,8 +47,8 @@ export const TAKEOVER_IDLE_GRACE_MS = 30 * 60 * 1000;
 export const ABANDONED_SUSPEND_CLAIM_MS = 60 * 60 * 1000;
 const IDLE_SWEEP_INTERVAL_MS = 10 * 60 * 1000;
 const EXECUTING_RUN_STATUSES = ["leased", "running"] as const;
-const BACKGROUND_WORK_MARKER_PREFIX = "/tmp/unibots-background-";
-const BACKGROUND_WORK_IDLE_SENTINEL = "unibots-background-idle";
+const BACKGROUND_WORK_MARKER_PREFIX = "/tmp/rakazo-background-";
+const BACKGROUND_WORK_IDLE_SENTINEL = "rakazo-background-idle";
 
 export const BACKGROUND_WORK_LAUNCH = [
   `marker="${BACKGROUND_WORK_MARKER_PREFIX}$1-$2-$3"`,
@@ -148,7 +148,7 @@ export const CANCEL_COMPUTER_RUN_WORK = [
   "  fi",
   "  exit 0",
   'elif [ "$(uname -s 2>/dev/null)" = "Darwin" ] && command -v lsof >/dev/null 2>&1; then',
-  `  pkill -TERM -f "unibots-background-launch $computerId $runId " 2>/dev/null || true`,
+  `  pkill -TERM -f "rakazo-background-launch $computerId $runId " 2>/dev/null || true`,
   '  for marker in "$prefix"*; do',
   '    [ -e "$marker" ] || continue',
   '    for pid in $(lsof -t -- "$marker" 2>/dev/null); do',
@@ -159,7 +159,7 @@ export const CANCEL_COMPUTER_RUN_WORK = [
   "  exit 0",
   "fi",
   "sleep 0.2",
-  `pkill -KILL -f "unibots-background-launch $computerId $runId " 2>/dev/null || true`,
+  `pkill -KILL -f "rakazo-background-launch $computerId $runId " 2>/dev/null || true`,
   'if [ "$(uname -s 2>/dev/null)" = "Darwin" ] && command -v lsof >/dev/null 2>&1; then',
   '  for marker in "$prefix"*; do',
   '    [ -e "$marker" ] || continue',
@@ -208,7 +208,7 @@ export const CANCEL_PRIMARY_BROWSER_WORK = [
 ].join("; ");
 
 export function cancelComputerRunWorkArgv(computerId: string, runId: string): string[] {
-  return ["bash", "-c", CANCEL_COMPUTER_RUN_WORK, "unibots-cancel-run-work", computerId, runId];
+  return ["bash", "-c", CANCEL_COMPUTER_RUN_WORK, "rakazo-cancel-run-work", computerId, runId];
 }
 
 export async function cancelComputerRunWork(
@@ -941,7 +941,7 @@ async function hasActiveBackgroundWork(
     for await (const event of sandbox.execute(
       computer,
       {
-        argv: ["bash", "-c", BACKGROUND_WORK_PROBE, "unibots-background-probe", computerId],
+        argv: ["bash", "-c", BACKGROUND_WORK_PROBE, "rakazo-background-probe", computerId],
         timeoutMs: 10_000,
       },
       context,

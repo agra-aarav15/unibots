@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 function collapsedSidebarSectionsStorageKey(userId: string | null | undefined): string | null {
   if (!userId) return null;
-  return `unibots:collapsed-sidebar-sections:${userId}`;
+  return `rakazo:collapsed-sidebar-sections:${userId}`;
 }
 
 function readCollapsedIdSet(storageKey: string | null): Set<string> {

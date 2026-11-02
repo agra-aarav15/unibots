@@ -1,8 +1,8 @@
 import { I18nProvider } from "@lingui/react";
-import type { MessageBlock, ThreadMessage } from "@unibots/contracts";
-import { BOT_COLOR_LIST, instructionUpdateDiff } from "@unibots/core";
-import type { GroupAvatarMember } from "@unibots/ui-web";
-import { Button } from "@unibots/ui-web";
+import type { MessageBlock, ThreadMessage } from "@rakazo/contracts";
+import { BOT_COLOR_LIST, instructionUpdateDiff } from "@rakazo/core";
+import type { GroupAvatarMember } from "@rakazo/ui-web";
+import { Button } from "@rakazo/ui-web";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";

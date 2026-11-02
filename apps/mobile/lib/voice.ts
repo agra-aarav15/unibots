@@ -1,4 +1,4 @@
-import type { SettingsScope } from "@unibots/contracts";
+import type { SettingsScope } from "@rakazo/contracts";
 import {
   ensureAiDataConsent,
   readVoiceAudio,
@@ -7,7 +7,7 @@ import {
   toUtterances,
   VOICE_RESPONSE_TIMEOUT_MS,
   withAbort,
-} from "@unibots/core";
+} from "@rakazo/core";
 import { createAudioPlayer, setAudioModeAsync } from "expo-audio";
 import { File, Paths } from "expo-file-system";
 import type * as ExpoSpeech from "expo-speech";
@@ -433,7 +433,7 @@ async function renderUtterance(
           method: "POST",
           headers: {
             "content-type": "application/json",
-            origin: "unibots://",
+            origin: "rakazo://",
             ...requestContext.headers,
           },
           body: JSON.stringify({
@@ -593,7 +593,7 @@ async function playWithNativeAudio(bytes: Uint8Array, session?: HostedSession): 
   });
   const file = new File(
     Paths.cache,
-    `unibots-voice-${Date.now()}.${speechClipType(bytes).extension}`,
+    `rakazo-voice-${Date.now()}.${speechClipType(bytes).extension}`,
   );
   file.create({ overwrite: true });
   file.write(bytesToBase64(bytes), { encoding: "base64" });

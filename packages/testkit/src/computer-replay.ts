@@ -4,7 +4,7 @@ import type {
   BrowserProvider,
   ComputerRef,
   SandboxProvider,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   browserActFromTool,
   browserNavigateFromTool,
@@ -12,7 +12,7 @@ import {
   builtinAgentTools,
   observationToolResult,
   PiAgentRuntime,
-} from "@unibots/adapters";
+} from "@rakazo/adapters";
 import { CONTACTS_CSV, CONTACTS_PATH, EXPORT_FIXTURE_URL } from "./computer-replay-fixture.js";
 import type {
   ModelEmulatorRequest,

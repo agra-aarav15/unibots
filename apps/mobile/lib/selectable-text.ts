@@ -1,4 +1,4 @@
-import { plainTextFromMarkdown } from "@unibots/core";
+import { plainTextFromMarkdown } from "@rakazo/core";
 
 /** A line longer than this is shown as written rather than converted. */
 const LINE_LIMIT = 100_000;

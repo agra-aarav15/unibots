@@ -1,7 +1,7 @@
 import { ORPCError } from "@orpc/server";
-import type { JobPublisher, ProductAnalytics, SandboxProvider } from "@unibots/adapter-kit";
-import { runContinueJob } from "@unibots/adapter-kit";
-import { cancelComputerRunWork, screenLeaseIdForRun, toComputerRef } from "@unibots/adapters";
+import type { JobPublisher, ProductAnalytics, SandboxProvider } from "@rakazo/adapter-kit";
+import { runContinueJob } from "@rakazo/adapter-kit";
+import { cancelComputerRunWork, screenLeaseIdForRun, toComputerRef } from "@rakazo/adapters";
 import type {
   Actor,
   GroupMember,
@@ -9,12 +9,12 @@ import type {
   MessageReaction,
   ReplyPreview,
   ThreadSnapshot,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   GROUP_MEMBER_MIN,
   MessageBlock as MessageBlockSchema,
   resolveBotAvatarSet,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   ACTIVE_RUN_STATUSES,
   BACKGROUND_RUN_TRIGGERS,
@@ -27,9 +27,9 @@ import {
   resolveGroupTargetBotIds,
   runFailureError,
   runReadsThreadHistory,
-} from "@unibots/core";
-import { deriveMessageQuote, messageReplyPreview } from "@unibots/core/message-quote";
-import type { Prisma, PrismaClient, ThreadEvents } from "@unibots/db";
+} from "@rakazo/core";
+import { deriveMessageQuote, messageReplyPreview } from "@rakazo/core/message-quote";
+import type { Prisma, PrismaClient, ThreadEvents } from "@rakazo/db";
 import {
   answerWaitingRunWithTextInTransaction,
   appendEventInTransaction,
@@ -45,8 +45,8 @@ import {
   retireWaitingQuestionInTransaction,
   touchGroupUpdatedAt,
   transientRunEventsWhere,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import {
   buildSendPrompt,
   buildUserMessageBlocks,

@@ -7,7 +7,7 @@ import type {
   TeamChatMessageKind,
   TeamChatSendRequest,
   TeamChatSendResult,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 
 /** Map a Chat SDK inbound message into a team-chat event, or null if empty. */
 export function toTeamChatInbound(event: MessagingInboundMessage): TeamChatInboundMessage | null {

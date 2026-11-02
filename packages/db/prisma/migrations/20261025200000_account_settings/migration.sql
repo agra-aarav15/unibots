@@ -128,11 +128,11 @@ CREATE POLICY user_action_auto_review_preferences_system ON "user_action_auto_re
 
 DO $$
 BEGIN
-  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'unibots_app') THEN
+  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'rakazo_app') THEN
     GRANT SELECT, INSERT, UPDATE, DELETE ON
       "space_setting_overrides", "user_model_role_choices", "user_model_preferences",
       "user_voice_preferences", "user_action_approval_rules", "user_action_auto_review_preferences"
-      TO unibots_app;
+      TO rakazo_app;
   END IF;
 END $$;
 

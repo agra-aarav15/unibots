@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import type { PluginSubmission } from "@unibots/contracts";
+import type { PluginSubmission } from "@rakazo/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ComponentProps, ReactNode } from "react";
 import { act } from "react";
@@ -39,7 +39,7 @@ vi.mock("@lingui/react/macro", () => ({
   }),
   Trans: ({ children }: { children: ReactNode }) => children,
 }));
-vi.mock("@unibots/ui-web", () => {
+vi.mock("@rakazo/ui-web", () => {
   const Pass = ({ children }: { children?: ReactNode }) => <div>{children}</div>;
   return {
     Button: ({

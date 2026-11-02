@@ -1,14 +1,14 @@
 import { ORPCError } from "@orpc/server";
-import { runContinueJob, runJobKey } from "@unibots/adapter-kit";
-import { settleCallRequest } from "@unibots/adapters";
-import type { ProductEvent } from "@unibots/contracts";
+import { runContinueJob, runJobKey } from "@rakazo/adapter-kit";
+import { settleCallRequest } from "@rakazo/adapters";
+import type { ProductEvent } from "@rakazo/contracts";
 import {
   AttachmentValidationError,
   CALL_CLIENT_NONCE_PREFIX,
   callClientNonce,
   MODEL_REQUIRED_SEND_ERROR,
   QUEUE_HOLDING_RUN_STATUSES,
-} from "@unibots/core";
+} from "@rakazo/core";
 import {
   AnswerTooLongError,
   appendEventInTransaction,
@@ -17,8 +17,8 @@ import {
   IsolationError,
   lockOwnedGroup,
   touchGroupUpdatedAt,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { assertTeachingSendAllowed } from "../taught-skills.js";
 import {
   isBackgroundRun,

@@ -13,9 +13,9 @@ import type {
   SecretPutOptions,
   SecretRecord,
   SecretStore,
-} from "@unibots/adapter-kit";
-import { SecretStoreUnavailableError } from "@unibots/adapter-kit";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/adapter-kit";
+import { SecretStoreUnavailableError } from "@rakazo/adapter-kit";
+import { getLogger } from "@rakazo/logging";
 import { SecretChanges } from "./secret-changes.js";
 
 const VERSION_PREFIX = "v2:";

@@ -1,10 +1,10 @@
 import { useLingui } from "@lingui/react/macro";
-import type { Bot, Connection, ConnectionCatalogItem, Group, Routine } from "@unibots/contracts";
+import type { Bot, Connection, ConnectionCatalogItem, Group, Routine } from "@rakazo/contracts";
 import {
   buildComposerMentionOptions,
   createRoutineMentionBatcher,
   mentionConnectorsFrom,
-} from "@unibots/core";
+} from "@rakazo/core";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { connectedAppMarks } from "../../lib/connected-apps";

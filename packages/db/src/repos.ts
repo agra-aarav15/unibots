@@ -5,14 +5,14 @@ import type {
   BotSection,
   MessageBlock,
   SpaceBot,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   canonicalPiProviderId,
   DEFAULT_NEW_BOT_AVATAR_SET,
   InstructionVersionSchema,
   initialBotMemory,
   resolveBotAvatarSet,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   BACKGROUND_RUN_TRIGGERS,
   displayName,
@@ -20,7 +20,7 @@ import {
   phoneCallSettings,
   ringingCall,
   userVisibleMessages,
-} from "@unibots/core";
+} from "@rakazo/core";
 import { chooseBotAvatar } from "./bot-avatar-choice.js";
 import type { Prisma, PrismaClient } from "./client.js";
 import type { ComputerMode } from "./computers.js";

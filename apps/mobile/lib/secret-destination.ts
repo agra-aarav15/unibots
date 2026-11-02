@@ -1,4 +1,4 @@
-import { commandVariableName } from "@unibots/contracts";
+import { commandVariableName } from "@rakazo/contracts";
 import { t } from "./i18n";
 
 /**

@@ -4,10 +4,10 @@ import type {
   ArtifactStore,
   JobPublisher,
   SandboxProvider,
-} from "@unibots/adapter-kit";
-import { destroyBot, removeAgentHome, toComputerRef } from "@unibots/adapters";
-import type { Actor } from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
+} from "@rakazo/adapter-kit";
+import { destroyBot, removeAgentHome, toComputerRef } from "@rakazo/adapters";
+import type { Actor } from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
 import {
   claimSpaceDeletionForMember,
   deleteClaimedSpaceForMember,
@@ -18,8 +18,8 @@ import {
   renewSpaceDeletionClaim,
   SPACE_DELETION_CLAIM_TIMEOUT_MS,
   SpaceDeletionInProgressError,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { rehomeItemsLeaving } from "./availability.js";
 
 /** Bound for one bot or sandbox teardown. Providers may ignore the abort signal,

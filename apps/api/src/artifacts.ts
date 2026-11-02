@@ -1,14 +1,14 @@
 import { createHash } from "node:crypto";
-import type { ArtifactStore, MessagingInboundAttachment } from "@unibots/adapter-kit";
-import { createAdapterContext } from "@unibots/adapter-kit";
-import type { Actor } from "@unibots/contracts";
+import type { ArtifactStore, MessagingInboundAttachment } from "@rakazo/adapter-kit";
+import { createAdapterContext } from "@rakazo/adapter-kit";
+import type { Actor } from "@rakazo/contracts";
 import {
   ARTIFACT_NAME_MAX_LENGTH,
   ATTACHMENT_MAX_BYTES,
   attachmentMaxCount,
   attachmentSizeLabel,
   isAttachmentAudioMimeType,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   AttachmentValidationError,
   decodeAttachmentBase64,
@@ -16,9 +16,9 @@ import {
   messageBlockForArtifact,
   promptTextForAttachments,
   validateAttachmentMimeType,
-} from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
-import { IsolationError, Prisma, withResolvedArtifactVersion } from "@unibots/db";
+} from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
+import { IsolationError, Prisma, withResolvedArtifactVersion } from "@rakazo/db";
 
 export async function createOwnedArtifact(
   deps: {

@@ -1,10 +1,10 @@
-import type { AdapterContext } from "@unibots/adapter-kit";
-import { computerControlExpireJobKey } from "@unibots/adapter-kit";
-import type { ComputerUpdate } from "@unibots/contracts";
-import { ComputerUpdateSchema } from "@unibots/contracts";
-import { ACTIVE_RUN_STATUSES } from "@unibots/core";
-import type { Prisma, PrismaClient, ThreadEvents } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+import type { AdapterContext } from "@rakazo/adapter-kit";
+import { computerControlExpireJobKey } from "@rakazo/adapter-kit";
+import type { ComputerUpdate } from "@rakazo/contracts";
+import { ComputerUpdateSchema } from "@rakazo/contracts";
+import { ACTIVE_RUN_STATUSES } from "@rakazo/core";
+import type { Prisma, PrismaClient, ThreadEvents } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import {
   enqueueTakeoverContinuation,
   isIdleOwnComputerTakeover,

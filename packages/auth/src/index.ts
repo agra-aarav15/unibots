@@ -1,6 +1,6 @@
 import { expo } from "@better-auth/expo";
 import { passkey } from "@better-auth/passkey";
-import type { ProductAnalytics, TransactionalEmailProvider } from "@unibots/adapter-kit";
+import type { ProductAnalytics, TransactionalEmailProvider } from "@rakazo/adapter-kit";
 import {
   displayName,
   emailAllowed,
@@ -8,9 +8,9 @@ import {
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH,
   signupPolicyFromEnv,
-} from "@unibots/core";
-import type { PrismaClient, SecurityEventType } from "@unibots/db";
-import { bootstrapUserSpace, personalOrganizationIds, recordSecurityEvent } from "@unibots/db";
+} from "@rakazo/core";
+import type { PrismaClient, SecurityEventType } from "@rakazo/db";
+import { bootstrapUserSpace, personalOrganizationIds, recordSecurityEvent } from "@rakazo/db";
 import type { BetterAuthOptions, BetterAuthPlugin } from "better-auth";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
@@ -106,7 +106,7 @@ function isUnusedEmailCodePath(path: string, body: { type?: unknown } | undefine
  * The only header Better Auth reads a client IP from. The API sets it from the socket peer and its
  * trusted proxies and drops any client-supplied copy, so a caller cannot choose its own address.
  */
-export const CLIENT_IP_HEADER = "x-unibots-client-ip";
+export const CLIENT_IP_HEADER = "x-rakazo-client-ip";
 
 /** Routes that end sessions other than the caller's own sign-out. Recorded per deleted session. */
 const REVOCATION_PATHS = new Set(["/revoke-session", "/revoke-sessions", "/revoke-other-sessions"]);
@@ -158,7 +158,7 @@ export function createAuth(prisma: PrismaClient, env: AuthEnv) {
     logger: env.logger,
     secret: env.secret,
     baseURL: env.baseURL,
-    trustedOrigins: [...buildTrustedOrigins(env), "unibots://"],
+    trustedOrigins: [...buildTrustedOrigins(env), "rakazo://"],
     account: {
       accountLinking: { enabled: true, disableImplicitLinking: true, trustedProviders: [] },
       encryptOAuthTokens: true,
@@ -207,7 +207,8 @@ export function createAuth(prisma: PrismaClient, env: AuthEnv) {
     emailVerification: {
       // Open signups get a session at once; the link only marks the address verified.
       sendOnSignUp: Boolean(env.email),
-      sendOnSignIn: true,
+      // An email-less deployment has no verification link to send on sign-in.
+      sendOnSignIn: Boolean(env.email),
       autoSignInAfterVerification: false,
       sendVerificationEmail: env.email
         ? async ({ user, url }) => {

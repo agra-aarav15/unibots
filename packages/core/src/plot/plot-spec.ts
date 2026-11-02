@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 import * as Plot from "@observablehq/plot";
-import { MAX_CHART_DATA_ROWS } from "@unibots/contracts";
+import { MAX_CHART_DATA_ROWS } from "@rakazo/contracts";
 import { autoType, csvParseRows, tsvParseRows } from "d3-dsv";
 
 /**

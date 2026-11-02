@@ -1,13 +1,13 @@
-import type { SkillRecord, SkillSource } from "@unibots/core";
+import type { SkillRecord, SkillSource } from "@rakazo/core";
 import {
   buildSkillMd,
   findSkillByName,
   isSkillReadOnly,
   mergeBuiltinSkills,
   parseSkillMd,
-} from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
-import { availableInSpace } from "@unibots/db";
+} from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
+import { availableInSpace } from "@rakazo/db";
 import { BUILTIN_AGENT_SKILLS } from "./builtin-skills.js";
 
 export const SKILL_TOOL_NAMES = new Set([

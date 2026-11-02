@@ -17,7 +17,7 @@ server integration credentials, or deployment updates, and cannot read deploymen
 
 There is no app-admin role, first-user privilege, or `ADMINS` list. Workspace owners manage only their own workspace.
 
-`UNIBOTS_ADMIN_EMAILS` names accounts, comma-separated, that review plugin submissions. An account
+`RAKAZO_ADMIN_EMAILS` names accounts, comma-separated, that review plugin submissions. An account
 counts only once its email is verified. It grants nothing else.
 
 ## Email verification and sign-in codes
@@ -54,7 +54,7 @@ Keep an installation without email on a trusted local network.
 ## Verification and password recovery email
 
 Password changes for signed-in users require no email configuration. Forgotten-password recovery
-appears on sign-in only when a transactional email provider is available. Unibots uses a
+appears on sign-in only when a transactional email provider is available. Rakazo uses a
 provider-neutral contract with Resend API and SMTP adapters. Templates render locally with React
 Email into HTML and plain text, independent of the sending provider.
 
@@ -64,7 +64,7 @@ to that domain, then configure:
 ```env
 EMAIL_PROVIDER=resend
 EMAIL_API_KEY=replace-with-sending-api-key
-EMAIL_FROM=Unibots <hello@mail.example.com>
+EMAIL_FROM=Rakazo <hello@mail.example.com>
 ```
 
 Disable click and open tracking for account email in the provider's domain settings. Resend delivery
@@ -75,7 +75,7 @@ For Amazon SES or another SMTP server, use:
 
 ```env
 SMTP_URL=smtps://smtp-user:replace-with-password@smtp.example.com:465
-EMAIL_FROM=Unibots <no-reply@example.com>
+EMAIL_FROM=Rakazo <no-reply@example.com>
 ```
 
 Set `EMAIL_REPLY_TO` to send replies somewhere other than `EMAIL_FROM`.
@@ -88,7 +88,7 @@ Resend also supports SMTP: use `smtp.resend.com`, username `resend`, and an API 
 SES, use the regional SMTP endpoint and SES SMTP credentials; these are different from ordinary AWS
 access keys. Verify the sender/domain with the provider before testing delivery. Keep credentials in
 `.env`, never in tracked files. `smtps://` uses implicit TLS; `smtp://` is also supported but requires
-STARTTLS. Unibots rejects configuration that disables TLS or certificate verification.
+STARTTLS. Rakazo rejects configuration that disables TLS or certificate verification.
 
 Local source development can use the offline email emulator instead. It captures email without
 contacting a provider:
@@ -133,7 +133,7 @@ AUTH_PASSWORD_ENABLED=true
 OIDC_ALLOW_SIGNUP_BYPASS=false
 ```
 
-The issuer must be HTTPS and exactly match the discovery document's issuer. Unibots loads
+The issuer must be HTTPS and exactly match the discovery document's issuer. Rakazo loads
 `<issuer>/.well-known/openid-configuration`, verifies ID tokens against discovery JWKS with
 issuer, audience and nonce checks, and uses authorization codes with PKCE. Additional scopes
 may be space- or comma-separated; `openid email profile` are always requested. `OIDC_NAME`
@@ -149,8 +149,8 @@ https://app.example.com/api/auth/callback/oidc
 
 Web, Electron and mobile use the same provider redirect URI. Electron completes SSO in a
 sandboxed in-app popup sharing the app's session, then returns to the main window. Mobile completes the callback
-on the API, then returns to `unibots://sign-in` (or `unibots://account` for linking and reauthentication) through Better Auth's Expo authorization proxy
-and a native auth browser session. The `unibots` app scheme is trusted by the auth server;
+on the API, then returns to `rakazo://sign-in` (or `rakazo://account` for linking and reauthentication) through Better Auth's Expo authorization proxy
+and a native auth browser session. The `rakazo` app scheme is trusted by the auth server;
 never register a client secret in the mobile app. Mobile stores the resulting session with
 SecureStore, like password sign-in. Native builds need the Expo WebBrowser module.
 
@@ -206,16 +206,16 @@ relying party is that origin's host, so existing passkeys keep working only whil
 stays on the same domain. They are off when password sign-in is disabled for SSO-only
 deployments. On web, a browser offers them where it has a platform authenticator. The macOS
 desktop app uses the system passkey sheet, which only serves the domain the release is
-associated with (`app.unibots.example`), so it hides passkeys for other servers.
+associated with (`app.rakazo.com`), so it hides passkeys for other servers.
 
 Native apps can use a domain's passkeys only when the domain vouches for them and the app was
 built for that domain (the app's associated domain comes from `EXPO_PUBLIC_API_URL` at build
 time). To let a build use this server's passkeys, set:
 
 ```bash
-# iOS and the macOS desktop app (dev.unibots.desktop): <Apple Team ID>.<bundle id>, comma-separated.
+# iOS and the macOS desktop app (dev.rakazo.desktop): <Apple Team ID>.<bundle id>, comma-separated.
 # Served as /.well-known/apple-app-site-association.
-PASSKEY_APPLE_APP_IDS=ABCDE12345.com.unibots.app,ABCDE12345.dev.unibots.desktop
+PASSKEY_APPLE_APP_IDS=ABCDE12345.com.rakazo.app,ABCDE12345.dev.rakazo.desktop
 # Android: SHA-256 fingerprints of the app signing certificates, comma-separated.
 # Served as /.well-known/assetlinks.json and accepted as passkey origins.
 PASSKEY_ANDROID_CERT_SHA256=AA:BB:...:FF

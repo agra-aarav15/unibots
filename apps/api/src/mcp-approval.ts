@@ -1,12 +1,12 @@
-import type { Actor, MessageBlock } from "@unibots/contracts";
-import { QUEUE_HOLDING_RUN_STATUSES } from "@unibots/core";
-import type { Prisma, PrismaClient, ThreadEvents } from "@unibots/db";
+import type { Actor, MessageBlock } from "@rakazo/contracts";
+import { QUEUE_HOLDING_RUN_STATUSES } from "@rakazo/core";
+import type { Prisma, PrismaClient, ThreadEvents } from "@rakazo/db";
 import {
   appendEventInTransaction,
   availableInSpace,
   IsolationError,
   withTransactionRetry,
-} from "@unibots/db";
+} from "@rakazo/db";
 import { requireBotThread } from "./bot-thread.js";
 
 export type McpApprovalDeps = {

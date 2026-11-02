@@ -1,4 +1,4 @@
-import { appConnectedInput } from "@unibots/core";
+import { appConnectedInput } from "@rakazo/core";
 import { describe, expect, it } from "vitest";
 import { appConnectPresentation } from "./app-connect.js";
 

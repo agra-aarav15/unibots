@@ -7,8 +7,8 @@ import type {
   AgentHomeStore,
   ObjectStorage,
   PortableFile,
-} from "@unibots/adapter-kit";
-import type { ContentKeyRing, ContentLocation, DataKey, PrismaClient } from "@unibots/db";
+} from "@rakazo/adapter-kit";
+import type { ContentKeyRing, ContentLocation, DataKey, PrismaClient } from "@rakazo/db";
 import {
   ContentDecryptionError,
   ciphertextKeyId,
@@ -18,8 +18,8 @@ import {
   openArtifact,
   runAsSystem,
   sealArtifact,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { LocalAgentHomeStore, newRevision } from "./home.js";
 import type { HomeArchiveLimits } from "./home-archive.js";
 import {

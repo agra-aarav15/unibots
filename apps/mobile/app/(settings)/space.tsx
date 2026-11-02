@@ -1,4 +1,4 @@
-import type { SpaceSetting } from "@unibots/contracts";
+import type { SpaceSetting } from "@rakazo/contracts";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text } from "react-native";

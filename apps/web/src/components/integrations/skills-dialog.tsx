@@ -1,7 +1,7 @@
 import { Plural, Trans, useLingui } from "@lingui/react/macro";
-import type { CapabilityInstall, PluginMarketplaceEntry } from "@unibots/contracts";
-import { PluginPreviewSchema } from "@unibots/contracts";
-import { installedPluginParts, matchesPluginQuery } from "@unibots/core";
+import type { CapabilityInstall, PluginMarketplaceEntry } from "@rakazo/contracts";
+import { PluginPreviewSchema } from "@rakazo/contracts";
+import { installedPluginParts, matchesPluginQuery } from "@rakazo/core";
 import {
   Button,
   Dialog,
@@ -13,7 +13,7 @@ import {
   FieldLabel,
   Input,
   Spinner,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeft, X } from "lucide-react";
 import { useState } from "react";

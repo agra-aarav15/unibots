@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@unibots/db";
+import type { PrismaClient } from "@rakazo/db";
 import { vi } from "vitest";
 
 // No database is available offline, so these run against an in-memory stand-in for the

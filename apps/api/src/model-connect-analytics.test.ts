@@ -1,5 +1,5 @@
-import type { Actor } from "@unibots/contracts";
-import { MODEL_KEY_REJECTED_ERROR, OPENAI_COMPATIBLE_PROVIDER_ID } from "@unibots/contracts";
+import type { Actor } from "@rakazo/contracts";
+import { MODEL_KEY_REJECTED_ERROR, OPENAI_COMPATIBLE_PROVIDER_ID } from "@rakazo/contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   firstModelConnectAnalytics,

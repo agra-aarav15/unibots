@@ -1,9 +1,9 @@
-import type { JobPublisher } from "@unibots/adapter-kit";
-import { ModelAccountError, routineWakeupJob } from "@unibots/adapter-kit";
-import type { RunErrorKind } from "@unibots/contracts";
-import { nextCronDateAcross, nextRoutineRunDateAcross, normalizeRunError } from "@unibots/core";
-import type { Prisma, PrismaClient } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+import type { JobPublisher } from "@rakazo/adapter-kit";
+import { ModelAccountError, routineWakeupJob } from "@rakazo/adapter-kit";
+import type { RunErrorKind } from "@rakazo/contracts";
+import { nextCronDateAcross, nextRoutineRunDateAcross, normalizeRunError } from "@rakazo/core";
+import type { Prisma, PrismaClient } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 
 /** The first account-error failure holds the routine this long; each further one doubles it. */
 const ROUTINE_ACCOUNT_BACKOFF_BASE_MS = 5 * 60_000;

@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@unibots/db";
+import type { PrismaClient } from "@rakazo/db";
 import type { SecretConfig } from "better-auth/crypto";
 import { symmetricDecrypt, symmetricEncrypt } from "better-auth/crypto";
 

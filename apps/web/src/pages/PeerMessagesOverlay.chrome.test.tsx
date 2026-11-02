@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import type { UnibotsDesktop } from "@unibots/contracts";
+import type { RakazoDesktop } from "@rakazo/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { act } from "react";
@@ -34,7 +34,7 @@ beforeEach(() => {
 afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
-  delete window.unibotsDesktop;
+  delete window.rakazoDesktop;
   vi.unstubAllGlobals();
 });
 
@@ -60,7 +60,7 @@ async function render() {
 }
 
 it("clears the macOS window controls in the desktop app", async () => {
-  window.unibotsDesktop = { platform: "darwin" } as UnibotsDesktop;
+  window.rakazoDesktop = { platform: "darwin" } as RakazoDesktop;
   const view = await render();
   const header = view.firstElementChild!;
   expect(header.classList).toContain("app-drag");

@@ -2,8 +2,8 @@ import {
   CONNECTOR_AUTH_UNAVAILABLE,
   isVoiceAccountErrorCode,
   MCP_OAUTH_CLIENT_REQUIRED,
-} from "@unibots/contracts";
-import type { CredentialField } from "@unibots/core";
+} from "@rakazo/contracts";
+import type { CredentialField } from "@rakazo/core";
 import {
   authErrorMessage,
   isServerUnreachable,
@@ -12,7 +12,7 @@ import {
   MODEL_IMAGE_INPUT_ERROR,
   MODEL_IMAGE_INPUT_UNKNOWN,
   userErrorMessage,
-} from "@unibots/core";
+} from "@rakazo/core";
 import { t } from "./i18n";
 
 /** Text for a failure: human messages pass through; network and implementation detail become copy. */

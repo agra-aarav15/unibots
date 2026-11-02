@@ -4,14 +4,14 @@ import {
   hasHostedModelCredits,
   isAutoReviewCheckerConfigured,
   PushSessionEndedError,
-} from "@unibots/adapters";
-import type { ActionApprovalRule, Actor, Me, SettingsScope } from "@unibots/contracts";
+} from "@rakazo/adapters";
+import type { ActionApprovalRule, Actor, Me, SettingsScope } from "@rakazo/contracts";
 import {
   approvalModeFromPreference,
   approvalPreferenceFromMode,
   previewActionApprovalRule,
-} from "@unibots/core";
-import { urlSite } from "@unibots/core/egress";
+} from "@rakazo/core";
+import { urlSite } from "@rakazo/core/egress";
 import {
   findAutoReviewPreference,
   findDefaultVoiceCredential,
@@ -27,7 +27,7 @@ import {
   saveAutoReviewPreference,
   selectVoicePreference,
   voicePreferenceTarget,
-} from "@unibots/db";
+} from "@rakazo/db";
 import { aiConsentStatus, allowAiConsent } from "../ai-consent.js";
 import type { BillingService } from "../billing.js";
 import { firstModelConnectAnalytics } from "../model-connect-analytics.js";

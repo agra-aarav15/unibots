@@ -30,25 +30,25 @@ export type EmulatedGithubRelease = {
   htmlUrl: string;
 };
 
-/** Seeded unibots releases so evals succeed without the public internet. */
-export const DEFAULT_UNIBOTS_EMULATED_RELEASES: readonly EmulatedGithubRelease[] = [
+/** Seeded rakazo releases so evals succeed without the public internet. */
+export const DEFAULT_RAKAZO_EMULATED_RELEASES: readonly EmulatedGithubRelease[] = [
   {
-    owner: "agra-aarav15",
-    repo: "unibots",
+    owner: "elie222",
+    repo: "rakazo",
     tag: "v0.4.2",
     name: "v0.4.2 — routine tools + connector emulators",
     body: "Routines can bind connector tools. Composio emulator covers GitHub releases offline.",
     publishedAt: "2026-08-28T12:00:00.000Z",
-    htmlUrl: "https://github.com/agra-aarav15/unibots/releases/tag/v0.4.2",
+    htmlUrl: "https://github.com/elie222/rakazo/releases/tag/v0.4.2",
   },
   {
-    owner: "agra-aarav15",
-    repo: "unibots",
+    owner: "elie222",
+    repo: "rakazo",
     tag: "v0.4.1",
     name: "v0.4.1 — computer + plugin guidance",
     body: "Prefer connected plugins over browsing when reading app data.",
     publishedAt: "2026-08-20T12:00:00.000Z",
-    htmlUrl: "https://github.com/agra-aarav15/unibots/releases/tag/v0.4.1",
+    htmlUrl: "https://github.com/elie222/rakazo/releases/tag/v0.4.1",
   },
 ];
 
@@ -85,7 +85,7 @@ export function assessReleaseWatchRoutinePrompt(prompt: string): {
     };
   }
 
-  const mentionsRepo = /unibots|agra-aarav15/i.test(text);
+  const mentionsRepo = /rakazo|elie222/i.test(text);
   const mentionsReleases = /release/i.test(text);
   const mentionsGithubTool =
     /GITHUB_LIST_RELEASES|GITHUB_GET_RELEASE|list(?:\s+\w+){0,4}\s+releases|github\s+(tool|integration|plugin|connector|api)/i.test(
@@ -106,7 +106,7 @@ export function assessReleaseWatchRoutinePrompt(prompt: string): {
 
   if (!mentionsRepo || !mentionsReleases || !mentionsGithubTool) {
     const missing = [
-      !mentionsRepo ? "repo (agra-aarav15/unibots)" : null,
+      !mentionsRepo ? "repo (elie222/rakazo)" : null,
       !mentionsReleases ? "releases" : null,
       !mentionsGithubTool ? "GitHub/releases tool steps" : null,
     ]

@@ -1,6 +1,6 @@
-import type { MessageBlock } from "@unibots/contracts";
-import { isToolActivityBlock } from "@unibots/core";
-import { MAX_QUOTABLE_SOURCE_LENGTH, visibleTextFromMarkdown } from "@unibots/core/message-quote";
+import type { MessageBlock } from "@rakazo/contracts";
+import { isToolActivityBlock } from "@rakazo/core";
+import { MAX_QUOTABLE_SOURCE_LENGTH, visibleTextFromMarkdown } from "@rakazo/core/message-quote";
 
 export function isCenteredAgentEvent(blocks: readonly MessageBlock[]): boolean {
   return blocks.some(

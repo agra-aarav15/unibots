@@ -32,12 +32,12 @@ describe("DaytonaSandboxProvider", () => {
   it("forwards an optional snapshot name to create()", async () => {
     const fixture = daytonaFixture();
     const provider = new DaytonaSandboxProvider(
-      { apiKey: "test-key", snapshot: "unibots-computer" },
+      { apiKey: "test-key", snapshot: "rakazo-computer" },
       fixture.client,
     );
     await provider.provision({ botId: "bot-a", homePath: "/unused" }, context);
     expect(fixture.create).toHaveBeenCalledWith(
-      expect.objectContaining({ snapshot: "unibots-computer" }),
+      expect.objectContaining({ snapshot: "rakazo-computer" }),
       { timeout: 120 },
     );
   });
@@ -93,10 +93,10 @@ describe("DaytonaSandboxProvider", () => {
       "packages/core/notes.txt",
     ]);
     const visited = listing.mock.calls.map(([directory]) => directory);
-    expect(visited).not.toContain("/home/daytona/unibots-home/project/node_modules");
-    expect(visited).not.toContain("/home/daytona/unibots-home/.cache");
-    expect(visited).not.toContain("/home/daytona/unibots-home/.yarn/cache");
-    expect(visited).not.toContain("/home/daytona/unibots-home/.browser-profiles/chromium/Cache");
+    expect(visited).not.toContain("/home/daytona/rakazo-home/project/node_modules");
+    expect(visited).not.toContain("/home/daytona/rakazo-home/.cache");
+    expect(visited).not.toContain("/home/daytona/rakazo-home/.yarn/cache");
+    expect(visited).not.toContain("/home/daytona/rakazo-home/.browser-profiles/chromium/Cache");
   });
 
   it("omits snapshot from create() when unset", async () => {
@@ -132,8 +132,8 @@ describe("DaytonaSandboxProvider", () => {
     expect(computer).not.toHaveProperty("started");
     expect(fixture.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        name: expect.stringMatching(/^unibots-/),
-        labels: { botId: "bot-a", unibots: "computer" },
+        name: expect.stringMatching(/^rakazo-/),
+        labels: { botId: "bot-a", rakazo: "computer" },
         envVars: { VNC_RESOLUTION: "1280x800" },
       }),
       { timeout: 120 },
@@ -154,7 +154,7 @@ describe("DaytonaSandboxProvider", () => {
     // Secrets go in the env field, never in command text.
     expect(fixture.executeCommand).toHaveBeenCalledWith(
       "'env' '-u' 'FAILED' '--' 'echo' 'hello'",
-      "/home/daytona/unibots-home",
+      "/home/daytona/rakazo-home",
       { FAKE_TOKEN: "fake-secret" },
       300,
     );
@@ -612,7 +612,7 @@ describe("DaytonaSandboxProvider", () => {
       timeout,
     );
     const name = fixture.create.mock.calls[0]?.[0].name;
-    expect(name).toMatch(/^unibots-/);
+    expect(name).toMatch(/^rakazo-/);
     expect(fixture.get).toHaveBeenCalledWith(name);
     expect(fixture.deleteSandbox).toHaveBeenCalledOnce();
     expect(fixture.remote.missing).toBe(true);
@@ -662,7 +662,7 @@ describe("DaytonaSandboxProvider", () => {
     const provider = new DaytonaSandboxProvider({ apiKey: "test-key" }, fixture.client);
     const computer = await provider.provision({ botId: "bot-a", homePath: "/unused" }, context);
     await provider.prepare(computer, context);
-    // Stopped outside Unibots, for example from the Daytona dashboard.
+    // Stopped outside Rakazo, for example from the Daytona dashboard.
     fixture.remote.state = "stopped";
     fixture.remote.desiredState = "stopped";
 

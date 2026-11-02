@@ -1,4 +1,4 @@
-import { textDirectionForLocale } from "@unibots/core";
+import { textDirectionForLocale } from "@rakazo/core";
 import { reloadAppAsync } from "expo";
 import { I18nManager, Platform } from "react-native";
 

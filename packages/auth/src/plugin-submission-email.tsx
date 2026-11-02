@@ -1,5 +1,5 @@
 /** @jsxRuntime automatic */
-import type { TransactionalEmail } from "@unibots/adapter-kit";
+import type { TransactionalEmail } from "@rakazo/adapter-kit";
 import { Link, Text } from "react-email";
 import { linkStyle, message } from "./email.js";
 

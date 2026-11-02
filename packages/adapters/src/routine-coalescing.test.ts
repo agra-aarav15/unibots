@@ -1,4 +1,4 @@
-import type { Prisma } from "@unibots/db";
+import type { Prisma } from "@rakazo/db";
 import { describe, expect, it, vi } from "vitest";
 import { findPendingRoutineTick, routineTimerNonce } from "./routine-coalescing.js";
 

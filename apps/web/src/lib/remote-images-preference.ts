@@ -1,5 +1,5 @@
-import type { RemoteImagesPreference } from "@unibots/core";
-import { normalizeRemoteImagesPreference, REMOTE_IMAGES_STORAGE_KEY } from "@unibots/core";
+import type { RemoteImagesPreference } from "@rakazo/core";
+import { normalizeRemoteImagesPreference, REMOTE_IMAGES_STORAGE_KEY } from "@rakazo/core";
 
 export type { RemoteImagesPreference };
 

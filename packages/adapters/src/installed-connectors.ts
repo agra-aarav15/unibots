@@ -6,9 +6,9 @@ import type {
   ConnectorProvider,
   ConnectorTool,
   SecretStore,
-} from "@unibots/adapter-kit";
-import type { PrismaClient } from "@unibots/db";
-import { availableInSpace, itemSecretIn } from "@unibots/db";
+} from "@rakazo/adapter-kit";
+import type { PrismaClient } from "@rakazo/db";
+import { availableInSpace, itemSecretIn } from "@rakazo/db";
 import { parse as parseYaml } from "yaml";
 import { z } from "zod";
 import {

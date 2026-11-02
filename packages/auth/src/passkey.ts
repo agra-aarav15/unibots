@@ -25,10 +25,14 @@ export function passkeyRelyingParty(
   const host = url.hostname.replace(/^\[|\]$/g, "");
   const loopback = host === "localhost" || host === "127.0.0.1" || host === "::1";
   if (loopback) {
-    // WebAuthn rejects IP relying parties, so loopback deployments use the localhost twin.
-    const local = new URL(url.origin);
-    local.hostname = "localhost";
-    return { rpID: "localhost", origins: [local.origin] };
+    // WebAuthn rejects IP relying parties, so loopback deployments use localhost.
+    // The desktop opens 127.0.0.1, so both same-scheme/port twins must be accepted.
+    const origins = ["localhost", "127.0.0.1"].map((name) => {
+      const twin = new URL(url.origin);
+      twin.hostname = name;
+      return twin.origin;
+    });
+    return { rpID: "localhost", origins };
   }
   if (isIP(host) || url.protocol !== "https:") return null;
   return {

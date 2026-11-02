@@ -1,5 +1,5 @@
-import type { LogoAvatarActivity } from "@unibots/core";
-import { logoAvatarStatusActivity } from "@unibots/core";
+import type { LogoAvatarActivity } from "@rakazo/core";
+import { logoAvatarStatusActivity } from "@rakazo/core";
 import type { ReactNode } from "react";
 import { createContext, startTransition, useContext, useEffect, useRef, useState } from "react";
 

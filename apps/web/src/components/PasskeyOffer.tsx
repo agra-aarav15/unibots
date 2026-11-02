@@ -1,6 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import { passkeyOfferDismissedKey, shouldOfferPasskey } from "@unibots/core";
-import { Button } from "@unibots/ui-web";
+import { passkeyOfferDismissedKey, shouldOfferPasskey } from "@rakazo/core";
+import { Button } from "@rakazo/ui-web";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { authClient } from "../lib/auth";

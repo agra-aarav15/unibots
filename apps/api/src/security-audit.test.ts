@@ -1,10 +1,10 @@
-import { BotSecretPutInput } from "@unibots/contracts";
-import type * as Db from "@unibots/db";
-import { recordSecurityEvent } from "@unibots/db";
+import { BotSecretPutInput } from "@rakazo/contracts";
+import type * as Db from "@rakazo/db";
+import { recordSecurityEvent } from "@rakazo/db";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createAuthResponseAudit, procedureSecurityEvent } from "./security-audit.js";
 
-vi.mock("@unibots/db", async (original) => ({
+vi.mock("@rakazo/db", async (original) => ({
   ...(await original<typeof Db>()),
   recordSecurityEvent: vi.fn(async () => undefined),
 }));

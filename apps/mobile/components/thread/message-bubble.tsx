@@ -1,14 +1,14 @@
-import { ChatMarkdown, withBlockMentions } from "@unibots/chat-ui/native";
-import type { LoginFieldInput, MessageBlock } from "@unibots/contracts";
-import { isAttachmentAudioMimeType } from "@unibots/contracts";
-import type { ChildBotBlock, PeerExchange } from "@unibots/core";
+import { ChatMarkdown, withBlockMentions } from "@rakazo/chat-ui/native";
+import type { LoginFieldInput, MessageBlock } from "@rakazo/contracts";
+import { isAttachmentAudioMimeType } from "@rakazo/contracts";
+import type { ChildBotBlock, PeerExchange } from "@rakazo/core";
 import {
   formatFileSize,
   isApprovalAskBlock,
   memberName,
   selectedAskActionLabel,
-} from "@unibots/core";
-import { fontWeight, typeScale } from "@unibots/ui-tokens";
+} from "@rakazo/core";
+import { fontWeight, typeScale } from "@rakazo/ui-tokens";
 import type { ComponentProps } from "react";
 import { memo, useState } from "react";
 import type { TextProps } from "react-native";

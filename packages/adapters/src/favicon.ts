@@ -1,4 +1,4 @@
-import { registrableDomain } from "@unibots/core/egress";
+import { registrableDomain } from "@rakazo/core/egress";
 import { JSDOM } from "jsdom";
 import type { ResolveHostname } from "./network-address.js";
 import { fetchSafeWebBytes } from "./web-ssrf.js";

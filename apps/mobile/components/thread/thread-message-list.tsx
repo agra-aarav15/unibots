@@ -1,5 +1,5 @@
-import type { ThreadItem } from "@unibots/core";
-import { threadWindowMessages } from "@unibots/core";
+import type { ThreadItem } from "@rakazo/core";
+import { threadWindowMessages } from "@rakazo/core";
 import type { ReactElement, ReactNode } from "react";
 import { useMemo } from "react";
 import type { ListRenderItem } from "react-native";

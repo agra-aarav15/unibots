@@ -1,12 +1,12 @@
-import type { AgentRunRequest, AgentRuntimeEvent } from "@unibots/adapter-kit";
-import type { MessageBlock } from "@unibots/contracts";
-import type { AppendEventInput, Prisma } from "@unibots/db";
+import type { AgentRunRequest, AgentRuntimeEvent } from "@rakazo/adapter-kit";
+import type { MessageBlock } from "@rakazo/contracts";
+import type { AppendEventInput, Prisma } from "@rakazo/db";
 import {
   appendEventInTransaction,
   createThreadMessageInTransaction,
   partialReplyClientNonce,
   RunHistoryWriteError,
-} from "@unibots/db";
+} from "@rakazo/db";
 import { describe, expect, it, vi } from "vitest";
 import { PARTIAL_REPLY_NOTE } from "./automated-messages.js";
 import { loadBotMessageContext, returnBotMessageOutcome } from "./bot-messages.js";

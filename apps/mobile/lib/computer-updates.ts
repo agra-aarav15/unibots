@@ -1,4 +1,4 @@
-import { createComputerUpdates, isUnauthorizedError } from "@unibots/core";
+import { createComputerUpdates, isUnauthorizedError } from "@rakazo/core";
 import { rpc, spaceSelectionSeq } from "./api";
 export const computerUpdates = createComputerUpdates({
   list: async () => {

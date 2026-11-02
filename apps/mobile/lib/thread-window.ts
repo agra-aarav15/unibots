@@ -1,11 +1,11 @@
-import type { ThreadScrollState } from "@unibots/core";
+import type { ThreadScrollState } from "@rakazo/core";
 import {
   foldPeerReplies,
   jumpTargetId,
   leaveThreadWindow,
   openThreadWindow,
   peerExchangeLines,
-} from "@unibots/core";
+} from "@rakazo/core";
 import type { Dispatch, RefObject, SetStateAction } from "react";
 import type { MobileSnapshot } from "./api";
 import { rpc } from "./api";

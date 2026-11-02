@@ -1,4 +1,4 @@
-import { isRetryableError } from "@unibots/core";
+import { isRetryableError } from "@rakazo/core";
 import { useFocusEffect } from "expo-router";
 import type { Dispatch, RefObject, SetStateAction } from "react";
 import { useCallback, useEffect } from "react";

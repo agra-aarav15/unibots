@@ -1,13 +1,13 @@
-import type { AgentRunRequest, ComputerRef, SemanticMemoryProvider } from "@unibots/adapter-kit";
+import type { AgentRunRequest, ComputerRef, SemanticMemoryProvider } from "@rakazo/adapter-kit";
 import {
   DEFAULT_CONTEXT_STRATEGY,
   isModelCredentialRejected,
   runContinueJob,
   SandboxUnavailableError,
   SandboxUnresponsiveError,
-} from "@unibots/adapter-kit";
-import type { MessageBlock, ModelRoleChoice, RunStatus } from "@unibots/contracts";
-import { disabledBuiltinToolSet } from "@unibots/contracts";
+} from "@rakazo/adapter-kit";
+import type { MessageBlock, ModelRoleChoice, RunStatus } from "@rakazo/contracts";
+import { disabledBuiltinToolSet } from "@rakazo/contracts";
 import {
   assertTransition,
   botMessageAllowsSilence,
@@ -30,7 +30,7 @@ import {
   renderBotDirectory,
   userRunError,
   userTurnMessageForRun,
-} from "@unibots/core";
+} from "@rakazo/core";
 import {
   effectiveMemoryScope,
   isPartialReplyClientNonce,
@@ -43,9 +43,9 @@ import {
   recordUsage,
   settleReleasedTakeoverCards,
   spaceHasModelAccess,
-} from "@unibots/db";
-import { enrichLogContext, getLogger } from "@unibots/logging";
-import { sanitizedError } from "@unibots/logging/monitoring";
+} from "@rakazo/db";
+import { enrichLogContext, getLogger } from "@rakazo/logging";
+import { sanitizedError } from "@rakazo/logging/monitoring";
 import { formatAgentEnvironmentInstruction } from "./agent-environment.js";
 import { createApprovedEffectReplayQueue } from "./approval-effect.js";
 import { PARTIAL_REPLY_NOTE } from "./automated-messages.js";
@@ -1526,13 +1526,6 @@ export function createRunExecutor(executorDeps: ExecutorDeps) {
               // Keep an explicit executor override, but let the runtime select
               // cache-aware context for connections declaring a cache window.
               contextStrategy: deps.contextStrategy,
-              runtimeInstructions: [
-                runIdentityInstruction(bot, run.trigger),
-                groupContext,
-                botDirectory,
-              ]
-                .filter(Boolean)
-                .join("\n\n"),
               instructions: userTurnInstructions({
                 botInstructions: runIdentityInstruction(bot, run.trigger),
                 groupContext,
@@ -1729,7 +1722,7 @@ export function createRunExecutor(executorDeps: ExecutorDeps) {
           redactSecrets(text, runSecrets),
         );
         // An outage at the computer provider is retried like any setup failure, but is not a
-        // Unibots bug to report.
+        // Rakazo bug to report.
         const providerOutage =
           setupError instanceof SandboxUnavailableError ||
           setupError instanceof SandboxUnresponsiveError;

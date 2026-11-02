@@ -1,6 +1,6 @@
 import path from "node:path";
-import type { ProcessEvent } from "@unibots/adapter-kit";
-import { redactSecrets, sandboxCommandTimeoutMs } from "@unibots/core";
+import type { ProcessEvent } from "@rakazo/adapter-kit";
+import { redactSecrets, sandboxCommandTimeoutMs } from "@rakazo/core";
 import type { HostComputerEnvironment } from "./host-computer-protocol.js";
 import { nativeShellCommandArgv } from "./native-shell.js";
 import type { RunContext } from "./run-context.js";
@@ -17,7 +17,7 @@ export const USER_COMPUTER_SHELL_TOOL = "user_computer_shell";
 export type UserComputerState = "connected" | "offline" | undefined;
 
 const USER_COMPUTER_UNAVAILABLE =
-  "The user's computer is not connected. Ask them to open the Unibots desktop app.";
+  "The user's computer is not connected. Ask them to open the Rakazo desktop app.";
 
 /**
  * Whose own computer this run may reach: the person whose message started it, when they own the

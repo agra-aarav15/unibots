@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "Unibots",
-    "slug": "unibots",
-    "owner": "agra-aarav15",
-    "scheme": "unibots",
+    "name": "Rakazo",
+    "slug": "rakazo",
+    "owner": "inbox-zero",
+    "scheme": "rakazo",
     "version": "1.0.11",
     "orientation": "default",
     "userInterfaceStyle": "automatic",
@@ -26,14 +26,14 @@
         "expo-audio",
         {
           "enableBackgroundPlayback": false,
-          "microphonePermission": "Unibots uses the microphone for voice calls with your bots."
+          "microphonePermission": "Rakazo uses the microphone for voice calls with your bots."
         }
       ],
       [
         "expo-speech-recognition",
         {
-          "speechRecognitionPermission": "Unibots turns your speech into messages during voice calls.",
-          "microphonePermission": "Unibots uses the microphone for voice calls with your bots."
+          "speechRecognitionPermission": "Rakazo turns your speech into messages during voice calls.",
+          "microphonePermission": "Rakazo uses the microphone for voice calls with your bots."
         }
       ],
       "expo-localization",
@@ -48,9 +48,9 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Unibots uses your photo library so you can attach images to a bot message.",
-          "cameraPermission": "Unibots uses the camera so you can attach photos to a bot message.",
-          "microphonePermission": "Unibots uses the microphone for voice calls with your bots."
+          "photosPermission": "Rakazo uses your photo library so you can attach images to a bot message.",
+          "cameraPermission": "Rakazo uses the camera so you can attach photos to a bot message.",
+          "microphonePermission": "Rakazo uses the microphone for voice calls with your bots."
         }
       ],
       [
@@ -83,24 +83,24 @@
       "./plugins/with-lan-cleartext"
     ],
     "ios": {
-      "bundleIdentifier": "com.unibots.app",
+      "bundleIdentifier": "com.rakazo.app",
       "buildNumber": "1",
       "supportsTablet": false,
-      "icon": "../../packages/ui-tokens/assets/Unibots.icon",
+      "icon": "../../packages/ui-tokens/assets/Rakazo.icon",
       "config": {
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "NSCameraUsageDescription": "Unibots uses the camera so you can attach photos to a bot message.",
-        "NSPhotoLibraryUsageDescription": "Unibots uses your photo library so you can attach images to a bot message.",
-        "NSLocalNetworkUsageDescription": "Unibots connects to a self-hosted Unibots server on your local network.",
+        "NSCameraUsageDescription": "Rakazo uses the camera so you can attach photos to a bot message.",
+        "NSPhotoLibraryUsageDescription": "Rakazo uses your photo library so you can attach images to a bot message.",
+        "NSLocalNetworkUsageDescription": "Rakazo connects to a self-hosted Rakazo server on your local network.",
         "NSAppTransportSecurity": {
           "NSAllowsLocalNetworking": true
         }
       }
     },
     "android": {
-      "package": "com.unibots.app",
+      "package": "com.rakazo.app",
       "versionCode": 10,
       "softwareKeyboardLayoutMode": "resize",
       "icon": "./assets/icon.png",
@@ -115,10 +115,16 @@
     },
     "extra": {
       "router": {},
-      "supportsRTL": true
+      "supportsRTL": true,
+      "eas": {
+        "projectId": "07f7eb04-45e3-47fe-9374-99a2f991131e"
+      }
     },
     "runtimeVersion": {
       "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/07f7eb04-45e3-47fe-9374-99a2f991131e"
     }
   }
 }

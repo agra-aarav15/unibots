@@ -5,16 +5,16 @@ import type {
   ComputerRef,
   JobPublisher,
   SandboxProvider,
-} from "@unibots/adapter-kit";
-import { routineJobKey, runContinueJob, runJobKey } from "@unibots/adapter-kit";
-import type { Actor, Bot, ComputerMode } from "@unibots/contracts";
+} from "@rakazo/adapter-kit";
+import { routineJobKey, runContinueJob, runJobKey } from "@rakazo/adapter-kit";
+import type { Actor, Bot, ComputerMode } from "@rakazo/contracts";
 import {
   BOT_DESCRIPTION_MAX_LENGTH,
   BOT_INSTRUCTIONS_MAX_LENGTH,
   GROUP_MEMBER_MIN,
-} from "@unibots/contracts";
-import { ACTIVE_RUN_STATUSES } from "@unibots/core";
-import type { Prisma, PrismaClient } from "@unibots/db";
+} from "@rakazo/contracts";
+import { ACTIVE_RUN_STATUSES } from "@rakazo/core";
+import type { Prisma, PrismaClient } from "@rakazo/db";
 import {
   cancelRunsInTransaction,
   clearEndedRunState,
@@ -25,8 +25,8 @@ import {
   legacyTeamHomeKey,
   recordComputerRunEnd,
   withTransactionRetry,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { BrowserStoppedReleaseError } from "./computer-screens.js";
 import { toComputerRef } from "./computer-support.js";
 import {

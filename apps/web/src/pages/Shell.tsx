@@ -5,7 +5,7 @@ import type {
   SpaceMemoryConfig,
   ThreadMessage,
   VoiceStatus,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   answerableAskMessageIds,
   channelMessageSender,
@@ -15,11 +15,11 @@ import {
   isActive,
   isRunWorking,
   memberName,
-} from "@unibots/core";
-import { fetchFresh, writeSaved } from "@unibots/core/query";
-import type { GroupAvatarMember } from "@unibots/ui-web";
-import { Button } from "@unibots/ui-web";
-import { useIsMobile } from "@unibots/ui-web/hooks/use-mobile";
+} from "@rakazo/core";
+import { fetchFresh, writeSaved } from "@rakazo/core/query";
+import type { GroupAvatarMember } from "@rakazo/ui-web";
+import { Button } from "@rakazo/ui-web";
+import { useIsMobile } from "@rakazo/ui-web/hooks/use-mobile";
 import { useQuery } from "@tanstack/react-query";
 import { Lock, Monitor, Moon, Plug, Plus, ScrollText, Sun, Users } from "lucide-react";
 import {

@@ -14,9 +14,9 @@ import type {
   PurchaseRequest,
   PurchaseSnapshot,
   PurchaseStatus,
-} from "@unibots/adapter-kit";
-import { PaymentWalletDisconnected, PaymentWalletRequestRejected } from "@unibots/adapter-kit";
-import { abortableDelay } from "@unibots/core";
+} from "@rakazo/adapter-kit";
+import { PaymentWalletDisconnected, PaymentWalletRequestRejected } from "@rakazo/adapter-kit";
+import { abortableDelay } from "@rakazo/core";
 import Link, { getDuplicateSpendRequest, LinkApiError } from "@stripe/link-sdk";
 import {
   readStripeChargeChallenge,

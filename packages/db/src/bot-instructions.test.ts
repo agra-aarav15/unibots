@@ -1,4 +1,4 @@
-import { BOT_INSTRUCTIONS_MAX_LENGTH } from "@unibots/contracts";
+import { BOT_INSTRUCTIONS_MAX_LENGTH } from "@rakazo/contracts";
 import { describe, expect, it, vi } from "vitest";
 import {
   InstructionConflictError,

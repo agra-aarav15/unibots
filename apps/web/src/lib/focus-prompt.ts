@@ -1,4 +1,4 @@
-import { abortableDelay } from "@unibots/core";
+import { abortableDelay } from "@rakazo/core";
 
 /** Delay before the setup focus card for a non-first bot. */
 export const FOCUS_PROMPT_DELAY_MS = 10_000;

@@ -43,7 +43,7 @@ export function renderIosScreenshotGallery(sections: IosGallerySection[]): strin
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Unibots iOS screenshots</title>
+  <title>Rakazo iOS screenshots</title>
   <style>
     :root { color-scheme: light dark; }
     * { box-sizing: border-box; }

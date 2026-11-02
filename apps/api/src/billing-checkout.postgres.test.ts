@@ -1,8 +1,8 @@
-import type { BillingCreditCheckoutRequest } from "@unibots/adapter-kit";
-import { BillingEmulator } from "@unibots/adapters";
-import type { Actor } from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
-import { asSystem, createDb } from "@unibots/db";
+import type { BillingCreditCheckoutRequest } from "@rakazo/adapter-kit";
+import { BillingEmulator } from "@rakazo/adapters";
+import type { Actor } from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
+import { asSystem, createDb } from "@rakazo/db";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createBillingService } from "./billing.js";
 
@@ -40,7 +40,7 @@ dbTests("billing checkout coordination", () => {
   const actor: Actor = {
     userId,
     spaceId,
-    email: `checkout-${stamp}@unibots.test`,
+    email: `checkout-${stamp}@rakazo.test`,
     isDeploymentOwner: false,
   };
   let prisma: PrismaClient, db: ReturnType<typeof createDb>;

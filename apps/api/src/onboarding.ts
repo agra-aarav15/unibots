@@ -1,17 +1,17 @@
-import type { ConnectorRegistry } from "@unibots/adapters";
-import type { Actor, MessageBlock } from "@unibots/contracts";
+import type { ConnectorRegistry } from "@rakazo/adapters";
+import type { Actor, MessageBlock } from "@rakazo/contracts";
 import {
   appConnectCard,
   connectedAppBlocks,
   matchAppCatalog,
   matchesAppConnection,
-} from "@unibots/core";
-import type { Prisma, PrismaClient, ThreadEvents } from "@unibots/db";
+} from "@rakazo/core";
+import type { Prisma, PrismaClient, ThreadEvents } from "@rakazo/db";
 import {
   appendEventInTransaction,
   createThreadMessageInTransaction,
   IsolationError,
-} from "@unibots/db";
+} from "@rakazo/db";
 import { requireBotThread } from "./bot-thread.js";
 import { resolveThreadTarget } from "./thread-target.js";
 

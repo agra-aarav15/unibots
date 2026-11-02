@@ -1,4 +1,4 @@
-import type { BillingStatus } from "@unibots/contracts";
+import type { BillingStatus } from "@rakazo/contracts";
 import { describe, expect, it, vi } from "vitest";
 import { currentPlan, ownKeyOffer, planEndsAt, purchaseCompleted } from "./billing";
 

@@ -6,8 +6,8 @@ import type {
   ComputerStatus,
   Run,
   TaughtSkill,
-} from "@unibots/contracts";
-import { BotAvatar, Button } from "@unibots/ui-web";
+} from "@rakazo/contracts";
+import { BotAvatar, Button } from "@rakazo/ui-web";
 import { X } from "lucide-react";
 import type { ReactNode } from "react";
 import { ComputerMaintenanceActions } from "../../components/ComputerMaintenanceActions";

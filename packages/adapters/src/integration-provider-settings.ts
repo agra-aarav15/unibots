@@ -3,10 +3,10 @@ import type {
   ConnectorCall,
   ManagedConnectorProvider,
   SecretStore,
-} from "@unibots/adapter-kit";
-import type { IntegrationProviderConfig, IntegrationProviderId } from "@unibots/contracts";
-import { IntegrationProviderConfigSchema, IntegrationProviderIdSchema } from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
+} from "@rakazo/adapter-kit";
+import type { IntegrationProviderConfig, IntegrationProviderId } from "@rakazo/contracts";
+import { IntegrationProviderConfigSchema, IntegrationProviderIdSchema } from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
 import { ComposioConnector } from "./composio-connector.js";
 import { credentialDigest } from "./credential-digest.js";
 import { PipedreamConnector } from "./pipedream-connector.js";

@@ -1,9 +1,9 @@
 import { t } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { ChatMarkdown } from "@unibots/chat-ui/web";
-import type { Artifact, Bot } from "@unibots/contracts";
-import { isAttachmentImageMimeType } from "@unibots/contracts";
-import { writeSaved } from "@unibots/core/query";
+import { ChatMarkdown } from "@rakazo/chat-ui/web";
+import type { Artifact, Bot } from "@rakazo/contracts";
+import { isAttachmentImageMimeType } from "@rakazo/contracts";
+import { writeSaved } from "@rakazo/core/query";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,7 +22,7 @@ import {
   Spinner,
   ToggleGroup,
   ToggleGroupItem,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import { skipToken, useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ChevronLeft,
@@ -53,7 +53,7 @@ import { WindowChrome } from "./WindowChrome";
 
 type ViewMode = "grid" | "list";
 type DateFilter = "all" | "today" | "week" | "month";
-const VIEW_MODE_STORAGE_KEY = "unibots:artifacts-view-mode";
+const VIEW_MODE_STORAGE_KEY = "rakazo:artifacts-view-mode";
 const LIST_PAGE_SIZE = 60;
 
 type ArtifactSummary = Artifact & { versionCount: number };

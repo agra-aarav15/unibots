@@ -1,4 +1,4 @@
-import { MODEL_CONTEXT_TOO_SMALL_ERROR } from "@unibots/core";
+import { MODEL_CONTEXT_TOO_SMALL_ERROR } from "@rakazo/core";
 import { describe, expect, it } from "vitest";
 import {
   ContextBudgetError,

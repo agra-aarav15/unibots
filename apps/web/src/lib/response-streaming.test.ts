@@ -1,4 +1,4 @@
-import { RESPONSE_STREAMING_STORAGE_KEY } from "@unibots/core";
+import { RESPONSE_STREAMING_STORAGE_KEY } from "@rakazo/core";
 import { describe, expect, it } from "vitest";
 import {
   persistResponseStreamingPreference,

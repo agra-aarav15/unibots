@@ -1,8 +1,8 @@
-import type { AgentToolCompletion } from "@unibots/adapter-kit";
-import { redactSecrets } from "@unibots/core";
-import type { ThreadEvents } from "@unibots/db";
-import { RunHistoryWriteError } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+import type { AgentToolCompletion } from "@rakazo/adapter-kit";
+import { redactSecrets } from "@rakazo/core";
+import type { ThreadEvents } from "@rakazo/db";
+import { RunHistoryWriteError } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { isToolPauseResult } from "./approval-effect.js";
 import { sanitizeConnectorError } from "./connector-safety.js";
 

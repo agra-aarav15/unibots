@@ -1,4 +1,4 @@
-import type { ThinkingLevel } from "@unibots/contracts";
+import type { ThinkingLevel } from "@rakazo/contracts";
 
 export function thinkingLevelLabel(level: ThinkingLevel, t: (message: string) => string): string {
   if (level === "xhigh") return t("Extra high");

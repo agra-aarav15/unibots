@@ -1,11 +1,11 @@
-appId: com.unibots.app
+appId: com.rakazo.app
 name: Settings
 ---
 - runFlow:
     file: ../subflows/sign-in.yaml
     env:
-      UNIBOTS_ACTIVE_EMAIL: ${UNIBOTS_SCREENSHOT_EMAIL}
-- openLink: "unibots:///account"
+      RAKAZO_ACTIVE_EMAIL: ${RAKAZO_SCREENSHOT_EMAIL}
+- openLink: "rakazo:///account"
 - extendedWaitUntil:
     visible: ".*Change password.*"
     timeout: 15000
@@ -25,7 +25,7 @@ name: Settings
     visible: "Stream replies"
     timeout: 10000
 - takeScreenshot: 03-account-advanced
-- openLink: "unibots:///change-password"
+- openLink: "rakazo:///change-password"
 - extendedWaitUntil:
     visible: "Current password"
     timeout: 15000
@@ -45,12 +45,12 @@ name: Settings
     timeout: 10000
 - takeScreenshot: 05-password-mismatch
 - tapOn: "Back"
-- openLink: "unibots:///models"
+- openLink: "rakazo:///models"
 - extendedWaitUntil:
     visible: "Main model"
     timeout: 15000
 - takeScreenshot: 06-models
-- openLink: "unibots:///integrations"
+- openLink: "rakazo:///integrations"
 - extendedWaitUntil:
     visible: "Search apps"
     timeout: 15000
@@ -61,39 +61,39 @@ name: Settings
     visible: "Remote MCP server"
     timeout: 10000
 - takeScreenshot: 08-integrations-advanced
-- openLink: "unibots:///voice"
+- openLink: "rakazo:///voice"
 - extendedWaitUntil:
     visible: ".*This device.*"
     timeout: 15000
 - takeScreenshot: 09-voice
-- openLink: "unibots:///ai-data-sharing"
+- openLink: "rakazo:///ai-data-sharing"
 - extendedWaitUntil:
     visible: "AI data sharing"
     timeout: 15000
 - takeScreenshot: 10-ai-data-sharing
-- openLink: "unibots:///routine?botId=${UNIBOTS_SCREENSHOT_BOT_ID}&botName=Researcher&routineId=${UNIBOTS_SCREENSHOT_ROUTINE_ID}"
+- openLink: "rakazo:///routine?botId=${RAKAZO_SCREENSHOT_BOT_ID}&botName=Researcher&routineId=${RAKAZO_SCREENSHOT_ROUTINE_ID}"
 - extendedWaitUntil:
     visible: ".*Weekly fixture review.*"
     timeout: 15000
 - takeScreenshot: 11-routine
-- openLink: "unibots:///bot-settings?botId=${UNIBOTS_SCREENSHOT_BOT_ID}"
+- openLink: "rakazo:///bot-settings?botId=${RAKAZO_SCREENSHOT_BOT_ID}"
 - scrollUntilVisible:
     element: "Advanced"
     direction: DOWN
     timeout: 15000
 - tapOn: "Advanced"
 - takeScreenshot: 12-bot-settings
-- openLink: "unibots:///group-settings?groupId=${UNIBOTS_SCREENSHOT_GROUP_ID}"
+- openLink: "rakazo:///group-settings?groupId=${RAKAZO_SCREENSHOT_GROUP_ID}"
 - extendedWaitUntil:
     visible: ".*Delete group.*"
     timeout: 15000
 - takeScreenshot: 13-group-settings
-- openLink: "unibots:///computer?botId=${UNIBOTS_SCREENSHOT_BOT_ID}&name=Researcher"
+- openLink: "rakazo:///computer?botId=${RAKAZO_SCREENSHOT_BOT_ID}&name=Researcher"
 - extendedWaitUntil:
     visible: ".*Take control.*|.*Open computer.*"
     timeout: 20000
 - takeScreenshot: 14-computer
-- openLink: "unibots:///account"
+- openLink: "rakazo:///account"
 - scrollUntilVisible:
     element: ".*Delete account.*"
     direction: DOWN
@@ -105,7 +105,7 @@ name: Settings
     timeout: 10000
 - takeScreenshot: 15-delete-prompt
 - tapOn: "Cancel"
-- openLink: "unibots:///account"
+- openLink: "rakazo:///account"
 - extendedWaitUntil:
     visible: ".*Language.*"
     timeout: 15000
@@ -120,7 +120,7 @@ name: Settings
     visible: "Deutsch"
     timeout: 10000
 - takeScreenshot: 16-language
-- openLink: "unibots:///account"
+- openLink: "rakazo:///account"
 - scrollUntilVisible:
     element: "Artifacts"
     direction: DOWN

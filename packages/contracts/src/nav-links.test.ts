@@ -36,7 +36,7 @@ describe("parseNavLinks", () => {
     "/ext/../api/me",
   ])("rejects the path %s", (path) => {
     expect(() => parseNavLinks(JSON.stringify([{ id: "x", label: "X", path }]))).toThrow(
-      "UNIBOTS_NAV_LINKS",
+      "RAKAZO_NAV_LINKS",
     );
   });
 
@@ -54,7 +54,7 @@ describe("parseNavLinks", () => {
       ]),
     ],
   ])("rejects %s", (_name, value) => {
-    expect(() => parseNavLinks(value)).toThrow("UNIBOTS_NAV_LINKS");
+    expect(() => parseNavLinks(value)).toThrow("RAKAZO_NAV_LINKS");
   });
 });
 

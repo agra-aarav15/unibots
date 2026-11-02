@@ -6,7 +6,7 @@ import type {
   Me,
   Run,
   ThreadSnapshot,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   createScreenReconnects,
   isRetryableError,
@@ -14,8 +14,8 @@ import {
   SCREEN_RECONNECT_EVERY_MS,
   screenProbeUrl,
   waitForScreenPage,
-} from "@unibots/core";
-import { Button, Spinner } from "@unibots/ui-web";
+} from "@rakazo/core";
+import { Button, Spinner } from "@rakazo/ui-web";
 import type { RefObject } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ComputerMaintenanceActions } from "../../components/ComputerMaintenanceActions";
@@ -141,13 +141,13 @@ export function useComputerState({
       if (!message) return;
       if (screenFrameStarted(message)) screenFrameReported.current = true;
       if (
-        message.unibotsScreen === "connected" &&
+        message.rakazoScreen === "connected" &&
         screenRefocus.current.connected(document.activeElement, screenFrame, document.body)
       ) {
         screenFrame.focus();
-        screenFrame.contentWindow?.postMessage({ unibotsScreenFocus: true }, "*");
+        screenFrame.contentWindow?.postMessage({ rakazoScreenFocus: true }, "*");
       }
-      const ended = message.unibotsScreen === "failed" || message.unibotsScreen === "disconnected";
+      const ended = message.rakazoScreen === "failed" || message.rakazoScreen === "disconnected";
       if (screenUrl?.startsWith("wuying:") && ended) {
         // A Wuying login code works once, so a frame that loaded a spent one, or a session
         // another viewer took over, can only come back with a fresh read of the screen.
@@ -163,7 +163,7 @@ export function useComputerState({
           return;
         }
       }
-      if (screenReconnect().report(message.unibotsScreen) === "reconnect") {
+      if (screenReconnect().report(message.rakazoScreen) === "reconnect") {
         screenRefocus.current.dropped(document.activeElement === screenFrame);
         clearTimeout(reconnect);
         const url = embeddableScreenUrl(screenUrl);

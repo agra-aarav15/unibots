@@ -1,4 +1,4 @@
-import { RunHistoryWriteError } from "@unibots/db";
+import { RunHistoryWriteError } from "@rakazo/db";
 import { describe, expect, it, vi } from "vitest";
 import { legacyPiToolCallId, recordEffect, runScopedToolExecutionId } from "./run-effects.js";
 

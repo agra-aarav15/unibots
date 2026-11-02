@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { BOT_INSTRUCTIONS_MAX_LENGTH, InstructionVersionSchema } from "@unibots/contracts";
-import { ACTIVE_RUN_STATUSES, isOwnerStartedRun } from "@unibots/core";
+import { BOT_INSTRUCTIONS_MAX_LENGTH, InstructionVersionSchema } from "@rakazo/contracts";
+import { ACTIVE_RUN_STATUSES, isOwnerStartedRun } from "@rakazo/core";
 import type { Prisma, PrismaClient } from "./client.js";
 
 export class InstructionConflictError extends Error {

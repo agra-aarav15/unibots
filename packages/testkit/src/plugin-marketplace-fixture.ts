@@ -1,4 +1,4 @@
-import type { PluginRepoFetcher, PluginTextReader } from "@unibots/adapters";
+import type { PluginRepoFetcher, PluginTextReader } from "@rakazo/adapters";
 
 export const MARKETPLACE_FIXTURE_SOURCE = "https://github.com/example/plugin-marketplace-fixture";
 export const MARKETPLACE_FIXTURE_ENDPOINT = "https://marketplace-tools.example.test/mcp";

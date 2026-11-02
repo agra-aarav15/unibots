@@ -1,12 +1,12 @@
 import { createHash } from "node:crypto";
 import { ORPCError } from "@orpc/server";
-import type { SecretStore } from "@unibots/adapter-kit";
-import type { AgentImportSettings, ImportedMcpServer } from "@unibots/adapters";
+import type { SecretStore } from "@rakazo/adapter-kit";
+import type { AgentImportSettings, ImportedMcpServer } from "@rakazo/adapters";
 import {
   BUILTIN_AGENT_SKILLS,
   isCatalogModelChoice,
   readAgentImportSettings,
-} from "@unibots/adapters";
+} from "@rakazo/adapters";
 import type {
   Actor,
   AgentImportCreateInput,
@@ -22,28 +22,28 @@ import type {
   CreateRoutineInput as CreateRoutineInputType,
   McpServerConfigInput,
   MessageBlock,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   BOT_INSTRUCTIONS_MAX_LENGTH,
   CreateRoutineInput,
   isValidTimeZone,
   MEMORY_INDEX_PATH,
-} from "@unibots/contracts";
-import type { SkillFiles } from "@unibots/core";
+} from "@rakazo/contracts";
+import type { SkillFiles } from "@rakazo/core";
 import {
   combineImportedInstructions,
   parseAgentImport,
   readAgentImportFolder,
   renameRoutineSkillMentions,
   resolveAgentImportNames,
-} from "@unibots/core";
-import type { McpServer as McpServerRow, Prisma, PrismaClient, Routine } from "@unibots/db";
+} from "@rakazo/core";
+import type { McpServer as McpServerRow, Prisma, PrismaClient, Routine } from "@rakazo/db";
 import {
   appendEventInTransaction,
   availableInSpace,
   createThreadMessageInTransaction,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 
 type Reader = Pick<Prisma.TransactionClient, "memoryDocument" | "agentSkill" | "mcpServer">;
 type Stored = Awaited<ReturnType<SecretStore["put"]>> | null;

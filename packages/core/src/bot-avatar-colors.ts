@@ -1,4 +1,4 @@
-import { parseBotAvatarValue } from "@unibots/contracts";
+import { parseBotAvatarValue } from "@rakazo/contracts";
 
 export interface BotColorDef {
   id: string;

@@ -13,8 +13,8 @@ import type {
   PurchaseCredentialKind,
   PurchaseRequest,
   PurchaseSnapshot,
-} from "@unibots/adapter-kit";
-import { PaymentWalletDisconnected, PaymentWalletRequestRejected } from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
+import { PaymentWalletDisconnected, PaymentWalletRequestRejected } from "@rakazo/adapter-kit";
 import {
   readStripeChargeChallenge,
   stripeChargeAuthorization,

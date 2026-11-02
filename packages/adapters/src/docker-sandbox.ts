@@ -16,14 +16,14 @@ import type {
   ScreenRequest,
   ScreenSession,
   TerminalRequest,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   boundedSandboxCommandTimeoutMs,
   cancelResponseBody,
   requestDeadline,
   resolveSupervisorToken,
-} from "@unibots/core";
-import { outgoingCorrelationHeaders } from "@unibots/logging";
+} from "@rakazo/core";
+import { outgoingCorrelationHeaders } from "@rakazo/logging";
 import {
   boundedComputerActions,
   clampRounded,
@@ -131,12 +131,12 @@ export class DockerSandboxProvider implements SandboxProvider {
   private headers(context: AdapterContext, botId?: string) {
     return {
       authorization: `Bearer ${this.supervisorToken}`,
-      "x-unibots-space-id": context.spaceId,
+      "x-rakazo-space-id": context.spaceId,
       ...outgoingCorrelationHeaders(),
-      ...(botId ? { "x-unibots-bot-id": botId } : {}),
-      ...(context.botId ? { "x-unibots-screen-id": context.botId } : {}),
-      ...(context.screenLeaseId ? { "x-unibots-screen-lease-id": context.screenLeaseId } : {}),
-      ...(context.cancelRunWork ? { "x-unibots-cancel-run-work": "1" } : {}),
+      ...(botId ? { "x-rakazo-bot-id": botId } : {}),
+      ...(context.botId ? { "x-rakazo-screen-id": context.botId } : {}),
+      ...(context.screenLeaseId ? { "x-rakazo-screen-lease-id": context.screenLeaseId } : {}),
+      ...(context.cancelRunWork ? { "x-rakazo-cancel-run-work": "1" } : {}),
     };
   }
 
@@ -534,7 +534,7 @@ export class DockerSandboxProvider implements SandboxProvider {
           headers: {
             ...this.headers(context, computer.botId),
             ...(context.keepScreenWarm && !context.cancelRunWork && !context.signal.aborted
-              ? { "x-unibots-preserve-screen": "1" }
+              ? { "x-rakazo-preserve-screen": "1" }
               : {}),
           },
           signal: deadline.signal,
@@ -694,9 +694,9 @@ function parseProcessLine(line: string): ProcessEvent | undefined {
 }
 
 function dockerCwd(cwd: string | undefined) {
-  if (!cwd || cwd === "." || cwd === "/" || cwd === "/home/unibots") return "/home/unibots";
-  const relative = cwd.startsWith("/home/unibots/")
-    ? cwd.slice("/home/unibots/".length)
+  if (!cwd || cwd === "." || cwd === "/" || cwd === "/home/rakazo") return "/home/rakazo";
+  const relative = cwd.startsWith("/home/rakazo/")
+    ? cwd.slice("/home/rakazo/".length)
     : normalizeWorkspacePath(cwd);
-  return path.posix.join("/home/unibots", relative);
+  return path.posix.join("/home/rakazo", relative);
 }

@@ -242,39 +242,39 @@ describe("screen frame reports", () => {
   });
 
   it("accepts only known states and bounds the detail", () => {
-    expect(screenFrameMessage({ unibotsScreen: "connected" })).toEqual({
-      unibotsScreen: "connected",
+    expect(screenFrameMessage({ rakazoScreen: "connected" })).toEqual({
+      rakazoScreen: "connected",
     });
-    expect(screenFrameMessage({ unibotsScreen: "failed", detail: "  Failed to connect  " })).toEqual(
-      { unibotsScreen: "failed", detail: "Failed to connect" },
+    expect(screenFrameMessage({ rakazoScreen: "failed", detail: "  Failed to connect  " })).toEqual(
+      { rakazoScreen: "failed", detail: "Failed to connect" },
     );
     expect(
-      screenFrameMessage({ unibotsScreen: "failed", detail: "x".repeat(300) })?.detail,
+      screenFrameMessage({ rakazoScreen: "failed", detail: "x".repeat(300) })?.detail,
     ).toHaveLength(200);
-    expect(screenFrameMessage({ unibotsScreen: "failed", detail: 5 })).toEqual({
-      unibotsScreen: "failed",
+    expect(screenFrameMessage({ rakazoScreen: "failed", detail: 5 })).toEqual({
+      rakazoScreen: "failed",
     });
-    expect(screenFrameMessage({ unibotsScreen: "exploded" })).toBeNull();
+    expect(screenFrameMessage({ rakazoScreen: "exploded" })).toBeNull();
     expect(screenFrameMessage("connected")).toBeNull();
     expect(screenFrameMessage(null)).toBeNull();
   });
 
   it("counts only reports past loading as a started page", () => {
-    expect(screenFrameStarted({ unibotsScreen: "loading" })).toBe(false);
-    expect(screenFrameStarted({ unibotsScreen: "connecting" })).toBe(true);
-    expect(screenFrameStarted({ unibotsScreen: "connected" })).toBe(true);
-    expect(screenFrameStarted({ unibotsScreen: "failed" })).toBe(true);
+    expect(screenFrameStarted({ rakazoScreen: "loading" })).toBe(false);
+    expect(screenFrameStarted({ rakazoScreen: "connecting" })).toBe(true);
+    expect(screenFrameStarted({ rakazoScreen: "connected" })).toBe(true);
+    expect(screenFrameStarted({ rakazoScreen: "failed" })).toBe(true);
   });
 
   it("turns failures into the error to show and keeps progress silent", () => {
-    expect(screenFrameError({ unibotsScreen: "loading" }, "fallback")).toBeNull();
-    expect(screenFrameError({ unibotsScreen: "connecting" }, "fallback")).toBeNull();
-    expect(screenFrameError({ unibotsScreen: "connected" }, "fallback")).toBeNull();
-    expect(screenFrameError({ unibotsScreen: "failed", detail: "Refused" }, "fallback")).toBe(
+    expect(screenFrameError({ rakazoScreen: "loading" }, "fallback")).toBeNull();
+    expect(screenFrameError({ rakazoScreen: "connecting" }, "fallback")).toBeNull();
+    expect(screenFrameError({ rakazoScreen: "connected" }, "fallback")).toBeNull();
+    expect(screenFrameError({ rakazoScreen: "failed", detail: "Refused" }, "fallback")).toBe(
       "fallback",
     );
-    expect(screenFrameError({ unibotsScreen: "failed" }, "fallback")).toBe("fallback");
-    expect(screenFrameError({ unibotsScreen: "disconnected" }, "fallback")).toBe(
+    expect(screenFrameError({ rakazoScreen: "failed" }, "fallback")).toBe("fallback");
+    expect(screenFrameError({ rakazoScreen: "disconnected" }, "fallback")).toBe(
       "The screen connection closed.",
     );
   });

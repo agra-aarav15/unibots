@@ -121,7 +121,7 @@ function isPlainBindings(value: unknown): value is LogBindings {
 }
 
 let installed: Logger = createLogger({
-  service: "unibots",
+  service: "rakazo",
   level: "off",
   sinks: [],
 });

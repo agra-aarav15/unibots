@@ -5,24 +5,24 @@ import type {
   ArtifactStore,
   ComputerRef,
   SandboxProvider,
-} from "@unibots/adapter-kit";
-import type { ComputerMode, MessageBlock } from "@unibots/contracts";
+} from "@rakazo/adapter-kit";
+import type { ComputerMode, MessageBlock } from "@rakazo/contracts";
 import {
   ARTIFACT_DESCRIPTION_MAX_LENGTH,
   ARTIFACT_NAME_MAX_LENGTH,
   ATTACHMENT_MAX_BYTES,
   ATTACHMENT_MAX_COUNT,
   attachmentSizeLabel,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   attachmentExtensionForMimeType,
   inferAttachmentMimeType,
   messageBlockForArtifact,
   validateAttachmentMimeType,
-} from "@unibots/core";
-import type { Artifact, Prisma, PrismaClient } from "@unibots/db";
-import { withResolvedArtifactVersion } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/core";
+import type { Artifact, Prisma, PrismaClient } from "@rakazo/db";
+import { withResolvedArtifactVersion } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { resolveBotWorkspacePath } from "./computer-support.js";
 
 export type MaterializedThreadFile = {

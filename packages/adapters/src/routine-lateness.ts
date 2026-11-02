@@ -1,4 +1,4 @@
-import { nextRoutineRunDateAcross } from "@unibots/core";
+import { nextRoutineRunDateAcross } from "@rakazo/core";
 import { localDateTime } from "./current-time.js";
 import { routineTimerScheduledFor } from "./routine-coalescing.js";
 

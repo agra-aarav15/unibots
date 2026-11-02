@@ -1,4 +1,4 @@
-import type { RunStatus } from "@unibots/contracts";
+import type { RunStatus } from "@rakazo/contracts";
 
 /** Runs the bot is working on, which the chat shows as working. */
 export const WORKING_RUN_STATUSES = [

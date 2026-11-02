@@ -1,5 +1,5 @@
 import { DecryptCommand, EncryptCommand, KMSClient } from "@aws-sdk/client-kms";
-import type { KeyProvider, KeyWrapContext, WrappedDataKey } from "@unibots/adapter-kit";
+import type { KeyProvider, KeyWrapContext, WrappedDataKey } from "@rakazo/adapter-kit";
 
 export interface AwsKmsKeyProviderConfig {
   /** Key ARN, not an alias, which can be repointed without stored keys noticing. */
@@ -113,8 +113,8 @@ export class AwsKmsKeyProvider implements KeyProvider {
 
 function encryptionContext(context: KeyWrapContext): Record<string, string> {
   return {
-    "unibots:purpose": "space-key/v1",
-    "unibots:space": context.spaceId,
-    "unibots:version": String(context.version),
+    "rakazo:purpose": "space-key/v1",
+    "rakazo:space": context.spaceId,
+    "rakazo:version": String(context.version),
   };
 }

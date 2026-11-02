@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { UnibotsDesktop, UnibotsDesktopOAuthCallback } from "./desktop.js";
+import type { RakazoDesktop, RakazoDesktopOAuthCallback } from "./desktop.js";
 import {
   desktopOAuthCode,
   oauthStateOf,
@@ -7,7 +7,7 @@ import {
   windowChromeKind,
 } from "./desktop.js";
 
-function desktop(platform: string): UnibotsDesktop {
+function desktop(platform: string): RakazoDesktop {
   const updateState = {
     phase: "unsupported" as const,
     currentVersion: "0.1.0",
@@ -67,20 +67,20 @@ describe("attempt correlation", () => {
   afterEach(() => vi.unstubAllGlobals());
 
   function bridgeEmitting() {
-    let emit: (callback: UnibotsDesktopOAuthCallback) => void = () => undefined;
+    let emit: (callback: RakazoDesktopOAuthCallback) => void = () => undefined;
     const unsubscribe = vi.fn();
     vi.stubGlobal("window", {
-      unibotsDesktop: {
+      rakazoDesktop: {
         ...desktop("linux"),
         oauth: {
-          onCallback: (listener: (callback: UnibotsDesktopOAuthCallback) => void) => {
+          onCallback: (listener: (callback: RakazoDesktopOAuthCallback) => void) => {
             emit = listener;
             return unsubscribe;
           },
         },
       },
     });
-    return { emit: (c: UnibotsDesktopOAuthCallback) => emit(c), unsubscribe };
+    return { emit: (c: RakazoDesktopOAuthCallback) => emit(c), unsubscribe };
   }
 
   it("reads the attempt state out of the authorize URL", () => {

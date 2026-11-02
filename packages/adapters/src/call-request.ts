@@ -1,21 +1,21 @@
 import { randomUUID } from "node:crypto";
-import type { JobPublisher } from "@unibots/adapter-kit";
-import { callExpireJob } from "@unibots/adapter-kit";
-import type { MessageBlock } from "@unibots/contracts";
-import type { CallRequestBlock } from "@unibots/core";
+import type { JobPublisher } from "@rakazo/adapter-kit";
+import { callExpireJob } from "@rakazo/adapter-kit";
+import type { MessageBlock } from "@rakazo/contracts";
+import type { CallRequestBlock } from "@rakazo/core";
 import {
   CALL_CLIENT_NONCE_PREFIX,
   callIdFromClientNonce,
   callRequestBlock,
   callRequestClientNonce,
   phoneCallSettings,
-} from "@unibots/core";
-import type { Prisma, PrismaClient, ThreadEvents } from "@unibots/db";
+} from "@rakazo/core";
+import type { Prisma, PrismaClient, ThreadEvents } from "@rakazo/db";
 import {
   appendEventInTransaction,
   createThreadMessageInTransaction,
   runAsSystem,
-} from "@unibots/db";
+} from "@rakazo/db";
 import type { ExecutorDeps } from "./executor-deps.js";
 import { isUniqueViolation, publishMessage, runLeaseFor } from "./run-messages.js";
 

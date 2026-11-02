@@ -1,60 +1,34 @@
-# Unibots by agra-aarav15
+# Rakazo
 
 [English](./README.md) | [简体中文](./README.zh-CN.md) | [日本語](./README.ja.md)
 
-[![GitHub stars](https://img.shields.io/github/stars/agra-aarav15/unibots?labelColor=black&style=for-the-badge&color=2563EB)](https://github.com/agra-aarav15/unibots/stargazers)
-[![Download for Windows](https://img.shields.io/badge/Windows-Download%20installer-black?labelColor=black&style=for-the-badge&logo=windows&logoColor=white)](https://github.com/agra-aarav15/unibots/releases/latest/download/Unibots-Setup-0.3.6.exe)
-[![Download the Android APK](https://img.shields.io/badge/Android-Download%20APK-black?labelColor=black&style=for-the-badge&logo=android&logoColor=white)](https://github.com/agra-aarav15/unibots/releases/latest/download/unibots.apk)
+[![GitHub stars](https://img.shields.io/github/stars/elie222/rakazo?labelColor=black&style=for-the-badge&color=2563EB)](https://github.com/elie222/rakazo/stargazers)
+[![Discord](https://img.shields.io/badge/Discord-Join%20the%20community-5865F2?labelColor=black&style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/RWwKa2Sn7h)
+[![Download on the App Store](https://img.shields.io/badge/App%20Store-Download%20for%20iPhone-black?labelColor=black&style=for-the-badge&logo=apple&logoColor=white)](https://apps.apple.com/app/rakazo/id6801531099)
+[![Download the Android APK](https://img.shields.io/badge/Android-Download%20APK-black?labelColor=black&style=for-the-badge&logo=android&logoColor=white)](https://github.com/elie222/rakazo/releases/download/android/rakazo.apk)
 
-> **Unibots is owned and developed by agra-aarav15.** It is a fork of the Apache-2.0 licensed
-> Rakazo project, rebuilt around the Hermes Agent brain. See [NOTICE](./NOTICE) for upstream attribution.
+![Rakazo — AI teammates you actually own](./docs/readme-hero.png)
 
-![Unibots — AI teammates you actually own](./docs/readme-hero.png)
-
-Unibots is an open source AI agent for persistent teammates, and a self-hosted AI assistant you
+Rakazo is an open source AI agent for persistent teammates, and a self-hosted AI assistant you
 can run on your own machine. It is available on the web, as an Electron desktop app, and on
-iPhone and Android. Bring your own model and computer provider, or run the complete stack locally.
-Each bot runs a real Hermes Agent profile, so its memory, skills, and working style evolve with
-the work your team gives it.
+[iPhone](https://apps.apple.com/app/rakazo/id6801531099) and [Android](https://github.com/elie222/rakazo/releases/download/android/rakazo.apk). Bring your own model
+and computer provider, or run the complete stack locally.
 
 It is an open source, self-hosted alternative to Grok Bot, Meta Muse, OpenAI Dots, Instinct,
-OpenClaw, and Claude Duet, with Hermes Agent as its brain.
+OpenClaw, Hermes Agent, and Claude Duet.
 
-Unibots is in beta. Learn more at [github.com/agra-aarav15/unibots](https://github.com/agra-aarav15/unibots).
+Rakazo is in beta. Learn more at [rakazo.com](https://rakazo.com).
 
 ## Features
 
 - Persistent bots with their own conversations, memory, routines, and history
-- An evolving Hermes Agent brain per bot: its own `MEMORY.md`, `USER.md`, `SOUL.md`, skills and searchable session history, isolated from every other bot
 - Voice mode: speak replies, dictate, and call a bot. Bring your own ElevenLabs, OpenAI, Cartesia, or Fish Audio key, or use a Mac server's installed voices
 - Shared Team Computers and isolated Private computers
 - Browser, terminal, file, and graphical desktop access
 - Bots that can delegate to peer bots or short-lived subagents
-- Bring-your-own model credentials for Hermes, with Pi kept for host-side model calls and the optional fallback runtime
+- Bring-your-own model credentials through Pi
 - App integrations through Composio or Pipedream Connect, plus user-installed Treg, remote MCP, and OpenAPI tool sources
 - Docker, E2B, Daytona, CreateOS, Boat, and trusted local-computer support
-
-## Hermes brain
-
-Every Unibots bot is backed by its own [Hermes Agent](https://github.com/NousResearch/hermes-agent)
-profile. Hermes owns the model loop, its tools, long-term memory and skill evolution; Unibots keeps
-the UI, threads, spaces, teammates, computers and orchestration. Profiles live in one shared data
-volume but never share memory, and the gateway multiplexes them under `/p/<profile>/`.
-
-The sidecar is opt-in so the default checkout still runs without extra services:
-
-```bash
-docker compose --env-file .env \
-  -f infra/compose/docker-compose.images.yml \
-  -f infra/hermes/docker-compose.hermes.yml \
-  --profile hermes up -d
-```
-
-Run the one-time `hermes setup` first if you have never configured a provider. Set
-`AGENT_RUNTIME=hermes` and the `UNIBOTS_HERMES_*` values from
-[infra/hermes/README.md](infra/hermes/README.md), which also covers approval modes, the
-single-profile fallback, and the security boundary. `AGENT_RUNTIME=pi` remains available for
-host-tool runs, and `AGENT_RUNTIME=scripted` for offline tests.
 
 ## Demo
 
@@ -62,12 +36,12 @@ https://github.com/user-attachments/assets/dccdeddb-2134-4a56-8eed-b2e591736b1c
 
 ## Thanks
 
-- [PromptLayer](https://promptlayer.com/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [Inbox Zero](https://getinboxzero.com/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [ConnectorMap](https://connectormap.luinbytes.dev/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [CodeRabbit](https://www.coderabbit.ai/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [Greptile](https://www.greptile.com/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [Snyk](https://snyk.io/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
+- [PromptLayer](https://promptlayer.com/?utm_source=github&utm_medium=referral&utm_campaign=rakazo_readme)
+- [Inbox Zero](https://getinboxzero.com/?utm_source=github&utm_medium=referral&utm_campaign=rakazo_readme)
+- [ConnectorMap](https://connectormap.luinbytes.dev/?utm_source=github&utm_medium=referral&utm_campaign=rakazo_readme)
+- [CodeRabbit](https://www.coderabbit.ai/?utm_source=github&utm_medium=referral&utm_campaign=rakazo_readme)
+- [Greptile](https://www.greptile.com/?utm_source=github&utm_medium=referral&utm_campaign=rakazo_readme)
+- [Snyk](https://snyk.io/?utm_source=github&utm_medium=referral&utm_campaign=rakazo_readme)
 
 ## Stack
 
@@ -78,8 +52,7 @@ https://github.com/user-attachments/assets/dccdeddb-2134-4a56-8eed-b2e591736b1c
 - PostgreSQL and Prisma
 - Better Auth
 - Graphile Worker
-- Hermes Agent (brain)
-- Pi (host-side model calls and fallback runtime)
+- Pi
 - Docker, E2B, Daytona, CreateOS, and Boat
 - Composio, Pipedream Connect, MCP, and OpenAPI integrations
 
@@ -88,12 +61,12 @@ https://github.com/user-attachments/assets/dccdeddb-2134-4a56-8eed-b2e591736b1c
 You need Docker Engine, the Compose plugin, curl, and OpenSSL. No clone or Node install.
 
 ```bash
-mkdir -p unibots && cd unibots &&
-curl -fsSLO https://raw.githubusercontent.com/agra-aarav15/unibots/main/infra/compose/install-images.sh &&
+mkdir -p rakazo && cd rakazo &&
+curl -fsSLO https://raw.githubusercontent.com/elie222/rakazo/main/infra/compose/install-images.sh &&
 bash install-images.sh
 ```
 
-The installer downloads the Compose files, creates `.env` with random secrets, and starts Unibots.
+The installer downloads the Compose files, creates `.env` with random secrets, and starts Rakazo.
 It preserves an existing `.env` when rerun.
 
 Open [http://127.0.0.1:5173](http://127.0.0.1:5173), create an account, and connect a model.
@@ -103,8 +76,8 @@ with the matching API key.
 Default image tag is `edge` (main builds, `linux/amd64` + `linux/arm64`). Details and tags:
 [self-hosting guide](./docs/self-host.md#published-images-no-checkout).
 
-On restricted networks, override the installer download base (`UNIBOTS_DOWNLOAD_BASE`), skip
-existing Compose files (`--local` / `UNIBOTS_DOWNLOAD_SKIP_EXISTING`), or mirror the bootstrap
+On restricted networks, override the installer download base (`RAKAZO_DOWNLOAD_BASE`), skip
+existing Compose files (`--local` / `RAKAZO_DOWNLOAD_SKIP_EXISTING`), or mirror the bootstrap
 script URL — see
 [Restricted networks / mirror downloads](./docs/self-host.md#restricted-networks--mirror-downloads).
 
@@ -117,7 +90,7 @@ the desktop app, the mobile app, or a browser.
 
 ```bash
 bash install-images.sh --prepare-only
-# edit .env: SANDBOX_PROVIDER=boat (or e2b / daytona / createos) with its API key, UNIBOTS_HOST=your.domain
+# edit .env: SANDBOX_PROVIDER=boat (or e2b / daytona / createos) with its API key, RAKAZO_HOST=your.domain
 bash install-images.sh
 ```
 
@@ -125,7 +98,7 @@ Put HTTPS in front of port 5173; [docs/self-host-production.md](./docs/self-host
 covers the Caddy setup and host hardening. In the desktop app choose **Existing instance** and enter
 the `https://` address.
 
-Or [deploy on Railway](https://railway.com/new/template/unibots-template); see the [Railway setup guide](./infra/railway/README.md).
+Or [deploy on Railway](https://railway.com/new/template/rakazo-template); see the [Railway setup guide](./infra/railway/README.md).
 
 ## Local development (source checkout)
 
@@ -133,14 +106,14 @@ You need Node.js 22.22.2 or newer in the 22.x line, Node.js 24.x, or Node.js 26+
 pnpm 9; and Docker. Node.js 23.x and 25.x are not supported.
 
 ```bash
-git clone https://github.com/agra-aarav15/unibots.git
-cd unibots
+git clone https://github.com/elie222/rakazo.git
+cd rakazo
 cp .env.example .env
 ```
 
 Set `POSTGRES_PASSWORD` and `POSTGRES_APP_PASSWORD` to two values from `openssl rand -hex 16`,
 then put them in `DATABASE_MIGRATION_URL` and `DATABASE_URL`. The app connects as its own
-`unibots_app` login, which row-level security applies to; migrations run as the owner
+`rakazo_app` login, which row-level security applies to; migrations run as the owner
 ([database roles](docs/self-host-configuration.md#database-roles)). Set `BETTER_AUTH_SECRET`, `ENCRYPTION_KEY`, and `SCREEN_PROXY_SECRET` to
 independent long random values. Docker sandboxes also need a dedicated
 `SANDBOX_SUPERVISOR_TOKEN`. You can also set `OPENROUTER_API_KEY`, or connect a supported
@@ -167,7 +140,7 @@ pnpm dev
 ```
 
 `pnpm dev` uses the Postgres in `DATABASE_URL` when it accepts a connection. Otherwise it starts a
-local `unibots-dev-postgres` container with Docker, and every checkout reuses that one. It applies
+local `rakazo-dev-postgres` container with Docker, and every checkout reuses that one. It applies
 migrations and generates the Prisma client before starting. A branch that adds migrations main
 doesn't have gets its own database on the same server, copied from the shared one when possible,
 so unmerged schema changes stay out of it. When the default ports are taken, for example by
@@ -222,22 +195,22 @@ Workspace exports reject files above 64 MiB without truncating them. Set `RAILWA
 
 ## Desktop and mobile
 
-The Electron and Expo apps are clients of the same Unibots API used by the web app.
+The Electron and Expo apps are clients of the same Rakazo API used by the web app.
 
 With the development stack running, launch Electron with:
 
 ```bash
-pnpm --filter @unibots/desktop dev
+pnpm --filter @rakazo/desktop dev
 ```
 
-On first run the desktop app asks whether to run Unibots on this computer or connect to an existing
+On first run the desktop app asks whether to run Rakazo on this computer or connect to an existing
 server. **This computer** installs and starts the published images with Docker Compose (the same
 files as `infra/compose/install-images.sh`) under the app's data directory, so Docker Desktop,
 OrbStack, or Docker Engine must be installed; the app links to them when it is not. Installed
 builds pin the image tag to their own version; unpackaged builds pull `edge`. Developers running
 `pnpm dev` should pick **Existing instance** with `http://127.0.0.1:5173` instead. Public servers
 must use HTTPS; HTTP is accepted only for loopback and private LAN addresses (not link-local). The
-app verifies Unibots's health endpoint before saving, and later launches go straight to that
+app verifies Rakazo's health endpoint before saving, and later launches go straight to that
 instance. The stack keeps running after the app quits; **Stop Local Stack** in the application
 menu turns it off.
 
@@ -248,17 +221,17 @@ that only include FUSE 3, such as Fedora Silverblue or Ubuntu 24.04, show
 FUSE:
 
 ```bash
-chmod +x Unibots-*.AppImage
-./Unibots-*.AppImage --appimage-extract-and-run
+chmod +x Rakazo-*.AppImage
+./Rakazo-*.AppImage --appimage-extract-and-run
 ```
 
 **This computer** looks for the `docker` CLI and does not detect Podman. To try another
-Docker-compatible CLI that supports the `compose` commands, set `UNIBOTS_DOCKER_BINARY` to its path
+Docker-compatible CLI that supports the `compose` commands, set `RAKAZO_DOCKER_BINARY` to its path
 before starting the app.
 
-Use **Change Unibots Server…** in the application menu to reconnect. Closing that window without
-saving returns to the previous instance. For development automation, set `UNIBOTS_WEB_URL` to point
-the shell somewhere else without changing the saved instance, or `UNIBOTS_FORCE_SETUP=1` to run
+Use **Change Rakazo Server…** in the application menu to reconnect. Closing that window without
+saving returns to the previous instance. For development automation, set `RAKAZO_WEB_URL` to point
+the shell somewhere else without changing the saved instance, or `RAKAZO_FORCE_SETUP=1` to run
 setup again.
 
 Mobile build and release instructions live in [docs/mobile-release.md](./docs/mobile-release.md).
@@ -319,15 +292,15 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the development workflow and test m
 - [Performance testing](./docs/performance.md)
 - [Manage the bots it creates](./docs/fleet-management.md)
 
-## How Unibots compares
+## How Rakazo compares
 
-- [Grok Bot](https://unibots.example/grok-bot-alternative/)
-- [Muse](https://unibots.example/muse-alternative/)
-- [Dots](https://unibots.example/dots-alternative/)
-- [Instinct](https://unibots.example/instinct-alternative/)
-- [OpenClaw](https://unibots.example/openclaw-alternative/)
-- [Hermes Agent](https://unibots.example/hermes-alternative/)
-- [All comparisons](https://unibots.example/alternatives/)
+- [Grok Bot](https://rakazo.com/grok-bot-alternative/)
+- [Muse](https://rakazo.com/muse-alternative/)
+- [Dots](https://rakazo.com/dots-alternative/)
+- [Instinct](https://rakazo.com/instinct-alternative/)
+- [OpenClaw](https://rakazo.com/openclaw-alternative/)
+- [Hermes Agent](https://rakazo.com/hermes-alternative/)
+- [All comparisons](https://rakazo.com/alternatives/)
 
 ## Contributing
 
@@ -335,6 +308,6 @@ Contributions are welcome. Please read [CONTRIBUTING.md](./CONTRIBUTING.md) befo
 request. For security vulnerabilities, follow [SECURITY.md](./SECURITY.md) instead of filing a public
 issue.
 
-Unibots is licensed under the [Apache License 2.0](./LICENSE).
+Rakazo is licensed under the [Apache License 2.0](./LICENSE).
 
-Questions and ideas are welcome in the [Unibots Discord community](https://discord.gg/RWwKa2Sn7h).
+Questions and ideas are welcome in the [Rakazo Discord community](https://discord.gg/RWwKa2Sn7h).

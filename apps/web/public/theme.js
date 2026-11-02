@@ -1,6 +1,6 @@
 // Runs before first paint, as a file because the app's CSP blocks inline scripts.
 (() => {
-  const key = "unibots.uiAppearance";
+  const key = "rakazo.uiAppearance";
   let preference = "system";
   try {
     const stored = localStorage.getItem(key);

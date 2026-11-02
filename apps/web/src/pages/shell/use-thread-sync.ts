@@ -6,14 +6,14 @@ import type {
   ProductEvent,
   RoutineHistory,
   ThreadSnapshot,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   anySignal,
   createRefreshCoalescer,
   isRunTerminalEvent,
   runThreadSubscription,
-} from "@unibots/core";
-import { fetchFresh } from "@unibots/core/query";
+} from "@rakazo/core";
+import { fetchFresh } from "@rakazo/core/query";
 import type { RefObject } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {

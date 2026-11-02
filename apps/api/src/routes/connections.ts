@@ -1,21 +1,21 @@
 import { ORPCError } from "@orpc/server";
-import type { AdapterContext, ConnectorCatalogItem } from "@unibots/adapter-kit";
-import { ConnectorAuthUnavailableError } from "@unibots/adapter-kit";
+import type { AdapterContext, ConnectorCatalogItem } from "@rakazo/adapter-kit";
+import { ConnectorAuthUnavailableError } from "@rakazo/adapter-kit";
 import {
   pickReusableConnection,
   planLiveConnectionSync,
   prepareManagedConnectorForTransaction,
   sanitizeComposioError,
-} from "@unibots/adapters";
-import type { Actor } from "@unibots/contracts";
-import type { Prisma, PrismaClient } from "@unibots/db";
+} from "@rakazo/adapters";
+import type { Actor } from "@rakazo/contracts";
+import type { Prisma, PrismaClient } from "@rakazo/db";
 import {
   IsolationError,
   ProviderTransactionBusyError,
   recordSecurityEvent,
   runProviderTransaction,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { connectionCreatedEvent } from "../security-audit.js";
 import type { RouterContext } from "./context.js";
 

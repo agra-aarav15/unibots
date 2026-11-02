@@ -7,8 +7,8 @@ import type {
   ThreadMessage,
   ThreadMessagePage,
   ThreadSnapshot,
-} from "@unibots/contracts";
-import { RUN_TRIGGERS } from "@unibots/contracts";
+} from "@rakazo/contracts";
+import { RUN_TRIGGERS } from "@rakazo/contracts";
 import {
   isActive,
   isBackgroundRunTrigger,
@@ -26,7 +26,7 @@ import {
   takeLiveMessage,
   updateCloudAgentMessages,
   upsertMessageById,
-} from "@unibots/core";
+} from "@rakazo/core";
 
 const runTriggers = new Set<string>(RUN_TRIGGERS);
 

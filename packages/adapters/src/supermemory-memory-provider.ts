@@ -7,7 +7,7 @@ import type {
   SemanticMemoryResponse,
   SemanticMemoryResult,
   SemanticMemorySaveRequest,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   assertLocalServiceBaseUrlSync,
   LocalServiceHost,
@@ -92,7 +92,7 @@ export async function prepareSupermemoryConnection(
   // Clearing a conversation deletes its memory, which only owner and admin keys may do.
   // Deleting a fresh random tag checks that without touching anyone's data.
   const deletable = await deleteSupermemoryContainer(
-    `unibots:delete-probe:${randomUUID()}`,
+    `rakazo:delete-probe:${randomUUID()}`,
     connection,
   );
   if (!deletable.ok) throw new Error(deletable.error);
@@ -114,14 +114,14 @@ export function decodeLegacySupermemoryCredentials(
 }
 
 function durableContainerTags(scope: DurableMemoryScope, botId: string, spaceId: string): string[] {
-  const isolated = `unibots:${botId}`;
+  const isolated = `rakazo:${botId}`;
   // This external namespace predates the Space rename. Keep it stable so
   // existing durable memories remain recallable; the identifier is a Space ID.
-  return scope === "shared" ? [`unibots:workspace:${spaceId}`, isolated] : [isolated];
+  return scope === "shared" ? [`rakazo:workspace:${spaceId}`, isolated] : [isolated];
 }
 
 function historyContainerTag(botId: string, generation: number): string {
-  return `unibots:${botId}:history:${generation}`;
+  return `rakazo:${botId}:history:${generation}`;
 }
 
 function recallContainerTags(request: SemanticMemoryRecallRequest, spaceId: string): string[] {

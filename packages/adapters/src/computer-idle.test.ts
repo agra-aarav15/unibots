@@ -2,16 +2,16 @@ import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { FetchError } from "@boatdev/sdk";
-import type { AgentHomeStore, JobPublisher, SandboxProvider } from "@unibots/adapter-kit";
+import type { AgentHomeStore, JobPublisher, SandboxProvider } from "@rakazo/adapter-kit";
 import {
   SandboxDamagedError,
   SandboxRateLimitError,
   SandboxUnavailableError,
   SandboxUnresponsiveError,
   WorkspaceTooLargeError,
-} from "@unibots/adapter-kit";
-import type { PrismaClient, ThreadEvents } from "@unibots/db";
-import { createLogger, createTestSink, installLogger } from "@unibots/logging";
+} from "@rakazo/adapter-kit";
+import type { PrismaClient, ThreadEvents } from "@rakazo/db";
+import { createLogger, createTestSink, installLogger } from "@rakazo/logging";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { boatError, FakeBoatApi, fakeBoatProvider } from "./boat-sandbox.test-support.js";
 import {
@@ -231,7 +231,7 @@ describe("sandbox idle", () => {
     expect(harness.sandbox.execute).toHaveBeenCalledWith(
       expect.objectContaining({ id: harness.computer.providerRef }),
       expect.objectContaining({
-        argv: ["bash", "-c", BACKGROUND_WORK_PROBE, "unibots-background-probe", harness.computer.id],
+        argv: ["bash", "-c", BACKGROUND_WORK_PROBE, "rakazo-background-probe", harness.computer.id],
       }),
       expect.anything(),
     );
@@ -1192,7 +1192,7 @@ describe("background work launch and probe", () => {
   function probeBackgroundWork(markerId: string, setup = ""): Promise<number> {
     const child = spawn(
       "bash",
-      ["-c", `${setup}\n${BACKGROUND_WORK_PROBE}`, "unibots-background-probe", markerId],
+      ["-c", `${setup}\n${BACKGROUND_WORK_PROBE}`, "rakazo-background-probe", markerId],
       { stdio: "ignore", detached: true },
     );
     children.push(child);
@@ -1205,14 +1205,14 @@ describe("background work launch and probe", () => {
       const databaseId = `computer-db-[literal]*?-${randomUUID()}`;
       const providerRef = `provider-${randomUUID()}`;
       const launchId = "active";
-      markers.add(`/tmp/unibots-background-${databaseId}-run-1-${launchId}`);
+      markers.add(`/tmp/rakazo-background-${databaseId}-run-1-${launchId}`);
 
       const launched = spawn(
         "bash",
         [
           "-c",
           BACKGROUND_WORK_LAUNCH,
-          "unibots-background-launch",
+          "rakazo-background-launch",
           databaseId,
           "run-1",
           launchId,
@@ -1232,10 +1232,10 @@ describe("background work launch and probe", () => {
     "sweeps every stale marker with held background work: %s",
     async (held) => {
       const markerId = `computer-sweep-${randomUUID()}`;
-      const activeMarker = `/tmp/unibots-background-${markerId}-run-1-a-held`;
+      const activeMarker = `/tmp/rakazo-background-${markerId}-run-1-a-held`;
       const staleMarkers = [
-        `/tmp/unibots-background-${markerId}-run-1-b-stale`,
-        `/tmp/unibots-background-${markerId}-run-2-c-stale`,
+        `/tmp/rakazo-background-${markerId}-run-1-b-stale`,
+        `/tmp/rakazo-background-${markerId}-run-2-c-stale`,
       ];
       for (const marker of [activeMarker, ...staleMarkers]) markers.add(marker);
 
@@ -1245,7 +1245,7 @@ describe("background work launch and probe", () => {
           [
             "-c",
             BACKGROUND_WORK_LAUNCH,
-            "unibots-background-launch",
+            "rakazo-background-launch",
             markerId,
             "run-1",
             "a-held",
@@ -1269,8 +1269,8 @@ describe("background work launch and probe", () => {
     "cleans a completed marker without blocking a later launch",
     async () => {
       const markerId = `computer-relaunch-${randomUUID()}`;
-      const completedMarker = `/tmp/unibots-background-${markerId}-run-1-completed`;
-      const activeMarker = `/tmp/unibots-background-${markerId}-run-1-active`;
+      const completedMarker = `/tmp/rakazo-background-${markerId}-run-1-completed`;
+      const activeMarker = `/tmp/rakazo-background-${markerId}-run-1-active`;
       markers.add(completedMarker);
       markers.add(activeMarker);
       const completed = spawn(
@@ -1278,7 +1278,7 @@ describe("background work launch and probe", () => {
         [
           "-c",
           BACKGROUND_WORK_LAUNCH,
-          "unibots-background-launch",
+          "rakazo-background-launch",
           markerId,
           "run-1",
           "completed",
@@ -1297,7 +1297,7 @@ describe("background work launch and probe", () => {
         [
           "-c",
           BACKGROUND_WORK_LAUNCH,
-          "unibots-background-launch",
+          "rakazo-background-launch",
           markerId,
           "run-1",
           "active",
@@ -1314,8 +1314,8 @@ describe("background work launch and probe", () => {
     "does not run the command when its marker cannot be opened",
     async () => {
       const markerId = `computer-marker-error-${randomUUID()}`;
-      const marker = `/tmp/unibots-background-${markerId}-run-1-collision`;
-      const commandRan = `/tmp/unibots-background-command-ran-${markerId}`;
+      const marker = `/tmp/rakazo-background-${markerId}-run-1-collision`;
+      const commandRan = `/tmp/rakazo-background-command-ran-${markerId}`;
       markers.add(marker);
       markers.add(commandRan);
       mkdirSync(marker);
@@ -1324,7 +1324,7 @@ describe("background work launch and probe", () => {
         [
           "-c",
           BACKGROUND_WORK_LAUNCH,
-          "unibots-background-launch",
+          "rakazo-background-launch",
           markerId,
           "run-1",
           "collision",
@@ -1343,8 +1343,8 @@ describe("background work launch and probe", () => {
     "does not follow a pre-existing marker symlink",
     async () => {
       const markerId = `computer-marker-symlink-${randomUUID()}`;
-      const marker = `/tmp/unibots-background-${markerId}-run-1-collision`;
-      const commandRan = `/tmp/unibots-background-command-ran-${markerId}`;
+      const marker = `/tmp/rakazo-background-${markerId}-run-1-collision`;
+      const commandRan = `/tmp/rakazo-background-command-ran-${markerId}`;
       markers.add(marker);
       markers.add(commandRan);
       symlinkSync(commandRan, marker);
@@ -1353,7 +1353,7 @@ describe("background work launch and probe", () => {
         [
           "-c",
           BACKGROUND_WORK_LAUNCH,
-          "unibots-background-launch",
+          "rakazo-background-launch",
           markerId,
           "run-1",
           "collision",
@@ -1374,7 +1374,7 @@ describe("background work launch and probe", () => {
       const computerId = `computer-cancel-${randomUUID()}`;
       const runId = "run-cancel-1";
       const launchId = "active";
-      const marker = `/tmp/unibots-background-${computerId}-${runId}-${launchId}`;
+      const marker = `/tmp/rakazo-background-${computerId}-${runId}-${launchId}`;
       markers.add(marker);
 
       const launched = spawn(
@@ -1382,7 +1382,7 @@ describe("background work launch and probe", () => {
         [
           "-c",
           BACKGROUND_WORK_LAUNCH,
-          "unibots-background-launch",
+          "rakazo-background-launch",
           computerId,
           runId,
           launchId,
@@ -1397,7 +1397,7 @@ describe("background work launch and probe", () => {
       const launchedDone = processExit(launched);
       const cancel = spawn(
         "bash",
-        ["-c", CANCEL_COMPUTER_RUN_WORK, "unibots-cancel-run-work", computerId, runId],
+        ["-c", CANCEL_COMPUTER_RUN_WORK, "rakazo-cancel-run-work", computerId, runId],
         { stdio: "ignore", detached: true },
       );
       children.push(cancel);
@@ -1411,16 +1411,16 @@ describe("background work launch and probe", () => {
     "cancels every holder of a deleted marker on a duplicated FD without touching another run",
     async () => {
       const computerId = `computer-deleted-${randomUUID()}`;
-      const marker = `/tmp/unibots-background-${computerId}-cancel-active`;
-      const otherMarker = `/tmp/unibots-background-${computerId}-other-active`;
-      const ready = `/tmp/unibots-background-ready-${randomUUID()}`;
+      const marker = `/tmp/rakazo-background-${computerId}-cancel-active`;
+      const otherMarker = `/tmp/rakazo-background-${computerId}-other-active`;
+      const ready = `/tmp/rakazo-background-ready-${randomUUID()}`;
       for (const file of [marker, otherMarker, ready]) markers.add(file);
       const launched = spawn(
         "bash",
         [
           "-c",
           BACKGROUND_WORK_LAUNCH,
-          "unibots-background-launch",
+          "rakazo-background-launch",
           computerId,
           "cancel",
           "active",
@@ -1433,7 +1433,7 @@ describe("background work launch and probe", () => {
         [
           "-c",
           BACKGROUND_WORK_LAUNCH,
-          "unibots-background-launch",
+          "rakazo-background-launch",
           computerId,
           "other",
           "active",
@@ -1450,7 +1450,7 @@ describe("background work launch and probe", () => {
       const launchedDone = processExit(launched);
       const cancel = spawn(
         "bash",
-        ["-c", CANCEL_COMPUTER_RUN_WORK, "unibots-cancel-run-work", computerId, "cancel"],
+        ["-c", CANCEL_COMPUTER_RUN_WORK, "rakazo-cancel-run-work", computerId, "cancel"],
         { stdio: "ignore", detached: true },
       );
       children.push(cancel);
@@ -1472,7 +1472,7 @@ describe("background work launch and probe", () => {
     "keeps markers and returns unknown when the filesystem scan fails with %j",
     async ({ status, partial }) => {
       const computerId = `computer-unknown-${randomUUID()}`;
-      const marker = `/tmp/unibots-background-${computerId}-run-active`;
+      const marker = `/tmp/rakazo-background-${computerId}-run-active`;
       markers.add(marker);
       writeFileSync(marker, "");
       const unrelated = spawn("sleep", ["30"], { stdio: "ignore", detached: true });
@@ -1502,7 +1502,7 @@ describe("background work launch and probe", () => {
     { operation: "scandir", errno: 13, status: 2 },
   ])("handles filesystem errors without widening scan authority %j", async (failure) => {
     const computerId = `computer-errno-${randomUUID()}`;
-    const marker = `/tmp/unibots-background-${computerId}-run-active`;
+    const marker = `/tmp/rakazo-background-${computerId}-run-active`;
     markers.add(marker);
     writeFileSync(marker, "");
     const script = [
@@ -1639,7 +1639,7 @@ function idleHarness(
       if (options.probeError) throw options.probeError;
       const code = backgroundWorkProbeCodes.shift() ?? options.backgroundWorkProbeCode ?? 1;
       if (code === 1 && !options.backgroundWorkProbeFailed) {
-        yield { type: "stdout", data: "unibots-background-idle\n" } as const;
+        yield { type: "stdout", data: "rakazo-background-idle\n" } as const;
       }
       yield { type: "exit", code } as const;
     }),

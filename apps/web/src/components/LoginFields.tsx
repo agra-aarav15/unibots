@@ -1,7 +1,7 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { LoginFieldInput } from "@unibots/contracts";
-import { LOGIN_FIELD_LIMIT } from "@unibots/contracts";
-import { Button, Input, Label, Switch } from "@unibots/ui-web";
+import type { LoginFieldInput } from "@rakazo/contracts";
+import { LOGIN_FIELD_LIMIT } from "@rakazo/contracts";
+import { Button, Input, Label, Switch } from "@rakazo/ui-web";
 import { X } from "lucide-react";
 import { useId } from "react";
 

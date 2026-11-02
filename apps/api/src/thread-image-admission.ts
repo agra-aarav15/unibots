@@ -1,6 +1,6 @@
 import { ORPCError } from "@orpc/server";
-import type { SecretStore } from "@unibots/adapter-kit";
-import type { CodexLiveCatalog } from "@unibots/adapters";
+import type { SecretStore } from "@rakazo/adapter-kit";
+import type { CodexLiveCatalog } from "@rakazo/adapters";
 import {
   CHATGPT_OAUTH_PROVIDER,
   codexLiveModel,
@@ -13,11 +13,11 @@ import {
   runModelChoice,
   runtimeModelAcceptsImages,
   selectConfiguredModel,
-} from "@unibots/adapters";
-import type { Actor, MessageBlock } from "@unibots/contracts";
-import { MODEL_IMAGE_INPUT_ERROR, MODEL_IMAGE_INPUT_UNKNOWN } from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
-import { appliedModelRole, findModelCredential, findModelCredentialById } from "@unibots/db";
+} from "@rakazo/adapters";
+import type { Actor, MessageBlock } from "@rakazo/contracts";
+import { MODEL_IMAGE_INPUT_ERROR, MODEL_IMAGE_INPUT_UNKNOWN } from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
+import { appliedModelRole, findModelCredential, findModelCredentialById } from "@rakazo/db";
 
 type ModelChoice = {
   modelProvider: string | null;

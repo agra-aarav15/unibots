@@ -1,1 +1,1 @@
-export { withTransactionRetry as withSerializableRetry } from "@unibots/db";
+export { withTransactionRetry as withSerializableRetry } from "@rakazo/db";

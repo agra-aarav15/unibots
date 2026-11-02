@@ -1,5 +1,5 @@
-import { SecretStoreUnavailableError } from "@unibots/adapter-kit";
-import { hasValidBearerToken } from "@unibots/core";
+import { SecretStoreUnavailableError } from "@rakazo/adapter-kit";
+import { hasValidBearerToken } from "@rakazo/core";
 import type { Hono } from "hono";
 import { mountGithubWebhookRoute } from "./github-webhook.js";
 import { readBoundedBody } from "./http-body.js";

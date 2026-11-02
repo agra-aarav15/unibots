@@ -25,7 +25,7 @@ export function rightPanelStorageKey(
   kind: "bot" | "group",
   targetId: string,
 ): string {
-  return `unibots:right-panel-state:${userId}:${spaceId}:${kind}:${targetId}`;
+  return `rakazo:right-panel-state:${userId}:${spaceId}:${kind}:${targetId}`;
 }
 
 export function readRightPanelState(key: string): RightPanelState {

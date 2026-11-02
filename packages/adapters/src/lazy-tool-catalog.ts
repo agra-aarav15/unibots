@@ -3,7 +3,7 @@ import type {
   ConnectorEvent,
   ConnectorRoute,
   ConnectorTool,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import { z } from "zod";
 
 export const DIRECT_TOOL_LIMIT = 20;

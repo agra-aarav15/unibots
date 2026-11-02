@@ -32,7 +32,7 @@ describe("changedBotSettings", () => {
         botId: bot.id,
         instructions: "Be thorough.",
         color: "#000000",
-        avatarSet: "unibots",
+        avatarSet: "rakazo",
         modelProvider: "openai",
         modelId: "gpt",
       }),

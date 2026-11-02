@@ -1,7 +1,7 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { ScratchpadItem } from "@unibots/contracts";
-import { fetchFresh, writeSaved } from "@unibots/core/query";
-import { Button, Checkbox, Input } from "@unibots/ui-web";
+import type { ScratchpadItem } from "@rakazo/contracts";
+import { fetchFresh, writeSaved } from "@rakazo/core/query";
+import { Button, Checkbox, Input } from "@rakazo/ui-web";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";

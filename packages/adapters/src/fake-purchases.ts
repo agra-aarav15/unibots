@@ -10,8 +10,8 @@ import type {
   PaymentWalletProvider,
   PurchaseRequest,
   PurchaseSnapshot,
-} from "@unibots/adapter-kit";
-import type { PrismaClient, Purchase } from "@unibots/db";
+} from "@rakazo/adapter-kit";
+import type { PrismaClient, Purchase } from "@rakazo/db";
 import { readStripeChargeChallenge, stripeChargeAuthorization } from "./mpp-stripe.js";
 
 export const FAKE_PAY_TOKEN = "fake_pay_token_secret";

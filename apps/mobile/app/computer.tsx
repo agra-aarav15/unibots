@@ -1,5 +1,5 @@
-import type { ComputerMode, ComputerReleaseReason } from "@unibots/contracts";
-import type { ScreenPageState } from "@unibots/core";
+import type { ComputerMode, ComputerReleaseReason } from "@rakazo/contracts";
+import type { ScreenPageState } from "@rakazo/core";
 import {
   createScreenReconnect,
   displayName,
@@ -7,7 +7,7 @@ import {
   SCREEN_RECONNECT_DELAY_MS,
   screenProbeUrl,
   waitForScreenPage,
-} from "@unibots/core";
+} from "@rakazo/core";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import type { RefObject } from "react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";

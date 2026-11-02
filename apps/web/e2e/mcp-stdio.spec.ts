@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import type { McpServer } from "@unibots/contracts";
+import type { McpServer } from "@rakazo/contracts";
 import { captureScreenshot, completeOnboarding, openIntegrationsAdd, signup } from "./helpers";
 
 const credentialsTemplate = `{
@@ -11,7 +11,7 @@ const credentialsTemplate = `{
 
 test("adds a stdio MCP server with encrypted environment variables", async ({ page }, testInfo) => {
   const stamp = Date.now();
-  await signup(page, `mcp-stdio-${stamp}@unibots.test`, "password12", "MCP stdio");
+  await signup(page, `mcp-stdio-${stamp}@rakazo.test`, "password12", "MCP stdio");
   await completeOnboarding(page);
 
   const servers: McpServer[] = [];

@@ -1,5 +1,5 @@
-import type { BotAvatarSet } from "@unibots/contracts";
-import type { AvatarMotionMode, LogoAvatarActivity } from "@unibots/core";
+import type { BotAvatarSet } from "@rakazo/contracts";
+import type { AvatarMotionMode, LogoAvatarActivity } from "@rakazo/core";
 import {
   AVATAR_LID_CLOSE,
   AVATAR_MOTION_UNITS,
@@ -20,8 +20,8 @@ import {
   SHIPPED_BOT_AVATAR_CENTER,
   SHIPPED_BOT_AVATAR_VIEWBOX,
   usesLogoAvatar,
-} from "@unibots/core";
-import { botEyeColor } from "@unibots/ui-tokens";
+} from "@rakazo/core";
+import { botEyeColor } from "@rakazo/ui-tokens";
 import { memo, useSyncExternalStore } from "react";
 import { Image, Pressable, View } from "react-native";
 import Animated, {
@@ -126,12 +126,12 @@ export interface BotAvatarProps {
 /** Missing set metadata deliberately preserves every existing avatar. */
 export const BotAvatar = memo(function BotAvatar(props: BotAvatarProps) {
   if (usesLogoAvatar(props)) {
-    return <UnibotsBotAvatar {...props} />;
+    return <RakazoBotAvatar {...props} />;
   }
   return <LegacyBotAvatar {...props} />;
 });
 
-function UnibotsBotAvatar({
+function RakazoBotAvatar({
   color,
   identity,
   size = 54,
@@ -148,7 +148,7 @@ function UnibotsBotAvatar({
     (): LogoAvatarActivity => "idle",
   );
   const resolved = botAvatarActivity(
-    { color, avatarSet: "unibots" },
+    { color, avatarSet: "rakazo" },
     activity ??
       (composing && (liveActivity === "working" || liveActivity === "idle")
         ? "writing"

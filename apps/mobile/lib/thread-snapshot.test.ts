@@ -1,4 +1,4 @@
-import { reduceLiveMessageBlocks, withLiveStreamingProgress } from "@unibots/core";
+import { reduceLiveMessageBlocks, withLiveStreamingProgress } from "@rakazo/core";
 import { describe, expect, it } from "vitest";
 import type { MobileSnapshot } from "./api";
 import { reconcileVisibleThreadSnapshot } from "./thread-snapshot";

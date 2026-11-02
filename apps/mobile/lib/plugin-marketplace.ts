@@ -3,9 +3,9 @@ import type {
   ConnectionCatalogItem,
   McpServer,
   PluginMarketplaceEntry,
-} from "@unibots/contracts";
-import { PluginPreviewSchema } from "@unibots/contracts";
-import type { PluginCategory } from "@unibots/core";
+} from "@rakazo/contracts";
+import { PluginPreviewSchema } from "@rakazo/contracts";
+import type { PluginCategory } from "@rakazo/core";
 import {
   catalogItemKey,
   installedPluginParts,
@@ -13,7 +13,7 @@ import {
   matchesPluginQuery,
   OTHER_PLUGINS,
   PLUGIN_CATEGORIES,
-} from "@unibots/core";
+} from "@rakazo/core";
 
 /** What the plugin screen needs, from a catalog entry or a pasted GitHub URL. */
 export type PluginParams = {

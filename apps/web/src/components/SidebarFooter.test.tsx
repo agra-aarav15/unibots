@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import type { DesktopUpdateState } from "@unibots/contracts";
-import { Toaster } from "@unibots/ui-web";
+import type { DesktopUpdateState } from "@rakazo/contracts";
+import { Toaster } from "@rakazo/ui-web";
 import type { ReactNode } from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
@@ -25,7 +25,7 @@ beforeEach(() => {
 afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
-  delete window.unibotsDesktop;
+  delete window.rakazoDesktop;
   vi.restoreAllMocks();
 });
 async function render(
@@ -35,7 +35,7 @@ async function render(
   onBoard?: () => void,
   logos?: Array<{ name: string; logo?: string }>,
 ) {
-  const email = "account@unibots.test";
+  const email = "account@rakazo.test";
   await act(async () =>
     root.render(
       <DesktopUpdatesProvider>
@@ -77,7 +77,7 @@ function bridge(phase: DesktopUpdateState["phase"]) {
     checkedAt: null,
   };
   const install = vi.fn(async () => state);
-  window.unibotsDesktop = {
+  window.rakazoDesktop = {
     platform: "darwin",
     window: {
       close: async () => {},
@@ -168,7 +168,7 @@ it("offers the existing Android download on Android", async () => {
     (link) => link.textContent === "Get the mobile app",
   )!;
   expect(mobile.href).toBe(
-    "https://github.com/agra-aarav15/unibots/releases/download/android/unibots.apk",
+    "https://github.com/elie222/rakazo/releases/download/android/rakazo.apk",
   );
 });
 
@@ -194,7 +194,7 @@ it.each(["throw", "state"] as const)(
     if (failure === "throw") install.mockRejectedValueOnce(new Error("offline"));
     else
       install.mockResolvedValueOnce({
-        ...(await window.unibotsDesktop!.update.state()),
+        ...(await window.rakazoDesktop!.update.state()),
         phase: "error",
         message: "Update could not be installed",
       });

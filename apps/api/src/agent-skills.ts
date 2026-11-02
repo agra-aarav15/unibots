@@ -1,21 +1,21 @@
 import { ORPCError } from "@orpc/server";
-import { BUILTIN_AGENT_SKILLS } from "@unibots/adapters";
-import type { Actor, AgentSkill, AgentSkillSource } from "@unibots/contracts";
-import type { SkillSource } from "@unibots/core";
+import { BUILTIN_AGENT_SKILLS } from "@rakazo/adapters";
+import type { Actor, AgentSkill, AgentSkillSource } from "@rakazo/contracts";
+import type { SkillSource } from "@rakazo/core";
 import {
   buildSkillMd,
   findSkillByName,
   isSkillReadOnly,
   mergeBuiltinSkills,
   parseSkillMd,
-} from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
+} from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
 import {
   AVAILABILITY_SELECT,
   availableInSpace,
   IsolationError,
   spaceAvailability,
-} from "@unibots/db";
+} from "@rakazo/db";
 import { assertNameFreeWhereAvailable, userAddedAvailability } from "./availability.js";
 
 type AgentSkillRow = {

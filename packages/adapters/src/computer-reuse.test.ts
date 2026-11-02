@@ -1,7 +1,7 @@
 import { mkdtemp, rm } from "node:fs/promises";
 import path from "node:path";
-import type { AdapterContext, JobPublisher } from "@unibots/adapter-kit";
-import type { PrismaClient, ThreadEvents } from "@unibots/db";
+import type { AdapterContext, JobPublisher } from "@rakazo/adapter-kit";
+import type { PrismaClient, ThreadEvents } from "@rakazo/db";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ComputerBusyError, provisionComputer } from "./computer-lifecycle.js";
 import { DockerSandboxProvider } from "./docker-sandbox.js";
@@ -125,8 +125,8 @@ describe("running Docker computer reuse", () => {
             expect.objectContaining({
               method: "GET",
               headers: expect.objectContaining({
-                "x-unibots-bot-id": "bot",
-                "x-unibots-space-id": "space",
+                "x-rakazo-bot-id": "bot",
+                "x-rakazo-space-id": "space",
               }),
             }),
           );

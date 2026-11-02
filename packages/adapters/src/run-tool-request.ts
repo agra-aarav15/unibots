@@ -1,6 +1,6 @@
-import type { ConnectorCall, ConnectorTool } from "@unibots/adapter-kit";
-import { redactSecrets } from "@unibots/core";
-import { reserveInstructionProposal, validateInstructionProposal } from "@unibots/db";
+import type { ConnectorCall, ConnectorTool } from "@rakazo/adapter-kit";
+import { redactSecrets } from "@rakazo/core";
+import { reserveInstructionProposal, validateInstructionProposal } from "@rakazo/db";
 import { prepareAgentConnectionResponse } from "./agent-connections.js";
 import type { FleetCardSummary } from "./approval-ask.js";
 import {

@@ -1,5 +1,5 @@
-import type { Actor, MessageBlock, SearchHit } from "@unibots/contracts";
-import { GROUP_MEMBER_MIN } from "@unibots/contracts";
+import type { Actor, MessageBlock, SearchHit } from "@rakazo/contracts";
+import { GROUP_MEMBER_MIN } from "@rakazo/contracts";
 import {
   displayName,
   escapeJsonSearchWildcards,
@@ -7,9 +7,9 @@ import {
   extractLinksFromText,
   matchesSearchQuery,
   snippetAroundMatch,
-} from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
-import { contentEncryptionOf, INDEXED_MESSAGE, Prisma, UNINDEXED_MESSAGE } from "@unibots/db";
+} from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
+import { contentEncryptionOf, INDEXED_MESSAGE, Prisma, UNINDEXED_MESSAGE } from "@rakazo/db";
 
 const SEARCH_LIMIT = 25;
 /** Cap name matches so content hits (messages/files/links/routines) keep most of the budget. */

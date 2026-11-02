@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 
 import { i18n } from "@lingui/core";
-import type { AgentImportPlan, Bot } from "@unibots/contracts";
-import type * as Core from "@unibots/core";
+import type { AgentImportPlan, Bot } from "@rakazo/contracts";
+import type * as Core from "@rakazo/core";
 import type { ReactNode } from "react";
 import { act } from "react";
 import type { Root } from "react-dom/client";
@@ -27,7 +27,7 @@ vi.mock("../../lib/rpc", () => ({
   },
 }));
 
-vi.mock("@unibots/core", async (importOriginal) => ({
+vi.mock("@rakazo/core", async (importOriginal) => ({
   ...(await importOriginal<typeof Core>()),
   openAgentImportArchive: (bytes: Uint8Array) => {
     const content = bytes[0] === 1 ? "First" : "Second";

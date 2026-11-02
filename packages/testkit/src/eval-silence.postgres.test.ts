@@ -124,10 +124,10 @@ describe.skipIf(!databaseAvailable)("routine silence eval through the product", 
           : []),
       ]);
       const model = await startModelEmulator({ apiKey: "offline-silence-key", steps });
-      const dataDir = await mkdtemp(path.join(tmpdir(), "unibots-silence-eval-"));
+      const dataDir = await mkdtemp(path.join(tmpdir(), "rakazo-silence-eval-"));
       let evidence: Evidence | undefined;
       try {
-        const { createApp } = await import("@unibots/api/app");
+        const { createApp } = await import("@rakazo/api/app");
         const result = await runTrial(
           {
             ...scenario,
@@ -216,7 +216,7 @@ describe.skipIf(!databaseAvailable)("offline judge model protocol", () => {
         },
       ],
     });
-    const { PiAgentRuntime } = await import("@unibots/adapters");
+    const { PiAgentRuntime } = await import("@rakazo/adapters");
     try {
       const judge = createEvalJudge(new PiAgentRuntime(), {
         provider: model.model.provider,

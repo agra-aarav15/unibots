@@ -1,6 +1,6 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import type { Bot } from "@unibots/contracts";
+import type { Bot } from "@rakazo/contracts";
 import {
   Badge,
   BotAvatar,
@@ -13,7 +13,7 @@ import {
   CommandList,
   CommandShortcut,
   Kbd,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import { Check } from "lucide-react";
 import type { ComponentType } from "react";
 import { useEffect, useMemo, useState } from "react";

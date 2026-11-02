@@ -3,8 +3,8 @@ import type {
   ModelRoleChoice,
   ModelRoleSettings,
   ModelRoleView,
-} from "@unibots/contracts";
-import { modelRoleChoiceKey } from "@unibots/contracts";
+} from "@rakazo/contracts";
+import { modelRoleChoiceKey } from "@rakazo/contracts";
 
 export interface ModelRoleTransport {
   load(): Promise<ModelRoleView>;

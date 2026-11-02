@@ -1,5 +1,5 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import { filterModelCatalog } from "@unibots/core";
+import { filterModelCatalog } from "@rakazo/core";
 import {
   Command,
   CommandEmpty,
@@ -12,7 +12,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import type { ReactElement } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ModelCatalogEntry } from "../../lib/model-auth";

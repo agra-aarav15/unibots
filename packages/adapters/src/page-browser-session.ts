@@ -4,8 +4,8 @@ import type {
   BrowserNavigateResult,
   BrowserSnapshotNode,
   BrowserSnapshotResult,
-} from "@unibots/adapter-kit";
-import type { PurchaseCardField } from "@unibots/contracts";
+} from "@rakazo/adapter-kit";
+import type { PurchaseCardField } from "@rakazo/contracts";
 import { JSDOM } from "jsdom";
 
 const INTERACTIVE_SELECTOR = [

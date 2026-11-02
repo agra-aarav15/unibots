@@ -1,4 +1,4 @@
-import type { Bot, BotAvatarSet, ComputerMode, ThinkingLevel } from "@unibots/contracts";
+import type { Bot, BotAvatarSet, ComputerMode, ThinkingLevel } from "@rakazo/contracts";
 import {
   BOT_AVATAR_SHAPE_COUNT,
   BOT_COLORS,
@@ -6,14 +6,14 @@ import {
   BOT_INSTRUCTIONS_MAX_LENGTH,
   BOT_NAME_MAX_LENGTH,
   resolveBotAvatarSet,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   credentialForModel,
   MODEL_SEARCH_THRESHOLD,
   modelOptionKey,
   parseModelOptionKey,
   resolveSelectableModelId,
-} from "@unibots/core";
+} from "@rakazo/core";
 import { Stack, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import type { Voice } from "expo-speech";
 import type { ReactNode } from "react";
@@ -843,7 +843,7 @@ export default function BotSettingsScreen() {
               label={t("Icon set")}
               choices={[
                 { key: "organic", label: t("Original") },
-                { key: "unibots", label: t("Unibots") },
+                { key: "rakazo", label: t("Rakazo") },
               ]}
               value={avatarSet}
               onChange={(next) => {

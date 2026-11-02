@@ -4,10 +4,10 @@ import type {
   ActionAutoReviewSettings,
   ApprovalMode,
   SettingsScope,
-} from "@unibots/contracts";
-import { humanizeToolName } from "@unibots/core";
-import { writeSaved } from "@unibots/core/query";
-import { Button, ToggleGroup, ToggleGroupItem } from "@unibots/ui-web";
+} from "@rakazo/contracts";
+import { humanizeToolName } from "@rakazo/core";
+import { writeSaved } from "@rakazo/core/query";
+import { Button, ToggleGroup, ToggleGroupItem } from "@rakazo/ui-web";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSpaceQueries } from "../lib/query";

@@ -1,15 +1,15 @@
-import type { NotificationMessage } from "@unibots/adapter-kit";
-import type { MessageBlock } from "@unibots/contracts";
+import type { NotificationMessage } from "@rakazo/adapter-kit";
+import type { MessageBlock } from "@rakazo/contracts";
 import {
   isBackgroundRunTrigger,
   plainTextFromMarkdown,
   redactSecrets,
   truncatedPlainText,
   truncatePlainText,
-} from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
-import { countUnreadInboxChats } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
+import { countUnreadInboxChats } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import type { ExecutorDeps } from "./executor-deps.js";
 
 export async function runNotificationsEnabled(

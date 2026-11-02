@@ -1,4 +1,4 @@
-import type { ModelCatalogEntry } from "@unibots/contracts";
+import type { ModelCatalogEntry } from "@rakazo/contracts";
 import {
   canonicalPiProviderId,
   DEFAULT_MODEL_MAX_TOKENS,
@@ -6,7 +6,7 @@ import {
   OPENAI_COMPATIBLE_PROVIDER_ID,
   selectCompatibleModelCredential,
   withConnectionName,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import { matchesSearchQuery } from "./search.js";
 
 /** Effort choices an OpenAI-compatible endpoint stores when reasoning is enabled. */

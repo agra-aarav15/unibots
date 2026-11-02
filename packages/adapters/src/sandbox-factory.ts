@@ -1,4 +1,4 @@
-import type { SandboxProvider } from "@unibots/adapter-kit";
+import type { SandboxProvider } from "@rakazo/adapter-kit";
 import { BoatSandboxProvider } from "./boat-sandbox.js";
 import { BoxdSandboxProvider } from "./boxd-sandbox.js";
 import { CreateOSSandboxProvider } from "./createos-sandbox.js";

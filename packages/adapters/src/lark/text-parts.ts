@@ -6,17 +6,17 @@ export interface LarkTextPart {
 }
 
 type LarkRootData = NonNullable<Root["data"]> & {
-  unibotsLarkParts?: LarkTextPart[];
+  rakazoLarkParts?: LarkTextPart[];
 };
 
 export function setLarkTextParts(root: Root, parts: LarkTextPart[]): void {
-  const data: LarkRootData = { ...root.data, unibotsLarkParts: parts };
+  const data: LarkRootData = { ...root.data, rakazoLarkParts: parts };
   root.data = data;
 }
 
 export function getLarkTextParts(root: Root): LarkTextPart[] | undefined {
-  const data = root.data as { unibotsLarkParts?: unknown } | undefined;
-  const parts = data?.unibotsLarkParts;
+  const data = root.data as { rakazoLarkParts?: unknown } | undefined;
+  const parts = data?.rakazoLarkParts;
   if (
     Array.isArray(parts) &&
     parts.every(

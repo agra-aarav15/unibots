@@ -1,14 +1,14 @@
-import type { MessageBlock, ThreadMessage, ThreadMessagePage } from "@unibots/contracts";
-import { MessageBlock as MessageBlockSchema } from "@unibots/contracts";
+import type { MessageBlock, ThreadMessage, ThreadMessagePage } from "@rakazo/contracts";
+import { MessageBlock as MessageBlockSchema } from "@rakazo/contracts";
 import {
   BACKGROUND_RUN_TRIGGERS,
   callIdFromClientNonce,
   isBackgroundInputBlock,
   isBackgroundRunTrigger,
   isPeerReceiptBlocks,
-} from "@unibots/core";
-import { messageReplyPreview } from "@unibots/core/message-quote";
-import type { Prisma, PrismaClient } from "@unibots/db";
+} from "@rakazo/core";
+import { messageReplyPreview } from "@rakazo/core/message-quote";
+import type { Prisma, PrismaClient } from "@rakazo/db";
 
 type MessageDb = PrismaClient | Prisma.TransactionClient;
 

@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@unibots/db";
+import type { PrismaClient } from "@rakazo/db";
 import { describe, expect, it, vi } from "vitest";
 import type { TicketChange } from "./ticket-changes.js";
 import { createTicketChangeNotifier } from "./ticket-changes.js";

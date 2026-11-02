@@ -1,4 +1,4 @@
-name: unibots-prod
+name: rakazo-prod
 
 # Bounded container logs even on hosts without infra/compose/docker-daemon.json;
 # same driver and limits it installs, so both layers agree.
@@ -16,7 +16,7 @@ x-app-environment: &app-environment
   # Runtime
   NODE_ENV: production
   # The app's own login, subject to row-level security (docs/self-host-configuration.md#database-roles).
-  DATABASE_URL: postgres://unibots_app:${POSTGRES_APP_PASSWORD:?Set POSTGRES_APP_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-unibots}
+  DATABASE_URL: postgres://rakazo_app:${POSTGRES_APP_PASSWORD:?Set POSTGRES_APP_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-rakazo}
   REALTIME_DATABASE_URL:
   DB_POOL_MAX:
   DATA_DIR: /data
@@ -37,28 +37,20 @@ x-app-environment: &app-environment
   OBJECT_STORAGE_PREFIX:
   OBJECT_STORAGE_PATH_STYLE:
   WAKEUP_DRIVER: graphile
-  AGENT_RUNTIME: ${AGENT_RUNTIME:-pi}
-  # Hermes Agent brain (AGENT_RUNTIME=hermes). The sidecar services live under the
-  # "hermes" Compose profile; see infra/hermes/README.md.
-  UNIBOTS_HERMES_URL:
-  UNIBOTS_HERMES_API_KEY:
-  UNIBOTS_HERMES_PROFILE:
-  UNIBOTS_HERMES_MODEL:
-  UNIBOTS_HERMES_PROVISION_URL:
-  UNIBOTS_HERMES_PROVISION_SECRET:
+  AGENT_RUNTIME: pi
   API_URL:
   MAX_UPLOAD_SIZE_MB:
   MAX_ATTACHMENTS_PER_MESSAGE:
-  UNIBOTS_UPDATE_RESTART_SUPERVISOR:
+  RAKAZO_UPDATE_RESTART_SUPERVISOR:
   TICKET_BOARD_ENABLED:
   USER_DEVICES_ENABLED:
   BOT_MESSAGE_MAX_HOPS:
-  UNIBOTS_MESSAGE_USER_MAX_CHARS:
+  RAKAZO_MESSAGE_USER_MAX_CHARS:
   TEACH_RECORDING_TTL_MS:
   PHONE_CALLS_ENABLED:
   PHONE_CALL_RING_SECONDS:
   PHONE_CALL_COOLDOWN_MINUTES:
-  UNIBOTS_SECRETS_ALLOW_PRIVATE_HTTP:
+  RAKAZO_SECRETS_ALLOW_PRIVATE_HTTP:
   EXPO_ACCESS_TOKEN:
   # Secret storage
   SECRET_STORE: ${SECRET_STORE:-encrypted}
@@ -95,24 +87,24 @@ x-app-environment: &app-environment
   PI_DEFAULT_MODEL:
   PI_DEFAULT_CREDENTIALS:
   PI_SESSION_RECORDING:
-  UNIBOTS_LIVE_MODEL_CATALOG:
+  RAKAZO_LIVE_MODEL_CATALOG:
   OPENROUTER_API_KEY:
   ANTHROPIC_API_KEY:
   TYPESAFE_API_KEY:
   MAX_TOOL_CALLS_PER_TURN:
   MODEL_STREAM_MAX_RETRIES:
-  UNIBOTS_LOCAL_MODELS:
-  UNIBOTS_LOCAL_MODELS_URL:
-  UNIBOTS_LOCAL_VISION_MODELS:
-  UNIBOTS_LOCAL_CONTEXT_WINDOW:
-  UNIBOTS_LOCAL_MAX_TOKENS:
-  UNIBOTS_OPENAI_COMPATIBLE_VISION_MODELS:
-  UNIBOTS_OPENAI_COMPAT_ALLOW_PUBLIC:
-  UNIBOTS_OPENAI_COMPAT_PRIVATE_HOSTS:
-  UNIBOTS_AUTO_REVIEW_PROVIDER:
-  UNIBOTS_AUTO_REVIEW_MODEL:
-  UNIBOTS_AUTO_REVIEW_MIN_CONFIDENCE:
-  UNIBOTS_AUTO_REVIEW_TIMEOUT_MS:
+  RAKAZO_LOCAL_MODELS:
+  RAKAZO_LOCAL_MODELS_URL:
+  RAKAZO_LOCAL_VISION_MODELS:
+  RAKAZO_LOCAL_CONTEXT_WINDOW:
+  RAKAZO_LOCAL_MAX_TOKENS:
+  RAKAZO_OPENAI_COMPATIBLE_VISION_MODELS:
+  RAKAZO_OPENAI_COMPAT_ALLOW_PUBLIC:
+  RAKAZO_OPENAI_COMPAT_PRIVATE_HOSTS:
+  RAKAZO_AUTO_REVIEW_PROVIDER:
+  RAKAZO_AUTO_REVIEW_MODEL:
+  RAKAZO_AUTO_REVIEW_MIN_CONFIDENCE:
+  RAKAZO_AUTO_REVIEW_TIMEOUT_MS:
   RELEASE_WATCH_EVAL_MODEL:
   FISH_TTS_MODEL:
   FISH_ASR_MODEL:
@@ -288,9 +280,9 @@ services:
     pids_limit: 200
     mem_limit: 2g
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-unibots}
+      POSTGRES_USER: ${POSTGRES_USER:-rakazo}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
-      POSTGRES_DB: ${POSTGRES_DB:-unibots}
+      POSTGRES_DB: ${POSTGRES_DB:-rakazo}
     volumes:
       # Postgres 18 keeps each major version's cluster in /var/lib/postgresql/<major>/docker.
       - postgres:/var/lib/postgresql
@@ -301,7 +293,7 @@ services:
     networks:
       - data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-unibots} -d ${POSTGRES_DB:-unibots}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rakazo} -d ${POSTGRES_DB:-rakazo}"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -313,7 +305,7 @@ services:
     profiles: [pitr]
     # Tagged with a hash of Dockerfile.pitr and pitr-agent.sh, so a deploy builds it once per change
     # instead of on every run (compose-service.test.ts checks the hash).
-    image: unibots-pitr:64e13c784833b1c6
+    image: rakazo-pitr:aa7cf1bde2aa8051
     build:
       context: .
       dockerfile: Dockerfile.pitr
@@ -336,7 +328,7 @@ services:
       # Stops pg_receivewal and uploads with the container, not only the script.
       TINI_KILL_PROCESS_GROUP: "1"
       PGHOST: postgres
-      PGUSER: unibots_pitr
+      PGUSER: rakazo_pitr
       PGDATABASE: postgres
       PGPASSWORD: ${PITR_DATABASE_PASSWORD:-}
       PITR_AGE_RECIPIENTS:
@@ -350,7 +342,7 @@ services:
       PITR_RETAIN_DAYS:
       PITR_MAX_WAL_GB:
     volumes:
-      - pitrspool:/var/lib/unibots-pitr
+      - pitrspool:/var/lib/rakazo-pitr
     tmpfs:
       - /tmp
     networks:
@@ -360,17 +352,17 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "unibots-pitr", "health"]
+      test: ["CMD", "rakazo-pitr", "health"]
       interval: 1m
       timeout: 20s
       retries: 3
       start_period: 2m
 
   # Applies migrations as the database owner, creates the runtime login, and exits. Only this
-  # container gets the owner login: the API and worker connect as unibots_app, which row-level
+  # container gets the owner login: the API and worker connect as rakazo_app, which row-level
   # security binds, so code running in either cannot find a login that bypasses it.
   migrate:
-    image: ${UNIBOTS_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${UNIBOTS_IMAGE_TAG:-local}
+    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-local}
     build:
       context: ../..
       dockerfile: infra/compose/Dockerfile
@@ -387,8 +379,8 @@ services:
     pids_limit: 256
     mem_limit: 1536m
     environment:
-      DATABASE_URL: postgres://unibots_app:${POSTGRES_APP_PASSWORD:?Set POSTGRES_APP_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-unibots}
-      DATABASE_MIGRATION_URL: postgres://${POSTGRES_USER:-unibots}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-unibots}
+      DATABASE_URL: postgres://rakazo_app:${POSTGRES_APP_PASSWORD:?Set POSTGRES_APP_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-rakazo}
+      DATABASE_MIGRATION_URL: postgres://${POSTGRES_USER:-rakazo}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-rakazo}
     networks:
       - data
     depends_on:
@@ -401,8 +393,8 @@ services:
     #
     # The default tag is `local`, which no registry serves, so a fresh install builds from the
     # checkout via `up -d --build` instead of failing on a `pull` of an image that does not exist
-    # yet. Once a release is published, pin UNIBOTS_IMAGE_TAG to it and the pull path takes over.
-    image: ${UNIBOTS_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${UNIBOTS_IMAGE_TAG:-local}
+    # yet. Once a release is published, pin RAKAZO_IMAGE_TAG to it and the pull path takes over.
+    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-local}
     build:
       context: ../..
       dockerfile: infra/compose/Dockerfile
@@ -421,7 +413,7 @@ services:
       - ALL
     # Chat runs execute in the API that receives them, so it gets the worker's headroom.
     pids_limit: 512
-    mem_limit: ${UNIBOTS_API_MEMORY_LIMIT:-2g}
+    mem_limit: ${RAKAZO_API_MEMORY_LIMIT:-2g}
     environment:
       <<: *app-environment
       # Sign-in, sessions, billing and inbound webhooks: API only.
@@ -446,8 +438,8 @@ services:
       SIGNUPS_ENABLED:
       SIGNUP_ALLOWLIST:
       SCREEN_PROXY_SECRET: ${SCREEN_PROXY_SECRET:?Set SCREEN_PROXY_SECRET in .env}
-      UNIBOTS_DESKTOP_STACK_TOKEN:
-      UNIBOTS_GIT_SHA:
+      RAKAZO_DESKTOP_STACK_TOKEN:
+      RAKAZO_GIT_SHA:
       SENTRY_BROWSER_DSN: ${SENTRY_BROWSER_DSN:-}
       PRIVACY_POLICY_URL:
       EMAIL_PROVIDER:
@@ -462,13 +454,13 @@ services:
       CRISP_WEBSITE_ID:
       INTEGRATIONS_CATALOG_URL:
       TEAM_CHAT_BOT_ID:
-      SLACK_UNIBOTS_BOT_ID:
+      SLACK_RAKAZO_BOT_ID:
       TEAM_CHAT_JUDGE_PROVIDER:
       TEAM_CHAT_JUDGE_MODEL:
       SPACE_TEARDOWN_TIMEOUT_MS:
-      UNIBOTS_MIN_CLIENT_BUILD:
-      UNIBOTS_NAV_LINKS:
-      UNIBOTS_ADMIN_EMAILS:
+      RAKAZO_MIN_CLIENT_BUILD:
+      RAKAZO_NAV_LINKS:
+      RAKAZO_ADMIN_EMAILS:
       VOICE_SUMMARY_MIN_CHARS:
     expose:
       - "3100"
@@ -497,7 +489,7 @@ services:
       start_interval: 1s
 
   worker:
-    image: ${UNIBOTS_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${UNIBOTS_IMAGE_TAG:-local}
+    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-local}
     build:
       context: ../..
       dockerfile: infra/compose/Dockerfile
@@ -522,7 +514,7 @@ services:
     cap_drop:
       - ALL
     pids_limit: 512
-    mem_limit: ${UNIBOTS_WORKER_MEMORY_LIMIT:-2g}
+    mem_limit: ${RAKAZO_WORKER_MEMORY_LIMIT:-2g}
     environment:
       <<: *app-environment
       GRAPHILE_WORKER_CONCURRENCY:
@@ -538,7 +530,7 @@ services:
         condition: service_healthy
 
   web:
-    image: ${UNIBOTS_IMAGE:-ghcr.io/agra-aarav15/unibots/app}:${UNIBOTS_IMAGE_TAG:-local}
+    image: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}:${RAKAZO_IMAGE_TAG:-local}
     build:
       context: ../..
       dockerfile: infra/compose/Dockerfile
@@ -565,10 +557,10 @@ services:
       # Keep that fixed so pids_limit holds on many-core hosts (#2430).
       RAYON_NUM_THREADS: "4"
       API_PROXY_TARGET: http://api:3100
-      UNIBOTS_HOST: ${UNIBOTS_HOST:-app.example.com}
+      RAKAZO_HOST: ${RAKAZO_HOST:-app.example.com}
       SCREEN_PROXY_SECRET: ${SCREEN_PROXY_SECRET:?Set SCREEN_PROXY_SECRET in .env}
-      UNIBOTS_CSP_SCRIPT_SRC: ${UNIBOTS_CSP_SCRIPT_SRC:-}
-      UNIBOTS_CSP_CONNECT_SRC: ${UNIBOTS_CSP_CONNECT_SRC:-}
+      RAKAZO_CSP_SCRIPT_SRC: ${RAKAZO_CSP_SCRIPT_SRC:-}
+      RAKAZO_CSP_CONNECT_SRC: ${RAKAZO_CSP_CONNECT_SRC:-}
       CRISP_WEBSITE_ID:
     expose:
       - "5173"
@@ -600,7 +592,7 @@ services:
     profiles: [updater]
     # Pinned separately from the application image: the updater does not recreate itself, so moving
     # its own version is an operator action, not something an update can do underneath itself.
-    image: ${UNIBOTS_UPDATER_IMAGE:-ghcr.io/agra-aarav15/unibots/updater}:${UNIBOTS_UPDATER_IMAGE_TAG:-local}
+    image: ${RAKAZO_UPDATER_IMAGE:-ghcr.io/elie222/rakazo/updater}:${RAKAZO_UPDATER_IMAGE_TAG:-local}
     build:
       context: ../..
       dockerfile: infra/updater/Dockerfile
@@ -618,21 +610,21 @@ services:
       NODE_ENV: production
       # Keep interpolation optional so deployments that do not enable this profile need no token.
       # resolveUpdaterConfig still refuses to start the sidecar without a dedicated secure value.
-      UNIBOTS_UPDATER_TOKEN: ${UNIBOTS_UPDATER_TOKEN:-}
-      UNIBOTS_UPDATER_HOST: "0.0.0.0"
-      UNIBOTS_UPDATER_PORT: "7092"
-      UNIBOTS_IMAGE: ${UNIBOTS_IMAGE:-ghcr.io/agra-aarav15/unibots/app}
+      RAKAZO_UPDATER_TOKEN: ${RAKAZO_UPDATER_TOKEN:-}
+      RAKAZO_UPDATER_HOST: "0.0.0.0"
+      RAKAZO_UPDATER_PORT: "7092"
+      RAKAZO_IMAGE: ${RAKAZO_IMAGE:-ghcr.io/elie222/rakazo/app}
       # `-p` is available to Compose interpolation but is not injected into containers unless it is
       # declared here. The sidecar must target the project the operator actually started.
-      COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME:-unibots-prod}
+      COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME:-rakazo-prod}
       # Must equal the host path it is mounted from, or every relative bind mount in this file would
-      # resolve somewhere else. /srv/unibots is the supported Linux production layout.
-      UNIBOTS_DEPLOY_DIR: ${UNIBOTS_DEPLOY_DIR:-/srv/unibots}
+      # resolve somewhere else. /srv/rakazo is the supported Linux production layout.
+      RAKAZO_DEPLOY_DIR: ${RAKAZO_DEPLOY_DIR:-/srv/rakazo}
       # A deployment that layers an overlay has to be reconciled with the same file list and the
       # same services the operator runs by hand, so these are read from the environment rather
       # than pinned to the base stack. Defaults reproduce the previous behaviour exactly.
-      UNIBOTS_COMPOSE_FILE: ${UNIBOTS_COMPOSE_FILE:-infra/compose/docker-compose.prod.yml}
-      UNIBOTS_UPDATE_SERVICES: ${UNIBOTS_UPDATE_SERVICES:-}
+      RAKAZO_COMPOSE_FILE: ${RAKAZO_COMPOSE_FILE:-infra/compose/docker-compose.prod.yml}
+      RAKAZO_UPDATE_SERVICES: ${RAKAZO_UPDATE_SERVICES:-}
       COMPOSE_PATH_SEPARATOR: ${COMPOSE_PATH_SEPARATOR:-}
       LOG_LEVEL: ${LOG_LEVEL:-info}
       LOG_FORMAT: ${LOG_FORMAT:-}
@@ -645,7 +637,7 @@ services:
       SENTRY_RELEASE: ${SENTRY_RELEASE:-}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${UNIBOTS_DEPLOY_DIR:-/srv/unibots}:${UNIBOTS_DEPLOY_DIR:-/srv/unibots}
+      - ${RAKAZO_DEPLOY_DIR:-/srv/rakazo}:${RAKAZO_DEPLOY_DIR:-/srv/rakazo}
     networks:
       - control
     healthcheck:
@@ -672,7 +664,7 @@ services:
     pids_limit: 128
     mem_limit: 256m
     environment:
-      UNIBOTS_HOST: ${UNIBOTS_HOST:-app.example.com}
+      RAKAZO_HOST: ${RAKAZO_HOST:-app.example.com}
     ports:
       - "80:80"
       - "443:443"

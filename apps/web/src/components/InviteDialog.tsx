@@ -1,5 +1,5 @@
 import { Plural, Trans, useLingui } from "@lingui/react/macro";
-import type { BillingStatus } from "@unibots/contracts";
+import type { BillingStatus } from "@rakazo/contracts";
 import {
   Button,
   Dialog,
@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   Input,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import { Check, Copy } from "lucide-react";
 import { useCopyText } from "../lib/copy-text";
 

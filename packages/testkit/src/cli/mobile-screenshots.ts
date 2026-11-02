@@ -11,9 +11,9 @@ import {
   FakeComposioClient,
   PipedreamConnector,
   ThirdPartyConnectorEmulator,
-} from "@unibots/adapters";
-import type { PrismaClient } from "@unibots/db";
-import { createThreadMessage } from "@unibots/db";
+} from "@rakazo/adapters";
+import type { PrismaClient } from "@rakazo/db";
+import { createThreadMessage } from "@rakazo/db";
 import { sessionCookieHeader } from "../index.js";
 import { runProcess } from "./process.js";
 
@@ -48,7 +48,7 @@ async function main() {
   await mkdir(REPORT_DIR, { recursive: true });
   await mkdir(DATA_DIR, { recursive: true });
 
-  execFileSync("pnpm", ["--filter", "@unibots/db", "exec", "prisma", "migrate", "deploy"], {
+  execFileSync("pnpm", ["--filter", "@rakazo/db", "exec", "prisma", "migrate", "deploy"], {
     cwd: path.join(ROOT, "packages", "db"),
     env: process.env,
     stdio: "inherit",
@@ -64,7 +64,7 @@ async function main() {
     },
     { fetch: thirdParties.fetch, resolveHostname: thirdParties.resolveHostname },
   );
-  const { createApp } = await import("@unibots/api/app");
+  const { createApp } = await import("@rakazo/api/app");
   const handles = await createApp({
     databaseUrl: process.env.DATABASE_URL!,
     dataDir: DATA_DIR,
@@ -150,21 +150,21 @@ async function runFlow(flow: string, fixture: Awaited<ReturnType<typeof seedFixt
       "--output",
       path.join(REPORT_DIR, `${flow}.html`),
       "-e",
-      `UNIBOTS_MOBILE_API_URL=http://10.0.2.2:${API_PORT}`,
+      `RAKAZO_MOBILE_API_URL=http://10.0.2.2:${API_PORT}`,
       "-e",
-      `UNIBOTS_SCREENSHOT_EMAIL=${EMAIL}`,
+      `RAKAZO_SCREENSHOT_EMAIL=${EMAIL}`,
       "-e",
-      `UNIBOTS_SCREENSHOT_PASSWORD=${PASSWORD}`,
+      `RAKAZO_SCREENSHOT_PASSWORD=${PASSWORD}`,
       "-e",
-      `UNIBOTS_SCREENSHOT_BOT_ID=${fixture.botId}`,
+      `RAKAZO_SCREENSHOT_BOT_ID=${fixture.botId}`,
       "-e",
-      `UNIBOTS_SCREENSHOT_GROUP_ID=${fixture.groupId}`,
+      `RAKAZO_SCREENSHOT_GROUP_ID=${fixture.groupId}`,
       "-e",
-      `UNIBOTS_SCREENSHOT_ROUTINE_ID=${fixture.routineId}`,
+      `RAKAZO_SCREENSHOT_ROUTINE_ID=${fixture.routineId}`,
       "-e",
-      "UNIBOTS_NOTIFICATION_VIDEO=notification-demo",
+      "RAKAZO_NOTIFICATION_VIDEO=notification-demo",
       "-e",
-      `UNIBOTS_EXPAND_NOTIFICATIONS_URL=${EXPAND_NOTIFICATIONS_URL}`,
+      `RAKAZO_EXPAND_NOTIFICATIONS_URL=${EXPAND_NOTIFICATIONS_URL}`,
       path.join(FLOW_DIR, `${flow}.yaml`),
     ],
     process.env,

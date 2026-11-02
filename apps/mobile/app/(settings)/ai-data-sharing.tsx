@@ -1,5 +1,5 @@
-import type { AiConsentStatus } from "@unibots/contracts";
-import { AI_DATA_DISCLOSURES, AI_PRIVACY_URL } from "@unibots/contracts";
+import type { AiConsentStatus } from "@rakazo/contracts";
+import { AI_DATA_DISCLOSURES, AI_PRIVACY_URL } from "@rakazo/contracts";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Linking, ScrollView, StyleSheet } from "react-native";
 import {
@@ -135,7 +135,7 @@ export default function AiDataSharing() {
               />
             ))}
             <SettingsRow
-              title={t("Unibots")}
+              title={t("Rakazo")}
               accessibilityRole="link"
               chevron="right"
               onPress={() => void Linking.openURL(status.privacyUrl ?? AI_PRIVACY_URL)}

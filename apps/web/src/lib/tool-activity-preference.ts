@@ -1,6 +1,6 @@
 export type ToolActivityPreference = "on" | "off";
 
-export const TOOL_ACTIVITY_STORAGE_KEY = "unibots.showToolActivity";
+export const TOOL_ACTIVITY_STORAGE_KEY = "rakazo.showToolActivity";
 
 export type ResolveToolActivityOptions = {
   stored?: string | null;

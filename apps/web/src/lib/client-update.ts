@@ -2,7 +2,7 @@ import {
   CLIENT_UPDATE_REQUIRED_STATUS,
   compareBuilds,
   SERVER_BUILD_HEADER,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import { getSnapshot as activeCall } from "./call-session";
 import { CLIENT_BUILD } from "./client-build";
 import { composerHoldsUnsavedWork, hasUnsentComposerDraft } from "./composer-draft";

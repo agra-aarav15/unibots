@@ -1,6 +1,6 @@
 import { t } from "@lingui/core/macro";
-import type { CronLabels, CronUnit } from "@unibots/core";
-import { ENGLISH_CRON_LABELS, localizedClock, russianInterval } from "@unibots/core";
+import type { CronLabels, CronUnit } from "@rakazo/core";
+import { ENGLISH_CRON_LABELS, localizedClock, russianInterval } from "@rakazo/core";
 
 export function cronUnitLabel(unit: CronUnit): string {
   switch (unit) {

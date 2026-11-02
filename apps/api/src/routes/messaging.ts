@@ -1,14 +1,14 @@
 import { ORPCError } from "@orpc/server";
-import { messagingDeliverJob } from "@unibots/adapter-kit";
-import { displayName } from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
+import { messagingDeliverJob } from "@rakazo/adapter-kit";
+import { displayName } from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
 import {
   crossSpaceCommunicationAllowed,
   formatMessagingLinkCode,
   issueMessagingLinkCode,
   runAsSystem,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import type { RouterContext } from "./context.js";
 import { isUniqueViolation } from "./shared.js";
 

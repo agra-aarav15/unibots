@@ -10,7 +10,7 @@ function association(env: Record<string, string>) {
   mountAppAssociation(
     app,
     loadEnv({
-      DATABASE_URL: "postgres://unibots:unibots@127.0.0.1:5433/unibots",
+      DATABASE_URL: "postgres://rakazo:rakazo@127.0.0.1:5433/rakazo",
       NODE_ENV: "test",
       ...env,
     }),
@@ -70,7 +70,7 @@ describe("native app association", () => {
         relation: ["delegate_permission/common.get_login_creds"],
         target: {
           namespace: "android_app",
-          package_name: "com.unibots.app",
+          package_name: "com.rakazo.app",
           sha256_cert_fingerprints: [fingerprint],
         },
       },

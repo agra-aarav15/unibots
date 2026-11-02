@@ -1,6 +1,6 @@
-import type { AppBootstrap } from "@unibots/contracts";
-import { ATTACHMENT_MAX_BYTES, attachmentMaxBytes } from "@unibots/contracts";
-import { displayIdentityResult } from "@unibots/core";
+import type { AppBootstrap } from "@rakazo/contracts";
+import { ATTACHMENT_MAX_BYTES, attachmentMaxBytes } from "@rakazo/contracts";
+import { displayIdentityResult } from "@rakazo/core";
 import { initialBootstrapTarget } from "./bootstrap-target";
 import { identityLabels } from "./identity-display";
 import { markOnce } from "./performance";
@@ -32,7 +32,7 @@ let primedBootstrap: {
 
 const initialTarget = initialBootstrapTarget(
   window.location.pathname,
-  Boolean(window.unibotsDesktop),
+  Boolean(window.rakazoDesktop),
 );
 if (initialTarget) {
   const { botId } = initialTarget;

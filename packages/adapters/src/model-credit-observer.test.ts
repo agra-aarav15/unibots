@@ -1,9 +1,9 @@
-import type { ModelCallObserver } from "@unibots/adapter-kit";
-import { creditAccount, organizationForMember, reserveModelCredits } from "@unibots/db";
+import type { ModelCallObserver } from "@rakazo/adapter-kit";
+import { creditAccount, organizationForMember, reserveModelCredits } from "@rakazo/db";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { hostedModelCreditObserver } from "./model-credit-observer.js";
 
-vi.mock("@unibots/db", () => ({
+vi.mock("@rakazo/db", () => ({
   organizationForMember: vi.fn(),
   creditAccount: vi.fn(),
   reserveModelCredits: vi.fn(),

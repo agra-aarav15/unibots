@@ -6,10 +6,10 @@ import {
   migrateSecrets,
   PostgresRealtimeFanout,
   secretStoreOptionsFromEnv,
-} from "@unibots/adapters";
-import { resolveEncryptionKey } from "@unibots/core";
-import { loadRootEnv } from "@unibots/core/node/load-root-env";
-import { createDb, runAsSystem } from "@unibots/db";
+} from "@rakazo/adapters";
+import { resolveEncryptionKey } from "@rakazo/core";
+import { loadRootEnv } from "@rakazo/core/node/load-root-env";
+import { createDb, runAsSystem } from "@rakazo/db";
 import { createSecretMigrationRepository } from "../secret-migration.js";
 
 loadRootEnv();

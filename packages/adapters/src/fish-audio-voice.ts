@@ -8,9 +8,9 @@ import type {
   VoiceSynthesizeRequest,
   VoiceTranscribeRequest,
   VoiceVerifyResult,
-} from "@unibots/adapter-kit";
-import { VoiceAccountError } from "@unibots/adapter-kit";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/adapter-kit";
+import { VoiceAccountError } from "@rakazo/adapter-kit";
+import { getLogger } from "@rakazo/logging";
 import {
   readVoiceAudio,
   readVoiceJson,
@@ -61,7 +61,7 @@ export class FishAudioVoiceProvider implements VoiceProvider {
     });
   }
 
-  /** Return user-owned then bounded public Fish Audio voices as Unibots choices. */
+  /** Return user-owned then bounded public Fish Audio voices as Rakazo choices. */
   async listVoices(apiKey: string, context: AdapterContext): Promise<VoiceInfo[]> {
     const controller = new AbortController();
     const signal = voiceDeadline(

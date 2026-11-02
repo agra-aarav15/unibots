@@ -7,22 +7,22 @@ import { UI_LOCALES } from "./ui-locale";
 const resources = resolve(
   dirname(fileURLToPath(import.meta.url)),
   "..",
-  "modules/unibots-notifications/android/src/main/res",
+  "modules/rakazo-notifications/android/src/main/res",
 );
 const keys = [
-  "unibots_channel_live",
-  "unibots_channel_messages",
-  "unibots_channel_scheduled",
-  "unibots_channel_attention",
-  "unibots_live_one",
-  "unibots_live_many",
-  "unibots_live_working",
-  "unibots_scheduled_title",
-  "unibots_replied_group",
-  "unibots_replied",
-  "unibots_attention_failed",
-  "unibots_attention_takeover",
-  "unibots_attention_input",
+  "rakazo_channel_live",
+  "rakazo_channel_messages",
+  "rakazo_channel_scheduled",
+  "rakazo_channel_attention",
+  "rakazo_live_one",
+  "rakazo_live_many",
+  "rakazo_live_working",
+  "rakazo_scheduled_title",
+  "rakazo_replied_group",
+  "rakazo_replied",
+  "rakazo_attention_failed",
+  "rakazo_attention_takeover",
+  "rakazo_attention_input",
 ];
 
 const resourceDirectories = {

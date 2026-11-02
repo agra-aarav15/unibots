@@ -1,8 +1,8 @@
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { ComposioConnector, FakeComposioClient } from "@unibots/adapters";
-import type { createApp } from "@unibots/api/app";
+import { ComposioConnector, FakeComposioClient } from "@rakazo/adapters";
+import type { createApp } from "@rakazo/api/app";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { sessionCookieHeader } from "./index.js";
 import { asSystem } from "./system-db.js";
@@ -22,10 +22,10 @@ describeWithDatabase("structured @ mention targets", () => {
   let app: App;
   let prisma: AppHandles["prisma"];
   const stamp = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-  const dataDir = mkdtempSync(path.join(tmpdir(), "unibots-mention-targets-"));
+  const dataDir = mkdtempSync(path.join(tmpdir(), "rakazo-mention-targets-"));
 
   beforeAll(async () => {
-    const { createApp } = await import("@unibots/api/app");
+    const { createApp } = await import("@rakazo/api/app");
     handles = await createApp({
       databaseUrl: process.env.DATABASE_URL!,
       dataDir,
@@ -44,7 +44,7 @@ describeWithDatabase("structured @ mention targets", () => {
   });
 
   it("starts a routine test run on the owning bot", async () => {
-    const cookie = await signup(app, `mention-routine-${stamp}@unibots.test`, "Routine Owner");
+    const cookie = await signup(app, `mention-routine-${stamp}@rakazo.test`, "Routine Owner");
     const bot = await rpc<{ id: string }>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -70,7 +70,7 @@ describeWithDatabase("structured @ mention targets", () => {
   });
 
   it("replays routine testRun with the same clientNonce", async () => {
-    const cookie = await signup(app, `mention-routine-replay-${stamp}@unibots.test`, "Replay Owner");
+    const cookie = await signup(app, `mention-routine-replay-${stamp}@rakazo.test`, "Replay Owner");
     const bot = await rpc<{ id: string }>(app, cookie, "bots/create", {
       name: "ReplayBot",
       title: "",
@@ -105,7 +105,7 @@ describeWithDatabase("structured @ mention targets", () => {
   });
 
   it("includes connector intent on a 1:1 send prompt", async () => {
-    const cookie = await signup(app, `mention-connector-${stamp}@unibots.test`, "Connector Owner");
+    const cookie = await signup(app, `mention-connector-${stamp}@rakazo.test`, "Connector Owner");
     const bot = await rpc<{ id: string }>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -132,7 +132,7 @@ describeWithDatabase("structured @ mention targets", () => {
   });
 
   it("lands a group-targeted send in the group transcript, not the 1:1 bot thread", async () => {
-    const cookie = await signup(app, `mention-group-${stamp}@unibots.test`, "Group Owner");
+    const cookie = await signup(app, `mention-group-${stamp}@rakazo.test`, "Group Owner");
     const botA = await rpc<{ id: string }>(app, cookie, "bots/create", {
       name: "BotA",
       title: "",
@@ -173,7 +173,7 @@ describeWithDatabase("structured @ mention targets", () => {
   });
 
   it("wakes exactly one bot on an unmentioned group send", async () => {
-    const cookie = await signup(app, `mention-group-default-${stamp}@unibots.test`, "Group Default");
+    const cookie = await signup(app, `mention-group-default-${stamp}@rakazo.test`, "Group Default");
     const botA = await rpc<{ id: string }>(app, cookie, "bots/create", {
       name: "BotA",
       title: "",
@@ -203,7 +203,7 @@ describeWithDatabase("structured @ mention targets", () => {
   });
 
   it("wakes a mentioned group member from typed bot chips and ignores non-members", async () => {
-    const cookie = await signup(app, `mention-out-${stamp}@unibots.test`, "Out Of Chat");
+    const cookie = await signup(app, `mention-out-${stamp}@rakazo.test`, "Out Of Chat");
     const botA = await rpc<{ id: string }>(app, cookie, "bots/create", {
       name: "MemberA",
       title: "",
@@ -246,8 +246,8 @@ describeWithDatabase("structured @ mention targets", () => {
   });
 
   it("rejects another user's routine, connection, and group mentions", async () => {
-    const ada = await signup(app, `mention-auth-ada-${stamp}@unibots.test`, "Ada Auth");
-    const bob = await signup(app, `mention-auth-bob-${stamp}@unibots.test`, "Bob Auth");
+    const ada = await signup(app, `mention-auth-ada-${stamp}@rakazo.test`, "Ada Auth");
+    const bob = await signup(app, `mention-auth-bob-${stamp}@rakazo.test`, "Bob Auth");
     const adaBot = await rpc<{ id: string }>(app, ada, "bots/create", {
       name: "AdaBot",
       title: "",

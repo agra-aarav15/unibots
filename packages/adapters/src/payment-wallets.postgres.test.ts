@@ -3,8 +3,8 @@ import type {
   PaymentWalletConnectResult,
   PaymentWalletCredential,
   PaymentWalletProvider,
-} from "@unibots/adapter-kit";
-import { asSystem, createDb, runAsTenant } from "@unibots/db";
+} from "@rakazo/adapter-kit";
+import { asSystem, createDb, runAsTenant } from "@rakazo/db";
 import { afterAll, describe, expect, it, vi } from "vitest";
 import type { PaymentWalletDeps } from "./payment-wallets.js";
 import {

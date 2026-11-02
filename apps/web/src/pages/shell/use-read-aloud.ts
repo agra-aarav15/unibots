@@ -1,6 +1,6 @@
-import type { Bot, ThreadMessage, ThreadSnapshot } from "@unibots/contracts";
-import { speechFromBlocks } from "@unibots/core";
-import { toast } from "@unibots/ui-web";
+import type { Bot, ThreadMessage, ThreadSnapshot } from "@rakazo/contracts";
+import { speechFromBlocks } from "@rakazo/core";
+import { toast } from "@rakazo/ui-web";
 import type { RefObject } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { speaker } from "../../lib/tts";

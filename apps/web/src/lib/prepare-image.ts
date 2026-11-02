@@ -1,5 +1,5 @@
-import { ATTACHMENT_IMAGE_MAX_EDGE, ATTACHMENT_IMAGE_QUALITY } from "@unibots/contracts";
-import { inferAttachmentMimeType } from "@unibots/core";
+import { ATTACHMENT_IMAGE_MAX_EDGE, ATTACHMENT_IMAGE_QUALITY } from "@rakazo/contracts";
+import { inferAttachmentMimeType } from "@rakazo/core";
 
 // Recompress byte-heavy images even when their dimensions already fit.
 const IMAGE_RECOMPRESS_BYTES = 5 * 1024 * 1024;

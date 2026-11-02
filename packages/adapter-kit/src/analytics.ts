@@ -1,4 +1,4 @@
-import type { AnalyticsEvent } from "@unibots/contracts";
+import type { AnalyticsEvent } from "@rakazo/contracts";
 
 /** Optional, best-effort product measurement. Implementations must never throw or block work. */
 export interface ProductAnalytics {

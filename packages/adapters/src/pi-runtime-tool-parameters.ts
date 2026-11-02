@@ -1,7 +1,7 @@
 import { Type } from "@earendil-works/pi-ai";
-import type { ConnectorTool } from "@unibots/adapter-kit";
-import { BOT_INSTRUCTIONS_MAX_LENGTH } from "@unibots/contracts";
-import { getLogger } from "@unibots/logging";
+import type { ConnectorTool } from "@rakazo/adapter-kit";
+import { BOT_INSTRUCTIONS_MAX_LENGTH } from "@rakazo/contracts";
+import { getLogger } from "@rakazo/logging";
 import {
   normalizeOpenAiToolParameters,
   openAiToolParametersNeedNormalization,

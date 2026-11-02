@@ -1,4 +1,4 @@
-import { cn } from "@unibots/ui-web/lib/utils";
+import { cn } from "@rakazo/ui-web/lib/utils";
 import { CheckIcon } from "lucide-react";
 import * as React from "react";
 

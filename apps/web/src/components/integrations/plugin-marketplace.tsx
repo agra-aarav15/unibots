@@ -1,15 +1,15 @@
 import { Plural, Trans, useLingui } from "@lingui/react/macro";
-import { useLinkFavicon } from "@unibots/chat-ui/web";
+import { useLinkFavicon } from "@rakazo/chat-ui/web";
 import type {
   CapabilityInstall,
   McpServer,
   PluginMarketplaceEntry,
   PluginPart,
   PluginPreview,
-} from "@unibots/contracts";
-import { PluginPreviewSchema } from "@unibots/contracts";
-import { installedPluginParts } from "@unibots/core";
-import { Button, Spinner } from "@unibots/ui-web";
+} from "@rakazo/contracts";
+import { PluginPreviewSchema } from "@rakazo/contracts";
+import { installedPluginParts } from "@rakazo/core";
+import { Button, Spinner } from "@rakazo/ui-web";
 import { ArrowUpRight, Check, ChevronLeft, FileText, Plug } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { connectMcpOauth } from "../../lib/mcp-connect";

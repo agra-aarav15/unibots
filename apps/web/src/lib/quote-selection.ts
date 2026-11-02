@@ -1,5 +1,5 @@
-import type { ThreadMessage } from "@unibots/contracts";
-import { truncateReplyQuote } from "@unibots/contracts";
+import type { ThreadMessage } from "@rakazo/contracts";
+import { truncateReplyQuote } from "@rakazo/contracts";
 
 /**
  * Resolves a text selection to the message it quotes. A quote stays scoped to

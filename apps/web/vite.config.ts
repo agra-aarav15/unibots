@@ -7,19 +7,19 @@ import net from "node:net";
 import path from "node:path";
 import tls from "node:tls";
 import { lingui } from "@lingui/vite-plugin";
-import type { DesktopStackProbeResponse } from "@unibots/contracts";
-import { buildIdAt } from "@unibots/contracts/client-build";
+import type { DesktopStackProbeResponse } from "@rakazo/contracts";
+import { buildIdAt } from "@rakazo/contracts/client-build";
 import {
   appContentSecurityPolicy,
   CSP_REPORTING_ENDPOINTS,
   contentSecurityPolicyFor,
   parseContentSecuritySources,
   parseCrispWebsiteId,
-} from "@unibots/contracts/content-security-policy";
+} from "@rakazo/contracts/content-security-policy";
 import {
   safeScreenProxyResponseHeaders,
   stripSensitiveHandshakeHeaders,
-} from "@unibots/core/node/screen-proxy-response";
+} from "@rakazo/core/node/screen-proxy-response";
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
@@ -39,7 +39,7 @@ import {
   rewrittenNovncHeaders,
   shouldInjectNovncStorageShim,
 } from "./src/novnc-html.js";
-import { unibotsPwa } from "./src/pwa/plugin.js";
+import { rakazoPwa } from "./src/pwa/plugin.js";
 import type { ScreenTargetFailure } from "./src/screen-proxy.js";
 import {
   checkScreenAuthorization,
@@ -55,10 +55,10 @@ import {
 } from "./src/screen-proxy.js";
 
 const webPort = Number(process.env.WEB_PORT ?? 5173);
-const DESKTOP_STACK_PROBE_PATH = "/.well-known/unibots-desktop-stack";
-const DESKTOP_STACK_TOKEN_HEADER = "x-unibots-desktop-stack-token";
+const DESKTOP_STACK_PROBE_PATH = "/.well-known/rakazo-desktop-stack";
+const DESKTOP_STACK_TOKEN_HEADER = "x-rakazo-desktop-stack-token";
 const SCREEN_UPSTREAM_TIMEOUT_MS = 20_000;
-const screenLog = createServiceLogger({ service: "unibots-web" });
+const screenLog = createServiceLogger({ service: "rakazo-web" });
 
 function screenPolicy(url: string | undefined) {
   return url?.startsWith("/novnc/session/control/") ? "control" : "view";
@@ -463,10 +463,10 @@ export default defineConfig(({ command, mode }) => {
   const buildId = command === "build" ? buildIdAt(new Date()) : "";
   const rootEnv = loadEnv(mode, path.resolve(import.meta.dirname, "../.."), "");
   const api = process.env.API_PROXY_TARGET ?? rootEnv.API_PROXY_TARGET ?? "http://127.0.0.1:3100";
-  const previewHost = process.env.UNIBOTS_HOST ?? rootEnv.UNIBOTS_HOST ?? "localhost";
+  const previewHost = process.env.RAKAZO_HOST ?? rootEnv.RAKAZO_HOST ?? "localhost";
   const allowedHosts = [
     previewHost,
-    ...(process.env.UNIBOTS_ALLOWED_HOSTS ?? rootEnv.UNIBOTS_ALLOWED_HOSTS ?? "")
+    ...(process.env.RAKAZO_ALLOWED_HOSTS ?? rootEnv.RAKAZO_ALLOWED_HOSTS ?? "")
       .split(",")
       .map((entry) => entry.trim())
       .filter(Boolean),
@@ -483,30 +483,30 @@ export default defineConfig(({ command, mode }) => {
         process.env.SANDBOX_SUPERVISOR_TOKEN ?? rootEnv.SANDBOX_SUPERVISOR_TOKEN,
       BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET ?? rootEnv.BETTER_AUTH_SECRET,
     });
-  const performanceAssetDelayMs = Number(process.env.UNIBOTS_PERFORMANCE_ASSET_DELAY_MS ?? 0);
+  const performanceAssetDelayMs = Number(process.env.RAKAZO_PERFORMANCE_ASSET_DELAY_MS ?? 0);
   const desktopStackToken =
-    process.env.UNIBOTS_DESKTOP_STACK_TOKEN ?? rootEnv.UNIBOTS_DESKTOP_STACK_TOKEN ?? "";
-  const imageTag = process.env.UNIBOTS_IMAGE_TAG ?? rootEnv.UNIBOTS_IMAGE_TAG ?? "edge";
+    process.env.RAKAZO_DESKTOP_STACK_TOKEN ?? rootEnv.RAKAZO_DESKTOP_STACK_TOKEN ?? "";
+  const imageTag = process.env.RAKAZO_IMAGE_TAG ?? rootEnv.RAKAZO_IMAGE_TAG ?? "edge";
   // Invalid origins throw here, so the server refuses to start rather than serve a wider policy.
   const appPolicy = appContentSecurityPolicy({
     scriptSrc: parseContentSecuritySources(
-      "UNIBOTS_CSP_SCRIPT_SRC",
-      process.env.UNIBOTS_CSP_SCRIPT_SRC ?? rootEnv.UNIBOTS_CSP_SCRIPT_SRC,
+      "RAKAZO_CSP_SCRIPT_SRC",
+      process.env.RAKAZO_CSP_SCRIPT_SRC ?? rootEnv.RAKAZO_CSP_SCRIPT_SRC,
     ),
     connectSrc: parseContentSecuritySources(
-      "UNIBOTS_CSP_CONNECT_SRC",
-      process.env.UNIBOTS_CSP_CONNECT_SRC ?? rootEnv.UNIBOTS_CSP_CONNECT_SRC,
+      "RAKAZO_CSP_CONNECT_SRC",
+      process.env.RAKAZO_CSP_CONNECT_SRC ?? rootEnv.RAKAZO_CSP_CONNECT_SRC,
     ),
     crisp: parseCrispWebsiteId(process.env.CRISP_WEBSITE_ID ?? rootEnv.CRISP_WEBSITE_ID) !== null,
   });
   return {
     build: { sourcemap: true },
-    define: { "import.meta.env.UNIBOTS_BUILD": JSON.stringify(buildId) },
+    define: { "import.meta.env.RAKAZO_BUILD": JSON.stringify(buildId) },
     plugins: [
       {
         // The API reads this to name the deployed build, and a tab fetches it to confirm the
         // server already serves a newer build before it reloads.
-        name: "unibots-build-id",
+        name: "rakazo-build-id",
         apply: "build",
         generateBundle() {
           this.emitFile({ type: "asset", fileName: "build-id", source: `${buildId}\n` });
@@ -516,10 +516,10 @@ export default defineConfig(({ command, mode }) => {
       babel({ plugins: ["@lingui/babel-plugin-lingui-macro"] }),
       lingui(),
       tailwindcss(),
-      unibotsPwa(buildId),
+      rakazoPwa(buildId),
       {
         // Production only: the dev server injects inline scripts for React Refresh.
-        name: "unibots-content-security-policy",
+        name: "rakazo-content-security-policy",
         configurePreviewServer(server) {
           server.middlewares.use((req, res, next) => {
             const policy = contentSecurityPolicyFor(req.url?.split("?", 1)[0] ?? "/", appPolicy);
@@ -532,7 +532,7 @@ export default defineConfig(({ command, mode }) => {
         },
       },
       {
-        name: "unibots-missing-asset-404",
+        name: "rakazo-missing-asset-404",
         configurePreviewServer({ config, middlewares }) {
           const outDir = path.resolve(config.root, config.build.outDir);
           const assetsDir = path.join(outDir, config.build.assetsDir);
@@ -553,13 +553,13 @@ export default defineConfig(({ command, mode }) => {
         },
       },
       {
-        name: "unibots-desktop-stack-probe",
+        name: "rakazo-desktop-stack-probe",
         configureServer: (server) => attachDesktopStackProbe(server, desktopStackToken, imageTag),
         configurePreviewServer: (server) =>
           attachDesktopStackProbe(server, desktopStackToken, imageTag),
       },
       {
-        name: "unibots-performance-asset-delay",
+        name: "rakazo-performance-asset-delay",
         configurePreviewServer(server) {
           if (!Number.isFinite(performanceAssetDelayMs) || performanceAssetDelayMs <= 0) return;
           server.middlewares.use((req, _res, next) => {
@@ -574,7 +574,7 @@ export default defineConfig(({ command, mode }) => {
       },
       {
         // The hosts the running server allows, as Vite resolved them, for proxied upgrades.
-        name: "unibots-api-proxy-hosts",
+        name: "rakazo-api-proxy-hosts",
         configureServer: (server) => {
           proxyHosts = server.config.server.allowedHosts;
         },
@@ -583,13 +583,13 @@ export default defineConfig(({ command, mode }) => {
         },
       },
       {
-        name: "unibots-novnc-proxy",
+        name: "rakazo-novnc-proxy",
         configureServer: (server) => attachNovncProxy(server, screenProxySecret(), api),
         configurePreviewServer: (server) => attachNovncProxy(server, screenProxySecret(), api),
       },
     ],
     server: {
-      host: process.env.UNIBOTS_DEV_HOST ?? rootEnv.UNIBOTS_DEV_HOST ?? "127.0.0.1",
+      host: process.env.RAKAZO_DEV_HOST ?? rootEnv.RAKAZO_DEV_HOST ?? "127.0.0.1",
       port: webPort,
       strictPort: true,
       allowedHosts,

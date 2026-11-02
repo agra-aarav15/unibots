@@ -1,8 +1,8 @@
-import { runContinueJob } from "@unibots/adapter-kit";
-import { BotSecretName, botSecretSubmissionSchema } from "@unibots/contracts";
-import { createStreamingRedactor, displayName } from "@unibots/core";
-import { runLoginKind, runSecretKind } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+import { runContinueJob } from "@rakazo/adapter-kit";
+import { BotSecretName, botSecretSubmissionSchema } from "@rakazo/contracts";
+import { createStreamingRedactor, displayName } from "@rakazo/core";
+import { runLoginKind, runSecretKind } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import {
   completeExternalEffect,
   replaceCompletedExternalEffectResult,

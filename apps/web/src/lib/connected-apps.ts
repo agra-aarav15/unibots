@@ -1,5 +1,5 @@
-import type { Connection, ConnectionCatalogItem } from "@unibots/contracts";
-import { matchFeaturedConnectorId } from "@unibots/core";
+import type { Connection, ConnectionCatalogItem } from "@rakazo/contracts";
+import { matchFeaturedConnectorId } from "@rakazo/core";
 
 function isFamiliarApp(item: ConnectionCatalogItem) {
   return (

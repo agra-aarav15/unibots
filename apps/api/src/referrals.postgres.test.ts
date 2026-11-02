@@ -1,8 +1,8 @@
-import { BillingEmulator } from "@unibots/adapters";
-import type { Actor } from "@unibots/contracts";
-import { BYOK_MONTHLY_PRICE_CENTS } from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
-import { asSystem, billingAccountForOrganization, createDb } from "@unibots/db";
+import { BillingEmulator } from "@rakazo/adapters";
+import type { Actor } from "@rakazo/contracts";
+import { BYOK_MONTHLY_PRICE_CENTS } from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
+import { asSystem, billingAccountForOrganization, createDb } from "@rakazo/db";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createBillingService } from "./billing.js";
 
@@ -21,7 +21,7 @@ dbTests("referrals", () => {
   async function newOrganization(name: string): Promise<Actor & { organizationId: string }> {
     const id = `referral-${name}-${stamp}`;
     const createdAt = new Date();
-    const email = `${id}@unibots.test`;
+    const email = `${id}@rakazo.test`;
     await prisma.user.create({ data: { id, name, email, emailVerified: false } });
     await prisma.organization.create({ data: { id, name, slug: id, createdAt } });
     await prisma.space.create({

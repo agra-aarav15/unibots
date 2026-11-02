@@ -1,8 +1,8 @@
 import { AsyncLocalStorage } from "node:async_hooks";
-import type { SecretStore } from "@unibots/adapter-kit";
-import type { PrismaClient } from "@unibots/db";
-import { Prisma, runAsSystem } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+import type { SecretStore } from "@rakazo/adapter-kit";
+import type { PrismaClient } from "@rakazo/db";
+import { Prisma, runAsSystem } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { deleteSecretBestEffort } from "./secret-store-factory.js";
 
 type Candidate = { id: string; ciphertext: string };

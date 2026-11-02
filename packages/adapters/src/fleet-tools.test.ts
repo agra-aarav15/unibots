@@ -1,5 +1,5 @@
-import type { JobPublisher } from "@unibots/adapter-kit";
-import type { PrismaClient, ThreadEvents } from "@unibots/db";
+import type { JobPublisher } from "@rakazo/adapter-kit";
+import type { PrismaClient, ThreadEvents } from "@rakazo/db";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { FleetDeps, FleetPrepareDeps, FleetRun } from "./fleet-tools.js";
 import {

@@ -1,6 +1,6 @@
 import { Plural, Trans, useLingui } from "@lingui/react/macro";
-import type { BillingStatus } from "@unibots/contracts";
-import { Button, Skeleton } from "@unibots/ui-web";
+import type { BillingStatus } from "@rakazo/contracts";
+import { Button, Skeleton } from "@rakazo/ui-web";
 import { useEffect, useState } from "react";
 import { ModelCreditsSettings } from "../components/ModelCredits";
 import { formatBillingDate, formatBillingPrice } from "../lib/billing";

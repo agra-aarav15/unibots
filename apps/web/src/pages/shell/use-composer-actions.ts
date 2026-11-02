@@ -7,16 +7,16 @@ import type {
   MessageReaction,
   ThreadMessage,
   ThreadSnapshot,
-} from "@unibots/contracts";
-import { attachmentMaxBytes, attachmentMaxCount, attachmentSizeLabel } from "@unibots/contracts";
-import type { ComposerMention } from "@unibots/core";
+} from "@rakazo/contracts";
+import { attachmentMaxBytes, attachmentMaxCount, attachmentSizeLabel } from "@rakazo/contracts";
+import type { ComposerMention } from "@rakazo/core";
 import {
   attachmentsForThread,
   inferAttachmentMimeType,
   isImageInputConfirmation,
   newClientId,
   resolveComposerSendPlan,
-} from "@unibots/core";
+} from "@rakazo/core";
 import type { RefObject } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { requestBrowserNotificationPermission } from "../../lib/browser-notifications";

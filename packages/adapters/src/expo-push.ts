@@ -6,9 +6,9 @@ import type {
   JobPublisher,
   NotificationMessage,
   NotificationProvider,
-} from "@unibots/adapter-kit";
-import { pushReceiptJob } from "@unibots/adapter-kit";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/adapter-kit";
+import { pushReceiptJob } from "@rakazo/adapter-kit";
+import { getLogger } from "@rakazo/logging";
 import { combineSignals } from "./connector-safety.js";
 import { credentialDigest } from "./credential-digest.js";
 import type { PushTokenStore } from "./push-token-store.js";

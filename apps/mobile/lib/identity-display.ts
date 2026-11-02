@@ -1,4 +1,4 @@
-import type { IdentityLabels } from "@unibots/core";
+import type { IdentityLabels } from "@rakazo/core";
 import { t } from "./i18n";
 
 export function identityLabels(): IdentityLabels {

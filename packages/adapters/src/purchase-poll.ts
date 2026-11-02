@@ -1,11 +1,11 @@
-import type { AdapterContext, PurchaseSnapshot, PurchaseStatus } from "@unibots/adapter-kit";
+import type { AdapterContext, PurchaseSnapshot, PurchaseStatus } from "@rakazo/adapter-kit";
 import {
   PaymentWalletDisconnected,
   PaymentWalletRequestRejected,
   runContinueJob,
-} from "@unibots/adapter-kit";
-import type { Purchase } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/adapter-kit";
+import type { Purchase } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import type { PurchaseDeps } from "./purchase-service.js";
 import {
   enqueuePurchasePoll,

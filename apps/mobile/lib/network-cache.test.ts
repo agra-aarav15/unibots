@@ -14,7 +14,7 @@ it("clears the native cache when the module is present", async () => {
 
   clearNetworkCache();
 
-  expect(requireOptionalNativeModule).toHaveBeenCalledWith("UnibotsNetworkCache");
+  expect(requireOptionalNativeModule).toHaveBeenCalledWith("RakazoNetworkCache");
   expect(clear).toHaveBeenCalledOnce();
 });
 

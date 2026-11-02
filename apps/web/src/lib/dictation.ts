@@ -5,7 +5,7 @@ import {
   recognitionLocaleTag,
   speechLocaleTag,
   withAbort,
-} from "@unibots/core";
+} from "@rakazo/core";
 import { desktopBridge } from "./desktop.js";
 import { DesktopSpeechRecognition } from "./desktop-speech.js";
 import { getActiveUiLocale } from "./i18n.js";
@@ -58,8 +58,8 @@ export function webSpeechAvailable(): boolean {
  */
 function electronSpeechHost(): boolean {
   if (typeof window !== "undefined") {
-    const host = window as Window & { unibotsDesktop?: unknown };
-    if (host.unibotsDesktop) return true;
+    const host = window as Window & { rakazoDesktop?: unknown };
+    if (host.rakazoDesktop) return true;
   }
   if (typeof navigator === "undefined") return false;
   const agent = navigator.userAgent;
@@ -335,7 +335,7 @@ export class Dictation {
         error:
           // macOS asks only once; after a refusal, only System Settings can allow it again.
           code === "not-allowed" && desktopBridge()?.speech
-            ? t`Allow Unibots to use Speech Recognition and the microphone in System Settings.`
+            ? t`Allow Rakazo to use Speech Recognition and the microphone in System Settings.`
             : code
               ? t`Dictation failed: ${code}`
               : t`Dictation failed.`,

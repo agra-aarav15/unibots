@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
-import * as core from "@unibots/core";
-import { AiConsentBlocked, MODEL_REQUIRED_SEND_ERROR, resolveComposerSendPlan } from "@unibots/core";
+import * as core from "@rakazo/core";
+import { AiConsentBlocked, MODEL_REQUIRED_SEND_ERROR, resolveComposerSendPlan } from "@rakazo/core";
 import { router } from "expo-router";
 import type { ReactNode } from "react";
 import { act, createElement, useMemo } from "react";

@@ -6,7 +6,7 @@ import type {
   ComputerMode,
   ModelCatalogEntry,
   ThinkingLevel,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   BOT_COMPUTER_MODES,
   BOT_DESCRIPTION_MAX_LENGTH,
@@ -14,7 +14,7 @@ import {
   BUILTIN_TOOL_NAMES,
   isBuiltinToolName,
   resolveBotAvatarSet,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   chatModelChoices,
   connectedModelChoices,
@@ -22,7 +22,7 @@ import {
   modelOptionKey,
   parseModelOptionKey,
   resolveSelectableModelId,
-} from "@unibots/core";
+} from "@rakazo/core";
 import {
   Button,
   Input,
@@ -35,7 +35,7 @@ import {
   TabsTrigger,
   Textarea,
   Toggle,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import { useQuery } from "@tanstack/react-query";
 import { Download, Settings, X } from "lucide-react";
 import type { ReactNode } from "react";

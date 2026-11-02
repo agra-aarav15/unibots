@@ -1,5 +1,5 @@
-import type { ThreadItem } from "@unibots/core";
-import { reconcileThreadScrollState } from "@unibots/core";
+import type { ThreadItem } from "@rakazo/core";
+import { reconcileThreadScrollState } from "@rakazo/core";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type {
   FlatList,

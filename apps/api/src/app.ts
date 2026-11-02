@@ -14,14 +14,14 @@ import type {
   RealtimeFanout,
   SandboxProvider,
   TransactionalEmailProvider,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   SandboxDamagedError,
   SandboxRateLimitError,
   SandboxUnavailableError,
   SandboxUnresponsiveError,
   VoiceAccountError,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import type {
   ComposioProvider,
   ConnectorRegistry,
@@ -29,7 +29,7 @@ import type {
   PluginTextReader,
   RemoteConnectorDependencies,
   UserDeviceGateway,
-} from "@unibots/adapters";
+} from "@rakazo/adapters";
 import {
   applyMessagingOutboundStatus,
   ChatSdkMessagingSurface,
@@ -59,7 +59,6 @@ import {
   EmailEmulator,
   ExpoPushProvider,
   GraphileJobPublisher,
-  hermesAgentRuntimeFromEnv,
   InMemoryJobQueue,
   InMemoryRealtimeFanout,
   InstalledConnectorProvider,
@@ -97,16 +96,16 @@ import {
   userDeviceInternalAddress,
   verifyModelServesAgents,
   withSecretPersistence,
-} from "@unibots/adapters";
-import { createAuth, isBlockedAuthPath, loopbackTwinOrigins } from "@unibots/auth";
-import type { Actor, AuthCapabilities } from "@unibots/contracts";
+} from "@rakazo/adapters";
+import { createAuth, isBlockedAuthPath, loopbackTwinOrigins } from "@rakazo/auth";
+import type { Actor, AuthCapabilities } from "@rakazo/contracts";
 import {
   isLocalhostOrLoopbackIp,
   PLUGIN_SUBMISSIONS_PATH,
   SERVER_BUILD_HEADER,
-} from "@unibots/contracts";
-import { encryptionKeyWarning, signupPolicyFromEnv } from "@unibots/core";
-import type { Pool, PrismaClient } from "@unibots/db";
+} from "@rakazo/contracts";
+import { encryptionKeyWarning, signupPolicyFromEnv } from "@rakazo/core";
+import type { Pool, PrismaClient } from "@rakazo/db";
 import {
   createBoardEvents,
   createDb,
@@ -125,17 +124,17 @@ import {
   runAsSystem,
   securityEventRetentionDays,
   verifyContentKeys,
-} from "@unibots/db";
-import type { Logger } from "@unibots/logging";
+} from "@rakazo/db";
+import type { Logger } from "@rakazo/logging";
 import {
   createServiceLogger,
   enrichLogContext,
   getLogger,
   installLogger,
   SERVICE_NAMES,
-} from "@unibots/logging";
-import { requestLogging } from "@unibots/logging/hono";
-import { MarkdownMemoryStore } from "@unibots/memory";
+} from "@rakazo/logging";
+import { requestLogging } from "@rakazo/logging/hono";
+import { MarkdownMemoryStore } from "@rakazo/memory";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { deleteAccountContent } from "./account-deletion.js";
@@ -194,7 +193,7 @@ import { mountWebhookHttpRoutes } from "./webhook.js";
  * The loopback entries are the Expo web dev server.
  */
 export const MOBILE_AUTH_ORIGINS = [
-  "unibots://",
+  "rakazo://",
   "http://localhost:8081",
   "http://127.0.0.1:8081",
   "http://localhost:19006",
@@ -279,7 +278,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
     ? { prisma: prismaOverride, pool: undefined }
     : createDb(env.databaseUrl, {
         poolMax: parsePositiveInteger(process.env.DB_POOL_MAX, 4),
-        applicationName: "unibots-api",
+        applicationName: "rakazo-api",
         keyProvider: contentKeyProviderFromEnv(),
         encryptContent: env.contentEncryption,
       });
@@ -345,7 +344,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
   if (!inMemoryJobs && !created.pool) {
     ownedJobPool = createPool(env.databaseUrl, {
       poolMax: parsePositiveInteger(process.env.DB_POOL_MAX, 4),
-      applicationName: "unibots-api-jobs",
+      applicationName: "rakazo-api-jobs",
     });
   }
   const jobPool = created.pool ?? ownedJobPool;
@@ -494,11 +493,9 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
     runtimeOverride ??
     (env.agentRuntime === "scripted"
       ? new ScriptedAgentRuntime()
-      : env.agentRuntime === "hermes"
-        ? hermesAgentRuntimeFromEnv(process.env)
-        : new PiAgentRuntime({
-            sessionRoot: env.piSessionRecording ? piSessionsRoot(env.dataDir) : undefined,
-          }));
+      : new PiAgentRuntime({
+          sessionRoot: env.piSessionRecording ? piSessionsRoot(env.dataDir) : undefined,
+        }));
   const pushTokens = new PrismaPushTokenStore(prisma, env.encryptionKey);
   const notifications =
     notificationsOverride ??
@@ -888,7 +885,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
     const session = await auth.api.getSession({ headers: request.headers });
     if (!session?.user) return null;
     const actor = await actorFromMembership(
-      requireMembership(prisma, session.user.id, request.headers.get("x-unibots-space-id")),
+      requireMembership(prisma, session.user.id, request.headers.get("x-rakazo-space-id")),
     );
     return actor && { actor, sessionId: session.session.id };
   };
@@ -1421,7 +1418,7 @@ export function isTrustedOrigin(
   env: Pick<AppEnv, "webOrigin" | "apiUrl" | "authUrl">,
 ) {
   if (!origin) return true;
-  if (origin.startsWith("unibots://")) return true;
+  if (origin.startsWith("rakazo://")) return true;
   const allowed = new Set(
     [env.webOrigin, env.apiUrl, env.authUrl, ...MOBILE_AUTH_ORIGINS].flatMap(originVariants),
   );
@@ -1429,7 +1426,7 @@ export function isTrustedOrigin(
 }
 
 function originVariants(origin: string): string[] {
-  if (!origin || origin === "unibots://") return [];
+  if (!origin || origin === "rakazo://") return [];
   const variants = [origin, ...loopbackTwinOrigins(origin)];
   try {
     const url = new URL(origin);

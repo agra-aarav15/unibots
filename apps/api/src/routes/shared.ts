@@ -4,13 +4,13 @@ import {
   hostCredentialSource,
   mcpStdioAvailable,
   resolveMemberMainModel,
-} from "@unibots/adapters";
-import type { Actor, Me } from "@unibots/contracts";
-import { attachmentMaxBytes, attachmentMaxCount, canonicalPiProviderId } from "@unibots/contracts";
+} from "@rakazo/adapters";
+import type { Actor, Me } from "@rakazo/contracts";
+import { attachmentMaxBytes, attachmentMaxCount, canonicalPiProviderId } from "@rakazo/contracts";
 import { isAdmin } from "../plugin-submissions.js";
 import type { RouterDeps } from "../router.js";
 
-export { createAdapterContext as computerContext } from "@unibots/adapter-kit";
+export { createAdapterContext as computerContext } from "@rakazo/adapter-kit";
 
 function hostCredentials(active: boolean, provider: string) {
   return active
@@ -111,13 +111,7 @@ export async function modelSetup(deps: RouterDeps, actor: Actor) {
     settings,
     funding,
     hasDeployment,
-    // Hermes runs on the model configured inside Hermes, so its deployments need no
-    // Unibots model connection before a bot can reply.
-    needsModel:
-      deps.env.agentRuntime !== "scripted" &&
-      deps.env.agentRuntime !== "hermes" &&
-      !main &&
-      !hasDeployment,
+    needsModel: deps.env.agentRuntime !== "scripted" && !main && !hasDeployment,
   };
 }
 

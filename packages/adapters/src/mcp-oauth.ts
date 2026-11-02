@@ -18,18 +18,18 @@ import type {
   OAuthClientMetadata,
   OAuthTokens,
 } from "@modelcontextprotocol/sdk/shared/auth.js";
-import type { SecretStore } from "@unibots/adapter-kit";
-import { SecretStoreUnavailableError } from "@unibots/adapter-kit";
+import type { SecretStore } from "@rakazo/adapter-kit";
+import { SecretStoreUnavailableError } from "@rakazo/adapter-kit";
 import {
   isLocalhostOrLoopbackIp,
   MCP_OAUTH_CLIENT_REQUIRED,
   mcpOAuthEnvReferences,
   parseMcpOAuthAuthorizationParams,
-} from "@unibots/contracts";
-import { readBoundedResponseBytes } from "@unibots/core";
-import type { Prisma, PrismaClient } from "@unibots/db";
-import { availableInSpace, itemSecretIn, runAsSystem } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/contracts";
+import { readBoundedResponseBytes } from "@rakazo/core";
+import type { Prisma, PrismaClient } from "@rakazo/db";
+import { availableInSpace, itemSecretIn, runAsSystem } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { sanitizeConnectorError } from "./connector-safety.js";
 import { MCP_DYNAMIC_REGISTRATION_UNSUPPORTED, needsMcpOAuthClient } from "./mcp-server-health.js";
 import { secureFetch, validateUrl, withEndpointOriginFallback } from "./mcp-transport.js";
@@ -389,7 +389,7 @@ export class StoredMcpOAuthProvider implements OAuthClientProvider {
     const applicationType = hostname === "localhost" || hostname === "127.0.0.1" ? "native" : "web";
     return {
       redirect_uris: [redirectUri],
-      client_name: "Unibots",
+      client_name: "Rakazo",
       grant_types: ["authorization_code", "refresh_token"],
       response_types: ["code"],
       token_endpoint_auth_method: "none",
@@ -749,7 +749,7 @@ async function startRemoteAuthorization(
     authProvider: provider,
     fetch: provider.wrapFetch(network.fetch),
   });
-  const client = new Client({ name: "unibots-oauth", version: "0.1.0" });
+  const client = new Client({ name: "rakazo-oauth", version: "0.1.0" });
   const signal = AbortSignal.timeout(15_000);
   try {
     await client.connect(transport, { signal, timeout: 15_000 });

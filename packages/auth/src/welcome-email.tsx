@@ -1,17 +1,17 @@
 /** @jsxRuntime automatic */
-import type { TransactionalEmail } from "@unibots/adapter-kit";
-import { ANDROID_APK_URL, IOS_APP_STORE_URL } from "@unibots/contracts";
-import { displayName } from "@unibots/core";
-import { lightTokens } from "@unibots/ui-tokens";
+import type { TransactionalEmail } from "@rakazo/adapter-kit";
+import { ANDROID_APK_URL, IOS_APP_STORE_URL } from "@rakazo/contracts";
+import { displayName } from "@rakazo/core";
+import { lightTokens } from "@rakazo/ui-tokens";
 import { Hr, Link, Text } from "react-email";
 import { linkStyle, message } from "./email.js";
 
 const APPS = [
   ["iPhone", IOS_APP_STORE_URL],
   ["Android", ANDROID_APK_URL],
-  ["Mac", "https://unibots.example/api/download?platform=mac"],
-  ["Windows", "https://unibots.example/api/download?platform=windows"],
-  ["Linux", "https://unibots.example/api/download?platform=linux"],
+  ["Mac", "https://rakazo.com/api/download?platform=mac"],
+  ["Windows", "https://rakazo.com/api/download?platform=windows"],
+  ["Linux", "https://rakazo.com/api/download?platform=linux"],
 ] as const;
 
 export function welcomeEmail(
@@ -61,7 +61,7 @@ export function welcomeEmail(
         .
       </Text>
       <Text>Have any questions? Reply to this email.</Text>
-      <Text>agra-aarav15</Text>
+      <Text>Elie</Text>
       <Hr style={{ borderColor: lightTokens.border, marginTop: "32px" }} />
       <Text style={{ color: lightTokens.mutedForeground, fontSize: "12px" }}>
         <Link href={unsubscribeUrl} style={{ color: lightTokens.mutedForeground }}>

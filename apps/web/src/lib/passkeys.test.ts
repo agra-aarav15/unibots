@@ -22,7 +22,8 @@ describe("passkeysSupported", () => {
     await expect(passkeysSupported("localhost", { host: "localhost" })).resolves.toBe(false);
     await expect(passkeysSupported(null, browser("localhost"))).resolves.toBe(false);
     await expect(passkeysSupported(undefined, browser("localhost"))).resolves.toBe(false);
-    await expect(passkeysSupported("localhost", browser("127.0.0.1"))).resolves.toBe(false);
+    await expect(passkeysSupported("localhost", browser("127.0.0.1"))).resolves.toBe(true);
+    await expect(passkeysSupported("localhost", browser("[::1]"))).resolves.toBe(true);
     await expect(passkeysSupported("example.test", browser("evil-example.test"))).resolves.toBe(
       false,
     );
@@ -37,7 +38,7 @@ describe("passkeysSupported", () => {
 
   it("on the macOS app, offers passkeys only for relying parties the build is associated with", async () => {
     const mac = (rpIds?: string[] | Error) => ({
-      ...browser("app.unibots.example"),
+      ...browser("agents.example.com"),
       desktop: {
         platform: "darwin",
         passkeys:
@@ -51,26 +52,26 @@ describe("passkeysSupported", () => {
               },
       },
     });
-    await expect(passkeysSupported("app.unibots.example", mac(["app.unibots.example"]))).resolves.toBe(true);
-    await expect(passkeysSupported("App.Unibots.example", mac(["app.unibots.example"]))).resolves.toBe(true);
-    await expect(passkeysSupported("app.unibots.example", mac([]))).resolves.toBe(false);
-    await expect(passkeysSupported("app.unibots.example", mac())).resolves.toBe(false);
-    await expect(passkeysSupported("app.unibots.example", mac(new Error("ipc")))).resolves.toBe(false);
-    const selfHosted = { ...mac(["app.unibots.example"]), host: "unibots.example.com" };
-    await expect(passkeysSupported("unibots.example.com", selfHosted)).resolves.toBe(false);
+    await expect(passkeysSupported("agents.example.com", mac(["agents.example.com"]))).resolves.toBe(true);
+    await expect(passkeysSupported("Agents.Example.com", mac(["agents.example.com"]))).resolves.toBe(true);
+    await expect(passkeysSupported("agents.example.com", mac([]))).resolves.toBe(false);
+    await expect(passkeysSupported("agents.example.com", mac())).resolves.toBe(false);
+    await expect(passkeysSupported("agents.example.com", mac(new Error("ipc")))).resolves.toBe(false);
+    const selfHosted = { ...mac(["agents.example.com"]), host: "rakazo.example.com" };
+    await expect(passkeysSupported("rakazo.example.com", selfHosted)).resolves.toBe(false);
     expect(
       selfHosted.credential.isUserVerifyingPlatformAuthenticatorAvailable,
     ).not.toHaveBeenCalled();
   });
 
   it("leaves other desktop platforms to their own platform authenticator", async () => {
-    const windows = { ...browser("unibots.example.com"), desktop: { platform: "win32" } };
-    await expect(passkeysSupported("unibots.example.com", windows)).resolves.toBe(true);
+    const windows = { ...browser("rakazo.example.com"), desktop: { platform: "win32" } };
+    await expect(passkeysSupported("rakazo.example.com", windows)).resolves.toBe(true);
   });
 
   it("does not ask the authenticator when the host cannot use the relying party", async () => {
-    const other = browser("127.0.0.1");
-    await passkeysSupported("localhost", other);
+    const other = browser("evil-example.test");
+    await passkeysSupported("example.test", other);
     expect(other.credential.isUserVerifyingPlatformAuthenticatorAvailable).not.toHaveBeenCalled();
   });
 });

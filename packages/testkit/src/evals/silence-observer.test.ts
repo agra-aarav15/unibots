@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@unibots/db";
+import type { PrismaClient } from "@rakazo/db";
 import { describe, expect, it, vi } from "vitest";
 import { SilenceObserver } from "./silence-observer.js";
 

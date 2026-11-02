@@ -1,5 +1,5 @@
 import { t } from "@lingui/core/macro";
-import type { Me } from "@unibots/contracts";
+import type { Me } from "@rakazo/contracts";
 import { rpc } from "./rpc";
 import { errorText } from "./user-error";
 

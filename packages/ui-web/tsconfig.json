@@ -8,7 +8,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "paths": {
-      "@unibots/ui-web/*": ["./src/*"]
+      "@rakazo/ui-web/*": ["./src/*"]
     }
   },
   "include": ["src"]

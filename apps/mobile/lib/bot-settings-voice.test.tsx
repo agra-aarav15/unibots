@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { BOT_COLORS, BOT_SETTINGS_SECTIONS } from "@unibots/contracts";
+import { BOT_COLORS, BOT_SETTINGS_SECTIONS } from "@rakazo/contracts";
 import type { ComponentProps, ReactNode } from "react";
 import { act, createElement, useEffect } from "react";
 import type { Root } from "react-dom/client";
@@ -13,7 +13,7 @@ const mocks = vi.hoisted(() => ({
   instructions: "",
   description: "",
   crossSpaceCommunication: false,
-  avatarSet: undefined as "organic" | "unibots" | undefined,
+  avatarSet: undefined as "organic" | "rakazo" | undefined,
   focus: undefined as string | undefined,
   os: "ios",
   work: [] as unknown[],
@@ -524,8 +524,8 @@ describe("bot settings device voice menu", () => {
       )!;
     expect(option("Original").dataset.state).toBe("on");
     expect(mocks.rpc).not.toHaveBeenCalled();
-    await act(async () => option("Unibots").click());
-    mocks.rpc.mockResolvedValueOnce({ avatarSet: "unibots" });
+    await act(async () => option("Rakazo").click());
+    mocks.rpc.mockResolvedValueOnce({ avatarSet: "rakazo" });
     await act(async () =>
       [...container.querySelectorAll<HTMLButtonElement>("button")]
         .find((button) => button.textContent === "Save")!
@@ -533,16 +533,16 @@ describe("bot settings device voice menu", () => {
     );
     expect(mocks.rpc).toHaveBeenCalledWith("bots/update", {
       botId: "bot-fixture",
-      avatarSet: "unibots",
+      avatarSet: "rakazo",
     });
     act(() => root.unmount());
     root = createRoot(container);
-    mocks.avatarSet = "unibots";
+    mocks.avatarSet = "rakazo";
     await render();
     await act(async () =>
       container.querySelector<HTMLButtonElement>('[aria-label="Edit avatar"]')!.click(),
     );
-    expect(option("Unibots").dataset.state).toBe("on");
+    expect(option("Rakazo").dataset.state).toBe("on");
     await act(async () => option("Original").click());
     mocks.rpc.mockResolvedValueOnce({ avatarSet: "organic" });
     await act(async () =>

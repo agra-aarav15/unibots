@@ -1,4 +1,4 @@
-import { ONCE_ROUTINE_CRON } from "@unibots/core";
+import { ONCE_ROUTINE_CRON } from "@rakazo/core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   cancelScheduleFromTool,

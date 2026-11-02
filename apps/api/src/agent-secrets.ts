@@ -1,20 +1,20 @@
 import { ORPCError } from "@orpc/server";
-import type { SecretStore } from "@unibots/adapter-kit";
+import type { SecretStore } from "@rakazo/adapter-kit";
 import {
   forgetBotSecret,
   getBotSecretMetadata,
   listBotSecretMetadata,
   storeBotSecret,
-} from "@unibots/adapters";
-import type { Actor } from "@unibots/contracts";
+} from "@rakazo/adapters";
+import type { Actor } from "@rakazo/contracts";
 import {
   AGENT_SECRET_NAME_PATTERN,
   BotSecretAuth,
   BotSecretName,
   commandVariableName,
   commandVariableProblem,
-} from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
+} from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
 import { mapBotSecretInputError } from "./routes/bots.js";
 
 type AgentSecretDeps = {

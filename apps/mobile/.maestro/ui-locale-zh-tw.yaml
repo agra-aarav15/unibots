@@ -1,9 +1,9 @@
-appId: com.unibots.app
+appId: com.rakazo.app
 name: Traditional Chinese language selection persists
 # Run against a signed-in test account on an English device.
 ---
 - launchApp
-- openLink: "unibots:///language"
+- openLink: "rakazo:///language"
 - extendedWaitUntil:
     visible: "Language"
     timeout: 10000
@@ -13,7 +13,7 @@ name: Traditional Chinese language selection persists
 - takeScreenshot: "ui-locale-zh-tw"
 - stopApp
 - launchApp
-- openLink: "unibots:///language"
+- openLink: "rakazo:///language"
 - extendedWaitUntil:
     visible: "語言"
     timeout: 10000

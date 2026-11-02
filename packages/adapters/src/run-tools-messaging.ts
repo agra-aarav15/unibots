@@ -1,4 +1,4 @@
-import { isBackgroundRunTrigger, redactSecrets } from "@unibots/core";
+import { isBackgroundRunTrigger, redactSecrets } from "@rakazo/core";
 import {
   connectAgent,
   messageConnectedAgent,

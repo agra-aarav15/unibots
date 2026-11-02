@@ -1,7 +1,7 @@
 /** @jsxRuntime automatic */
-import type { TransactionalEmail } from "@unibots/adapter-kit";
-import { displayName } from "@unibots/core";
-import { lightTokens } from "@unibots/ui-tokens";
+import type { TransactionalEmail } from "@rakazo/adapter-kit";
+import { displayName } from "@rakazo/core";
+import { lightTokens } from "@rakazo/ui-tokens";
 import type { ReactNode } from "react";
 import { Body, Container, Head, Html, Link, render, Text, toPlainText } from "react-email";
 

@@ -6,7 +6,7 @@ import type {
   MessagingInstallationStore,
   MessagingInstallProvider,
   MessagingSurface,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import { describe, expect, it, vi } from "vitest";
 import { InstalledMessagingSurface } from "./installed-messaging-surface.js";
 

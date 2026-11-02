@@ -3,8 +3,8 @@ import {
   organicAvatarPath,
   SHIPPED_BOT_AVATAR_CENTER,
   SHIPPED_BOT_AVATAR_VIEWBOX,
-} from "@unibots/core";
-import { botEyeColor } from "@unibots/ui-tokens";
+} from "@rakazo/core";
+import { botEyeColor } from "@rakazo/ui-tokens";
 import type { ReactNode } from "react";
 import { memo, useId } from "react";
 import type { ColorValue } from "react-native";

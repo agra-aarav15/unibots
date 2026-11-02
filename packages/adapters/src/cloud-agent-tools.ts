@@ -1,4 +1,4 @@
-import { cloudAgentHttpsUrl } from "@unibots/core";
+import { cloudAgentHttpsUrl } from "@rakazo/core";
 import { z } from "zod";
 
 const image = z.union([

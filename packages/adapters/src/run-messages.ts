@@ -1,12 +1,12 @@
-import type { MessageBlock } from "@unibots/contracts";
-import { callIdFromClientNonce, isBackgroundRunTrigger, redactSecrets } from "@unibots/core";
-import type { Prisma, RunLease } from "@unibots/db";
+import type { MessageBlock } from "@rakazo/contracts";
+import { callIdFromClientNonce, isBackgroundRunTrigger, redactSecrets } from "@rakazo/core";
+import type { Prisma, RunLease } from "@rakazo/db";
 import {
   appendEventInTransaction,
   createThreadMessageInTransaction,
   withTransactionRetry,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import type { ExecutorDeps } from "./executor-deps.js";
 
 /** Deps for one attempt: its run's history writes carry the lease, so a superseded attempt cannot write. */

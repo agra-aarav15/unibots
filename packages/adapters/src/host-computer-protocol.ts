@@ -1,4 +1,4 @@
-import { boundedSandboxCommandTimeoutMs } from "@unibots/core";
+import { boundedSandboxCommandTimeoutMs } from "@rakazo/core";
 import { z } from "zod";
 
 export const HOST_COMPUTER_MAX_BYTES = 12 * 1024 * 1024;

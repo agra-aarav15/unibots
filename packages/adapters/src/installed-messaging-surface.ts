@@ -7,7 +7,7 @@ import type {
   MessagingInstallProvider,
   MessagingSendRequest,
   MessagingSurface,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import { credentialDigest } from "./credential-digest.js";
 
 type CachedSurface = {

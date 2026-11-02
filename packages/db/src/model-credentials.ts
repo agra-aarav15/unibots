@@ -1,4 +1,4 @@
-import { canonicalPiProviderId, storedPiProviderIds, usableModelId } from "@unibots/contracts";
+import { canonicalPiProviderId, storedPiProviderIds, usableModelId } from "@rakazo/contracts";
 import type { PrismaClient } from "./client.js";
 
 export const newestCredentialOrder = [

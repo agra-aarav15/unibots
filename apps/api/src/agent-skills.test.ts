@@ -1,13 +1,13 @@
-import type { Actor } from "@unibots/contracts";
-import { buildSkillMd, parseSkillMd } from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
+import type { Actor } from "@rakazo/contracts";
+import { buildSkillMd, parseSkillMd } from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
 import { describe, expect, it, vi } from "vitest";
 import { createAgentSkillsService, resolveSkillContent } from "./agent-skills.js";
 
 const actor: Actor = {
   spaceId: "space-1",
   userId: "user-1",
-  email: "user@unibots.test",
+  email: "user@rakazo.test",
   isDeploymentOwner: true,
 };
 

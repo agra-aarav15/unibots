@@ -1,6 +1,6 @@
-import type { ProductEvent } from "@unibots/contracts";
-import type { LogoAvatarActivitySnapshot } from "@unibots/core";
-import { createLogoAvatarActivityStore } from "@unibots/core";
+import type { ProductEvent } from "@rakazo/contracts";
+import type { LogoAvatarActivitySnapshot } from "@rakazo/core";
+import { createLogoAvatarActivityStore } from "@rakazo/core";
 
 /** Client-owned projection; clear when the authenticated identity changes. */
 const projection = createLogoAvatarActivityStore();

@@ -1,7 +1,7 @@
-import { runJobKey } from "@unibots/adapter-kit";
-import type { RunStatus } from "@unibots/contracts";
-import { isActive } from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
+import { runJobKey } from "@rakazo/adapter-kit";
+import type { RunStatus } from "@rakazo/contracts";
+import { isActive } from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
 import { asSystem } from "./system-db.js";
 
 type App = { request: (input: string, init?: RequestInit) => Response | Promise<Response> };
@@ -90,7 +90,7 @@ async function rpc(
       "content-type": "application/json",
       cookie,
       origin: "http://127.0.0.1:5173",
-      ...(spaceId ? { "x-unibots-space-id": spaceId } : {}),
+      ...(spaceId ? { "x-rakazo-space-id": spaceId } : {}),
     },
     body: JSON.stringify({ json: body }),
   });

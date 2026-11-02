@@ -1,4 +1,4 @@
-appId: com.unibots.app
+appId: com.rakazo.app
 name: Keyboard lifecycle regression
 tags:
   - screenshots
@@ -10,7 +10,7 @@ tags:
 
 # A cold API 34 emulator can show a launcher ANR over the healthy app.
 - extendedWaitUntil:
-    visible: "Sign up for Unibots|Pixel Launcher isn't responding"
+    visible: "Sign up for Rakazo|Pixel Launcher isn't responding"
     timeout: 30000
 - runFlow:
     when:
@@ -18,7 +18,7 @@ tags:
     commands:
       - tapOn: "Close app"
 - extendedWaitUntil:
-    visible: "Sign up for Unibots"
+    visible: "Sign up for Rakazo"
     timeout: 30000
 - takeScreenshot: "02-sign-up"
 - tapOn: "Sign in"
@@ -27,7 +27,7 @@ tags:
       notVisible:
         id: "server-address"
     commands:
-      - assertVisible: "Sign in to Unibots"
+      - assertVisible: "Sign in to Rakazo"
       - takeScreenshot: "01-sign-in"
       - tapOn: "Use a custom server"
 - assertVisible: "Server"
@@ -35,9 +35,9 @@ tags:
 - runFlow: helpers/server.yaml
 
 - tapOn: "Email"
-- inputText: ${UNIBOTS_SCREENSHOT_EMAIL}
+- inputText: ${RAKAZO_SCREENSHOT_EMAIL}
 - tapOn: "Password"
-- inputText: ${UNIBOTS_SCREENSHOT_PASSWORD}
+- inputText: ${RAKAZO_SCREENSHOT_PASSWORD}
 - hideKeyboard
 - tapOn: "Sign in"
 - tapOn:
@@ -47,7 +47,7 @@ tags:
 - extendedWaitUntil:
     visible: "Researcher"
     timeout: 30000
-- openLink: "unibots:///thread?botId=${UNIBOTS_SCREENSHOT_BOT_ID}&name=Researcher"
+- openLink: "rakazo:///thread?botId=${RAKAZO_SCREENSHOT_BOT_ID}&name=Researcher"
 - extendedWaitUntil:
     visible: "Message Researcher"
     timeout: 15000
@@ -82,24 +82,24 @@ tags:
 - assertVisible: "Send"
 - takeScreenshot: "keyboard-restarted"
 - hideKeyboard
-- openLink: "unibots:///account"
+- openLink: "rakazo:///account"
 - scrollUntilVisible:
     element: "Sign out"
     direction: DOWN
 - tapOn: "Sign out"
 - extendedWaitUntil:
-    visible: "Sign in to Unibots"
+    visible: "Sign in to Rakazo"
     timeout: 15000
 - tapOn: "Email"
-- inputText: ${UNIBOTS_SCREENSHOT_EMAIL}
+- inputText: ${RAKAZO_SCREENSHOT_EMAIL}
 - tapOn: "Password"
-- inputText: ${UNIBOTS_SCREENSHOT_PASSWORD}
+- inputText: ${RAKAZO_SCREENSHOT_PASSWORD}
 - hideKeyboard
 - tapOn: "Sign in"
 - extendedWaitUntil:
     visible: "Researcher"
     timeout: 15000
-- openLink: "unibots:///thread?botId=${UNIBOTS_SCREENSHOT_BOT_ID}&name=Researcher"
+- openLink: "rakazo:///thread?botId=${RAKAZO_SCREENSHOT_BOT_ID}&name=Researcher"
 - extendedWaitUntil:
     visible: "Message Researcher"
     timeout: 15000

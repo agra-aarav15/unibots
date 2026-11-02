@@ -7,14 +7,14 @@ import type {
   SandboxProvider,
   SemanticMemoryProvider,
   WebProvider,
-} from "@unibots/adapter-kit";
-import type { ComputerMode, MessageBlock } from "@unibots/contracts";
-import type { ToolCallStreak } from "@unibots/core";
-import { createStreamingRedactor } from "@unibots/core";
-import { toolEffectIdempotencyKey } from "@unibots/core/node/approval-effect-key";
-import type { Bot, Computer, effectiveMemoryScope, Run, Task, Thread } from "@unibots/db";
-import { dropRunTurnCheckpoint, saveRunTurnCheckpoint } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/adapter-kit";
+import type { ComputerMode, MessageBlock } from "@rakazo/contracts";
+import type { ToolCallStreak } from "@rakazo/core";
+import { createStreamingRedactor } from "@rakazo/core";
+import { toolEffectIdempotencyKey } from "@rakazo/core/node/approval-effect-key";
+import type { Bot, Computer, effectiveMemoryScope, Run, Task, Thread } from "@rakazo/db";
+import { dropRunTurnCheckpoint, saveRunTurnCheckpoint } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import type { ApprovalPausedToolResult, ApprovedEffectReplayQueue } from "./approval-effect.js";
 import { approvalPausedToolResult, approvedEffectOccurrence } from "./approval-effect.js";
 import type { loadBotMessageContext } from "./bot-messages.js";

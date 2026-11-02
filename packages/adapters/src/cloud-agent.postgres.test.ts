@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
-import type { AdapterContext, BackgroundJob, JobPublisher } from "@unibots/adapter-kit";
-import type { PrismaClient } from "@unibots/db";
+import type { AdapterContext, BackgroundJob, JobPublisher } from "@rakazo/adapter-kit";
+import type { PrismaClient } from "@rakazo/db";
 import {
   asSystem,
   clearThread,
@@ -8,7 +8,7 @@ import {
   RunHistoryWriteError,
   runAsSystem,
   runAsTenant,
-} from "@unibots/db";
+} from "@rakazo/db";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { CursorCloudAgentEmulator } from "./cloud-agent-emulator.js";
 import type { CloudAgentConnection } from "./cloud-agent-factory.js";

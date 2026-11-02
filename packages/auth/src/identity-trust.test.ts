@@ -1,7 +1,7 @@
 import { createHash, createHmac, generateKeyPairSync, randomBytes, sign } from "node:crypto";
-import type { TransactionalEmail } from "@unibots/adapter-kit";
-import type * as Db from "@unibots/db";
-import { bootstrapUserSpace, recordSecurityEvent } from "@unibots/db";
+import type { TransactionalEmail } from "@rakazo/adapter-kit";
+import type * as Db from "@rakazo/db";
+import { bootstrapUserSpace, recordSecurityEvent } from "@rakazo/db";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CLIENT_IP_HEADER, createAuth } from "./index.js";
 
@@ -28,7 +28,7 @@ vi.mock("better-auth/adapters/prisma", async () => {
     },
   };
 });
-vi.mock("@unibots/db", async (original) => ({
+vi.mock("@rakazo/db", async (original) => ({
   ...(await original<typeof Db>()),
   bootstrapUserSpace: vi.fn(async () => ({ spaceId: "space-1" })),
   recordSecurityEvent: vi.fn(async () => undefined),

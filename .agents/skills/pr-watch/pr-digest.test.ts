@@ -157,7 +157,7 @@ describe("pr-digest", () => {
     [
       "github-actions[bot]",
       "Bot",
-      "<!-- unibots-playwright-screenshots -->\n### Playwright screenshots\n",
+      "<!-- rakazo-playwright-screenshots -->\n### Playwright screenshots\n",
       0,
     ],
     ["reviewer", "User", "<h3>Greptile Summary</h3>", 11],

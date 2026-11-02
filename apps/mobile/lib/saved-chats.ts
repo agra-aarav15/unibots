@@ -1,4 +1,4 @@
-import { displayIdentityResult, identitySource } from "@unibots/core";
+import { displayIdentityResult, identitySource } from "@rakazo/core";
 import { Directory, File, Paths } from "expo-file-system";
 import type {
   MobileBot,

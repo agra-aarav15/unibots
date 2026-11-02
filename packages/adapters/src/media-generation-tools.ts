@@ -3,11 +3,11 @@ import type {
   GeneratedMedia,
   MediaGenerationProvider,
   MediaVideoJob,
-} from "@unibots/adapter-kit";
-import { MediaGenerationError } from "@unibots/adapter-kit";
-import type { MessageBlock } from "@unibots/contracts";
-import { messageBlockForArtifact } from "@unibots/core";
-import type { ExternalEffect, PrismaClient } from "@unibots/db";
+} from "@rakazo/adapter-kit";
+import { MediaGenerationError } from "@rakazo/adapter-kit";
+import type { MessageBlock } from "@rakazo/contracts";
+import { messageBlockForArtifact } from "@rakazo/core";
+import type { ExternalEffect, PrismaClient } from "@rakazo/db";
 import { z } from "zod";
 import { mediaPromptSchema, validateGeneratedMedia } from "./media-generation-provider.js";
 

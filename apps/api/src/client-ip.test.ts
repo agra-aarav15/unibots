@@ -1,5 +1,5 @@
-import { CLIENT_IP_HEADER } from "@unibots/auth";
-import { recordSecurityEvent } from "@unibots/db";
+import { CLIENT_IP_HEADER } from "@rakazo/auth";
+import { recordSecurityEvent } from "@rakazo/db";
 import {
   createLogger,
   createTestSink,
@@ -7,7 +7,7 @@ import {
   getLogger,
   installLogger,
   runWithLogContext,
-} from "@unibots/logging";
+} from "@rakazo/logging";
 import { Hono } from "hono";
 import { describe, expect, it, vi } from "vitest";
 import {
@@ -188,7 +188,7 @@ describe("clientIpMiddleware", () => {
 
   it("keeps caller details on security events only", async () => {
     const sink = createTestSink();
-    installLogger(createLogger({ service: "unibots-api", sinks: [sink] }));
+    installLogger(createLogger({ service: "rakazo-api", sinks: [sink] }));
     const body = await fromSocket(app(["192.0.2.3"]), "192.0.2.3", {
       [header]: "203.0.113.5",
       "user-agent": "curl/8.5.0",

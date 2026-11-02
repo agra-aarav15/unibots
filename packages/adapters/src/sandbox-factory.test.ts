@@ -66,7 +66,7 @@ describe("createSandboxProvider", () => {
 
   it("returns the Kubernetes provider without contacting the cluster", async () => {
     const sandbox = await createSandboxProvider("kubernetes", {
-      kubernetesNamespace: "unibots-computers",
+      kubernetesNamespace: "rakazo-computers",
       kubernetesRuntimeClassName: "kata",
     });
     expect(sandbox.describe()).toMatchObject({

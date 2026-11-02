@@ -1,11 +1,11 @@
-import type { ThreadMessage } from "@unibots/contracts";
-import type { ThreadScrollState } from "@unibots/core";
+import type { ThreadMessage } from "@rakazo/contracts";
+import type { ThreadScrollState } from "@rakazo/core";
 import {
   expandPeerReplies,
   foldPeerReplies,
   peerExchangeLines,
   reconcileThreadScrollState,
-} from "@unibots/core";
+} from "@rakazo/core";
 import { describe, expect, it } from "vitest";
 import {
   isOwnThreadMessage,

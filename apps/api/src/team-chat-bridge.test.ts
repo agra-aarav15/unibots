@@ -3,10 +3,10 @@ import type {
   SandboxProvider,
   TeamChatInboundMessage,
   TeamChatSendRequest,
-} from "@unibots/adapter-kit";
-import type { MessageBlock } from "@unibots/contracts";
-import { userTurnMessageForRun } from "@unibots/core";
-import type { PrismaClient } from "@unibots/db";
+} from "@rakazo/adapter-kit";
+import type { MessageBlock } from "@rakazo/contracts";
+import { userTurnMessageForRun } from "@rakazo/core";
+import type { PrismaClient } from "@rakazo/db";
 import { describe, expect, it, vi } from "vitest";
 import { materializeCurrentTurnFiles } from "../../../packages/adapters/src/thread-artifacts.js";
 import type { MessagingReceipts } from "./messaging-receipts.js";

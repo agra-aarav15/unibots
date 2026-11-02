@@ -1,4 +1,4 @@
-import type { AgentRuntimeEvent } from "@unibots/adapter-kit";
+import type { AgentRuntimeEvent } from "@rakazo/adapter-kit";
 import {
   DEFAULT_CONTEXT_STRATEGY,
   historyCompactJob,
@@ -7,7 +7,7 @@ import {
   runContinueJob,
   SandboxRateLimitError,
   TransientModelError,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   containsSecret,
   displayName,
@@ -17,10 +17,10 @@ import {
   TAKEOVER_COMPUTER_PENDING_STATE,
   userRunError,
   withoutLastToolStepNotes,
-} from "@unibots/core";
-import { RunHistoryWriteError, recordUsage } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
-import { sanitizedError } from "@unibots/logging/monitoring";
+} from "@rakazo/core";
+import { RunHistoryWriteError, recordUsage } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
+import { sanitizedError } from "@rakazo/logging/monitoring";
 import { isToolPauseResult } from "./approval-effect.js";
 import { returnBotMessageOutcome } from "./bot-messages.js";
 import { scheduleComputerSleep } from "./computer-idle.js";

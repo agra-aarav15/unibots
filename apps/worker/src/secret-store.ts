@@ -1,6 +1,6 @@
-import type { RealtimeFanout, SecretStore } from "@unibots/adapter-kit";
-import { createSecretStore } from "@unibots/adapters";
-import { resolveEncryptionKey } from "@unibots/core";
+import type { RealtimeFanout, SecretStore } from "@rakazo/adapter-kit";
+import { createSecretStore } from "@rakazo/adapters";
+import { resolveEncryptionKey } from "@rakazo/core";
 
 /** Worker composition without starting job hosts or database connections. */
 export async function createWorkerSecretStore(

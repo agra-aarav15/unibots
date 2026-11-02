@@ -1,5 +1,5 @@
-import type { ComposerMentionBinding } from "@unibots/core";
-import { validateComposerMentionBindings } from "@unibots/core";
+import type { ComposerMentionBinding } from "@rakazo/core";
+import { validateComposerMentionBindings } from "@rakazo/core";
 import { Directory, File, Paths } from "expo-file-system";
 import { currentApiBase } from "./api";
 

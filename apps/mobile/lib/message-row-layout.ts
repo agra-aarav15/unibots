@@ -1,4 +1,4 @@
-import { isSecretAskBlock } from "@unibots/core";
+import { isSecretAskBlock } from "@rakazo/core";
 import type { MobileMessage } from "./api";
 import { isCenteredAgentEvent } from "./message-presentation";
 

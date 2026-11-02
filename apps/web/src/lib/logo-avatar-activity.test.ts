@@ -1,4 +1,4 @@
-import type { ProductEvent } from "@unibots/contracts";
+import type { ProductEvent } from "@rakazo/contracts";
 import { afterEach, expect, it } from "vitest";
 import {
   newLogoAvatarActivitySource,

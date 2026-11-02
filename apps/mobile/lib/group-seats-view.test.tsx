@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { botEyeColor } from "@unibots/ui-tokens";
+import { botEyeColor } from "@rakazo/ui-tokens";
 import type { ReactNode } from "react";
 import { act, createElement } from "react";
 import type { Root } from "react-dom/client";

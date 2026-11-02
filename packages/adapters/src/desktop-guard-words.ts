@@ -1,14 +1,14 @@
 export const SHELL_INTERPRETER_NAMES = /^(?:bash|sh|dash|zsh|ksh|fish)$/;
 
 export const STATIC_SHELL_EXPANSIONS: Readonly<Record<string, string>> = {
-  HOME: "/home/unibots",
-  LOGNAME: "unibots",
-  PATH: "/home/unibots/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-  PWD: "/home/unibots",
+  HOME: "/home/rakazo",
+  LOGNAME: "rakazo",
+  PATH: "/home/rakazo/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+  PWD: "/home/rakazo",
   TMPDIR: "/tmp",
-  USER: "unibots",
-  WORKSPACE: "/home/unibots/workspace",
-  XDG_CONFIG_HOME: "/home/unibots/.config",
+  USER: "rakazo",
+  WORKSPACE: "/home/rakazo/workspace",
+  XDG_CONFIG_HOME: "/home/rakazo/.config",
 };
 
 export const SAFE_SHELL_CONTROL_OPS = new Set([

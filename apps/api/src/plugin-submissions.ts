@@ -1,20 +1,20 @@
 import { ORPCError } from "@orpc/server";
-import type { TransactionalEmail } from "@unibots/adapter-kit";
-import { parsePluginSource, previewPluginInstall } from "@unibots/adapters";
+import type { TransactionalEmail } from "@rakazo/adapter-kit";
+import { parsePluginSource, previewPluginInstall } from "@rakazo/adapters";
 import {
   pluginSubmissionAdminEmail,
   pluginSubmissionReceivedEmail,
   pluginSubmissionReviewedEmail,
-} from "@unibots/auth";
+} from "@rakazo/auth";
 import type {
   PluginMarketplaceEntry,
   PluginSubmission,
   PluginSubmissionReview,
   PluginSubmissionStatus,
-} from "@unibots/contracts";
-import { PLUGIN_SUBMISSIONS_PATH, PluginSubmissionInputSchema } from "@unibots/contracts";
-import { pluginCategory } from "@unibots/core";
-import type { PluginSubmission as PluginSubmissionRow, PrismaClient } from "@unibots/db";
+} from "@rakazo/contracts";
+import { PLUGIN_SUBMISSIONS_PATH, PluginSubmissionInputSchema } from "@rakazo/contracts";
+import { pluginCategory } from "@rakazo/core";
+import type { PluginSubmission as PluginSubmissionRow, PrismaClient } from "@rakazo/db";
 import type { Context } from "hono";
 import { Hono } from "hono";
 import { readBoundedBody } from "./http-body.js";
@@ -22,7 +22,7 @@ import { assertMcpRemoteEndpoint } from "./mcp-servers.js";
 import type { RouterDeps } from "./router.js";
 import { throttleKey, windowCounter } from "./window-counter.js";
 
-const PLUGIN_REGISTRY = "Unibots";
+const PLUGIN_REGISTRY = "Rakazo";
 const MAX_BODY_BYTES = 32 * 1024;
 const HOUR_MS = 60 * 60_000;
 const SUBMISSIONS_PER_IP_PER_HOUR = 10;

@@ -1,5 +1,5 @@
-import type { AdapterContext, ConnectorCall } from "@unibots/adapter-kit";
-import type { MessageBlock } from "@unibots/contracts";
+import type { AdapterContext, ConnectorCall } from "@rakazo/adapter-kit";
+import type { MessageBlock } from "@rakazo/contracts";
 import { describe, expect, it } from "vitest";
 import type { Evidence } from "./cases.js";
 import { EvalServices } from "./services.js";

@@ -1,9 +1,9 @@
-import type { ResponseStreamingPreference } from "@unibots/core";
+import type { ResponseStreamingPreference } from "@rakazo/core";
 import {
   normalizeResponseStreamingPreference,
   RESPONSE_STREAMING_STORAGE_KEY,
   responseStreamingEnabled,
-} from "@unibots/core";
+} from "@rakazo/core";
 import * as SecureStore from "expo-secure-store";
 
 export type { ResponseStreamingPreference };

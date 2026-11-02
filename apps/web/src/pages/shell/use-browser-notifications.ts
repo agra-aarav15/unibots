@@ -1,4 +1,4 @@
-import type { Bot, ProductEvent } from "@unibots/contracts";
+import type { Bot, ProductEvent } from "@rakazo/contracts";
 import type { RefObject } from "react";
 import { useCallback, useRef } from "react";
 import {

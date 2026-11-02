@@ -1,4 +1,4 @@
-import type { MessageBlock } from "@unibots/contracts";
+import type { MessageBlock } from "@rakazo/contracts";
 import {
   appendTextSegment,
   appendToolCallSegment,
@@ -7,8 +7,8 @@ import {
   isBackgroundRunTrigger,
   noteLastToolStep,
   redactSecretsAfter,
-} from "@unibots/core";
-import type { Run } from "@unibots/db";
+} from "@rakazo/core";
+import type { Run } from "@rakazo/db";
 import type { ExecutorDeps } from "./executor-deps.js";
 import type { ReplyState, RunContext } from "./run-context.js";
 import { publishMessage } from "./run-messages.js";

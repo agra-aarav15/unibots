@@ -4,7 +4,7 @@ import type {
   AgentRunModel,
   AgentRunRequest,
   AgentRuntime,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import type { CacheDecisionMeasurement, EvalPricing, MeasuredCall } from "./measurement.js";
 import { measureCalls } from "./measurement.js";
 

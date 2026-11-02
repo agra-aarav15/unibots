@@ -1,5 +1,5 @@
-import type { ThreadMessage } from "@unibots/contracts";
-import { REPLY_QUOTE_MAX_LENGTH } from "@unibots/contracts";
+import type { ThreadMessage } from "@rakazo/contracts";
+import { REPLY_QUOTE_MAX_LENGTH } from "@rakazo/contracts";
 import { describe, expect, it } from "vitest";
 import { quoteDraftForSelection } from "./quote-selection.js";
 

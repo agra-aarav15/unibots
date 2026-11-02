@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
-import { skillCreateFromTool } from "@unibots/adapters";
-import type { Actor } from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
-import { createDb, itemSecretIn, runAsSystem, runAsTenant } from "@unibots/db";
+import { skillCreateFromTool } from "@rakazo/adapters";
+import type { Actor } from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
+import { createDb, itemSecretIn, runAsSystem, runAsTenant } from "@rakazo/db";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createAgentSkillsService } from "./agent-skills.js";
 import {
@@ -28,7 +28,7 @@ describe.skipIf(!enabled).sequential("items available across a user's spaces (Po
   const actorIn = (spaceId: string, userId = owner): Actor => ({
     spaceId,
     userId,
-    email: `${userId}@unibots.test`,
+    email: `${userId}@rakazo.test`,
     isDeploymentOwner: false,
   });
   const skills = () => createAgentSkillsService(prisma);
@@ -66,7 +66,7 @@ describe.skipIf(!enabled).sequential("items available across a user's spaces (Po
       });
       for (const userId of [owner, teammate]) {
         await prisma.user.create({
-          data: { id: userId, name: userId, email: `${userId}@unibots.test`, emailVerified: false },
+          data: { id: userId, name: userId, email: `${userId}@rakazo.test`, emailVerified: false },
         });
         await prisma.member.create({
           data: { id: `${userId}-m`, organizationId, userId, role: "owner", createdAt: new Date() },

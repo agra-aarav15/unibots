@@ -1,5 +1,5 @@
-import type { ComputerRef } from "@unibots/adapter-kit";
-import { encodeLoginSecret } from "@unibots/contracts";
+import type { ComputerRef } from "@rakazo/adapter-kit";
+import { encodeLoginSecret } from "@rakazo/contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type * as ComputerLifecycleModule from "./computer-lifecycle.js";
 import { createRunExecutor } from "./executor.js";

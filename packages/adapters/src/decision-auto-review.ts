@@ -6,8 +6,8 @@ import type {
   AutoReviewRequest,
   AutoReviewResult,
   DecisionProvider,
-} from "@unibots/adapter-kit";
-import { DecisionProviderError } from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
+import { DecisionProviderError } from "@rakazo/adapter-kit";
 import {
   AUTO_REVIEW_ASK,
   AUTO_REVIEW_PASS,

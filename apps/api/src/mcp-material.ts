@@ -1,4 +1,4 @@
-import type { McpServerConfigInput } from "@unibots/contracts";
+import type { McpServerConfigInput } from "@rakazo/contracts";
 
 type McpOAuthClient = {
   client_id: string;

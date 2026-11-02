@@ -1,10 +1,10 @@
 import type { MenuAction } from "@expo/ui/community/menu";
-import type { ModelCatalogEntry, ModelCredential } from "@unibots/contracts";
+import type { ModelCatalogEntry, ModelCredential } from "@rakazo/contracts";
 import {
   canonicalPiProviderId,
   connectionDisplayName,
   MAX_MODEL_CONNECTION_LABEL,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import { Alert, Platform } from "react-native";
 import { useI18n } from "../lib/i18n";
 import { RowMenu } from "./model-role-settings";

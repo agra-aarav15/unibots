@@ -1,5 +1,5 @@
-import type { SignupSurvey as SignupSurveyAnswers } from "@unibots/contracts";
-import { signupSurveyAsksTeamSize } from "@unibots/contracts";
+import type { SignupSurvey as SignupSurveyAnswers } from "@rakazo/contracts";
+import { signupSurveyAsksTeamSize } from "@rakazo/contracts";
 
 import { useRef, useState } from "react";
 import {
@@ -66,7 +66,7 @@ export default function SignupSurvey() {
         <SettingsGroup>
           <ChoiceRow
             choices={uses}
-            label={t("How will you use Unibots?")}
+            label={t("How will you use Rakazo?")}
             onChange={setUse}
             value={use}
           />
@@ -88,9 +88,9 @@ export default function SignupSurvey() {
             value={source}
           />
         </SettingsGroup>
-        <SettingsGroup label={t("What do you most want Unibots to help with?")}>
+        <SettingsGroup label={t("What do you most want Rakazo to help with?")}>
           <TextInput
-            accessibilityLabel={t("What do you most want Unibots to help with?")}
+            accessibilityLabel={t("What do you most want Rakazo to help with?")}
             maxLength={2000}
             multiline
             onChangeText={setReason}

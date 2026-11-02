@@ -3,17 +3,17 @@ import type {
   AdapterContext,
   BackgroundJobPayloads,
   CloudAgentSnapshot,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   CloudAgentRequestRejected,
   CloudAgentRetryLater,
   runContinueJob,
-} from "@unibots/adapter-kit";
-import type { MessageBlock } from "@unibots/contracts";
-import { cloudAgentHttpsUrl } from "@unibots/core";
-import type { CloudAgent } from "@unibots/db";
-import { appendEventInTransaction, Prisma } from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/adapter-kit";
+import type { MessageBlock } from "@rakazo/contracts";
+import { cloudAgentHttpsUrl } from "@rakazo/core";
+import type { CloudAgent } from "@rakazo/db";
+import { appendEventInTransaction, Prisma } from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import { cloudAgentsEnabled } from "./cloud-agent-factory.js";
 import type { CloudAgentDeps } from "./cloud-agent-service.js";
 import { cloudAgentBlock, enqueueCloudAgent } from "./cloud-agent-service.js";

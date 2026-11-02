@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
-import type { ThreadScrollState } from "@unibots/core";
-import { openThreadWindow, withLiveStreamingProgress } from "@unibots/core";
+import type { ThreadScrollState } from "@rakazo/core";
+import { openThreadWindow, withLiveStreamingProgress } from "@rakazo/core";
 import { act, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { describe, expect, it, vi } from "vitest";

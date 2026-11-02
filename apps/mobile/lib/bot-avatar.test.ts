@@ -1,4 +1,4 @@
-import { resolvePersonaColorDef, shippedBotAvatarShapePath } from "@unibots/core";
+import { resolvePersonaColorDef, shippedBotAvatarShapePath } from "@rakazo/core";
 import { describe, expect, it } from "vitest";
 import { mobileBotAvatarPresentation } from "./bot-avatar.js";
 

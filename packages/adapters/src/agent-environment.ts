@@ -1,4 +1,4 @@
-import { redactSecrets } from "@unibots/core";
+import { redactSecrets } from "@rakazo/core";
 
 export function formatAgentEnvironmentInstruction(
   environment: Record<string, string>,

@@ -5,8 +5,8 @@ import type {
   Space,
   SpaceMemoryConfig,
   UsageSummary,
-} from "@unibots/contracts";
-import { writeSaved } from "@unibots/core/query";
+} from "@rakazo/contracts";
+import { writeSaved } from "@rakazo/core/query";
 import { useQuery } from "@tanstack/react-query";
 import type { RefObject } from "react";
 import { useCallback } from "react";

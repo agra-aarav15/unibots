@@ -1,22 +1,22 @@
 import { createHash } from "node:crypto";
 import { ORPCError } from "@orpc/server";
-import type { SecretStore } from "@unibots/adapter-kit";
-import type { PluginMcpServerEntry, PluginRepoFetcher } from "@unibots/adapters";
+import type { SecretStore } from "@rakazo/adapter-kit";
+import type { PluginMcpServerEntry, PluginRepoFetcher } from "@rakazo/adapters";
 import {
   buildMcpCredentialBlob,
   persistPreparedSecret,
   pluginPreviewDto,
   previewPluginInstall,
-} from "@unibots/adapters";
-import type { Actor, CapabilityInstall, PluginPart } from "@unibots/contracts";
-import { installedPluginParts } from "@unibots/core";
-import type { Prisma, PrismaClient } from "@unibots/db";
+} from "@rakazo/adapters";
+import type { Actor, CapabilityInstall, PluginPart } from "@rakazo/contracts";
+import { installedPluginParts } from "@rakazo/core";
+import type { Prisma, PrismaClient } from "@rakazo/db";
 import {
   AVAILABILITY_SELECT,
   availableInSpace,
   runAsSystemInTransaction,
   spaceAvailability,
-} from "@unibots/db";
+} from "@rakazo/db";
 import { assertNameFreeWhereAvailable, lockOwner } from "./availability.js";
 
 export type PluginInstallDeps = {

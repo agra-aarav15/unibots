@@ -1,8 +1,8 @@
-import type { AdapterContext, ComputerRef, SandboxProvider } from "@unibots/adapter-kit";
-import type { ComputerMode } from "@unibots/contracts";
-import { ATTACHMENT_MAX_BYTES } from "@unibots/contracts";
-import { redactSecrets } from "@unibots/core";
-import { getLogger } from "@unibots/logging";
+import type { AdapterContext, ComputerRef, SandboxProvider } from "@rakazo/adapter-kit";
+import type { ComputerMode } from "@rakazo/contracts";
+import { ATTACHMENT_MAX_BYTES } from "@rakazo/contracts";
+import { redactSecrets } from "@rakazo/core";
+import { getLogger } from "@rakazo/logging";
 import { JSDOM } from "jsdom";
 import { displayBotWorkspacePath, resolveBotWorkspacePath } from "./computer-support.js";
 import type { ExecutorDeps } from "./executor-deps.js";

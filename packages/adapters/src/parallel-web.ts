@@ -6,8 +6,8 @@ import type {
   WebProvider,
   WebSearchHit,
   WebSearchRequest,
-} from "@unibots/adapter-kit";
-import { resolveEncryptionKey } from "@unibots/core";
+} from "@rakazo/adapter-kit";
+import { resolveEncryptionKey } from "@rakazo/core";
 import { z } from "zod";
 import { combineSignals } from "./connector-safety.js";
 import type { RemoteTransportDependencies } from "./remote-mcp.js";
@@ -16,7 +16,7 @@ import { clampMaxChars, clampMaxResults, clampOffset, pageWindow } from "./web-l
 import { assertSafeWebUrl, withAbort } from "./web-ssrf.js";
 
 const ENDPOINT = "https://search.parallel.ai/mcp";
-const USER_AGENT = "Unibots/0.1 (+https://github.com/agra-aarav15/unibots; web tools)";
+const USER_AGENT = "Rakazo/0.1 (+https://github.com/elie222/rakazo; web tools)";
 const MAX_SNIPPET_CHARS = 8_000;
 const pageSchema = z.object({
   url: z.string().max(8_192),
@@ -124,7 +124,7 @@ export class ParallelWebProvider implements WebProvider {
     signal.throwIfAborted();
     // Scope conversation accounting to this deployment without disclosing raw IDs.
     const sessionId = createHmac("sha256", this.sessionKey)
-      .update("unibots:parallel:web-session:v1\0")
+      .update("rakazo:parallel:web-session:v1\0")
       .update(
         JSON.stringify([
           context.spaceId,

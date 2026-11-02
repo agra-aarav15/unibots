@@ -1,5 +1,5 @@
-import type { AdapterContext } from "@unibots/adapter-kit";
-import type { PrismaClient } from "@unibots/db";
+import type { AdapterContext } from "@rakazo/adapter-kit";
+import type { PrismaClient } from "@rakazo/db";
 import type { PluginConnectionRow } from "./composio-connector.js";
 import { planLiveConnectionSync } from "./composio-connector.js";
 import type { ExecutorDeps } from "./executor-deps.js";

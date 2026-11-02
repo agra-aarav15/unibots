@@ -1,4 +1,4 @@
-import { MODEL_REQUIRED_SEND_ERROR } from "@unibots/core";
+import { MODEL_REQUIRED_SEND_ERROR } from "@rakazo/core";
 import { router } from "expo-router";
 import { Alert } from "react-native";
 import { beforeEach, describe, expect, it, vi } from "vitest";

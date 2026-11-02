@@ -1,4 +1,4 @@
-import { textDirectionForLocale } from "@unibots/core";
+import { textDirectionForLocale } from "@rakazo/core";
 import { resolveUiLocale } from "./ui-locale";
 
 export function applyUiDirection(locale: string = resolveUiLocale()) {

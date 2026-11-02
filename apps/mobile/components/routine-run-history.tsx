@@ -1,5 +1,5 @@
-import type { RoutineRun } from "@unibots/contracts";
-import { formatRoutineRunAt } from "@unibots/core";
+import type { RoutineRun } from "@rakazo/contracts";
+import { formatRoutineRunAt } from "@rakazo/core";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator } from "react-native";

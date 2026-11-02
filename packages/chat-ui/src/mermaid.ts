@@ -1,4 +1,4 @@
-import type { ColorTokens, ResolvedAppearance } from "@unibots/ui-tokens";
+import type { ColorTokens, ResolvedAppearance } from "@rakazo/ui-tokens";
 
 /** True for a fence whose info string names Mermaid (```mermaid, ```Mermaid title="x"). */
 export function isMermaidFence(info: string | undefined | null): boolean {

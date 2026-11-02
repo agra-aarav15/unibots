@@ -33,7 +33,7 @@ for (const surface of ["settings", "onboarding"] as const) {
       }
       await signup(
         page,
-        `header-${surface}-${action}-${Date.now()}@unibots.test`,
+        `header-${surface}-${action}-${Date.now()}@rakazo.test`,
         "password12",
         "Header discovery",
       );

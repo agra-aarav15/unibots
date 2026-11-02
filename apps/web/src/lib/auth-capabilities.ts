@@ -1,8 +1,8 @@
-import type { AuthCapabilities } from "@unibots/contracts";
-import { authCapabilitiesSchema, legacyAuthCapabilitiesSchema } from "@unibots/contracts";
-import { ResponseBodyTooLargeError, readBoundedJsonResponse } from "@unibots/core";
+import type { AuthCapabilities } from "@rakazo/contracts";
+import { authCapabilitiesSchema, legacyAuthCapabilitiesSchema } from "@rakazo/contracts";
+import { ResponseBodyTooLargeError, readBoundedJsonResponse } from "@rakazo/core";
 
-export type { AuthCapabilities } from "@unibots/contracts";
+export type { AuthCapabilities } from "@rakazo/contracts";
 
 const TIMEOUT_MS = 8_000;
 const MAX_RESPONSE_BYTES = 64 * 1024;

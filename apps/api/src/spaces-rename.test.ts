@@ -1,6 +1,6 @@
 import { RPCHandler } from "@orpc/server/fetch";
-import type { Actor } from "@unibots/contracts";
-import type { PrismaClient } from "@unibots/db";
+import type { Actor } from "@rakazo/contracts";
+import type { PrismaClient } from "@rakazo/db";
 import { describe, expect, it, vi } from "vitest";
 import type { RouterDeps } from "./router.js";
 import { createRouter } from "./router.js";
@@ -8,7 +8,7 @@ import { createRouter } from "./router.js";
 const actor = {
   spaceId: "space-current",
   userId: "user-1",
-  email: "user@unibots.test",
+  email: "user@rakazo.test",
   isDeploymentOwner: false,
 } satisfies Actor;
 
@@ -59,7 +59,7 @@ function renameHarness(target: TargetSpace, currentOrganizationId: string | null
       screenProxySecret: "fake-test-secret",
       sandboxProvider: "fake",
     },
-    dataDir: "/tmp/unibots-space-rename-test",
+    dataDir: "/tmp/rakazo-space-rename-test",
   } as unknown as RouterDeps;
   return { update, transaction, handler: new RPCHandler(createRouter(deps)) };
 }

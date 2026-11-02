@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@unibots/db";
+import type { PrismaClient } from "@rakazo/db";
 
 type RecoveryRun = { id: string; botId: string; bot: { computerId: string | null } };
 

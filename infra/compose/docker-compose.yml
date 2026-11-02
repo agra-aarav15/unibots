@@ -6,7 +6,7 @@ x-app-environment: &app-environment
   # Runtime
   NODE_ENV: ${NODE_ENV:-production}
   # The app's own login, subject to row-level security (docs/self-host-configuration.md#database-roles).
-  DATABASE_URL: postgres://unibots_app:${POSTGRES_APP_PASSWORD:?Set POSTGRES_APP_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-unibots}
+  DATABASE_URL: postgres://rakazo_app:${POSTGRES_APP_PASSWORD:?Set POSTGRES_APP_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-rakazo}
   REALTIME_DATABASE_URL:
   DB_POOL_MAX:
   DATA_DIR: /data
@@ -27,28 +27,20 @@ x-app-environment: &app-environment
   OBJECT_STORAGE_PREFIX:
   OBJECT_STORAGE_PATH_STYLE:
   WAKEUP_DRIVER: graphile
-  AGENT_RUNTIME: ${AGENT_RUNTIME:-pi}
-  # Hermes Agent brain (AGENT_RUNTIME=hermes). The sidecar services live under the
-  # "hermes" Compose profile; see infra/hermes/README.md.
-  UNIBOTS_HERMES_URL:
-  UNIBOTS_HERMES_API_KEY:
-  UNIBOTS_HERMES_PROFILE:
-  UNIBOTS_HERMES_MODEL:
-  UNIBOTS_HERMES_PROVISION_URL:
-  UNIBOTS_HERMES_PROVISION_SECRET:
+  AGENT_RUNTIME: pi
   API_URL:
   MAX_UPLOAD_SIZE_MB:
   MAX_ATTACHMENTS_PER_MESSAGE:
-  UNIBOTS_UPDATE_RESTART_SUPERVISOR:
+  RAKAZO_UPDATE_RESTART_SUPERVISOR:
   TICKET_BOARD_ENABLED:
   USER_DEVICES_ENABLED:
   BOT_MESSAGE_MAX_HOPS:
-  UNIBOTS_MESSAGE_USER_MAX_CHARS:
+  RAKAZO_MESSAGE_USER_MAX_CHARS:
   TEACH_RECORDING_TTL_MS:
   PHONE_CALLS_ENABLED:
   PHONE_CALL_RING_SECONDS:
   PHONE_CALL_COOLDOWN_MINUTES:
-  UNIBOTS_SECRETS_ALLOW_PRIVATE_HTTP:
+  RAKAZO_SECRETS_ALLOW_PRIVATE_HTTP:
   EXPO_ACCESS_TOKEN:
   # Secret storage
   SECRET_STORE: ${SECRET_STORE:-encrypted}
@@ -85,24 +77,24 @@ x-app-environment: &app-environment
   PI_DEFAULT_MODEL:
   PI_DEFAULT_CREDENTIALS:
   PI_SESSION_RECORDING:
-  UNIBOTS_LIVE_MODEL_CATALOG:
+  RAKAZO_LIVE_MODEL_CATALOG:
   OPENROUTER_API_KEY:
   ANTHROPIC_API_KEY:
   TYPESAFE_API_KEY:
   MAX_TOOL_CALLS_PER_TURN:
   MODEL_STREAM_MAX_RETRIES:
-  UNIBOTS_LOCAL_MODELS:
-  UNIBOTS_LOCAL_MODELS_URL:
-  UNIBOTS_LOCAL_VISION_MODELS:
-  UNIBOTS_LOCAL_CONTEXT_WINDOW:
-  UNIBOTS_LOCAL_MAX_TOKENS:
-  UNIBOTS_OPENAI_COMPATIBLE_VISION_MODELS:
-  UNIBOTS_OPENAI_COMPAT_ALLOW_PUBLIC:
-  UNIBOTS_OPENAI_COMPAT_PRIVATE_HOSTS:
-  UNIBOTS_AUTO_REVIEW_PROVIDER:
-  UNIBOTS_AUTO_REVIEW_MODEL:
-  UNIBOTS_AUTO_REVIEW_MIN_CONFIDENCE:
-  UNIBOTS_AUTO_REVIEW_TIMEOUT_MS:
+  RAKAZO_LOCAL_MODELS:
+  RAKAZO_LOCAL_MODELS_URL:
+  RAKAZO_LOCAL_VISION_MODELS:
+  RAKAZO_LOCAL_CONTEXT_WINDOW:
+  RAKAZO_LOCAL_MAX_TOKENS:
+  RAKAZO_OPENAI_COMPATIBLE_VISION_MODELS:
+  RAKAZO_OPENAI_COMPAT_ALLOW_PUBLIC:
+  RAKAZO_OPENAI_COMPAT_PRIVATE_HOSTS:
+  RAKAZO_AUTO_REVIEW_PROVIDER:
+  RAKAZO_AUTO_REVIEW_MODEL:
+  RAKAZO_AUTO_REVIEW_MIN_CONFIDENCE:
+  RAKAZO_AUTO_REVIEW_TIMEOUT_MS:
   RELEASE_WATCH_EVAL_MODEL:
   FISH_TTS_MODEL:
   FISH_ASR_MODEL:
@@ -275,9 +267,9 @@ services:
       # USER/PASSWORD/DB apply only on first volume init. Keep existing values in
       # .env, or ALTER ROLE / rename in place. Recreate the volume only after backup
       # (or when it is disposable); down -v deletes all DB state.
-      POSTGRES_USER: ${POSTGRES_USER:-unibots}
+      POSTGRES_USER: ${POSTGRES_USER:-rakazo}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
-      POSTGRES_DB: ${POSTGRES_DB:-unibots}
+      POSTGRES_DB: ${POSTGRES_DB:-rakazo}
     volumes:
       # Postgres 18 keeps each major version's cluster in /var/lib/postgresql/<major>/docker.
       - postgres:/var/lib/postgresql
@@ -286,7 +278,7 @@ services:
       # upgrade-postgres.sh (docs/self-host-upgrading.md#upgrading-to-postgres-18).
       - pgdata:/var/lib/postgresql/16/docker:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-unibots} -d ${POSTGRES_DB:-unibots}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rakazo} -d ${POSTGRES_DB:-rakazo}"]
       interval: 3s
       timeout: 5s
       retries: 20
@@ -301,10 +293,10 @@ services:
       SUPERVISOR_HOST: "0.0.0.0"
       SUPERVISOR_PORT: "7091"
       DOCKER_SOCKET: /var/run/docker.sock
-      UNIBOTS_COMPUTER_IMAGE: unibots/computer:local
-      UNIBOTS_COMPUTER_MEMORY: ${UNIBOTS_COMPUTER_MEMORY:-2g}
-      UNIBOTS_COMPUTER_CPUS: ${UNIBOTS_COMPUTER_CPUS:-2}
-      UNIBOTS_COMPUTER_PIDS_LIMIT: ${UNIBOTS_COMPUTER_PIDS_LIMIT:-2048}
+      RAKAZO_COMPUTER_IMAGE: rakazo/computer:local
+      RAKAZO_COMPUTER_MEMORY: ${RAKAZO_COMPUTER_MEMORY:-2g}
+      RAKAZO_COMPUTER_CPUS: ${RAKAZO_COMPUTER_CPUS:-2}
+      RAKAZO_COMPUTER_PIDS_LIMIT: ${RAKAZO_COMPUTER_PIDS_LIMIT:-2048}
       SANDBOX_COMMAND_TIMEOUT_MS: ${SANDBOX_COMMAND_TIMEOUT_MS:-300000}
       SANDBOX_TEAM_SCREEN_LIMIT: ${SANDBOX_TEAM_SCREEN_LIMIT:-0}
       SANDBOX_SUPERVISOR_TOKEN: ${SANDBOX_SUPERVISOR_TOKEN:?Set SANDBOX_SUPERVISOR_TOKEN in .env}
@@ -329,7 +321,7 @@ services:
         condition: service_completed_successfully
 
   computer:
-    image: unibots/computer:local
+    image: rakazo/computer:local
     build:
       context: ../sandboxes/computer
     command: ["true"]
@@ -343,7 +335,7 @@ services:
       - ../../data:/data
 
   # Applies migrations as the database owner, creates the runtime login, and exits. Only this
-  # container gets the owner login: the API and worker connect as unibots_app, which row-level
+  # container gets the owner login: the API and worker connect as rakazo_app, which row-level
   # security binds, so code running in either cannot find a login that bypasses it.
   migrate:
     build:
@@ -353,8 +345,8 @@ services:
     command: ["pnpm", "db:deploy"]
     restart: "no"
     environment:
-      DATABASE_URL: postgres://unibots_app:${POSTGRES_APP_PASSWORD:?Set POSTGRES_APP_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-unibots}
-      DATABASE_MIGRATION_URL: postgres://${POSTGRES_USER:-unibots}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-unibots}
+      DATABASE_URL: postgres://rakazo_app:${POSTGRES_APP_PASSWORD:?Set POSTGRES_APP_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-rakazo}
+      DATABASE_MIGRATION_URL: postgres://${POSTGRES_USER:-rakazo}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-rakazo}
     depends_on:
       postgres:
         condition: service_healthy
@@ -392,8 +384,8 @@ services:
       SIGNUPS_ENABLED:
       SIGNUP_ALLOWLIST:
       SCREEN_PROXY_SECRET: ${SCREEN_PROXY_SECRET:?Set SCREEN_PROXY_SECRET in .env}
-      UNIBOTS_DESKTOP_STACK_TOKEN:
-      UNIBOTS_GIT_SHA:
+      RAKAZO_DESKTOP_STACK_TOKEN:
+      RAKAZO_GIT_SHA:
       SENTRY_BROWSER_DSN: ${SENTRY_BROWSER_DSN:-}
       PRIVACY_POLICY_URL:
       EMAIL_PROVIDER:
@@ -408,13 +400,13 @@ services:
       CRISP_WEBSITE_ID:
       INTEGRATIONS_CATALOG_URL:
       TEAM_CHAT_BOT_ID:
-      SLACK_UNIBOTS_BOT_ID:
+      SLACK_RAKAZO_BOT_ID:
       TEAM_CHAT_JUDGE_PROVIDER:
       TEAM_CHAT_JUDGE_MODEL:
       SPACE_TEARDOWN_TIMEOUT_MS:
-      UNIBOTS_MIN_CLIENT_BUILD:
-      UNIBOTS_NAV_LINKS:
-      UNIBOTS_ADMIN_EMAILS:
+      RAKAZO_MIN_CLIENT_BUILD:
+      RAKAZO_NAV_LINKS:
+      RAKAZO_ADMIN_EMAILS:
       VOICE_SUMMARY_MIN_CHARS:
     healthcheck:
       test:
@@ -477,9 +469,9 @@ services:
     environment:
       API_PROXY_TARGET: http://api:3100
       SCREEN_PROXY_SECRET: ${SCREEN_PROXY_SECRET:?Set SCREEN_PROXY_SECRET in .env}
-      UNIBOTS_HOST: ${UNIBOTS_HOST:-localhost}
-      UNIBOTS_CSP_SCRIPT_SRC: ${UNIBOTS_CSP_SCRIPT_SRC:-}
-      UNIBOTS_CSP_CONNECT_SRC: ${UNIBOTS_CSP_CONNECT_SRC:-}
+      RAKAZO_HOST: ${RAKAZO_HOST:-localhost}
+      RAKAZO_CSP_SCRIPT_SRC: ${RAKAZO_CSP_SCRIPT_SRC:-}
+      RAKAZO_CSP_CONNECT_SRC: ${RAKAZO_CSP_CONNECT_SRC:-}
       CRISP_WEBSITE_ID:
     ports:
       - "127.0.0.1:5173:5173"

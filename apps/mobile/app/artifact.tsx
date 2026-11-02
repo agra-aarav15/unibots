@@ -1,6 +1,6 @@
-import { ChatMarkdown } from "@unibots/chat-ui/native";
-import type { ArtifactVersion, ArtifactWithContent } from "@unibots/contracts";
-import { isAttachmentImageMimeType } from "@unibots/contracts";
+import { ChatMarkdown } from "@rakazo/chat-ui/native";
+import type { ArtifactVersion, ArtifactWithContent } from "@rakazo/contracts";
+import { isAttachmentImageMimeType } from "@rakazo/contracts";
 import type { File } from "expo-file-system";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import type { ReactNode } from "react";

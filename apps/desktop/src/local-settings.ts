@@ -1,8 +1,8 @@
 import {
   LOCAL_COMPUTER_HOST_PATH,
   LOCAL_SETTINGS_TOKEN_HEADER,
-} from "@unibots/contracts/local-settings";
-import { isLoopbackHost } from "@unibots/contracts/network-host";
+} from "@rakazo/contracts/local-settings";
+import { isLoopbackHost } from "@rakazo/contracts/network-host";
 
 /** Called by native main only after the local host permission flow. Never exposes the token. */
 export async function saveLocalComputerHost(

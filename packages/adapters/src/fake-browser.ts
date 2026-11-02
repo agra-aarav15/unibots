@@ -8,7 +8,7 @@ import type {
   BrowserSnapshotRequest,
   BrowserSnapshotResult,
   ComputerRef,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import { PageBrowserSessionStore, pageBrowserSessionKey } from "./page-browser-session.js";
 import { fetchSafeWebText } from "./web-ssrf.js";
 

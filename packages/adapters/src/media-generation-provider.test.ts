@@ -1,5 +1,5 @@
-import type { AdapterContext } from "@unibots/adapter-kit";
-import { ATTACHMENT_MAX_BYTES } from "@unibots/contracts";
+import type { AdapterContext } from "@rakazo/adapter-kit";
+import { ATTACHMENT_MAX_BYTES } from "@rakazo/contracts";
 import { describe, expect, it, vi } from "vitest";
 import { createMediaGenerationProvider } from "./media-generation-factory.js";
 import {

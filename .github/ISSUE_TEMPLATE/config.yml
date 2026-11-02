@@ -1,11 +1,11 @@
 blank_issues_enabled: true
 contact_links:
   - name: Security vulnerabilities
-    url: https://github.com/agra-aarav15/unibots/blob/main/SECURITY.md
-    about: Report security issues to security@unibots.example — do not open a public issue.
+    url: https://github.com/elie222/rakazo/blob/main/SECURITY.md
+    about: Report security issues to security@rakazo.com — do not open a public issue.
   - name: User support
-    url: mailto:support@unibots.example
-    about: Questions about using Unibots or self-hosting help.
+    url: mailto:support@rakazo.com
+    about: Questions about using Rakazo or self-hosting help.
   - name: Maintainer
-    url: mailto:maintainer@unibots.example
+    url: mailto:elie@rakazo.com
     about: Reach the maintainer directly.

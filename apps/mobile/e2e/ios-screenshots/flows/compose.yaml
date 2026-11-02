@@ -1,17 +1,17 @@
-appId: com.unibots.app
+appId: com.rakazo.app
 name: Compose
 ---
 - runFlow:
     file: ../subflows/sign-in.yaml
     env:
-      UNIBOTS_ACTIVE_EMAIL: ${UNIBOTS_SCREENSHOT_EMAIL}
-- openLink: "unibots:///new-space"
+      RAKAZO_ACTIVE_EMAIL: ${RAKAZO_SCREENSHOT_EMAIL}
+- openLink: "rakazo:///new-space"
 - extendedWaitUntil:
     visible: "Customer support|Create space"
     timeout: 15000
 - takeScreenshot: 02-new-space
 - tapOn: "Cancel"
-- openLink: "unibots:///new-group"
+- openLink: "rakazo:///new-group"
 - extendedWaitUntil:
     visible: "Search bots"
     timeout: 15000
@@ -21,4 +21,4 @@ name: Compose
 - tapOn: "Next"
 - assertVisible: "Skip"
 - takeScreenshot: 04-new-group-name
-- openLink: "unibots:///"
+- openLink: "rakazo:///"

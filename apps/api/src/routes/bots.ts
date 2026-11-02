@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { ORPCError } from "@orpc/server";
-import { runContinueJob, runJobKey } from "@unibots/adapter-kit";
-import type { getBotSecretMetadata } from "@unibots/adapters";
+import { runContinueJob, runJobKey } from "@rakazo/adapter-kit";
+import type { getBotSecretMetadata } from "@rakazo/adapters";
 import {
   archiveBot,
   cancelComputerRunWork,
@@ -17,17 +17,17 @@ import {
   storeBotSecret,
   toComputerRef,
   validateBotModelChange,
-} from "@unibots/adapters";
+} from "@rakazo/adapters";
 import type {
   Actor,
   Bot,
   BotSecretMetadata,
   SettingsScope,
   VaultPutInput,
-} from "@unibots/contracts";
-import { BotSecretAuth, resolveBotAvatarSet } from "@unibots/contracts";
-import { ACTIVE_RUN_STATUSES, displayName } from "@unibots/core";
-import type { Prisma } from "@unibots/db";
+} from "@rakazo/contracts";
+import { BotSecretAuth, resolveBotAvatarSet } from "@rakazo/contracts";
+import { ACTIVE_RUN_STATUSES, displayName } from "@rakazo/core";
+import type { Prisma } from "@rakazo/db";
 import {
   BotSectionNameConflictError,
   botProfileLabelsChanged,
@@ -41,8 +41,8 @@ import {
   restoreBotUnderComputerQuota,
   SpaceDeletionInProgressError,
   settingsTarget,
-} from "@unibots/db";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/db";
+import { getLogger } from "@rakazo/logging";
 import type { AgentImportServices } from "../agent-import.js";
 import { agentImportSetupState, createImportedBot, previewAgentImport } from "../agent-import.js";
 import { deleteAgentSecret, listAgentSecrets, putAgentSecret } from "../agent-secrets.js";

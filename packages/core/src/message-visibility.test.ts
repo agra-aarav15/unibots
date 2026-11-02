@@ -1,4 +1,4 @@
-import type { ThreadMessage } from "@unibots/contracts";
+import type { ThreadMessage } from "@rakazo/contracts";
 import { describe, expect, it } from "vitest";
 import { projectMessageReactions } from "./message-reactions.js";
 import {

@@ -1,4 +1,4 @@
-import type { Connection, ConnectionCatalogItem } from "@unibots/contracts";
+import type { Connection, ConnectionCatalogItem } from "@rakazo/contracts";
 import { describe, expect, it, vi } from "vitest";
 import {
   catalogItemAccounts,

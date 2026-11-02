@@ -3,13 +3,13 @@ import {
   isAbandonedRequest,
   isConnectionFailure,
   isServerUnreachable,
-} from "@unibots/core/user-error";
-import type { ClientOperation, MonitoringConfig } from "@unibots/logging/monitoring";
+} from "@rakazo/core/user-error";
+import type { ClientOperation, MonitoringConfig } from "@rakazo/logging/monitoring";
 import {
   createClientErrorReporter,
   isMonitoringUserId,
   sanitizeMonitoringEvent,
-} from "@unibots/logging/monitoring";
+} from "@rakazo/logging/monitoring";
 import type * as SentryReact from "@sentry/react";
 import type { ErrorInfo } from "react";
 import { importChunk, recoveringByReload } from "./preload-recovery";

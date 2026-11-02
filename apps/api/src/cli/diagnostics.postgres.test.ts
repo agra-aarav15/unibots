@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { promisify } from "node:util";
-import { asSystem, bootstrapUserSpace, createDb } from "@unibots/db";
+import { asSystem, bootstrapUserSpace, createDb } from "@rakazo/db";
 import { expect, it } from "vitest";
 import { opaque } from "../diagnostics.js";
 
@@ -44,7 +44,7 @@ it.skipIf(!testDatabase)(
 
       const { stdout } = await run(
         "pnpm",
-        ["--filter", "@unibots/api", "exec", "tsx", "src/cli/diagnostics.ts"],
+        ["--filter", "@rakazo/api", "exec", "tsx", "src/cli/diagnostics.ts"],
         {
           env: {
             ...process.env,

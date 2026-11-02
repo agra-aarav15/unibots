@@ -1,6 +1,6 @@
-import type { AttachmentMimeType } from "@unibots/contracts";
-import { ATTACHMENT_MAX_BYTES, ATTACHMENT_MAX_COUNT, attachmentSizeLabel } from "@unibots/contracts";
-import { newClientId } from "@unibots/core";
+import type { AttachmentMimeType } from "@rakazo/contracts";
+import { ATTACHMENT_MAX_BYTES, ATTACHMENT_MAX_COUNT, attachmentSizeLabel } from "@rakazo/contracts";
+import { newClientId } from "@rakazo/core";
 
 export type PickedAttachment = {
   id: string;

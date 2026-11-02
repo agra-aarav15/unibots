@@ -4,7 +4,7 @@ import {
   CLIENT_BUILD_HEADER,
   formatClientBuild,
   IOS_APP_STORE_URL,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import * as Updates from "expo-updates";
 import type { AppStateStatus } from "react-native";
 import { Alert, AppState, Linking, Platform } from "react-native";

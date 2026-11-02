@@ -1,9 +1,9 @@
-import type { SignupSurvey } from "@unibots/contracts";
+import type { SignupSurvey } from "@rakazo/contracts";
 import {
   SIGNUP_SURVEY_TEAM_SIZES,
   signupSurveyAsksTeamSize,
   signupSurveyTeamSizeLabel,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 
 export type SignupSurveyTeamSize = (typeof SIGNUP_SURVEY_TEAM_SIZES)[number];
 

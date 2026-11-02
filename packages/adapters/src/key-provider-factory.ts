@@ -1,10 +1,10 @@
-import type { KeyProvider } from "@unibots/adapter-kit";
+import type { KeyProvider } from "@rakazo/adapter-kit";
 import {
   LocalKeyProvider,
   lazyKeyProvider,
   masterKeysFromEnv,
   withLocalMasterKeys,
-} from "@unibots/db";
+} from "@rakazo/db";
 import { AwsKmsKeyProvider, awsKmsConfigFromEnv } from "./aws-kms-key-provider.js";
 
 /**

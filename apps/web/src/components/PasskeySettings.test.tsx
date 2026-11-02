@@ -11,7 +11,7 @@ vi.mock("@lingui/react/macro", () => ({
   useLingui: () => ({ t: (strings: TemplateStringsArray) => strings.join("") }),
   Trans: ({ children }: { children: ReactNode }) => children,
 }));
-vi.mock("@unibots/ui-web", () => {
+vi.mock("@rakazo/ui-web", () => {
   const Plain = ({ children }: { children?: ReactNode }) => <>{children}</>;
   return {
     Button: ({

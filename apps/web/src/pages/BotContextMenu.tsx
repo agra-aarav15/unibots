@@ -1,5 +1,5 @@
 import { useLingui } from "@lingui/react/macro";
-import type { Bot, BotSection } from "@unibots/contracts";
+import type { Bot, BotSection } from "@rakazo/contracts";
 import {
   ContextMenuContent,
   ContextMenuItem,
@@ -7,7 +7,7 @@ import {
   ContextMenuSub,
   ContextMenuSubContent,
   ContextMenuSubTrigger,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import {
   Archive,
   Bell,

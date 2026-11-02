@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="unibots_call_channel">Laufender Anruf</string>
-  <string name="unibots_call_title">Unibots-Anruf</string>
-  <string name="unibots_call_text">Mikrofon ist aktiv</string>
-</resources>

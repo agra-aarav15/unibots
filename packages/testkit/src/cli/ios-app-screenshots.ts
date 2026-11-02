@@ -37,11 +37,11 @@ async function main() {
     : catalog;
 
   const udid = requiredEnv("SIM_UDID");
-  const apiUrl = requiredEnv("UNIBOTS_API_URL").replace(/\/$/, "");
+  const apiUrl = requiredEnv("RAKAZO_API_URL").replace(/\/$/, "");
   const databaseUrl = requiredEnv("DATABASE_URL");
-  const email = requiredEnv("UNIBOTS_SCREENSHOT_EMAIL");
-  const emptyEmail = requiredEnv("UNIBOTS_SCREENSHOT_EMPTY_EMAIL");
-  const password = requiredEnv("UNIBOTS_SCREENSHOT_PASSWORD");
+  const email = requiredEnv("RAKAZO_SCREENSHOT_EMAIL");
+  const emptyEmail = requiredEnv("RAKAZO_SCREENSHOT_EMPTY_EMAIL");
+  const password = requiredEnv("RAKAZO_SCREENSHOT_PASSWORD");
   const outDir = path.resolve(
     process.env.IOS_SCREENSHOT_OUT || path.join(ROOT, "test-report", "ios-screenshots"),
   );
@@ -79,17 +79,17 @@ async function main() {
             "--test-output-dir",
             path.join(work, "out"),
             "-e",
-            `UNIBOTS_SCREENSHOT_EMAIL=${email}`,
+            `RAKAZO_SCREENSHOT_EMAIL=${email}`,
             "-e",
-            `UNIBOTS_SCREENSHOT_EMPTY_EMAIL=${emptyEmail}`,
+            `RAKAZO_SCREENSHOT_EMPTY_EMAIL=${emptyEmail}`,
             "-e",
-            `UNIBOTS_SCREENSHOT_PASSWORD=${password}`,
+            `RAKAZO_SCREENSHOT_PASSWORD=${password}`,
             "-e",
-            `UNIBOTS_SCREENSHOT_BOT_ID=${fixture.botId}`,
+            `RAKAZO_SCREENSHOT_BOT_ID=${fixture.botId}`,
             "-e",
-            `UNIBOTS_SCREENSHOT_GROUP_ID=${fixture.groupId}`,
+            `RAKAZO_SCREENSHOT_GROUP_ID=${fixture.groupId}`,
             "-e",
-            `UNIBOTS_SCREENSHOT_ROUTINE_ID=${fixture.routineId}`,
+            `RAKAZO_SCREENSHOT_ROUTINE_ID=${fixture.routineId}`,
             path.join(CATALOG_DIR, section.flow),
           ],
           process.env,

@@ -18,9 +18,9 @@ import type {
   ScreenRequest,
   ScreenSession,
   TerminalRequest,
-} from "@unibots/adapter-kit";
-import { boundedSandboxCommandTimeoutMs } from "@unibots/core";
-import { COMPUTER_CACHE_ENV } from "@unibots/core/node/desktop-runtime";
+} from "@rakazo/adapter-kit";
+import { boundedSandboxCommandTimeoutMs } from "@rakazo/core";
+import { COMPUTER_CACHE_ENV } from "@rakazo/core/node/desktop-runtime";
 import { normalizeWorkspacePath, shellQuote, workspacePath } from "./computer-support.js";
 import { LinuxDesktop, onBotScreen } from "./linux-desktop.js";
 import { sandboxCommandArgv } from "./sandbox-command-environment.js";
@@ -30,16 +30,16 @@ import {
 } from "./workspace-save-policy.js";
 
 const DISPLAY_START = 20;
-const DEFAULT_NAMESPACE = "unibots-sandboxes";
+const DEFAULT_NAMESPACE = "rakazo-sandboxes";
 // Same default as the Compose stack. Pin a digest with KUBERNETES_SANDBOX_COMPUTER_IMAGE in
 // production so every pod runs the image the API was tested against.
-const DEFAULT_COMPUTER_IMAGE = "ghcr.io/agra-aarav15/unibots/computer:edge";
+const DEFAULT_COMPUTER_IMAGE = "ghcr.io/elie222/rakazo/computer:edge";
 const DEFAULT_READY_TIMEOUT_MS = 120_000;
-const WORKSPACE = "/home/unibots";
+const WORKSPACE = "/home/rakazo";
 const CONTAINER_NAME = "computer";
 // Names the bot that owns a computer pod. A pod carrying another bot's value is
 // never reused or replaced.
-const BOT_ID_LABEL = "unibots-bot-id";
+const BOT_ID_LABEL = "rakazo-bot-id";
 const HOME_VOLUME = "home";
 const READY_PORT = 6080;
 const DESKTOP_PORT_START = 6100;
@@ -69,7 +69,7 @@ export interface KubernetesSandboxOptions {
   podLabels?: Record<string, string>;
   readyTimeoutMs?: number;
   /**
-   * Claim in the sandbox namespace that holds the Unibots data directory. When
+   * Claim in the sandbox namespace that holds the Rakazo data directory. When
    * set, each Computer mounts only its own `homes/<bot id>` directory at the
    * workspace, so the home persists in place and is never copied in or out.
    * The claim's volume is ReadWriteOnce, so the pod must also be placed with
@@ -426,14 +426,14 @@ export class KubernetesSandboxProvider implements SandboxProvider {
         'mode="$2"',
         'directory=$(dirname -- "$target")',
         'mkdir -p -- "$directory"',
-        'temporary=$(mktemp "$directory/.unibots-write.XXXXXX")',
+        'temporary=$(mktemp "$directory/.rakazo-write.XXXXXX")',
         "trap 'rm -f -- \"$temporary\"' EXIT",
         'cat >"$temporary"',
         'chmod "$mode" -- "$temporary"',
         'mv -f -- "$temporary" "$target"',
         "trap - EXIT",
       ].join("\n"),
-      "unibots-write",
+      "rakazo-write",
       target,
       file.executable ? "700" : "600",
     ];
@@ -478,11 +478,11 @@ export class KubernetesSandboxProvider implements SandboxProvider {
     let stderr = "";
     // Kata can stall large stdout while exec also has stdin attached. Stage the
     // NUL-delimited file list separately so the archive exec only reads stdout.
-    const listPath = `/tmp/unibots-workspace-${randomUUID()}`;
+    const listPath = `/tmp/rakazo-workspace-${randomUUID()}`;
     try {
       const staged = await this.collectExec(
         computer,
-        ["bash", "-c", 'umask 077; cat > "$1"', "unibots-export-list", listPath],
+        ["bash", "-c", 'umask 077; cat > "$1"', "rakazo-export-list", listPath],
         context,
         1024 * 1024,
         Readable.from([list]),
@@ -606,7 +606,7 @@ export class KubernetesSandboxProvider implements SandboxProvider {
         annotations: this.podAnnotations,
         labels: {
           ...this.podLabels,
-          "app.kubernetes.io/name": "unibots-computer",
+          "app.kubernetes.io/name": "rakazo-computer",
           [BOT_ID_LABEL]: botId,
         },
       },
@@ -927,7 +927,7 @@ function commandRequestArgv(request: CommandRequest, timeoutMs: number): string[
     "bash",
     "-c",
     'cd -- "$1" && shift && exec env "$@"',
-    "unibots-exec",
+    "rakazo-exec",
     cwd,
     ...environment,
     ...withTimeout(sandboxCommandArgv(request), timeoutMs),
@@ -959,7 +959,7 @@ function podNameForBot(botId: string): string {
     .replaceAll(/^-+|-+$/g, "")
     .slice(0, 40);
   const hash = createHash("sha256").update(botId).digest("hex").slice(0, 12);
-  return `unibots-${normalized || "bot"}-${hash}`;
+  return `rakazo-${normalized || "bot"}-${hash}`;
 }
 
 /** The data directory holds `homes/<bot id>`; a bot id must name exactly one folder. */

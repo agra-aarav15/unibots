@@ -1,7 +1,7 @@
-import { parseServerHeaders } from "@unibots/contracts";
+import { parseServerHeaders } from "@rakazo/contracts";
 import * as SecureStore from "expo-secure-store";
 
-const SERVER_HEADERS_KEY = "unibots.server_headers";
+const SERVER_HEADERS_KEY = "rakazo.server_headers";
 
 let saved: { apiBase: string; headers: Record<string, string> } | null = null;
 

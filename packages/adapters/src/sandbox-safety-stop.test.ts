@@ -1,5 +1,5 @@
-import type { AgentHomeStore, JobPublisher } from "@unibots/adapter-kit";
-import type { PrismaClient, ThreadEvents } from "@unibots/db";
+import type { AgentHomeStore, JobPublisher } from "@rakazo/adapter-kit";
+import type { PrismaClient, ThreadEvents } from "@rakazo/db";
 import { DesktopSandbox, SandboxNotFoundError } from "novita-sandbox";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { provisionComputer } from "./computer-lifecycle.js";

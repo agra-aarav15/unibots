@@ -3,9 +3,9 @@ import {
   contentKeyProviderFromEnv,
   createAgentHomeStore,
   ObjectAgentHomeStore,
-} from "@unibots/adapters";
-import { loadRootEnv } from "@unibots/core/node/load-root-env";
-import { createDb } from "@unibots/db";
+} from "@rakazo/adapters";
+import { loadRootEnv } from "@rakazo/core/node/load-root-env";
+import { createDb } from "@rakazo/db";
 
 loadRootEnv();
 
@@ -36,7 +36,7 @@ if (!parsed) {
 if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required");
 
 const { prisma, pool } = createDb(process.env.DATABASE_URL, {
-  applicationName: "unibots-home-storage",
+  applicationName: "rakazo-home-storage",
   keyProvider: contentKeyProviderFromEnv(),
 });
 const write = (line: string) => process.stdout.write(`${line}\n`);

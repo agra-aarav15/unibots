@@ -6,9 +6,9 @@ import type {
   Routine,
   RoutineWatch,
   RoutineWatchInput,
-} from "@unibots/contracts";
-import { ROUTINE_WATCH_DEFAULT_MINUTES, ROUTINE_WATCH_MIN_MINUTES } from "@unibots/contracts";
-import type { CronFreq, CronLabels, CronPreset } from "@unibots/core";
+} from "@rakazo/contracts";
+import { ROUTINE_WATCH_DEFAULT_MINUTES, ROUTINE_WATCH_MIN_MINUTES } from "@rakazo/contracts";
+import type { CronFreq, CronLabels, CronPreset } from "@rakazo/core";
 import {
   credentialForModel,
   cronFromPreset,
@@ -17,7 +17,7 @@ import {
   formatCron,
   isOneShotRoutineCrons,
   presetFromCron,
-} from "@unibots/core";
+} from "@rakazo/core";
 import {
   Button,
   DropdownMenu,
@@ -35,7 +35,7 @@ import {
   PopoverTrigger,
   Switch,
   Textarea,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import {
   ChevronLeft,
   Clock,

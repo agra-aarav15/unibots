@@ -7,14 +7,14 @@ import type {
   ModelRoleSettings as ModelRoleSettingsValue,
   SettingsScope,
   ThinkingLevel,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   canonicalPiProviderId,
   connectedBackupOptions,
   MAX_MODEL_BACKUPS,
   modelRoleChoiceKey,
-} from "@unibots/contracts";
-import { createModelRoleSettings, modelRoleListPatch } from "@unibots/core";
+} from "@rakazo/contracts";
+import { createModelRoleSettings, modelRoleListPatch } from "@rakazo/core";
 import {
   Button,
   DropdownMenu,
@@ -28,7 +28,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   Spinner,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import { useQueryClient } from "@tanstack/react-query";
 import { GripVertical, MoreHorizontal, Plus } from "lucide-react";
 import type { ReactNode } from "react";

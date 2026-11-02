@@ -1,5 +1,5 @@
-import type { Routine } from "@unibots/contracts";
-import { formatCron } from "@unibots/core";
+import type { Routine } from "@rakazo/contracts";
+import { formatCron } from "@rakazo/core";
 import { cronLabels } from "./cron";
 import { t } from "./i18n";
 

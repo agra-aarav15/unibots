@@ -1,7 +1,7 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { ThinkingLevel } from "@unibots/contracts";
-import { isOllamaCloudBaseUrl } from "@unibots/contracts";
-import { toggleEnabledModelId } from "@unibots/core";
+import type { ThinkingLevel } from "@rakazo/contracts";
+import { isOllamaCloudBaseUrl } from "@rakazo/contracts";
+import { toggleEnabledModelId } from "@rakazo/core";
 import {
   Button,
   Checkbox,
@@ -11,7 +11,7 @@ import {
   ModelThinkingOptions,
   NativeSelect,
   NativeSelectOption,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import { ModelPreflightFeedback } from "../../components/ModelConnectionPreflightNotice";
 import { ModelHeadersEditor } from "../../components/ModelHeadersEditor";
 
@@ -127,7 +127,7 @@ export function CompatibleModelFields({
           summary={<Trans>Setup help</Trans>}
         >
           <p className="mt-1">
-            {t`Paste the OpenAI-compatible address from your server. Unibots adds /v1 if needed.`}
+            {t`Paste the OpenAI-compatible address from your server. Rakazo adds /v1 if needed.`}
           </p>
         </Disclosure>
       ) : null}

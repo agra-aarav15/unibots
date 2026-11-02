@@ -1,6 +1,6 @@
-import type { BackgroundJob, JobPublisher } from "@unibots/adapter-kit";
-import { stuckWorkStatusMessages } from "@unibots/core";
-import type { Pool, PrismaClient, ThreadEvents } from "@unibots/db";
+import type { BackgroundJob, JobPublisher } from "@rakazo/adapter-kit";
+import { stuckWorkStatusMessages } from "@rakazo/core";
+import type { Pool, PrismaClient, ThreadEvents } from "@rakazo/db";
 import { describe, expect, it, vi } from "vitest";
 import { returnBotMessageOutcome } from "./bot-messages.js";
 import type { ReconciliationLeadership } from "./job-reconciler.js";

@@ -1,5 +1,5 @@
-import type { AccountExportManifest, AccountExportRecord } from "@unibots/contracts";
-import { accountExportPaths } from "@unibots/contracts";
+import type { AccountExportManifest, AccountExportRecord } from "@rakazo/contracts";
+import { accountExportPaths } from "@rakazo/contracts";
 import { Zip, ZipDeflate } from "fflate";
 
 export type ArchiveFile = [name: string, content: string | Uint8Array];
@@ -60,7 +60,7 @@ export function exportFiles(
 
 export function manifestFor(spaces: Array<{ id: string; name: string }>): AccountExportManifest {
   return {
-    format: "unibots-account-export",
+    format: "rakazo-account-export",
     version: 1,
     exportedAt: "2026-10-01T00:00:00.000Z",
     user: { name: "Ada", email: "ada@example.com", timezone: "UTC" },

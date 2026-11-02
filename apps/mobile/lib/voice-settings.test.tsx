@@ -26,7 +26,7 @@ vi.mock("./api", () => ({
   selectedSpaceId: () => "space-fixture",
   captureApiRequestContext: async (spaceId?: string) => ({
     apiBase: "https://app.example.test",
-    headers: spaceId ? { "x-unibots-space-id": spaceId } : {},
+    headers: spaceId ? { "x-rakazo-space-id": spaceId } : {},
   }),
 }));
 vi.mock("./session", () => ({ currentSessionGeneration: () => 1 }));
@@ -326,7 +326,7 @@ it("edits a Space's override in that Space, leaving this device's voice and soun
   const spaceContext = {
     requestContext: {
       apiBase: "https://app.example.test",
-      headers: { "x-unibots-space-id": "space-other" },
+      headers: { "x-rakazo-space-id": "space-other" },
     },
   };
   // Reads also carry an abort signal.

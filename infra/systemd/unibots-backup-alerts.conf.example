@@ -1,9 +1,0 @@
-# Optional drop-in: /etc/systemd/system/unibots-backup.service.d/alerts.conf
-[Unit]
-OnFailure=unibots-backup-alert.service
-
-[Service]
-ExecStartPost=-/usr/local/sbin/unibots-host-alert backup-failure ""
-ReadWritePaths=/var/lib/unibots/alerts
-StateDirectory=unibots/alerts
-StateDirectoryMode=0700

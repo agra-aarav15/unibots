@@ -3,7 +3,7 @@ import type {
   PluginSubmission,
   PluginSubmissionReview,
   PluginSubmissionStatus,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import {
   Button,
   Dialog,
@@ -18,7 +18,7 @@ import {
   TabsTrigger,
   Textarea,
   toast,
-} from "@unibots/ui-web";
+} from "@rakazo/ui-web";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowUpRight } from "lucide-react";
 import type { FormEvent } from "react";

@@ -1,6 +1,6 @@
-import { Dialog, DialogContent } from "@unibots/ui-web/components/ui/dialog";
-import { useIsMobile } from "@unibots/ui-web/hooks/use-mobile";
-import { cn } from "@unibots/ui-web/lib/utils";
+import { Dialog, DialogContent } from "@rakazo/ui-web/components/ui/dialog";
+import { useIsMobile } from "@rakazo/ui-web/hooks/use-mobile";
+import { cn } from "@rakazo/ui-web/lib/utils";
 import type { ReactNode } from "react";
 import { useRef } from "react";
 

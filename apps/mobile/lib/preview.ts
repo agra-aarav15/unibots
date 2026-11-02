@@ -1,4 +1,4 @@
-import { plainTextFromMarkdown } from "@unibots/core";
+import { plainTextFromMarkdown } from "@rakazo/core";
 
 const MAX_PREVIEW_WORDS = 12;
 

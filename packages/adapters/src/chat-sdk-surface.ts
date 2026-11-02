@@ -14,8 +14,8 @@ import type {
   MessagingSendRequest,
   MessagingSendResult,
   MessagingSurface,
-} from "@unibots/adapter-kit";
-import { getLogger } from "@unibots/logging";
+} from "@rakazo/adapter-kit";
+import { getLogger } from "@rakazo/logging";
 import type { Adapter, Message, PostableMarkdown, Thread } from "chat";
 import { Chat, isLinkNode, parseMarkdown, text, toPlainText, walkAst } from "chat";
 import { getLarkTextParts } from "./lark/text-parts.js";
@@ -49,7 +49,7 @@ export interface MessagingPlatform {
   /**
    * The adapter's own thread-id prefix when it differs from `provider`, so
    * one adapter type can mount more than once (one Telegram bot per space:
-   * "telegram-work"). Unibots only ever sees `provider`-prefixed thread ids;
+   * "telegram-work"). Rakazo only ever sees `provider`-prefixed thread ids;
    * the adapter keeps its native ones. Defaults to `provider`.
    */
   adapterName?: string;
@@ -114,7 +114,7 @@ export class ChatSdkMessagingSurface implements MessagingSurface {
       }
       const adapterName = platform.adapterName ?? platform.provider;
       const chat = new Chat({
-        userName: options.userName ?? "unibots",
+        userName: options.userName ?? "rakazo",
         adapters: { [adapterName]: platform.adapter },
         state: createMemoryState(),
         // The SDK default ("drop") takes a per-conversation lock and discards
@@ -569,7 +569,7 @@ export function providerOfThreadId(threadId: string): string {
   return threadId.split(":", 1)[0]?.split("~", 1)[0] ?? "";
 }
 
-/** Adapter-native thread id ("telegram:42") → Unibots thread id ("telegram-work:42"). */
+/** Adapter-native thread id ("telegram:42") → Rakazo thread id ("telegram-work:42"). */
 function toProviderThreadId(mounted: MountedPlatform, threadId: string): string {
   const { provider } = mounted.platform;
   if (mounted.adapterName === provider) return threadId;
@@ -577,7 +577,7 @@ function toProviderThreadId(mounted: MountedPlatform, threadId: string): string 
   return threadId.startsWith(prefix) ? `${provider}:${threadId.slice(prefix.length)}` : threadId;
 }
 
-/** Unibots thread id → the id the platform's adapter and Chat instance expect. */
+/** Rakazo thread id → the id the platform's adapter and Chat instance expect. */
 function toAdapterThreadId(mounted: MountedPlatform, threadId: string): string {
   const { provider } = mounted.platform;
   if (mounted.adapterName === provider) return threadId;

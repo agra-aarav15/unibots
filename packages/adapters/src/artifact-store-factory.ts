@@ -6,14 +6,14 @@ import type {
   ArtifactPut,
   ArtifactStore,
   ObjectStorage,
-} from "@unibots/adapter-kit";
-import type { PrismaClient } from "@unibots/db";
+} from "@rakazo/adapter-kit";
+import type { PrismaClient } from "@rakazo/db";
 import {
   ContentDecryptionError,
   contentEncryptionOf,
   openArtifact,
   sealArtifact,
-} from "@unibots/db";
+} from "@rakazo/db";
 import type { ArtifactKeys } from "./artifacts.js";
 import { LocalArtifactStore } from "./artifacts.js";
 import { objectStorageConfigFromEnv, S3ObjectStorage } from "./s3-object-storage.js";

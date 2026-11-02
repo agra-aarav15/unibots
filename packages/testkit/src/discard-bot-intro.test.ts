@@ -48,7 +48,7 @@ describe("discardBotIntroRun", () => {
       expect.objectContaining({
         headers: expect.objectContaining({
           cookie: "session",
-          "x-unibots-space-id": "space-support",
+          "x-rakazo-space-id": "space-support",
         }),
         body: JSON.stringify({ json: { botId: "bot-1" } }),
       }),

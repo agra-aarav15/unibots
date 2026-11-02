@@ -1,10 +1,10 @@
-import type { ClientOperation, MonitoringConfig } from "@unibots/logging/monitoring";
+import type { ClientOperation, MonitoringConfig } from "@rakazo/logging/monitoring";
 import {
   createClientErrorReporter,
   isMonitoringUserId,
   nativeMonitoringDsn,
   sanitizeMonitoringEvent,
-} from "@unibots/logging/monitoring";
+} from "@rakazo/logging/monitoring";
 import type * as ElectronSentry from "@sentry/electron/main";
 import { configureNativeCrashReporting, disableNativeCrashReporting } from "./native-crashes.js";
 
@@ -107,7 +107,7 @@ export function configureDesktopMonitoring(
       if (!sdk) {
         Sentry.init({
           dsn,
-          release: `unibots-desktop@${options.version}`,
+          release: `rakazo-desktop@${options.version}`,
           ipcMode: Sentry.IPCMode.Classic,
           getSessions: () => [],
           defaultIntegrations: false,

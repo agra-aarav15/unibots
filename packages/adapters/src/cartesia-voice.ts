@@ -7,7 +7,7 @@ import type {
   VoiceProvider,
   VoiceSynthesizeRequest,
   VoiceVerifyResult,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   readVoiceAudio,
   readVoiceJson,

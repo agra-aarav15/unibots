@@ -1,5 +1,5 @@
-import type { BillingProvider } from "@unibots/adapter-kit";
-import type { Actor } from "@unibots/contracts";
+import type { BillingProvider } from "@rakazo/adapter-kit";
+import type { Actor } from "@rakazo/contracts";
 import { Hono } from "hono";
 import { describe, expect, it, vi } from "vitest";
 import type { BillingService } from "./billing.js";
@@ -13,7 +13,7 @@ import {
 const actor: Actor = {
   userId: "user-1",
   spaceId: "space-1",
-  email: "user@unibots.test",
+  email: "user@rakazo.test",
   isDeploymentOwner: false,
 };
 
@@ -96,7 +96,7 @@ describe("billing checkout return", () => {
     const { app, syncForActor } = mount(() => null, { actor: null });
     const res = await app.request(`${BILLING_RETURN_PATH}?client=mobile`);
     expect(res.status).toBe(303);
-    expect(res.headers.get("location")).toBe("unibots://billing");
+    expect(res.headers.get("location")).toBe("rakazo://billing");
     expect(syncForActor).not.toHaveBeenCalled();
   });
 

@@ -1,4 +1,4 @@
-import { displayName } from "@unibots/core";
+import { displayName } from "@rakazo/core";
 export type VoiceCallStatus = { ready: boolean; transcribe: boolean };
 
 export type VoiceCallPlan =

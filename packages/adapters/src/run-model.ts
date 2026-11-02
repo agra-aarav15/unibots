@@ -4,14 +4,14 @@ import type {
   AgentRuntime,
   ModelCredentialFailedState,
   ModelCredentialRetireReason,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   CLOUDFLARE_AI_GATEWAY_CONFIG_MESSAGE,
   CLOUDFLARE_WORKERS_AI_PROVIDER_ID,
   cloudflareModelConfigMessage,
   OPENAI_COMPATIBLE_PROVIDER_ID,
-} from "@unibots/contracts";
-import { MISSING_MODEL_RUN_ERROR } from "@unibots/core";
+} from "@rakazo/contracts";
+import { MISSING_MODEL_RUN_ERROR } from "@rakazo/core";
 import { cloudflareProviderEnv } from "./cloudflare-ai-gateway.js";
 import { resolveDeploymentModel } from "./deployment-model.js";
 import type { ExecutorDeps } from "./executor-deps.js";
@@ -50,12 +50,7 @@ import {
 } from "./pi-oauth.js";
 
 export function runtimeFallbackModel(runtime: AgentRuntime) {
-  const described = runtime.describe();
-  if (described.capabilities.scripted) return { provider: "scripted", id: "scripted" };
-  // Hermes owns the model loop and its provider key, so a run records the Hermes
-  // model instead of demanding a connection the runtime never calls.
-  if (described.id === "hermes") return { provider: "hermes", id: "hermes" };
-  return null;
+  return runtime.describe().capabilities.scripted ? { provider: "scripted", id: "scripted" } : null;
 }
 
 export function isTerminalModelSetupError(error: unknown): boolean {
@@ -172,7 +167,6 @@ export async function resolveModelKey(...args: Parameters<typeof resolveModelKey
     provider === LOCAL_PROVIDER_ID ||
     (provider === OPENAI_COMPATIBLE_PROVIDER_ID && Boolean(material.baseUrl)) ||
     (provider === "scripted" && deps.runtime?.describe().capabilities.scripted) ||
-    (provider === "hermes" && deps.runtime?.describe().id === "hermes") ||
     (!credential && deployment.provider === provider && deployment.hostCredentials);
   // Match Pi's OpenRouter fallback only when no explicit key overrides it.
   const runtimeKey =

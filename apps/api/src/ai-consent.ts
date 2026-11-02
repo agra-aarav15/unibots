@@ -7,15 +7,15 @@ import {
   resolveMemberMainModel,
   selectConfiguredModel,
   toStringRecord,
-} from "@unibots/adapters";
+} from "@rakazo/adapters";
 import type {
   Actor,
   AiConsentQuery,
   AiConsentStatus,
   AiRecipient,
   SettingsScope,
-} from "@unibots/contracts";
-import { AI_DISCLOSURE_VERSION, AI_PRIVACY_URL } from "@unibots/contracts";
+} from "@rakazo/contracts";
+import { AI_DISCLOSURE_VERSION, AI_PRIVACY_URL } from "@rakazo/contracts";
 import {
   findDefaultVoiceCredential,
   findModelCredential,
@@ -24,7 +24,7 @@ import {
   listVoicePreferences,
   modelRoleTarget,
   voicePreferenceTarget,
-} from "@unibots/db";
+} from "@rakazo/db";
 import type { RouterDeps } from "./router.js";
 import { resolveThreadTarget } from "./thread-target.js";
 import { voiceCredentialServer } from "./voice.js";

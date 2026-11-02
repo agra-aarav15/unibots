@@ -1,10 +1,10 @@
 import { MenuView } from "@expo/ui/community/menu";
-import type { BillingStatus } from "@unibots/contracts";
+import type { BillingStatus } from "@rakazo/contracts";
 import {
   DEFAULT_MONTHLY_CREDIT_AMOUNT,
   MODEL_CREDIT_AMOUNTS,
   ModelCreditAmountSchema,
-} from "@unibots/contracts";
+} from "@rakazo/contracts";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { Alert, AppState, ScrollView, Share, StyleSheet } from "react-native";
@@ -97,7 +97,7 @@ export default function BillingScreen() {
               : plan === "byok"
                 ? t("Your subscription or API key")
                 : plan === "credits"
-                  ? t("Unibots credits")
+                  ? t("Rakazo credits")
                   : t("None")
           }
         />
@@ -207,7 +207,7 @@ export default function BillingScreen() {
           ) : null}
           {status.canManage && status.funding === "byok" && (status.balanceUsd ?? 0) > 0 ? (
             <SettingsRow
-              title={t("Use Unibots credits")}
+              title={t("Use Rakazo credits")}
               disabled={pending || !status.creditPurchasesEnabled}
               onPress={() =>
                 void action(async () => {

@@ -1,4 +1,4 @@
-import type { ProductEvent } from "@unibots/contracts";
+import type { ProductEvent } from "@rakazo/contracts";
 import { describe, expect, it } from "vitest";
 import {
   initialLogoAvatarSignals,

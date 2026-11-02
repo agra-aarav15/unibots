@@ -7,12 +7,12 @@ import type {
   BillingProvider,
   BillingSubscriptionSnapshot,
   BillingSubscriptionStatus,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   BillingCheckoutCompletedError,
   BillingCustomerNotFoundError,
   BillingNoMonthlyCreditsError,
-} from "@unibots/adapter-kit";
+} from "@rakazo/adapter-kit";
 import {
   holdsBillingSubscription,
   parseStripeWebhook,

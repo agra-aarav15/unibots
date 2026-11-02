@@ -3,8 +3,8 @@ import type {
   ActionApprovalRule,
   ApprovalRulePreview as Preview,
   SettingsScope,
-} from "@unibots/contracts";
-import { Button, Input, ToggleGroup, ToggleGroupItem } from "@unibots/ui-web";
+} from "@rakazo/contracts";
+import { Button, Input, ToggleGroup, ToggleGroupItem } from "@rakazo/ui-web";
 import { useState } from "react";
 import { useSpaceRpc } from "../lib/space-rpc";
 import { errorText } from "../lib/user-error";
