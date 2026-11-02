@@ -2,7 +2,9 @@
 
 ## Reporting vulnerabilities
 
-Email **security@rakazo.com** only. Do not open public GitHub issues for security bugs.
+Use GitHub's private vulnerability reporting on this repository:
+<https://github.com/agra-aarav15/unibots/security/advisories/new>. Do not open a public GitHub
+issue for security bugs.
 
 Please include:
 
@@ -14,8 +16,7 @@ We will acknowledge your report and work on a fix. Please do not file a public i
 
 ## Other contact
 
-- General support: **support@rakazo.com**
-- Maintainer: **elie@rakazo.com**
+- General support and questions: <https://github.com/agra-aarav15/unibots/issues>
 
 ## Scope
 

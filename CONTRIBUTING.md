@@ -91,6 +91,5 @@ capability config, fixtures, logs, or snapshots; use the encrypted secret store 
 
 | Address | Use for |
 | --- | --- |
-| [security@rakazo.com](mailto:security@rakazo.com) | Vulnerabilities only — see [SECURITY.md](SECURITY.md) |
-| [support@rakazo.com](mailto:support@rakazo.com) | User and support questions |
-| [elie@rakazo.com](mailto:elie@rakazo.com) | Maintainer |
+| [Private vulnerability report](https://github.com/agra-aarav15/unibots/security/advisories/new) | Vulnerabilities only — see [SECURITY.md](SECURITY.md) |
+| [Issues](https://github.com/agra-aarav15/unibots/issues) | User and support questions |
