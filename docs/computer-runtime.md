@@ -7,7 +7,7 @@ chat/API -> one Pi agent session -> Unibots computer tools -> SandboxProvider ->
                                                    |-> Docker
                                                    |-> desktop/fake
 
-SandboxProvider workspace <-> AgentHomeStore <-> Rakazo-owned DATA_DIR
+SandboxProvider workspace <-> AgentHomeStore <-> Unibots-owned DATA_DIR
 ```
 
 Pi runs in the Unibots API/worker process. It is not installed in, or executed by, E2B. The built-in tools are ordinary Pi tools, not Claude- or MCP-specific tools, so any model exposed through Pi can call them. Screen operation still requires a model that can accept image tool results and reason about screenshots.
@@ -89,9 +89,9 @@ Boat stop archives the machine and resume reconnects the same opaque sandbox id.
 
 ## Persistence
 
-The portable computer workspace is the durable boundary. E2B uses `/home/user/rakazo-home`; Docker and local providers expose the equivalent home. Browser profiles are rooted under `.browser-profiles` in that workspace on E2B. Unibots checkpoints transferred workspaces into `AgentHomeStore` at run completion or failure, before explicit stop, and before idle suspension. Docker mounts the Rakazo-owned home directly and only advances its revision marker at those boundaries. New or replacement machines import the latest stored workspace before use.
+The portable computer workspace is the durable boundary. E2B uses `/home/user/rakazo-home`; Docker and local providers expose the equivalent home. Browser profiles are rooted under `.browser-profiles` in that workspace on E2B. Unibots checkpoints transferred workspaces into `AgentHomeStore` at run completion or failure, before explicit stop, and before idle suspension. Docker mounts the Unibots-owned home directly and only advances its revision marker at those boundaries. New or replacement machines import the latest stored workspace before use.
 
-`LocalAgentHomeStore` keeps the latest workspace under `DATA_DIR/homes/<computer-home-key>` and checkpoint metadata separately under `DATA_DIR/home-revisions`. Replacements are staged before the current copy is swapped, and checkpoints are serialized per computer. This implementation is latest-only rather than an immutable revision archive. Deployments using it must put `DATA_DIR` on a Rakazo-owned persistent volume, encrypt that volume at rest, and include it in off-host backups.
+`LocalAgentHomeStore` keeps the latest workspace under `DATA_DIR/homes/<computer-home-key>` and checkpoint metadata separately under `DATA_DIR/home-revisions`. Replacements are staged before the current copy is swapped, and checkpoints are serialized per computer. This implementation is latest-only rather than an immutable revision archive. Deployments using it must put `DATA_DIR` on a Unibots-owned persistent volume, encrypt that volume at rest, and include it in off-host backups.
 
 With `OBJECT_STORAGE_BUCKET` set, `ObjectAgentHomeStore` makes an S3-compatible bucket the source of truth and `DATA_DIR/homes` a cache, without changing agent tools or sandbox providers. Each checkpoint packs the home into one archive of directories and regular files, seals it with the home's data key (64 KiB AES-256-GCM segments bound to the home's storage id and revision), uploads it as `homes/<storage id>/<revision>`, advances the revision on the computer row, and deletes the previous object. Reads, restores and Docker boots first bring the cache up to the stored revision. The data key is wrapped by the space's content key and stored on the computer row, so deleting the computer makes its objects unreadable; the worker's reconciler then deletes objects no computer owns. Restores accept only relative paths without `.` or `..` segments, create only directories and regular files, and enforce size and entry limits. See [self-hosting](./self-host-storage.md#bot-homes-in-object-storage).
 

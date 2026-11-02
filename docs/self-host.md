@@ -18,7 +18,7 @@ Pull Postgres and `ghcr.io/agra-aarav15/unibots/app` into any empty folder. No c
 Requires Docker Engine 26+ (API 1.45+ for bot home volume subpaths), the Compose plugin, curl, and OpenSSL.
 
 ```bash
-mkdir -p rakazo && cd rakazo &&
+mkdir -p unibots && cd unibots &&
 curl -fsSLO https://raw.githubusercontent.com/agra-aarav15/unibots/main/infra/compose/install-images.sh &&
 bash install-images.sh
 ```

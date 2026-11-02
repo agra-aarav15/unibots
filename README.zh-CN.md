@@ -76,7 +76,7 @@ https://github.com/user-attachments/assets/dccdeddb-2134-4a56-8eed-b2e591736b1c
 需要 Docker Engine、Compose 插件、curl 和 OpenSSL。无需克隆仓库或安装 Node.js。
 
 ```bash
-mkdir -p rakazo && cd rakazo &&
+mkdir -p unibots && cd unibots &&
 curl -fsSLO https://raw.githubusercontent.com/agra-aarav15/unibots/main/infra/compose/install-images.sh &&
 bash install-images.sh
 ```
@@ -118,7 +118,7 @@ bash install-images.sh
 
 ```bash
 git clone https://github.com/agra-aarav15/unibots.git
-cd rakazo
+cd unibots
 cp .env.example .env
 ```
 
@@ -217,8 +217,8 @@ pnpm --filter @rakazo/desktop dev
 `dlopen(): error loading libfuse.so.2`。请安装 FUSE 2 库（Fedora 上为 `fuse-libs`，Ubuntu 24.04 上为 `libfuse2t64`，较早的 Ubuntu 和 Debian 上为 `libfuse2`），或者不借助 FUSE 运行 AppImage：
 
 ```bash
-chmod +x Rakazo-*.AppImage
-./Rakazo-*.AppImage --appimage-extract-and-run
+chmod +x Unibots-*.AppImage
+./Unibots-*.AppImage --appimage-extract-and-run
 ```
 
 使用应用菜单中的 **Change Unibots Server…**（更换 Unibots 服务器）重新选择服务器。

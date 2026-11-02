@@ -218,9 +218,9 @@ built for that domain (the app's associated domain comes from `EXPO_PUBLIC_API_U
 time). To let a build use this server's passkeys, set:
 
 ```bash
-# iOS app (com.rakazo.app): <Apple Team ID>.<bundle id>, comma-separated.
+# iOS app (com.unibots.app): <Apple Team ID>.<bundle id>, comma-separated.
 # Served as /.well-known/apple-app-site-association.
-PASSKEY_APPLE_APP_IDS=ABCDE12345.com.rakazo.app,ABCDE12345.dev.rakazo.desktop
+PASSKEY_APPLE_APP_IDS=ABCDE12345.com.unibots.app,ABCDE12345.dev.unibots.desktop
 # Android: SHA-256 fingerprints of the app signing certificates, comma-separated.
 # Served as /.well-known/assetlinks.json and accepted as passkey origins.
 PASSKEY_ANDROID_CERT_SHA256=AA:BB:...:FF

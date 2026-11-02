@@ -1,6 +1,6 @@
 # Local-first
 
-Rakazo runs on your own computer or your own server. No hosted service is involved: the desktop
+Unibots runs on your own computer or your own server. No hosted service is involved: the desktop
 app either runs the whole stack locally in Docker or connects to an instance you run, and the
 phone connects to one of those two. This page lists where data lives, what leaves the machine,
 and how to back up, recover, and turn things off.
@@ -9,9 +9,9 @@ and how to back up, recover, and turn things off.
 
 The desktop app keeps the Compose project in its user data directory:
 
-- Windows: `%APPDATA%\Rakazo\stack`
-- macOS: `~/Library/Application Support/Rakazo/stack`
-- Linux: `~/.config/Rakazo/stack`
+- Windows: `%APPDATA%\Unibots\stack`
+- macOS: `~/Library/Application Support/Unibots/stack`
+- Linux: `~/.config/Unibots/stack`
 
 That folder holds `.env` (generated secrets), `docker-compose.images.yml`, the LAN overlay, and
 the private stack token. It does not hold your data. The data is in Docker volumes named after
@@ -29,7 +29,7 @@ project. See [self-host storage](./self-host-storage.md) for what is in Postgres
 ## What leaves the machine
 
 - The model provider you configure, for the bot's replies and for memory curation.
-- The image registry, when the stack pulls Rakazo images the first time.
+- The image registry, when the stack pulls Unibots images the first time.
 - Any integration you set up yourself (messaging, voice, object storage).
 - Update checks only when you ask for one, or when you set `RAKAZO_AUTO_UPDATE=on`.
 
