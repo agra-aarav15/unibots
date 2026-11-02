@@ -87,7 +87,7 @@ export const LOGO_AVATAR_LIGHTING = {
     cx: 0,
     cy: 0,
     r: 1.1,
-    gradientTransform: "matrix(35.3494 0 0 45.3948 50.0193 49.4219)",
+    gradientTransform: "matrix(37.8239 0 0 48.5724 50.0193 49.4219)",
   },
   rimLeftTrim: {
     gradientUnits: "userSpaceOnUse",
@@ -101,14 +101,14 @@ export const LOGO_AVATAR_LIGHTING = {
     cx: 0,
     cy: 0,
     r: 1.1,
-    gradientTransform: "matrix(66.2501 0 0 63.0879 -50 30.676)",
+    gradientTransform: "matrix(66.2501 0 0 63.0879 -52.5 30.676)",
   },
   rimRight: {
     gradientUnits: "userSpaceOnUse",
     cx: 0,
     cy: 0,
     r: 1.1,
-    gradientTransform: "matrix(66.2472 0 0 63.3467 150 30.5562)",
+    gradientTransform: "matrix(66.2472 0 0 63.3467 152.5 30.5562)",
   },
   handLight: { leftPeak: 0.15, rightPeak: 0.24, radius: "62%" },
 } as const;
