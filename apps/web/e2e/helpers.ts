@@ -111,10 +111,13 @@ export async function openBotPanelTab(page: Page, name: "Computer" | "Routines" 
   const pill = page.getByTestId("bot-settings-trigger");
   const tab = page.getByTestId("bot-settings").getByRole("tab", { name, exact: true });
   if (!(await tab.isVisible())) {
-    // The pill closes whatever else the sidebar shows, such as a restored routine editor.
-    if ((await pill.getAttribute("aria-expanded")) === "true") await pill.click();
-    await expect(pill).toHaveAttribute("aria-expanded", "false");
-    await pill.click();
+    // The saved panel restores after the first paint, so retry the whole open rather than
+    // reading aria-expanded once and then clicking when it flips underneath us. A restored
+    // panel may also be showing another tab, which is why the tab is the success signal.
+    await expect(async () => {
+      if (!(await tab.isVisible())) await pill.click();
+      await expect(tab).toBeVisible({ timeout: 2_000 });
+    }).toPass({ timeout: 15_000 });
   }
   await tab.click();
   await expect(tab).toHaveAttribute("aria-selected", "true");
