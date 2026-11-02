@@ -9,8 +9,8 @@ const starsLabel = await githubStarsLabel();
 ---
 
 <BaseLayout
-  title="Terms · Rakazo"
-  description="The terms for using Rakazo, including paid plans, cancellation, and refunds."
+  title="Terms · Unibots"
+  description="The terms for using Unibots."
 >
   <div class="container">
     <Header starsLabel={starsLabel} />
@@ -18,20 +18,21 @@ const starsLabel = await githubStarsLabel();
       <h1>Terms of Service</h1>
       <p><strong>Last updated: October 27, 2026</strong></p>
       <p>
-        These terms are an agreement between you and Inbox Zero Inc. (“Inbox Zero,” “we,” or “us”) for
-        your use of the Rakazo service that we host, the Rakazo web, desktop, and mobile apps, and
-        rakazo.com (together, the “Service”). By using the Service, you agree to these terms. If you
-        use the Service on behalf of an organization, you confirm that you can bind that organization
-        to these terms, and “you” includes it.
+        These terms cover your use of the Unibots web, desktop, and mobile apps (together, the
+        “Service”). Unibots is open-source software; the operator of each deployment is responsible
+        for how it is run and for the data it holds.
+        By using the Service, you agree to these terms. If you use the Service on behalf of an
+        organization, you confirm that you can bind that organization to these terms, and “you”
+        includes it.
       </p>
 
       <h2>Open-source software</h2>
       <p>
-        The Rakazo source code is available under the{" "}
+        The Unibots source code is available under the{" "}
         <a href={`${GITHUB_URL}/blob/main/LICENSE`}>Apache License 2.0</a>. That license, not these
-        terms, governs your use of the code. It does not grant rights to the Rakazo name or logo; do
+        terms, governs your use of the code. It does not grant rights to the Unibots name or logo; do
         not use them in a way that suggests we operate or endorse something we do not. A third party
-        that operates a self-hosted Rakazo deployment is responsible for that deployment and its own
+        that operates a self-hosted Unibots deployment is responsible for that deployment and its own
         terms.
       </p>
 
@@ -69,7 +70,7 @@ const starsLabel = await githubStarsLabel();
         </li>
         <li>Violate the terms of the model providers or connected apps you use through the Service.</li>
         <li>
-          Create accounts by automated means or to evade limits, or resell or provide the hosted Service
+          Create accounts by automated means or to evade limits, or resell or provide the Service
           to others without our written permission.
         </li>
       </ul>
@@ -77,7 +78,7 @@ const starsLabel = await githubStarsLabel();
       <h2>Your content</h2>
       <p>
         You keep ownership of the content you provide and the output your bots produce, and you are
-        responsible for having the rights to provide it. You give us permission to host, process, and
+        responsible for having the rights to provide it. You give us permission to process and
         transmit that content only as needed to provide the Service, as described in our{" "}
         <a href="/privacy/">privacy policy</a>. We may use aggregated or de-identified
         usage data to operate and improve the Service. If you send us feedback, we may use it without
@@ -92,66 +93,20 @@ const starsLabel = await githubStarsLabel();
         incur on your own API keys.
       </p>
 
-      <h2>Paid plans and billing</h2>
-      <p>
-        Some features require a paid plan. Prices are shown before you subscribe. Subscriptions renew
-        automatically at the end of each billing period until you cancel, and we charge the payment
-        method on file, which is processed by Stripe. Prices exclude taxes unless stated otherwise.
-        If your plan starts with a free trial, we collect a payment method at signup and charge it
-        when the trial ends unless you cancel before then. Cancelling during the trial ends it, and you
-        are not charged.
-        Plans are subject to the <a href="#fair-use">fair use</a> limits below. If a payment fails, we may pause paid features until it
-        succeeds. If you dispute a charge with your bank instead of contacting us, we may suspend the
-        account while the dispute is open. We will notify you before a
-        price change takes effect on your next renewal, and you can cancel before it does.
-      </p>
-
-      <h2 id="fair-use">Fair use</h2>
-      <p>
-        Hosted plans include up to 100 computer-hours a month and up to 5 computers running at once
-        per account, which is more than enough for most people. A computer counts toward those hours
-        only while it is running. Computers sleep after a few minutes without activity and run for up
-        to about two hours each time they wake, so they are not meant to stay on continuously. Each
-        computer currently has 4 vCPUs, 8 GB of memory, and 50 GB of disk. Files are saved when a
-        computer sleeps, up to 5 GB per computer, and kept until you delete the bot or your account.
-        Rebuildable caches and dependencies are not kept.
-      </p>
-      <p>
-        If an account goes beyond these limits or places an unreasonable load on the Service, we may
-        slow or pause its computers and will contact you before taking further action. We do not
-        charge for computer use beyond your plan. These limits do not apply to self-hosted Rakazo.
-      </p>
-
-      <h2>Cancellation and refunds</h2>
-      <p>
-        You can cancel at any time from your account’s billing settings or by emailing{" "}
-        <a href="mailto:hello@rakazo.com">hello@rakazo.com</a>. Cancellation stops future renewals;
-        you keep access until the end of the period you paid for. Payments are non-refundable and
-        partial periods are not prorated, except where required by law. If you were charged in error,
-        email us within 30 days and we will refund the charge.
-      </p>
-      <p>
-        If you are a consumer in the European Union or the United Kingdom, you can withdraw from a new
-        subscription within 14 days of buying it by telling us, for example by email. Because you ask
-        the Service to start immediately, we will refund your payment less an amount proportionate to
-        the Service provided before you withdrew.
-      </p>
-
       <h2>Changes to the Service</h2>
       <p>
         We may add, change, or remove features. Features marked as beta or preview may be incomplete
         or change without notice, and we do not promise the Service will be uninterrupted or
-        error-free. If we materially reduce a paid feature during your billing period, we will tell
-        you in advance, and you can cancel and receive a refund for the unused period.
+        error-free.
       </p>
 
       <h2>Termination</h2>
       <p>
         You can stop using the Service and delete your account at any time. We may suspend or
-        terminate your access if you violate these terms, do not pay, or put the Service or others at
+        terminate your access if you violate these terms or put the Service or others at
         risk, or if the law requires it. Where reasonable, we will tell you first. If we terminate
         your account or stop offering the Service for reasons other than a violation of these terms,
-        we will give you reasonable notice and refund any prepaid fees for the unused period.
+        we will give you reasonable notice.
       </p>
       <p>
         When an account is deleted, its bots and routines stop and we delete its content as described
@@ -196,7 +151,7 @@ const starsLabel = await githubStarsLabel();
 
       <h2>App stores</h2>
       <p>
-        If you download a Rakazo app from an app store, that store’s terms also apply to the app. For
+        If you download a Unibots app from an app store, that store’s terms also apply to the app. For
         the iOS app, Apple’s Standard EULA applies. Apple is not a party to these terms and is not
         responsible for the Service or its support.
       </p>
@@ -211,8 +166,8 @@ const starsLabel = await githubStarsLabel();
 
       <h2>General</h2>
       <p>
-        These terms, together with any terms shown when you buy a plan, are the entire agreement
-        between you and us about the Service. If any part is unenforceable, the rest stays in effect.
+        These terms are the entire agreement between you and us about the Service. If any part is
+        unenforceable, the rest stays in effect.
         Not enforcing a term is not a waiver. You may not transfer these terms without our consent; we
         may transfer them in connection with a merger, acquisition, or sale of assets. Neither of us is
         responsible for delays caused by events beyond reasonable control. We may send you notices by
@@ -221,10 +176,8 @@ const starsLabel = await githubStarsLabel();
 
       <h2>Contact us</h2>
       <p>
-        Inbox Zero Inc.<br />
-        131 Continental Dr, Suite 305<br />
-        Newark, Delaware 19713, United States<br />
-        <a href="mailto:hello@rakazo.com">hello@rakazo.com</a>
+        The Unibots project<br />
+        <a href="https://github.com/agra-aarav15/unibots/issues">Public issue tracker</a>
       </p>
     </main>
     <Footer />

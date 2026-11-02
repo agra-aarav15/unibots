@@ -1,4 +1,5 @@
 export * from "./account-export.js";
+export * from "./advisory-lock.js";
 export * from "./approval-settings.js";
 export * from "./artifact-versions.js";
 export * from "./availability.js";

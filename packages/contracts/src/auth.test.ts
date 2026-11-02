@@ -28,6 +28,14 @@ it("treats email code sign-in as an optional boolean capability", () => {
   expect(authCapabilitiesSchema.safeParse({ ...base, emailCode: "true" }).success).toBe(false);
 });
 
+it("reports email change and first-user state as optional capabilities", () => {
+  const base = { passwordAuth: true, passwordReset: false, resetUrl: null, sso: null };
+  expect(authCapabilitiesSchema.parse(base)).not.toHaveProperty("emailChange");
+  expect(authCapabilitiesSchema.parse({ ...base, emailChange: true }).emailChange).toBe(true);
+  expect(authCapabilitiesSchema.parse({ ...base, needsFirstUser: true }).needsFirstUser).toBe(true);
+  expect(authCapabilitiesSchema.safeParse({ ...base, needsFirstUser: "true" }).success).toBe(false);
+});
+
 it("only accepts complete legacy capabilities without partial SSO fields", () => {
   expect(
     legacyAuthCapabilitiesSchema.parse({ passwordReset: false, resetUrl: null, billing: true }),

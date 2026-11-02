@@ -1,7 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
-  <title id="title">Blue Rakazo bot avatar</title>
+  <title id="title">Blue Unibots bot avatar</title>
   <circle cx="32" cy="32" r="30" fill="#1A1A1D" />
-  <path fill="#3B82F6" d="M11 62c0-8 5-12 8-17 4-7 2-16 3-24 2-9 6-13 12-13 8 0 13 6 14 15 1 8-2 15 2 21 3 5 7 10 7 18H11Z" />
-  <rect x="27" y="24" width="5" height="10" rx="2.5" fill="#07152B" />
-  <rect x="37" y="24" width="5" height="10" rx="2.5" fill="#07152B" />
+  <g transform="translate(13 9.5) scale(0.5)">
+    <path fill="#3B82F6" d="M 38 14 H 62 A 26 26 0 0 1 88 40 V 78 A 26 26 0 0 1 62 104 H 38 A 26 26 0 0 1 12 78 V 40 A 26 26 0 0 1 38 14 Z" />
+    <ellipse cx="39" cy="49" rx="7" ry="9" fill="#101014" />
+    <ellipse cx="61" cy="49" rx="7" ry="9" fill="#101014" />
+  </g>
 </svg>

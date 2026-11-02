@@ -3,6 +3,7 @@ import type {
   AgentRuntime,
   ArtifactStore,
   JobPublisher,
+  MemoryStore,
   MessagingSurface,
   SandboxProvider,
 } from "@rakazo/adapter-kit";
@@ -48,6 +49,7 @@ describe("createBackgroundJobHandlers", () => {
       workerId: "worker-1",
       runtime: {} as unknown as AgentRuntime,
       secretStore: {} as unknown as EncryptedSecretStore,
+      memory: {} as unknown as MemoryStore,
       memoryProviders: { resolve: vi.fn(async () => null) },
       messaging: {} as unknown as MessagingSurface,
     });
@@ -89,6 +91,7 @@ describe("createBackgroundJobHandlers", () => {
       workerId: "worker-1",
       runtime,
       secretStore,
+      memory: {} as unknown as MemoryStore,
       memoryProviders,
       deploymentModelKey: "openrouter-key",
       deploymentModelConfigured: true,
@@ -131,6 +134,7 @@ describe("createBackgroundJobHandlers", () => {
         workerId: "worker-fixture",
         runtime,
         secretStore: {} as unknown as EncryptedSecretStore,
+        memory: {} as unknown as MemoryStore,
         memoryProviders: { resolve: vi.fn(async () => null) },
       });
 
@@ -158,6 +162,7 @@ describe("createBackgroundJobHandlers", () => {
       workerId: "worker-1",
       runtime: {} as unknown as AgentRuntime,
       secretStore: {} as unknown as EncryptedSecretStore,
+      memory: {} as unknown as MemoryStore,
       memoryProviders: { resolve: vi.fn(async () => null) },
     });
 

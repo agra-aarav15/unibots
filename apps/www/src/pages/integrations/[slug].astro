@@ -12,7 +12,7 @@ import {
   integrationUrlSlug,
   relatedIntegrations,
 } from "../../integrations";
-import { APP_URL } from "../../site";
+import { SELF_HOST_GUIDE_PATH } from "../../site";
 
 interface Props {
   integration: Integration;
@@ -39,8 +39,8 @@ const groups = [
 ---
 
 <SiteFrame
-  title={`${name} AI agent: connect ${name} to Rakazo`}
-  description={`Let your Rakazo bots work in ${name}. ${actions.length} actions, connected in one step.`}
+  title={`${name} AI agent: connect ${name} to Unibots`}
+  description={`Let your Unibots bots work in ${name}. ${actions.length} actions, connected in one step.`}
   structuredData={integrationBreadcrumbs(integration)}
   markdownAlternate={`${integrationPath(integration.slug).slice(0, -1)}.md`}
   wide
@@ -61,7 +61,7 @@ const groups = [
         <span>{AUTH_LABEL[integration.auth]}</span>
       </p>
     </div>
-    <a class="button button--primary ix-detail__cta" href={APP_URL}>Connect {name}</a>
+    <a class="button button--primary ix-detail__cta" href={SELF_HOST_GUIDE_PATH}>Connect {name}</a>
   </header>
 
   <section class="ix-section">

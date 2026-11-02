@@ -5,6 +5,7 @@ import type {
   BackgroundJobExecution,
   BackgroundJobHandlers,
   JobPublisher,
+  MemoryStore,
   MessagingSurface,
   PaymentWalletProvider,
   SandboxProvider,
@@ -23,6 +24,8 @@ import { performComputerUpdate } from "./computer-update.js";
 import type { createRunExecutor } from "./executor.js";
 import type { ExpoPushProvider } from "./expo-push.js";
 import { compactHistory } from "./history-compaction.js";
+import type { MemoryCurationConfig } from "./memory-curator.js";
+import { curateMemory } from "./memory-curator.js";
 import type { MemoryProviderResolver } from "./memory-provider-factory.js";
 import { deliverMessagingOutbound, mirrorMessagingOutbound } from "./messaging-delivery.js";
 import { pollPurchase } from "./purchase-poll.js";
@@ -61,7 +64,11 @@ export function createBackgroundJobHandlers(deps: {
   workerId: string;
   runtime: AgentRuntime;
   secretStore: SecretStore;
+  memory: MemoryStore;
   memoryProviders: MemoryProviderResolver;
+  memoryCuration?: MemoryCurationConfig;
+  /** Serializes USER.md for one user across bots and worker instances. */
+  withUserMemoryLock?: <T>(userId: string, fn: () => Promise<T>) => Promise<T>;
   deploymentModelKey?: string;
   deploymentModelConfigured?: boolean;
   messaging?: MessagingSurface;
@@ -211,6 +218,26 @@ export function createBackgroundJobHandlers(deps: {
         },
         payload.threadId,
       );
+    }),
+    "memory.curate": asOwner(run, async (payload) => {
+      try {
+        await curateMemory(
+          {
+            prisma: deps.prisma,
+            runtime: deps.runtime,
+            memory: deps.memory,
+            memoryCuration: deps.memoryCuration,
+            deploymentModelKey: deps.deploymentModelKey,
+            deploymentModelConfigured: deps.deploymentModelConfigured,
+            ...(deps.executor.resolveModel ? { resolveModel: deps.executor.resolveModel } : {}),
+            ...(deps.withUserMemoryLock ? { withUserMemoryLock: deps.withUserMemoryLock } : {}),
+          },
+          payload.runId,
+        );
+      } catch (error) {
+        // Memory is a convenience: a curation failure must never surface in the person's run.
+        getLogger().error("memory.curate failed", error, { "run.id": payload.runId });
+      }
     }),
   };
 }

@@ -78,6 +78,18 @@ export interface RakazoDesktop {
     rpIds: () => Promise<string[]>;
   };
   /**
+   * Phone access for this computer's network. Only the app-managed local stack has it;
+   * absent on an existing instance and on older desktop releases.
+   */
+  phoneAccess?: {
+    /** The address a phone should use, or null while phone access is off. */
+    state: () => Promise<{ url: string | null }>;
+    /** Publishes the API on the private network, then returns its address. */
+    enable: () => Promise<{ ok: true; url: string } | { ok: false; error: string }>;
+    /** Removes the published port and restores loopback-only access. */
+    disable: () => Promise<{ ok: boolean }>;
+  };
+  /**
    * The operating system's own speech recognition, so dictation needs no provider key.
    * Absent on platforms without one and on older desktop releases.
    */
@@ -115,7 +127,7 @@ export interface RakazoDesktop {
 }
 
 /**
- * How the desktop app was pointed at a Rakazo server during first-run setup.
+ * How the desktop app was pointed at a Unibots server during first-run setup.
  * `new` is the Docker Compose stack this app installs and runs on the same computer.
  */
 export type DesktopInstanceMode = "new" | "existing";
@@ -129,8 +141,6 @@ export interface DesktopSetup {
 
 export interface DesktopSetupState {
   defaultLocalUrl: string;
-  /** Hosted Rakazo origin, saved as an `existing` server when chosen. */
-  cloudUrl: string;
   saved: DesktopSetup | null;
   /** Present when a saved or newly selected server could not be reopened. */
   error?: string;
@@ -171,6 +181,8 @@ export interface DesktopLocalStackState {
   phase: DesktopLocalStackPhase;
   /** One actionable sentence; null while the stack is progressing normally. */
   message: string | null;
+  /** Advisory that does not stop the start; null when there is nothing to warn about. */
+  warning: string | null;
   /** Bounded tail of docker output for the current attempt. */
   output: string[];
   /** Bytes pulled per image layer in the current attempt; the sum is the only progress Docker reports. */

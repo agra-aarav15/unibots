@@ -65,8 +65,6 @@ import { errorText } from "../lib/user-error";
 import { CompatibleKeyField } from "./model-settings/compatible-key-field";
 
 const CUSTOM_MODEL_OPTION = "__rakazo_custom_model__";
-/** Rakazo credits sit among the providers as the one choice that needs no account of its own. */
-const CREDITS_OPTION = "__rakazo_credits__";
 /** A provider whose catalog entry offers both sign-in and a key appears once per way to connect. */
 type ProviderAuth = "sign-in" | "key";
 
@@ -148,13 +146,11 @@ export function OnboardingPage() {
   const [creatingBot, setCreatingBot] = useState(false);
   const [surveyDone, setSurveyDone] = useState(false);
   const step = creatingBot ? "bot" : surveyDone ? "loading" : (linkedStep ?? "loading");
-  const [billingEnabled, setBillingEnabled] = useState(false);
   // The step after the survey; null until me loads.
   const [afterSurvey, setAfterSurvey] = useState<"model" | "bot" | null>(null);
   const [catalog, setCatalog] = useState<ModelCatalogEntry[]>([]);
   const [provider, setProvider] = useState("");
   const [providerAuth, setProviderAuth] = useState<ProviderAuth | undefined>();
-  const [credits, setCredits] = useState(false);
   const [modelId, setModelId] = useState("");
   const modelIdRef = useRef(modelId);
   modelIdRef.current = modelId;
@@ -203,7 +199,6 @@ export function OnboardingPage() {
   useEffect(() => {
     void Promise.all([rpc.me(), rpc.models.list().catch(() => [])])
       .then(([me, models]) => {
-        setBillingEnabled(me.billingEnabled);
         setCatalog(models);
         const next = me.needsModel ? "model" : "bot";
         setAfterSurvey(next);
@@ -275,7 +270,6 @@ export function OnboardingPage() {
       return providerDisplayName(id, byId.get(id)?.providerName ?? id, auth);
     };
     const main = [
-      ...(billingEnabled ? [{ value: CREDITS_OPTION, label: t`Rakazo credits` }] : []),
       ...MAIN_PROVIDER_OPTIONS.filter((option) => byId.has(option.provider)).map((option) => ({
         value: providerOptionValue(option.provider, option.auth),
         label: optionLabel(option.provider, option.auth),
@@ -292,7 +286,7 @@ export function OnboardingPage() {
           : [item];
       });
     return { main, rest };
-  }, [billingEnabled, providers, t]);
+  }, [providers, t]);
   // Base UI Select.Value only resolves labels when Root gets `items`.
   const providerItems = useMemo(
     () => [...providerOptions.main, ...providerOptions.rest],
@@ -506,16 +500,6 @@ export function OnboardingPage() {
     }
   }
 
-  async function fundWithCredits() {
-    setError(null);
-    try {
-      await rpc.billing.selectFunding({ funding: "credits" });
-      window.location.assign("/onboarding");
-    } catch {
-      setError(t`Could not open billing`);
-    }
-  }
-
   function beginSelectedSubscriptionSignIn() {
     if (!selected?.id) return;
     void startSubscriptionSignIn({
@@ -570,25 +554,14 @@ export function OnboardingPage() {
               </span>
               <Select
                 value={
-                  credits
-                    ? CREDITS_OPTION
-                    : isOpenAiCompatible && isOllamaCloudBaseUrl(baseUrl)
-                      ? "ollama-preset"
-                      : provider
-                        ? providerOptionValue(provider, providerAuth)
-                        : null
+                  isOpenAiCompatible && isOllamaCloudBaseUrl(baseUrl)
+                    ? "ollama-preset"
+                    : provider
+                      ? providerOptionValue(provider, providerAuth)
+                      : null
                 }
                 onValueChange={(value) => {
                   if (typeof value !== "string" || !value) return;
-                  if (value === CREDITS_OPTION) {
-                    cancelOAuthAttempt();
-                    setProvider("");
-                    setProviderAuth(undefined);
-                    setCredits(true);
-                    setError(null);
-                    return;
-                  }
-                  setCredits(false);
                   if (value === "ollama-preset")
                     selectProvider(OPENAI_COMPATIBLE_PROVIDER_ID, OLLAMA_CLOUD_BASE_URL);
                   else selectProvider(value);
@@ -1017,8 +990,8 @@ export function OnboardingPage() {
             {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
             <Button
               className="mt-6"
-              disabled={!credits && !canSaveModel}
-              onClick={() => void (credits ? fundWithCredits() : saveModel())}
+              disabled={!canSaveModel}
+              onClick={() => void saveModel()}
             >
               <Trans>Continue</Trans>
             </Button>

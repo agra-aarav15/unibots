@@ -243,7 +243,7 @@ export const BotAvatar = memo(function BotAvatar({
   );
 });
 
-/** Only live Rakazo consumers subscribe to public activity updates. */
+/** Only live Unibots consumers subscribe to public activity updates. */
 function LiveLogoAvatar({
   status,
   ...props
@@ -401,7 +401,7 @@ export function Wordmark({ className }: { className?: string }) {
         <span className="h-4 w-[7px] rounded-full bg-primary" />
       </div>
       <span className="font-[Aeonik,ui-sans-serif] text-[28px] tracking-tight text-foreground">
-        Rakazo
+        Unibots
       </span>
     </div>
   );

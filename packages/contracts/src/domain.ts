@@ -984,7 +984,7 @@ const McpOAuthClientFields = {
  * authorization server, so the client is bound to it on first use. */
 const McpOAuthClientInput = z.object(McpOAuthClientFields).nullable().optional();
 /** A stdio server has no URL to discover from, so its client names the
- * authorization server (its issuer, e.g. https://accounts.google.com). Rakazo
+ * authorization server (its issuer, e.g. https://accounts.google.com). Unibots
  * runs the OAuth flow and passes the grant through `{{oauth.*}}` env references. */
 const McpStdioOAuthClientInput = z
   .object({ ...McpOAuthClientFields, authorizationServer: McpRemoteEndpointSchema })
@@ -1129,7 +1129,9 @@ export const UsageRecordSchema = z.object({
   usageSource: z.string().nullable().optional(),
   callId: z.string().nullable().optional(),
   operationId: z.string().nullable().optional(),
-  operationKind: z.enum(["answer", "setup", "retrieval", "subagent", "compaction"]).optional(),
+  operationKind: z
+    .enum(["answer", "setup", "retrieval", "subagent", "compaction", "memory"])
+    .optional(),
   parentRunId: z.string().nullable().optional(),
   agentId: z.string().nullable().optional(),
   createdAt: z.string(),

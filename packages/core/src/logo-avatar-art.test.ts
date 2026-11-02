@@ -1,57 +1,77 @@
 import { expect, it } from "vitest";
-import { LOGO_BODY_PATH } from "./logo-avatar-art.js";
+import {
+  LOGO_BODY_PATH,
+  LOGO_LEFT_HAND_PATH,
+  LOGO_RIGHT_HAND_PATH,
+} from "./logo-avatar-art.js";
 
 type Point = [number, number];
-type Segment = [Point, Point, Point, Point];
 
-it("keeps the body contour smooth through cubic joins and across its crown", () => {
-  const numbers = (part: string) => [...part.matchAll(/-?\d+(?:\.\d+)?/g)].map(([n]) => Number(n));
-  const point = (values: number[], offset = 0): Point => [
-    values[offset] ?? NaN,
-    values[offset + 1] ?? NaN,
-  ];
-  let start = point(numbers(LOGO_BODY_PATH.split("C")[0] ?? ""));
-  const segments = [...LOGO_BODY_PATH.matchAll(/C([^CLHZ]+)/g)].map<Segment>(([, part]) => {
-    const values = numbers(part ?? "");
-    const points: Segment = [start, point(values), point(values, 2), point(values, 4)];
-    start = points[3];
-    return points;
-  });
-  expect(segments.length).toBeLessThanOrEqual(12);
-  for (const [index, segment] of segments.entries()) {
-    for (const p of segment) expect(p.every(Number.isFinite)).toBe(true);
-    const previous = segments[index - 1];
-    if (!previous) continue;
-    const [, b, c, d] = previous;
-    const [e, f, g] = segment;
-    for (const axis of [0, 1] as const) {
-      // Rounding path coordinates must not create visible kinks.
-      expect(Math.abs(3 * (d[axis] - c[axis]) - 3 * (f[axis] - e[axis]))).toBeLessThan(0.01);
-      expect(
-        Math.abs(6 * (d[axis] - 2 * c[axis] + b[axis]) - 6 * (g[axis] - 2 * f[axis] + e[axis])),
-      ).toBeLessThan(0.025);
-    }
+/** Every absolute command in the path, in order, so bounds and symmetry can be checked. */
+function outline(path: string) {
+  const points: Point[] = [];
+  for (const [, command, body] of path.matchAll(/([MLHVCA])([^MLHVCAZ]*)/g)) {
+    const numbers = (body ?? "").match(/-?\d+(?:\.\d+)?/g)?.map(Number) ?? [];
+    const last = points.at(-1);
+    if (command === "M" || command === "L") points.push([numbers[0]!, numbers[1]!]);
+    else if (command === "H" && last) points.push([numbers[0]!, last[1]]);
+    else if (command === "V" && last) points.push([last[0], numbers[0]!]);
+    // A cubic carries two control points; only its end point is on the outline.
+    else if (command === "C") points.push([numbers[4]!, numbers[5]!]);
+    // An arc carries rx ry rotation large-arc sweep x y; its end point is last.
+    else if (command === "A" && last) points.push([numbers[5]!, numbers[6]!]);
   }
-  for (const [a, b, c, d] of segments)
-    for (let step = 0; step <= 50; step++) {
-      const t = step / 50;
-      const y =
-        (1 - t) ** 3 * a[1] +
-        3 * (1 - t) ** 2 * t * b[1] +
-        3 * (1 - t) * t ** 2 * c[1] +
-        t ** 3 * d[1];
-      if (y >= 12) continue;
-      const velocity = (i: 0 | 1) =>
-        3 * (1 - t) ** 2 * (b[i] - a[i]) +
-        6 * (1 - t) * t * (c[i] - b[i]) +
-        3 * t ** 2 * (d[i] - c[i]);
-      const acceleration = (i: 0 | 1) =>
-        6 * (1 - t) * (c[i] - 2 * b[i] + a[i]) + 6 * t * (d[i] - 2 * c[i] + b[i]);
-      const curvature =
-        (velocity(0) * acceleration(1) - velocity(1) * acceleration(0)) /
-        Math.hypot(velocity(0), velocity(1)) ** 3;
-      // The logo has a broad, convex dome rather than a pointed cap.
-      expect(curvature).toBeGreaterThan(0);
-      expect(curvature).toBeLessThan(0.08);
-    }
+  return points;
+}
+
+it("draws a symmetric head that encloses the eyes and the book", () => {
+  const points = outline(LOGO_BODY_PATH);
+  expect(points.length).toBeGreaterThanOrEqual(8);
+  for (const [x, y] of points) {
+    expect(Number.isFinite(x)).toBe(true);
+    expect(Number.isFinite(y)).toBe(true);
+  }
+
+  const xs = points.map(([x]) => x);
+  const ys = points.map(([, y]) => y);
+  const left = Math.min(...xs);
+  const right = Math.max(...xs);
+  const top = Math.min(...ys);
+  const bottom = Math.max(...ys);
+
+  // The outline is mirrored around the avatar's centre line.
+  expect(left + right).toBeCloseTo(100, 5);
+  expect(top).toBeLessThan(49);
+  expect(bottom).toBeGreaterThan(94);
+
+  // Eyes (cx 39/61, cy 49, ry 9) and the book (y 75..94) both sit inside the head.
+  expect(left).toBeLessThan(39 - 7);
+  expect(right).toBeGreaterThan(61 + 7);
+  expect(bottom).toBeGreaterThan(94);
+});
+
+it("keeps the side tabs outside the head, mirrored, and clear of the eyes", () => {
+  const headPoints = outline(LOGO_BODY_PATH);
+  const headLeft = Math.min(...headPoints.map(([x]) => x));
+  const headRight = Math.max(...headPoints.map(([x]) => x));
+
+  const leftPoints = outline(LOGO_LEFT_HAND_PATH);
+  const rightPoints = outline(LOGO_RIGHT_HAND_PATH);
+
+  expect(Math.min(...leftPoints.map(([x]) => x))).toBeLessThan(headLeft);
+  expect(Math.max(...rightPoints.map(([x]) => x))).toBeGreaterThan(headRight);
+
+  // Mirror symmetry: each right-hand point is the left-hand point reflected about x=50.
+  for (const [x, y] of leftPoints) {
+    const mirror = rightPoints.find(
+      ([rx, ry]) => Math.abs(rx - (100 - x)) < 0.01 && Math.abs(ry - y) < 0.01,
+    );
+    expect(mirror, `no mirror for ${x},${y}`).toBeDefined();
+  }
+
+  // Tabs sit beside the eyes, not over them.
+  for (const [x, y] of [...leftPoints, ...rightPoints]) {
+    expect(y).toBeGreaterThan(45);
+    expect(Math.abs(x - 50)).toBeGreaterThan(30);
+  }
 });

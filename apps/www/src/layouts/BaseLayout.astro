@@ -39,7 +39,7 @@ const {
   skipLabel = "Skip to content",
   homeAlternates = false,
   localeAlternates = true,
-  ogImageAlt = "Rakazo. AI teammates you actually own. Your keys, your model, your machine.",
+  ogImageAlt = "Unibots. AI teammates you actually own. Your keys, your model, your machine.",
   ogImage = "/og-image.png",
   ogType = "website",
   index = true,
@@ -108,7 +108,7 @@ const homeUrls = Object.fromEntries(
     {markdownAlternate && (
       <link rel="alternate" type="text/markdown" href={markdownAlternate} />
     )}
-    <link rel="alternate" type="application/rss+xml" title="Rakazo blog" href="/blog/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Unibots blog" href="/blog/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="describedby" type="text/plain" href="/llms.txt" />
     <link rel="ai-catalog" type="application/ai-catalog+json" href="/.well-known/ai-catalog.json" />
@@ -124,9 +124,6 @@ const homeUrls = Object.fromEntries(
     />
     {structuredDataJson && <script is:inline type="application/ld+json" set:html={structuredDataJson} />}
     <title>{title}</title>
-    <script>
-      import "../analytics";
-    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">{skipLabel}</a>

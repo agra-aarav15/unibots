@@ -10,8 +10,12 @@ import { resolveWwwPort } from "./www-port.mjs";
 
 const wwwPort = resolveWwwPort();
 
+// Canonical origin for the sitemap and canonical tags. Set PUBLIC_SITE_URL on the deployment;
+// the default keeps local builds coherent without claiming a domain this project does not own.
+const site = (process.env.PUBLIC_SITE_URL ?? "http://localhost:4321").replace(/\/$/, "");
+
 export default defineConfig({
-  site: "https://rakazo.com",
+  site,
   output: "static",
   i18n: {
     defaultLocale: "en",

@@ -24,7 +24,9 @@ export function passkeyOfferDismissedKey(userId: string): string {
 /** WebAuthn requires the page host to equal the relying party ID or be a subdomain of it. */
 export function hostMatchesPasskeyRpId(host: string, rpId: string | null | undefined): boolean {
   if (!rpId) return false;
-  const normalized = host.toLowerCase();
+  const normalized = host.toLowerCase().replace(/^\[|\]$/g, "");
   const rp = rpId.toLowerCase();
+  // Loopback deployments use the localhost relying party; the desktop opens 127.0.0.1.
+  if (rp === "localhost" && (normalized === "127.0.0.1" || normalized === "::1")) return true;
   return normalized === rp || normalized.endsWith(`.${rp}`);
 }

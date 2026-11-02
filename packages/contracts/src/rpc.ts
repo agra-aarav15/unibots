@@ -151,6 +151,12 @@ import {
 import { ModelHeadersSchema } from "./model-headers.js";
 import { ModelRoleSchema, ModelRoleUpdateSchema, ModelRoleViewSchema } from "./model-roles.js";
 import { PaymentWalletStatusSchema } from "./payments.js";
+import {
+  CreateDevicePairingInputSchema,
+  DevicePairingSchema,
+  PairDeviceInputSchema,
+  PairDeviceOutputSchema,
+} from "./pairing.js";
 import { MessageReactionSchema } from "./reactions.js";
 import { RoutineWatchSchema } from "./routine-watch.js";
 import {
@@ -1349,6 +1355,17 @@ export const appContract = {
     remove: oc
       .input(z.object({ botId: Id, name: StoredBotSecretName }))
       .output(z.object({ ok: z.literal(true) })),
+  },
+  /** A signed-in owner creates a one-time code for a phone on the same network. */
+  pairing: {
+    create: oc.input(CreateDevicePairingInputSchema).output(DevicePairingSchema),
+  },
+  /**
+   * The phone redeems the code. Unauthenticated by design: it returns an existing
+   * user's session and can never create an account. The route rate limits attempts.
+   */
+  device: {
+    pair: oc.input(PairDeviceInputSchema).output(PairDeviceOutputSchema),
   },
 };
 

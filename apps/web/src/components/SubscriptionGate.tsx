@@ -9,8 +9,6 @@ import { peekInitialBootstrap } from "../lib/bootstrap";
 import { lazyComponent } from "../lib/preload-recovery";
 import { claimStoredReferral } from "../lib/referral";
 import { rpc } from "../lib/rpc";
-import type { SupportChat } from "../lib/support-chat";
-import { useSupportChat } from "../lib/support-chat";
 
 const PaywallPage = lazyComponent(() =>
   import("../pages/Paywall").then((module) => module.PaywallPage),
@@ -57,7 +55,6 @@ export function SubscriptionGate({
   fallback: ReactNode;
 }) {
   const [state, setState] = useState<GateState>({ kind: "loading" });
-  const [supportChat, setSupportChat] = useState<SupportChat | null>(null);
   const { t } = useLingui();
   // `?plans` links straight to the plan choice.
   const [searchParams, setSearchParams] = useSearchParams();
@@ -78,13 +75,6 @@ export function SubscriptionGate({
         if (!me.billingEnabled) return { kind: "open" };
         void claimStoredReferral();
         const status = await rpc.billing.status();
-        if (active && capabilities.crispWebsiteId) {
-          setSupportChat({
-            crispWebsiteId: capabilities.crispWebsiteId,
-            email: me.email,
-            name: me.name,
-          });
-        }
         return gateFor(status);
       })
       .catch((): GateState => ({ kind: "open" }))
@@ -120,9 +110,6 @@ export function SubscriptionGate({
     };
   }, [billed]);
 
-  // On the required paywall only: the plans dialog blocks pointer input outside itself.
-  useSupportChat(state.kind === "paywall" ? supportChat : null);
-
   if (state.kind === "loading") return fallback;
   if (state.kind === "paywall") {
     return (
@@ -140,7 +127,7 @@ export function SubscriptionGate({
         // Over the app rather than replacing it, so closing keeps its state.
         <Dialog open={plansOpen} onOpenChange={setPlansOpen}>
           <DialogContent
-            aria-label={t`Choose how to use Rakazo`}
+            aria-label={t`Choose how to use Unibots`}
             className="inset-0 top-0 left-0 block h-dvh max-w-none translate-x-0 translate-y-0 overflow-y-auto rounded-none bg-background p-0 ring-0 sm:max-w-none"
           >
             <Suspense fallback={fallback}>

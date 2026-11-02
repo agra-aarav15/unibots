@@ -32,11 +32,13 @@ describe("shouldOfferPasskey", () => {
 });
 
 describe("hostMatchesPasskeyRpId", () => {
-  it("accepts the relying party and its subdomains only", () => {
+  it("accepts the relying party, its subdomains, and loopback for localhost", () => {
     expect(hostMatchesPasskeyRpId("app.example.com", "app.example.com")).toBe(true);
     expect(hostMatchesPasskeyRpId("eu.app.example.com", "app.example.com")).toBe(true);
     expect(hostMatchesPasskeyRpId("evilapp.example.com", "app.example.com")).toBe(false);
-    expect(hostMatchesPasskeyRpId("127.0.0.1", "localhost")).toBe(false);
+    expect(hostMatchesPasskeyRpId("127.0.0.1", "localhost")).toBe(true);
+    expect(hostMatchesPasskeyRpId("[::1]", "localhost")).toBe(true);
+    expect(hostMatchesPasskeyRpId("127.0.0.1", "app.example.com")).toBe(false);
     expect(hostMatchesPasskeyRpId("localhost", null)).toBe(false);
   });
 });

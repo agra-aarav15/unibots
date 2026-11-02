@@ -45,6 +45,7 @@ import { mcpRoutes } from "./routes/mcp.js";
 import { memoryRoutes } from "./routes/memory.js";
 import { messagingRoutes } from "./routes/messaging.js";
 import { modelsRoutes } from "./routes/models.js";
+import { pairingRoutes } from "./routes/pairing.js";
 import { paymentWalletRoutes } from "./routes/payment-wallet.js";
 import { routinesRoutes } from "./routes/routines.js";
 import { spacesRoutes } from "./routes/spaces.js";
@@ -135,6 +136,10 @@ export interface RouterDeps {
     integrationsCatalogUrl?: string;
     mcpAllowPrivateEndpoint?: boolean;
     desktopHostChoiceEnabled?: boolean;
+    /** True only for the app-managed local stack, which is the only pairing host. */
+    desktopManaged?: boolean;
+    /** Signs pairing-code hashes; the auth secret, never stored or logged. */
+    pairingSecret?: string;
     mcpStdioEnabled?: boolean;
     mcpStdioAllowedCommands?: string[];
   };
@@ -160,5 +165,6 @@ export function createRouter(deps: RouterDeps) {
     ...messagingRoutes(ctx),
     ...contentRoutes(ctx),
     ...paymentWalletRoutes(ctx),
+    ...pairingRoutes(ctx),
   });
 }

@@ -18,7 +18,7 @@ import {
 describe("normalizeRepoUrl", () => {
   it("accepts the official repository and https forks", () => {
     expect(normalizeRepoUrl(OFFICIAL_REPO_URL)).toEqual({
-      url: "https://github.com/elie222/rakazo",
+      url: "https://github.com/agra-aarav15/unibots",
     });
     expect(normalizeRepoUrl("  https://github.com/me/rakazo.git/  ")).toEqual({
       url: "https://github.com/me/rakazo.git",
@@ -69,18 +69,19 @@ describe("normalizeRepoUrl", () => {
 
 describe("repoIdentity", () => {
   it("treats every spelling of the same remote as one repository", () => {
-    const identity = "github.com/elie222/rakazo";
-    expect(repoIdentity("https://github.com/elie222/rakazo")).toBe(identity);
-    expect(repoIdentity("https://github.com/elie222/rakazo.git")).toBe(identity);
-    expect(repoIdentity("git@github.com:elie222/rakazo.git")).toBe(identity);
-    expect(repoIdentity("ssh://git@github.com/Elie222/Rakazo")).toBe(identity);
+    const identity = "github.com/agra-aarav15/unibots";
+    expect(repoIdentity("https://github.com/agra-aarav15/unibots")).toBe(identity);
+    expect(repoIdentity("https://github.com/agra-aarav15/unibots.git")).toBe(identity);
+    expect(repoIdentity("git@github.com:agra-aarav15/unibots.git")).toBe(identity);
+    // A different capitalization names the same repository.
+    expect(repoIdentity("ssh://git@github.com/Agra-Aarav15/Unibots")).toBe(identity);
     expect(repoIdentity("not a url")).toBeNull();
   });
 
   it("only calls the real upstream official", () => {
-    expect(isOfficialRepoUrl("git@github.com:elie222/rakazo.git")).toBe(true);
+    expect(isOfficialRepoUrl("git@github.com:agra-aarav15/unibots.git")).toBe(true);
     expect(isOfficialRepoUrl("https://github.com/attacker/rakazo")).toBe(false);
-    expect(isOfficialRepoUrl("https://githubb.com/elie222/rakazo")).toBe(false);
+    expect(isOfficialRepoUrl("https://githubb.com/agra-aarav15/unibots")).toBe(false);
   });
 });
 

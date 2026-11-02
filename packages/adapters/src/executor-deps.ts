@@ -34,6 +34,8 @@ export interface ExecutorDeps {
   sandbox: SandboxProvider;
   memory: MemoryStore;
   memoryProviders: MemoryProviderResolver;
+  /** Automatic curation of MEMORY.md and USER.md after a direct conversation. */
+  memoryCuration?: { enabled: boolean; model?: string };
   home: AgentHomeStore;
   artifacts?: ArtifactStore;
   connector?: ConnectorProvider;

@@ -46,9 +46,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { homeStructuredData } from "../structured-data";
 import {
   ANDROID_APK_URL,
-  APP_URL,
   GITHUB_URL,
-  IOS_APP_URL,
   SELF_HOST_GUIDE_PATH,
   SETUP_PROMPT_URL,
   SITE_URL,
@@ -70,7 +68,7 @@ const [starsLabel, desktopDownloads, recentChanges] = await Promise.all([
   fetchDesktopDownloads(),
   fetchRecentChanges(5),
 ]);
-const setupAgentPrompt = `Set up Rakazo for me. Follow the setup prompt at ${SETUP_PROMPT_URL}`;
+const setupAgentPrompt = `Set up Unibots for me. Follow the setup prompt at ${SETUP_PROMPT_URL}`;
 const desktopPlatforms = availableDesktopPlatforms(desktopDownloads);
 const PLATFORM_NAMES = { mac: "macOS", windows: "Windows", linux: "Linux" } as const;
 const PROVIDER_LOGOS: Record<string, string> = {
@@ -150,7 +148,6 @@ const structuredData = homeStructuredData({
         <GetStartedActions
           class="hero__actions"
           copy={copy.hero}
-          placement="hero"
           githubLabel={copy.openSource.starOnGithub}
         />
         <div class="hero__agent-setup">
@@ -317,7 +314,7 @@ const structuredData = homeStructuredData({
             </p>
           </div>
           <div class="selfhost__actions">
-            <Button href={GITHUB_URL} external data-attr="selfhost-github">{copy.hero.viewOnGithub}</Button>
+            <Button href={GITHUB_URL} external>{copy.hero.viewOnGithub}</Button>
             <Button href="/docs/self-host/" variant="secondary">{copy.openSource.readTheDocs}</Button>
           </div>
         </div>
@@ -357,7 +354,7 @@ const structuredData = homeStructuredData({
               </svg>
               <h3>{copy.platforms.web}</h3>
               <div class="platform-card__links">
-                <a href={APP_URL}>{copy.hero.getStarted}</a>
+                <a href={SELF_HOST_GUIDE_PATH}>{copy.hero.getStarted}</a>
               </div>
             </article>
             <article class="platform-card">
@@ -379,7 +376,6 @@ const structuredData = homeStructuredData({
               </svg>
               <h3>{copy.platforms.mobile}</h3>
               <div class="platform-card__links">
-                <a href={IOS_APP_URL}>iOS</a>
                 <a href={ANDROID_APK_URL}>Android</a>
               </div>
             </article>
@@ -395,7 +391,7 @@ const structuredData = homeStructuredData({
             {copy.openSource.copy}
           </p>
           <div class="source-links">
-            <Button href={GITHUB_URL} external data-attr="open-source-github">
+            <Button href={GITHUB_URL} external>
               {copy.openSource.starOnGithub}
             </Button>
           </div>
@@ -431,7 +427,6 @@ const structuredData = homeStructuredData({
             class="cta-actions"
             copy={copy.hero}
             downloads={desktopDownloads}
-            placement="cta"
           />
         </div>
         <div class="stats-grid">
@@ -467,7 +462,6 @@ const structuredData = homeStructuredData({
 </BaseLayout>
 
 <script>
-  import "../support-chat";
   const setupCopy = document.querySelector<HTMLButtonElement>("[data-setup-copy]");
   const setupCopyLabel = setupCopy?.querySelector<HTMLElement>(".setup-copy__label");
 

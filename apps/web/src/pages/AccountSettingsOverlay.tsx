@@ -37,6 +37,7 @@ import { ComputerDeviceSettings } from "../components/ComputerDeviceSettings";
 import { ComputersUnavailableHint } from "../components/ComputersUnavailableHint";
 import { DesktopUpdateSection } from "../components/DesktopUpdates";
 import { PasskeySettings } from "../components/PasskeySettings";
+import { PhoneAccessSection } from "../components/PhoneAccess";
 import { SettingsGroup, SettingsRow } from "../components/SettingsRows";
 import { TrustedLinkSitesSettings } from "../components/TrustedLinkSitesSettings";
 import { authClient } from "../lib/auth";
@@ -463,6 +464,7 @@ export function GeneralSettingsPanels({
 
       <TrustedLinkSitesSettings />
       <ComputerDeviceSettings />
+      <PhoneAccessSection />
 
       {showPassword || passkeysSupported ? (
         <SettingsGroup title={<Trans>Security</Trans>}>

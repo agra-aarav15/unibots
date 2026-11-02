@@ -1,8 +1,16 @@
 .deepsec/
+.cloud-attachments/
+# Editor/plugin state and bundled interpreters that land in the checkout.
+.mimosa/
+.v2c/
+.video_agent/
+Python/
 node_modules
 __pycache__/
 *.py[cod]
 .turbo
+# Local tooling: bundled runtimes, generated installers, and release keystores. Never committed.
+.tools/
 dist
 build
 coverage

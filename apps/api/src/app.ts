@@ -124,6 +124,7 @@ import {
   runAsSystem,
   securityEventRetentionDays,
   verifyContentKeys,
+  withPostgresAdvisoryLock,
 } from "@rakazo/db";
 import type { Logger } from "@rakazo/logging";
 import {
@@ -595,6 +596,10 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
   const userDevices = userDeviceHub
     ? new UserDevices({ prisma, forwardSecret: userDeviceSecret, hub: userDeviceHub })
     : undefined;
+  const memoryCuration = {
+    enabled: env.memoryCurationEnabled,
+    ...(env.memoryCurationModel ? { model: env.memoryCurationModel } : {}),
+  };
   const executor = createRunExecutor({
     billingEnabled: modelCreditsEnabled,
     maxUploadSizeBytes: env.maxUploadSizeBytes,
@@ -605,6 +610,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
     sandbox,
     memory,
     memoryProviders,
+    memoryCuration,
     home,
     artifacts,
     connector: stack.connector,
@@ -662,7 +668,13 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
     runtime,
     notifications: notifications instanceof ExpoPushProvider ? notifications : undefined,
     secretStore: secrets,
+    memory,
     memoryProviders,
+    memoryCuration,
+    withUserMemoryLock: jobPool
+      ? <T>(userId: string, fn: () => Promise<T>) =>
+          withPostgresAdvisoryLock(jobPool, `memory-curate:user:${userId}`, fn)
+      : undefined,
     deploymentModelKey: env.deploymentModelKey,
     deploymentModelConfigured: env.deploymentModelConfigured,
     messaging,
@@ -774,6 +786,8 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
       integrationsCatalogUrl: env.integrationsCatalogUrl,
       mcpAllowPrivateEndpoint: env.mcpAllowPrivateEndpoint,
       desktopHostChoiceEnabled: Boolean(env.desktopStackToken),
+      desktopManaged: Boolean(env.desktopStackToken),
+      pairingSecret: env.authSecret,
       mcpStdioEnabled: env.mcpStdioEnabled,
       mcpStdioAllowedCommands: env.mcpStdioAllowedCommands,
     },
@@ -804,7 +818,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
       c.header("cache-control", "no-store");
     });
   }
-  app.get("/api/auth/capabilities", (c) => {
+  app.get("/api/auth/capabilities", async (c) => {
     return c.json({
       sso: env.oidc
         ? { name: env.oidc.name, availability: auth.ssoAvailability() ?? "checking" }
@@ -814,10 +828,12 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
       resetUrl:
         env.passwordAuth !== false && email ? new URL("/reset-password", env.webOrigin).href : null,
       emailCode: auth.emailCodeSignIn,
+      emailChange: Boolean(email),
+      needsFirstUser: (await prisma.user.count()) === 0,
+      desktopManaged: Boolean(env.desktopStackToken),
       billing: Boolean(billing),
       passkeyRpId: auth.passkeyRpId,
       nativePasskeys: nativePasskeys(env, auth.passkeyRpId),
-      crispWebsiteId: billing ? (env.crispWebsiteId ?? null) : null,
     } satisfies AuthCapabilities);
   });
   mountAppAssociation(app, env);
@@ -927,6 +943,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
       context: {
         actor,
         sessionId: session?.sessionId,
+        ip: requestClientIp(c),
         signal: c.req.raw.signal,
         // Same user in the same space, so leaving the space also ends a stream.
         // A database failure rejects this check; only a missing membership is unauthorized.

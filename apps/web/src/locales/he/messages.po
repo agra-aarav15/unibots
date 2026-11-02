@@ -678,7 +678,7 @@ msgid "Allow once"
 msgstr "אישור חד-פעמי"
 
 #: src/lib/dictation.ts
-msgid "Allow Rakazo to use Speech Recognition and the microphone in System Settings."
+msgid "Allow Unibots to use Speech Recognition and the microphone in System Settings."
 msgstr ""
 
 #: src/components/ApprovalRulePreview.tsx
@@ -730,8 +730,8 @@ msgid "An API key is stored for this provider, not a subscription sign-in."
 msgstr "לספק הזה שמור מפתח API, לא התחברות עם מנוי."
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
-msgid "An existing Honcho peer to read from. Rakazo never writes to it."
-msgstr "עמית Honcho קיים לקריאה ממנו. Rakazo לעולם לא כותב אליו."
+msgid "An existing Honcho peer to read from. Unibots never writes to it."
+msgstr "עמית Honcho קיים לקריאה ממנו. Unibots לעולם לא כותב אליו."
 
 #: src/lib/agent-import-errors.ts
 msgid "An imported API key could not be checked. Try again."
@@ -1313,7 +1313,7 @@ msgstr "בחירת תיקייה"
 
 #: src/components/ModelCredits.tsx
 #: src/components/SubscriptionGate.tsx
-msgid "Choose how to use Rakazo"
+msgid "Choose how to use Unibots"
 msgstr ""
 
 #: src/lib/localized-provider-hint.ts
@@ -1615,8 +1615,8 @@ msgstr "יש לחבר קודם את הספק של המודל הזה."
 
 #. js-lingui-explicit-id
 #: src/lib/run-error.ts
-msgid "Connect your own API key in Models or choose Rakazo credits in Billing."
-msgstr "חבר מפתח API משלך במודלים או בחר בקרדיטים של Rakazo בחיוב."
+msgid "Connect your own API key in Models or choose Unibots credits in Billing."
+msgstr "חבר מפתח API משלך במודלים או בחר בקרדיטים של Unibots בחיוב."
 
 #: src/components/ComputerDeviceSettings.tsx
 #: src/components/integrations/IntegrationSetup.tsx
@@ -2305,8 +2305,8 @@ msgid "Create space"
 msgstr "יצירת מרחב"
 
 #: src/pages/Auth.tsx
-msgid "Create your Rakazo"
-msgstr "יצירת Rakazo משלך"
+msgid "Create your Unibots"
+msgstr "יצירת Unibots משלך"
 
 #: src/components/AskCard.tsx
 msgid "Created"
@@ -3165,7 +3165,7 @@ msgid "How to check"
 msgstr "איך לבדוק"
 
 #: src/components/SignupSurvey.tsx
-msgid "How will you use Rakazo?"
+msgid "How will you use Unibots?"
 msgstr ""
 
 #: src/pages/shell/computer-release-actions.tsx
@@ -4112,8 +4112,8 @@ msgid "Not imported"
 msgstr "לא יובא"
 
 #: src/pages/shell/import-status.ts
-msgid "Not in Rakazo's catalog"
-msgstr "לא בקטלוג של Rakazo"
+msgid "Not in Unibots's catalog"
+msgstr "לא בקטלוג של Unibots"
 
 #: src/pages/PluginsOverlay.tsx
 msgid "Not in the plugin catalog"
@@ -4125,11 +4125,11 @@ msgstr "לא עכשיו"
 
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/import-status.ts
-msgid "Not supported in Rakazo"
+msgid "Not supported in Unibots"
 msgstr "לא נתמך ב-Rakazo"
 
 #: src/pages/shell/agent-import.tsx
-msgid "Not used by Rakazo"
+msgid "Not used by Unibots"
 msgstr "לא בשימוש ב-Rakazo"
 
 #: src/components/McpServerHealthLine.tsx
@@ -4372,8 +4372,8 @@ msgid "Paste a replacement key"
 msgstr "יש להדביק מפתח חלופי"
 
 #: src/pages/model-settings/compatible-model-fields.tsx
-msgid "Paste the OpenAI-compatible address from your server. Rakazo adds /v1 if needed."
-msgstr "יש להדביק את הכתובת התואמת ל-OpenAI מהשרת. Rakazo מוסיף /v1 במידת הצורך."
+msgid "Paste the OpenAI-compatible address from your server. Unibots adds /v1 if needed."
+msgstr "יש להדביק את הכתובת התואמת ל-OpenAI מהשרת. Unibots מוסיף /v1 במידת הצורך."
 
 #: src/pages/shell/agent-import.tsx
 msgid "Paste the reply"
@@ -4546,16 +4546,16 @@ msgid "Queued"
 msgstr "בתור"
 
 #: src/pages/shell/avatar-studio-popover.tsx
-msgid "Rakazo"
-msgstr "Rakazo"
+msgid "Unibots"
+msgstr "Unibots"
 
 #: src/components/ModelCredits.tsx
 #: src/pages/Onboarding.tsx
-msgid "Rakazo credits"
+msgid "Unibots credits"
 msgstr ""
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
-msgid "rakazo-shared and IDs starting with bot- are reserved for Rakazo."
+msgid "rakazo-shared and IDs starting with bot- are reserved for Unibots."
 msgstr ""
 
 #: src/pages/shell/message-hover-actions.tsx
@@ -4953,7 +4953,7 @@ msgstr ""
 
 #: src/pages/McpOAuthCallback.tsx
 #: src/pages/SlackInstallCallback.tsx
-msgid "Return to Rakazo"
+msgid "Return to Unibots"
 msgstr "חזרה ל-Rakazo"
 
 #: src/lib/model-connection-preflight.ts
@@ -5379,7 +5379,7 @@ msgid "Sign in at <0>{0}</0>, then paste the code here."
 msgstr "התחברו ב-<0>{0}</0> והדביקו כאן את הקוד."
 
 #: src/pages/Auth.tsx
-msgid "Sign in to Rakazo"
+msgid "Sign in to Unibots"
 msgstr "התחברות ל-Rakazo"
 
 #: src/lib/user-error.ts
@@ -5624,8 +5624,8 @@ msgid "Subscribe for {price} / month"
 msgstr "הרשמה במחיר {price} לחודש"
 
 #: src/components/ModelCredits.tsx
-msgid "Subscribe to Rakazo credits"
-msgstr "הרשמה למנוי לקרדיטים של Rakazo"
+msgid "Subscribe to Unibots credits"
+msgstr "הרשמה למנוי לקרדיטים של Unibots"
 
 #: src/components/ModelCredits.tsx
 msgid "Subscribe with your own AI"
@@ -5923,7 +5923,7 @@ msgid "This server is already connected. Disconnect it first to authorize again.
 msgstr "השרת הזה כבר מחובר. יש לנתק אותו קודם כדי לאשר מחדש."
 
 #: src/pages/model-settings/connection-controls.tsx
-msgid "This subscription sign-in is not available in Rakazo yet. Use a deployment credential or choose another provider."
+msgid "This subscription sign-in is not available in Unibots yet. Use a deployment credential or choose another provider."
 msgstr "התחברות עם המנוי הזה עדיין לא זמינה ב-Rakazo. אפשר להשתמש בפרטי גישה של ההתקנה או לבחור ספק אחר."
 
 #: src/pages/Artifacts.tsx
@@ -6215,7 +6215,7 @@ msgid "Use Protected input for passwords."
 msgstr "לסיסמאות יש להשתמש בקלט מוגן."
 
 #: src/components/ModelCredits.tsx
-msgid "Use Rakazo credits"
+msgid "Use Unibots credits"
 msgstr ""
 
 #: src/pages/model-settings/space-bots-model.tsx
@@ -6348,7 +6348,7 @@ msgid "Weekends"
 msgstr "סופי שבוע"
 
 #: src/components/SignupSurvey.tsx
-msgid "Welcome to Rakazo"
+msgid "Welcome to Unibots"
 msgstr ""
 
 #: src/pages/shell/dialogs.tsx
@@ -6360,7 +6360,7 @@ msgid "What can this space use?"
 msgstr ""
 
 #: src/components/SignupSurvey.tsx
-msgid "What do you most want Rakazo to help with?"
+msgid "What do you most want Unibots to help with?"
 msgstr ""
 
 #: src/pages/shell/message-cards.tsx

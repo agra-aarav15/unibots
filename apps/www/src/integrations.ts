@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import type { PluginCategory } from "@rakazo/core";
 import { PLUGIN_CATEGORIES } from "@rakazo/core";
 import { z } from "zod";
-import { CATALOG_URL, SITE_URL } from "./site";
+import { INTEGRATIONS_CATALOG_PATH, SITE_URL } from "./site";
 
 const IntegrationSchema = z.object({
   slug: z.string().regex(/^[a-z0-9_-]+$/),
@@ -21,9 +21,13 @@ const CatalogSchema = z.object({
 
 export type Integration = z.infer<typeof IntegrationSchema>;
 
-/** Published weekly by a private sync job. `CATALOG_URL` may point at another URL or a local file. */
+/** Set `CATALOG_URL` to an HTTPS URL or a local file. Without it no app pages are built. */
 async function loadCatalog(): Promise<Integration[]> {
-  const source = process.env.CATALOG_URL?.trim() || CATALOG_URL;
+  const source = process.env.CATALOG_URL?.trim();
+  if (!source) {
+    console.warn(`Integrations catalog not configured; set CATALOG_URL to publish ${INTEGRATIONS_CATALOG_PATH}`);
+    return [];
+  }
   try {
     const text = /^https?:\/\//.test(source)
       ? await fetch(source).then((response) => {
@@ -240,9 +244,9 @@ export function integrationsMarkdown(): string {
     (integration) =>
       `- [${integration.name}](${SITE_URL}${integrationPath(integration.slug)}): ${CATEGORY_LABELS[categoryOf(integration)]}, ${integration.actions.length} actions`,
   );
-  return `# Rakazo integrations
+  return `# Unibots integrations
 
-Rakazo bots can connect to ${INTEGRATIONS.length} apps. Ask a bot to connect one and approve the sign-in it sends.
+Unibots bots can connect to ${INTEGRATIONS.length} apps. Ask a bot to connect one and approve the sign-in it sends.
 
 ${lines.join("\n")}
 `;
@@ -257,7 +261,7 @@ export function integrationMarkdown(integration: Integration): string {
 
 ${integration.description}
 
-Category: ${CATEGORY_LABELS[categoryOf(integration)]}. Connect from any Rakazo bot at ${SITE_URL}${integrationPath(integration.slug)}.
+Category: ${CATEGORY_LABELS[categoryOf(integration)]}. Connect from any Unibots bot at ${SITE_URL}${integrationPath(integration.slug)}.
 
 ## Actions
 

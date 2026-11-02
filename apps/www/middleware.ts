@@ -8,8 +8,23 @@ import {
 } from "./src/agent-content.js";
 
 const VARY_HEADER = "Accept, Accept-Encoding";
-const APEX_ORIGIN = "https://rakazo.com";
-const WWW_HOST = "www.rakazo.com";
+
+/**
+ * Canonical origin for the www redirect and the /sitemap.xml alias.
+ *
+ * Set `PUBLIC_SITE_URL` on the deployment. Without it the middleware does not redirect
+ * anywhere, so a preview or self-hosted copy is never sent to a domain it does not own.
+ */
+const SITE_URL = process.env.PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "";
+
+function wwwHostOf(origin: string): string | null {
+  try {
+    const { hostname } = new URL(origin);
+    return hostname.startsWith("www.") ? hostname : `www.${hostname}`;
+  } catch {
+    return null;
+  }
+}
 
 export const config = {
   matcher: ["/((?!api|_astro|.*\\..*).*)", "/sitemap.xml"],
@@ -24,14 +39,15 @@ function permanentRedirect(location: string): Response {
 
 export default function middleware(request: Request): Response {
   const url = new URL(request.url);
+  const wwwHost = SITE_URL ? wwwHostOf(SITE_URL) : null;
 
-  if (url.hostname.toLowerCase() === WWW_HOST) {
-    const destination = new URL(`${url.pathname}${url.search}`, APEX_ORIGIN);
+  if (wwwHost && url.hostname.toLowerCase() === wwwHost) {
+    const destination = new URL(`${url.pathname}${url.search}`, SITE_URL);
     return permanentRedirect(destination.toString());
   }
 
-  if (url.pathname === "/sitemap.xml") {
-    const destination = new URL(`/sitemap-index.xml${url.search}`, APEX_ORIGIN);
+  if (url.pathname === "/sitemap.xml" && SITE_URL) {
+    const destination = new URL(`/sitemap-index.xml${url.search}`, SITE_URL);
     return permanentRedirect(destination.toString());
   }
 

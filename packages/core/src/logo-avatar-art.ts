@@ -1,8 +1,17 @@
-/** Smooth cubic fit to the canonical silhouette; no raster image is embedded. */
+/**
+ * The bot head, drawn as one symmetric outline: a flat crown, straight sides with
+ * soft shoulders, and a broad base. It is deliberately not a dome-and-hem
+ * silhouette, so the avatar reads as a device rather than a floating figure.
+ *
+ * Coordinates live in the avatar's 100x110 user space; the eyes sit at y=49 and the
+ * book/monitor at y=75..94, so the body must enclose both.
+ */
 export const LOGO_BODY_PATH =
-  "M-1.759 76.330C0.959 69.782 7.117 63.647 10.602 56.566C14.086 49.486 14.898 41.460 17.063 33.747C19.227 26.034 22.744 18.634 28.465 13.175C34.186 7.716 42.110 4.197 50.032 4.183C57.954 4.169 65.874 7.660 71.581 13.121C77.288 18.582 80.783 26.014 82.945 33.732C85.107 41.449 85.935 49.451 89.402 56.543C92.869 63.634 98.975 69.814 101.767 76.305L108 108H-8Z";
-export const LOGO_LEFT_HAND_PATH = "M-2 74C7 68 22 75 26 83C31 93 26 102 19 107H-2Z";
-export const LOGO_RIGHT_HAND_PATH = "M102 73C92 68 78 75 74 83C69 93 74 102 81 107H102Z";
+  "M 38 14 H 62 A 26 26 0 0 1 88 40 V 78 A 26 26 0 0 1 62 104 H 38 A 26 26 0 0 1 12 78 V 40 A 26 26 0 0 1 38 14 Z";
+
+/** Side tabs, read as ears/arms. They stay outside the head so the rim lights them. */
+export const LOGO_LEFT_HAND_PATH = "M 15 50 C 4 50 2 64 5 73 C 7 79 13 79 15 73 Z";
+export const LOGO_RIGHT_HAND_PATH = "M 85 50 C 96 50 98 64 95 73 C 93 79 87 79 85 73 Z";
 
 /** Shared vector paint palette for web SVG and react-native-svg. */
 export function logoAvatarPaint(hex: string, originalOrange = false) {

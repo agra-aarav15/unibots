@@ -2,6 +2,7 @@ import type {
   AgentHomeStore,
   AgentRuntime,
   ArtifactStore,
+  MemoryStore,
   SandboxProvider,
   SecretStore,
 } from "@rakazo/adapter-kit";
@@ -146,6 +147,7 @@ describePostgres("tenant-scoped background jobs (PostgreSQL)", () => {
       workerId: "tenant-jobs",
       runtime: {} as AgentRuntime,
       secretStore: {} as SecretStore,
+      memory: {} as unknown as MemoryStore,
       memoryProviders: { resolve: vi.fn(async () => null) },
     });
     return { handlers, seen, continueRun };

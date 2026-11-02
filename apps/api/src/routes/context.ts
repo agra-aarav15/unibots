@@ -79,6 +79,8 @@ export function createRouterContext(deps: RouterDeps) {
     actor: Actor | null;
     /** The signed-in session, so a push token ends with the session that registered it. */
     sessionId?: string;
+    /** Client address for the few unauthenticated procedures that need a bound. */
+    ip?: string;
     signal?: AbortSignal;
     /** Re-runs the request's auth so a long-lived stream notices sign-out and revocation. */
     stillAuthorized?: () => Promise<boolean>;
@@ -186,7 +188,7 @@ export function createRouterContext(deps: RouterDeps) {
               auth.secretIdByModel[entry.provider]?.[entry.id] ||
               auth.secretIdByProvider[entry.provider]
                 ? entry.billing
-                : "Uses Rakazo credits",
+                : "Uses Unibots credits",
           }
         : entry,
     );

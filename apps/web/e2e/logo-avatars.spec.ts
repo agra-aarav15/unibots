@@ -1,4 +1,3 @@
-import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 import { BOT_AVATAR_COLORS } from "@rakazo/core";
 import { captureScreenshot } from "./helpers";
@@ -10,7 +9,7 @@ test("renders the real logo in every requested pose in both themes", async ({ pa
   page.on("pageerror", (error) => errors.push(error.message));
   for (const theme of ["dark", "light"]) {
     await page.goto(`/e2e/fixtures/logo-avatars.html?theme=${theme}`);
-    await expect(page.getByRole("img", { name: "Official Rakazo logo" })).toBeVisible();
+    await expect(page.getByRole("img", { name: "Official Unibots logo" })).toBeVisible();
     const cards = page.getByRole("region", { name: "Requested expressions" });
     for (const label of ["Idle", "Reading", "Writing", "Thinking", "Computer use"]) {
       await expect(cards.getByRole("img", { name: label, exact: true })).toBeVisible();
@@ -723,70 +722,53 @@ test("native small-size indicators keep one-pixel strokes and omit fine detail i
   }
 });
 
-test("directional vector rim follows the source edge falloff without whitening the face", async ({
+test("directional vector rim lights the silhouette edge without whitening the face", async ({
   page,
 }) => {
-  const original = await readFile(
-    new URL(
-      "../../../packages/ui-tokens/assets/Rakazo.icon/Assets/orange-bot.png",
-      import.meta.url,
-    ),
-  );
   await page.goto("/e2e/fixtures/logo-avatars.html?compare=1&theme=light");
   const art = await page
     .getByRole("img", { name: "Idle", exact: true })
     .locator(".logo-avatar-art")
     .evaluate((node) => node.outerHTML);
-  const proof = await page.evaluate(
-    async ({ art, original }) => {
-      const pixels = async (src: string) => {
-        const image = new Image();
-        image.src = src;
-        await image.decode();
-        const canvas = document.createElement("canvas");
-        canvas.width = canvas.height = 1024;
-        const context = canvas.getContext("2d")!;
-        context.drawImage(image, 0, 0, 1024, 1024);
-        return context.getImageData(0, 0, 1024, 1024).data;
-      };
-      const source = await pixels(original);
-      const vector = await pixels(
-        `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 100 100">${art}</svg>`)}`,
-      );
-      const rgba = (data: Uint8ClampedArray, x: number, y: number) =>
-        Array.from(data.slice((y * 1024 + x) * 4, (y * 1024 + x) * 4 + 4));
-      const y = 420;
-      const opaque = Array.from({ length: 1024 }, (_, x) => x).filter(
-        (x) => rgba(source, x, y)[3]! > 245,
-      );
-      const left = opaque[0]!,
-        right = opaque[opaque.length - 1]!;
-      const sample = (data: Uint8ClampedArray, side: "left" | "right", inset: number) =>
-        rgba(data, side === "left" ? left + inset : right - inset, y);
-      return {
-        sourceLeft: sample(source, "left", 4),
-        vectorLeft: sample(vector, "left", 4),
-        sourceRight: sample(source, "right", 4),
-        vectorRight: sample(vector, "right", 4),
-        leftInside: sample(vector, "left", 40),
-        rightInside: sample(vector, "right", 40),
-        sourceHotspot: rgba(source, 580, 220),
-        vectorHotspot: rgba(vector, 580, 220),
-        outsideAlpha: rgba(vector, 512, 20)[3],
-      };
-    },
-    { art, original: `data:image/png;base64,${original.toString("base64")}` },
-  );
-  expect(proof.vectorRight[2]! - proof.rightInside[2]!).toBeGreaterThan(25);
-  expect(proof.vectorLeft[2]! - proof.leftInside[2]!).toBeGreaterThan(15);
-  expect(proof.vectorRight[1]! - proof.vectorLeft[1]!).toBeGreaterThan(25);
-  for (const [actual, source] of [
-    [proof.vectorLeft, proof.sourceLeft],
-    [proof.vectorRight, proof.sourceRight],
-    [proof.vectorHotspot, proof.sourceHotspot],
-  ])
-    for (let channel = 0; channel < 3; channel++)
-      expect(Math.abs(actual![channel]! - source![channel]!)).toBeLessThan(30);
+  const proof = await page.evaluate(async ({ art }) => {
+    const vector = async (src: string) => {
+      const image = new Image();
+      image.src = src;
+      await image.decode();
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = 1024;
+      const context = canvas.getContext("2d")!;
+      context.drawImage(image, 0, 0, 1024, 1024);
+      return context.getImageData(0, 0, 1024, 1024).data;
+    };
+    const data = await vector(
+      `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 100 100">${art}</svg>`)}`,
+    );
+    const rgba = (x: number, y: number) => Array.from(data.slice((y * 1024 + x) * 4, (y * 1024 + x) * 4 + 4));
+    // A row across the straight sides of the head, below the eyes and above the book.
+    const y = 420;
+    const opaque = Array.from({ length: 1024 }, (_, x) => x).filter((x) => rgba(x, y)[3]! > 245);
+    const left = opaque[0]!;
+    const right = opaque[opaque.length - 1]!;
+    const sample = (side: "left" | "right", inset: number) =>
+      rgba(side === "left" ? left + inset : right - inset, y);
+    return {
+      hasSilhouette: opaque.length > 400,
+      leftEdge: sample("left", 4),
+      rightEdge: sample("right", 4),
+      leftInside: sample("left", 40),
+      rightInside: sample("right", 40),
+      outsideAlpha: rgba(512, 20)[3],
+    };
+  }, { art });
+
+  expect(proof.hasSilhouette).toBe(true);
+  // The rim brightens each edge over the flat interior on both sides.
+  expect(proof.rightEdge[2]! - proof.rightInside[2]!).toBeGreaterThan(25);
+  expect(proof.leftEdge[2]! - proof.leftInside[2]!).toBeGreaterThan(15);
+  // Light falls from the right, so the right rim outshines the left.
+  expect(proof.rightEdge[1]! - proof.leftEdge[1]!).toBeGreaterThan(25);
+  // Nothing is painted outside the silhouette.
   expect(proof.outsideAlpha).toBe(0);
 });
 

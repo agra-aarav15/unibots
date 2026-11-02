@@ -33,7 +33,7 @@ const DISPLAY_START = 20;
 const DEFAULT_NAMESPACE = "rakazo-sandboxes";
 // Same default as the Compose stack. Pin a digest with KUBERNETES_SANDBOX_COMPUTER_IMAGE in
 // production so every pod runs the image the API was tested against.
-const DEFAULT_COMPUTER_IMAGE = "ghcr.io/elie222/rakazo/computer:edge";
+const DEFAULT_COMPUTER_IMAGE = "ghcr.io/agra-aarav15/unibots/computer:edge";
 const DEFAULT_READY_TIMEOUT_MS = 120_000;
 const WORKSPACE = "/home/rakazo";
 const CONTAINER_NAME = "computer";
@@ -69,7 +69,7 @@ export interface KubernetesSandboxOptions {
   podLabels?: Record<string, string>;
   readyTimeoutMs?: number;
   /**
-   * Claim in the sandbox namespace that holds the Rakazo data directory. When
+   * Claim in the sandbox namespace that holds the Unibots data directory. When
    * set, each Computer mounts only its own `homes/<bot id>` directory at the
    * workspace, so the home persists in place and is never copied in or out.
    * The claim's volume is ReadWriteOnce, so the pod must also be placed with

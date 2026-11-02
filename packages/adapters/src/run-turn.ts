@@ -31,6 +31,7 @@ import {
   HISTORY_WINDOW_SIZE,
   shouldEnqueueCompaction,
 } from "./history-compaction.js";
+import { maybeEnqueueMemoryCuration } from "./memory-curator.js";
 import {
   backOffRoutineAfterAccountError,
   clearRoutineBackoff,
@@ -835,6 +836,19 @@ export async function completeRun(ctx: RunContext) {
     }
   } catch (error) {
     getLogger().error("history.compact enqueue failed", error);
+  }
+  // Durable memory follows a direct conversation, never a routine, group, or messaging run.
+  try {
+    await maybeEnqueueMemoryCuration(deps, {
+      runId,
+      botId: bot.id,
+      threadId: thread.id,
+      trigger: run.trigger,
+      groupId: thread.groupId,
+      externalConversationId: thread.externalConversationId,
+    });
+  } catch (error) {
+    getLogger().error("memory.curate enqueue failed", error);
   }
 }
 
