@@ -565,3 +565,32 @@ Keep each phase reviewable and reversible:
 6. `docs: local-first cleanup and no-cloud guard`
 
 Do not combine phases into one commit. Do not commit generated keystores, `.env` files, or `dist` output.
+
+## Delivered after the plan (2026-11-02)
+
+The table above was written while the APK was still blocked and before the last checks ran. What
+changed afterwards:
+
+- `ci` and `nightly verification` are green on `main`. The three red checks had three different
+  causes: two unit tests the word-level rename half-changed, an avatar rim test whose measurement no
+  longer matched the new silhouette, and an onboarding step that had lost its "pay with the
+  deployment's credits" provider option — a feature, not a label. The nightly's third failure was
+  never code: the visual report upload now skips with a notice when no bucket is configured.
+- The signed APK builds in CI and is published on release tag `android` as `unibots.apk`
+  (`com.unibots.app`, 1.0.13 / code 12). The local Windows build stays impossible (275-character
+  generated path); the workflow sizes Gradle for a four-core runner instead of the JVM defaults
+  `expo prebuild` writes.
+- The root `NOTICE` is back. It was dropped when `main`'s tree was rebuilt from the upstream
+  checkout, not removed on purpose, so the earlier "no `NOTICE` file exists" note was wrong at the
+  time this table was written.
+- The last of the upstream identity is gone from what a person reads: the site's wordmark and one
+  blog URL, the welcome email's signature and Discord invite, the App Store and store-download
+  links, the third-party plugin and legal links, the OpenRouter attribution, the German and Dutch
+  call titles, the security, support and maintainer addresses, and the install commands and data
+  paths in the docs. `scripts/check-no-cloud.mjs` now fails on those strings, so they cannot return
+  quietly. Internal identifiers (`@rakazo/*`, `RAKAZO_*`, `rakazo-*` paths, `com.rakazo.*`
+  packages) are unchanged on purpose.
+
+Still open, and only the owner can close them: the `v0.4.0` GHCR images (a `v0.4.0` tag push; the
+`edge` tag is published, so the documented installer works today), and the on-device test, which
+needs a wireless-debugging pairing code from the phone.
