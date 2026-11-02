@@ -6,7 +6,11 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-/** Every string that would mean the removed hosted service is back. */
+/**
+ * Every string that would mean the removed hosted service is back, plus the upstream project's
+ * identity: a link or address that sends people to another company's product or inbox is the same
+ * class of mistake as the hosted service returning.
+ */
 export const FORBIDDEN = [
   "Unibots Cloud",
   "UNIBOTS_CLOUD_URL",
@@ -14,6 +18,13 @@ export const FORBIDDEN = [
   "Rakazo Cloud",
   "RAKAZO_CLOUD_URL",
   "app.rakazo.com",
+  "https://rakazo.com",
+  "www.rakazo.com",
+  "security@rakazo.com",
+  "support@rakazo.com",
+  "elie@rakazo.com",
+  "apps.apple.com/app/rakazo",
+  "discord.gg/RWwKa2Sn7h",
 ];
 
 const SCAN_ROOTS = ["apps", "packages", "docs", "infra", "scripts"];
