@@ -1,10 +1,4 @@
-import {
-  ANDROID_APK_URL,
-  buildIdAt,
-  CLIENT_BUILD_HEADER,
-  formatClientBuild,
-  IOS_APP_STORE_URL,
-} from "@rakazo/contracts";
+import { ANDROID_APK_URL, buildIdAt, CLIENT_BUILD_HEADER, formatClientBuild } from "@rakazo/contracts";
 import * as Updates from "expo-updates";
 import type { AppStateStatus } from "react-native";
 import { Alert, AppState, Linking, Platform } from "react-native";
@@ -42,7 +36,7 @@ async function downloadUpdate(): Promise<boolean> {
   return true;
 }
 
-/** Apply an over-the-air update now if one exists; otherwise send the user to the store. */
+/** Apply an over-the-air update now if one exists; otherwise send Android users to the APK. */
 export async function applyRequiredUpdate(): Promise<void> {
   try {
     if (await downloadUpdate()) {
@@ -50,11 +44,13 @@ export async function applyRequiredUpdate(): Promise<void> {
       return;
     }
   } catch {
-    // An unreachable update server falls through to the store.
+    // An unreachable update server falls through to the download.
   }
-  await Linking.openURL(Platform.OS === "ios" ? IOS_APP_STORE_URL : ANDROID_APK_URL).catch(
-    () => undefined,
-  );
+  // Only Android has a published build; an iOS sideload has nothing to open, so it waits for the
+  // deployment's next bundle instead of sending the person to someone else's listing.
+  if (Platform.OS === "android") {
+    await Linking.openURL(ANDROID_APK_URL).catch(() => undefined);
+  }
 }
 
 let prompting = false;

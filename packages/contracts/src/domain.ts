@@ -883,7 +883,8 @@ export const PluginMarketplaceCatalogSchema = z.object({
 export type PluginMarketplaceCatalog = z.infer<typeof PluginMarketplaceCatalogSchema>;
 
 export const PLUGIN_SUBMISSIONS_PATH = "/api/v1/plugin-submissions";
-export const SUBMIT_PLUGIN_URL = "https://rakazo.com/plugins/submit/";
+export const SUBMIT_PLUGIN_URL =
+  "https://github.com/agra-aarav15/unibots/blob/main/docs/build-a-plugin.md";
 
 const HttpsUrlSchema = z
   .string()

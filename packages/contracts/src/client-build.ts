@@ -16,9 +16,9 @@ export const CLIENT_KINDS = ["web", "mobile"] as const;
 export type ClientKind = (typeof CLIENT_KINDS)[number];
 export type MinimumClientBuilds = Partial<Record<ClientKind, string>>;
 
-export const IOS_APP_STORE_URL = "https://apps.apple.com/app/rakazo/id6801531099";
+/** The rolling release that carries the signed Android build; this project has no iOS listing. */
 export const ANDROID_APK_URL =
-  "https://github.com/agra-aarav15/unibots/releases/download/android/rakazo.apk";
+  "https://github.com/agra-aarav15/unibots/releases/download/android/unibots.apk";
 
 const BUILD_ID = /^\d{14}$/;
 

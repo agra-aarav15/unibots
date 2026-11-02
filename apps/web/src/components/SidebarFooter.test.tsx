@@ -146,7 +146,6 @@ it("opens integrations and keeps the existing account actions and links", async 
     "Artifacts",
     "Board",
     "Usage",
-    "Get the mobile app",
     "Docs",
     "Log out",
   ]);
@@ -168,8 +167,16 @@ it("offers the existing Android download on Android", async () => {
     (link) => link.textContent === "Get the mobile app",
   )!;
   expect(mobile.href).toBe(
-    "https://github.com/agra-aarav15/unibots/releases/download/android/rakazo.apk",
+    "https://github.com/agra-aarav15/unibots/releases/download/android/unibots.apk",
   );
+});
+
+it("offers no mobile download where no build is published", async () => {
+  vi.spyOn(navigator, "userAgent", "get").mockReturnValue("iPhone");
+  await render();
+  expect(
+    [...document.querySelectorAll("a")].some((link) => link.textContent === "Get the mobile app"),
+  ).toBe(false);
 });
 
 it("falls back when app artwork fails and accepts replacement artwork", async () => {

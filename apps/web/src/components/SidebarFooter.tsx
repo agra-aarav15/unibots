@@ -1,6 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import type { NavLink } from "@rakazo/contracts";
-import { ANDROID_APK_URL, IOS_APP_STORE_URL } from "@rakazo/contracts";
+import { ANDROID_APK_URL } from "@rakazo/contracts";
 import {
   AppMarkStack,
   Button,
@@ -209,15 +209,18 @@ export function SidebarFooter({
               <Trans>Usage</Trans>
             </Button>
             <div className="my-1 border-t border-border" />
-            <a
-              className={`${buttonVariants({ variant: "ghost" })} h-9 w-full justify-start gap-2.5 font-normal`}
-              href={/Android/i.test(navigator.userAgent) ? ANDROID_APK_URL : IOS_APP_STORE_URL}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Smartphone className="text-muted-foreground" strokeWidth={1.75} />
-              <Trans>Get the mobile app</Trans>
-            </a>
+            {/* Only Android is published; an iPhone has nothing to download. */}
+            {/Android/i.test(navigator.userAgent) ? (
+              <a
+                className={`${buttonVariants({ variant: "ghost" })} h-9 w-full justify-start gap-2.5 font-normal`}
+                href={ANDROID_APK_URL}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Smartphone className="text-muted-foreground" strokeWidth={1.75} />
+                <Trans>Get the mobile app</Trans>
+              </a>
+            ) : null}
             {onInvite ? (
               <Button
                 variant="ghost"

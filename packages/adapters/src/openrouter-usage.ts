@@ -17,7 +17,7 @@ export function openRouterInferenceFetch(fetcher: typeof fetch, userId?: string)
           ? input.headers
           : undefined,
     );
-    headers.set("HTTP-Referer", "https://rakazo.com");
+    headers.set("HTTP-Referer", "https://github.com/agra-aarav15/unibots");
     headers.set("X-OpenRouter-Title", "Unibots");
     const body = init?.body ?? (input instanceof Request ? await input.clone().text() : undefined);
     if (typeof body !== "string") throw new Error("OpenRouter inference requires a JSON body");

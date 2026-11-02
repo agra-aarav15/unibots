@@ -1,4 +1,4 @@
-appId: com.rakazo.app
+appId: com.unibots.app
 ---
 - runFlow: launch-app.yaml
 - runFlow:

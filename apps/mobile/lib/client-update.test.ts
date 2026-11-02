@@ -29,8 +29,9 @@ vi.mock("react-native", () => rn);
 vi.mock("./api", () => ({ configureClientBuild: vi.fn() }));
 vi.mock("./i18n", () => ({ t: (message: string) => message }));
 
-import { IOS_APP_STORE_URL } from "@rakazo/contracts";
+import { ANDROID_APK_URL } from "@rakazo/contracts";
 import {
+  applyRequiredUpdate,
   clientBuildHeaders,
   FOREGROUND_UPDATE_CHECK_MS,
   mobileClientBuild,
@@ -41,6 +42,7 @@ import {
 afterEach(() => {
   updates.isEnabled = true;
   updates.createdAt = new Date("2026-10-22T09:30:15Z");
+  rn.Platform.OS = "ios";
   vi.clearAllMocks();
 });
 
@@ -81,14 +83,22 @@ describe("update required", () => {
     expect(rn.Linking.openURL).not.toHaveBeenCalled();
   });
 
-  it("opens the store when no over-the-air update can fix it, and asks again next time", async () => {
+  it("opens the Android download when no over-the-air update can fix it, and asks again next time", async () => {
+    rn.Platform.OS = "android";
     noteClientUpdateRequired();
     pressUpdate();
     await flush();
     expect(updates.reloadAsync).not.toHaveBeenCalled();
-    expect(rn.Linking.openURL).toHaveBeenCalledWith(IOS_APP_STORE_URL);
+    expect(rn.Linking.openURL).toHaveBeenCalledWith(ANDROID_APK_URL);
     noteClientUpdateRequired();
     expect(rn.Alert.alert).toHaveBeenCalledTimes(2);
+  });
+
+  it("has nowhere to send an iOS build, which is only sideloaded from a deployment", async () => {
+    rn.Platform.OS = "ios";
+    await applyRequiredUpdate();
+    expect(updates.reloadAsync).not.toHaveBeenCalled();
+    expect(rn.Linking.openURL).not.toHaveBeenCalled();
   });
 });
 
