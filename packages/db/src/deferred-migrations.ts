@@ -3,6 +3,7 @@ import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { Client } from "pg";
+import { pnpmCommand } from "./pnpm-command.js";
 
 /** First line of a migration that may only run once the release before it has stopped. */
 export const DEFERRED_MIGRATION_MARKER = "-- deferred";
@@ -72,7 +73,8 @@ export async function deployMigrations(input: {
     process.stdout.write(`Holding back until the next migration run: ${held.join(", ")}\n`);
   }
   try {
-    execFileSync("pnpm", ["exec", "prisma", "migrate", "deploy"], {
+    const pnpm = pnpmCommand(["exec", "prisma", "migrate", "deploy"]);
+    execFileSync(pnpm.file, pnpm.args, {
       cwd: input.dbPackageDir,
       stdio: "inherit",
       env: {
