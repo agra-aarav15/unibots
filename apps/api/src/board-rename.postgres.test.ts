@@ -158,7 +158,7 @@ describe.skipIf(!enabled).sequential("board prefix rename (PostgreSQL)", () => {
         prisma.board.findUniqueOrThrow({ where: { id: boardId } }),
       );
       expect(board.name).toBe("General");
-      expect(board.ticketPrefix).toBe("RAK");
+      expect(board.ticketPrefix).toBe("UNI");
       expect(board.nextNumber).toBe(2);
       expect(
         await runAsSystem("board rename assertion", () =>

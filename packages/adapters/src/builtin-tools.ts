@@ -1098,7 +1098,7 @@ export const builtinAgentTools: ConnectorTool[] = [
     inputSchema: {
       type: "object",
       properties: {
-        ref: { type: "string", description: "Ticket reference such as RAK-42, or the ticket id." },
+        ref: { type: "string", description: "Ticket reference such as UNI-42, or the ticket id." },
       },
       required: ["ref"],
     },
