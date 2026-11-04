@@ -31,6 +31,9 @@ function boardSpace() {
   const row = board();
   return {
     board: {
+      // `ensureBoard` and `resolveBoard` both read the default board with `findFirst`.
+      findFirst: vi.fn(async () => row),
+      findFirstOrThrow: vi.fn(async () => row),
       findUnique: vi.fn(async () => row),
       createMany: vi.fn(async () => ({ count: 1 })),
       findUniqueOrThrow: vi.fn(async () => row),
@@ -317,7 +320,7 @@ describe("ticket mutations", () => {
     expect(s.changes).toHaveBeenCalledOnce();
     expect(s.changes).toHaveBeenCalledWith(expect.objectContaining({ wakeAssignee: true }));
   });
-  it("wakes on an actual reassignment once, and never on status edits or repeated assignment", async () => {
+  it("wakes on reassignment and on a move back into play, but not on a move out", async () => {
     const s = mutationDeps();
     await updateTicket(s.deps, {
       spaceId: "ws",
@@ -329,6 +332,7 @@ describe("ticket mutations", () => {
     expect(s.changes).toHaveBeenCalledWith(
       expect.objectContaining({ wakeAssignee: true, assigneeBotId: "bot-2" }),
     );
+    // Finished work is not work: moving out of play does not wake anyone.
     await updateTicket(s.deps, {
       spaceId: "ws",
       userId: "user-1",
@@ -336,10 +340,18 @@ describe("ticket mutations", () => {
       ownerBotId: "bot-2",
       status: "done",
     });
+    // A ticket that comes back into todo is work again, even with the same owner.
+    await updateTicket(s.deps, {
+      spaceId: "ws",
+      userId: "user-1",
+      id: "t1",
+      ownerBotId: "bot-2",
+      status: "todo",
+    });
     expect(
       s.changes.mock.calls.map(([value]) => (value as { wakeAssignee: boolean }).wakeAssignee),
-    ).toEqual([true, false]);
-    expect(s.tx.ticket.update).toHaveBeenLastCalledWith(
+    ).toEqual([true, false, true]);
+    expect(s.tx.ticket.update).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({ status: "done", completedAt: expect.any(Date) }),
       }),

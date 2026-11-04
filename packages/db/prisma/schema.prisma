@@ -420,7 +420,7 @@ model Space {
   vaultCredentials            VaultCredential[]
   externalConversations       ExternalConversation[]
   agentSecrets                AgentSecret[]
-  board                       Board?
+  boards                      Board[]
   tickets                     Ticket[]
   ticketComments              TicketComment[]
   agentSkillSpaces            AgentSkillSpace[]
@@ -877,8 +877,11 @@ model Run {
   clientNonce          String?
   sourceMessageId      String?
   sourceMessage        Message?          @relation("RunSourceMessage", fields: [sourceMessageId], references: [id], onDelete: SetNull)
-  routineId            String?
-  routine              Routine?          @relation(fields: [routineId], references: [id], onDelete: SetNull)
+routineId            String?
+    routine              Routine?          @relation(fields: [routineId], references: [id], onDelete: SetNull)
+    // The board ticket this run is working, so one ticket is never worked twice at once.
+    ticketId             String?
+    ticket               Ticket?           @relation("TicketRuns", fields: [ticketId], references: [id], onDelete: SetNull)
   // The failed routine run this run retries. Unique, so a run is retried at most once.
   retryOfRunId         String?           @unique
   // Durable retry schedule; null means runnable immediately when queued.
@@ -911,8 +914,9 @@ model Run {
   @@index([threadId, createdAt, id])
   // Partial index runs_recent_activity_idx (recent foreground activity) is created in SQL.
   // Partial index runs_bot_outcome_pending_idx (unreturned bot-message outcomes) is created in SQL.
-  @@index([routineId])
-  @@map("runs")
+@@index([routineId])
+    @@index([ticketId, status])
+    @@map("runs")
 }
 
 model SteeringMessage {
@@ -1879,7 +1883,7 @@ model IntegrationProviderConfig {
 
 model Board {
   id           String   @id @default(cuid())
-  spaceId      String   @unique
+  spaceId      String
   space        Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   name         String   @default("Board")
   ticketPrefix String   @default("UNI")
@@ -1888,6 +1892,10 @@ model Board {
   updatedAt    DateTime @updatedAt
   tickets      Ticket[]
 
+  // A workspace holds several boards; the first one created is its default board.
+  @@index([spaceId])
+  // Ticket references are prefix + number, so a prefix has to mean one board in a workspace.
+  @@unique([spaceId, ticketPrefix])
   @@map("boards")
 }
 
@@ -1910,8 +1918,9 @@ model Ticket {
   createdByUser   User?     @relation("TicketCreatorUser", fields: [createdByUserId], references: [id], onDelete: SetNull)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
-  completedAt       DateTime?
-  comments        TicketComment[]
+completedAt       DateTime?
+    comments        TicketComment[]
+    runs            Run[]         @relation("TicketRuns")
 
   @@unique([boardId, number])
   @@index([spaceId, status])

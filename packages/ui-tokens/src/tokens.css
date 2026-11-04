@@ -23,6 +23,9 @@
   --faint-foreground: #f5f5f58a;
   --accent: #f5f5f50f;
   --accent-foreground: #f5f5f5;
+  --brand: #ec4899;
+  --brand-foreground: #ffffff;
+  --brand-muted: #ec48992e;
   --destructive: #ff6463;
   --destructive-fill: #cf2b35;
   --destructive-foreground: #ffffff;
@@ -71,6 +74,9 @@
   --faint-foreground: #1c1c1c8f;
   --accent: #1c1c1c0f;
   --accent-foreground: #1c1c1c;
+  --brand: #db2777;
+  --brand-foreground: #ffffff;
+  --brand-muted: #db27771f;
   --destructive: #cd2834;
   --destructive-fill: #e72e3b;
   --destructive-foreground: #ffffff;

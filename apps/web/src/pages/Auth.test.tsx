@@ -20,6 +20,7 @@ vi.mock("@lingui/react/macro", () => ({
   Trans: ({ children }: { children: ReactNode }) => children,
 }));
 vi.mock("@rakazo/ui-web", () => ({
+  BrandMark: () => <svg data-testid="brand-mark" />,
   Button: ({
     children,
     variant,

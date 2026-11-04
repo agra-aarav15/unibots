@@ -400,21 +400,26 @@ async function* spaceRecords(
     };
 
   if (!owner) return;
-  const board = await prisma.board.findUnique({ where: { spaceId } });
-  if (!board) return;
-  yield { type: "board", id: board.id, name: board.name, ticketPrefix: board.ticketPrefix };
-  for (let number = 0; ; ) {
-    const tickets = await prisma.ticket.findMany({
-      where: { boardId: board.id, spaceId, number: { gt: number } },
-      orderBy: { number: "asc" },
-      take: PAGE,
-    });
-    for (const ticket of tickets) {
-      yield {
-        type: "ticket",
-        id: ticket.id,
-        number: ticket.number,
-        title: ticket.title,
+  // Every board in the space, oldest first. Each one is followed by its own tickets, which is
+  // the order the importer reads them in.
+  const boards = await prisma.board.findMany({
+    where: { spaceId },
+    orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+  });
+  for (const board of boards) {
+    yield { type: "board", id: board.id, name: board.name, ticketPrefix: board.ticketPrefix };
+    for (let number = 0; ; ) {
+      const tickets = await prisma.ticket.findMany({
+        where: { boardId: board.id, spaceId, number: { gt: number } },
+        orderBy: { number: "asc" },
+        take: PAGE,
+      });
+      for (const ticket of tickets) {
+        yield {
+          type: "ticket",
+          id: ticket.id,
+          number: ticket.number,
+          title: ticket.title,
         description: ticket.description,
         status: ticket.status,
         priority: ticket.priority,
@@ -457,6 +462,7 @@ async function* spaceRecords(
       }
     }
     if (tickets.length < PAGE) break;
-    number = tickets.at(-1)!.number;
+      number = tickets.at(-1)!.number;
+    }
   }
 }

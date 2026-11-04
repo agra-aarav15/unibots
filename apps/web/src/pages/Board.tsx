@@ -1,6 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import { ChatMarkdown } from "@rakazo/chat-ui/web";
-import type { Bot, Ticket, TicketPriority, TicketStatus } from "@rakazo/contracts";
+import type { Board, Bot, Ticket, TicketPriority, TicketStatus } from "@rakazo/contracts";
 import {
   TICKET_COMMENT_MAX_LENGTH,
   TICKET_DESCRIPTION_MAX_LENGTH,
@@ -8,9 +8,10 @@ import {
   TICKET_STATUSES,
   TICKET_TITLE_MAX_LENGTH,
 } from "@rakazo/contracts";
-import { isRetryableError, retryDelayMs } from "@rakazo/core";
+import { ACTIVE_RUN_STATUSES, isRetryableError, retryDelayMs } from "@rakazo/core";
 import { fetchFresh, writeSaved } from "@rakazo/core/query";
 import {
+  BotAvatar,
   Button,
   buttonVariants,
   Dialog,
@@ -24,7 +25,7 @@ import {
 } from "@rakazo/ui-web";
 import { skipToken, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSpaceQueries } from "../lib/query";
 import { formatRelativeTime } from "../lib/relative-time";
@@ -34,22 +35,41 @@ import { useTicketStatusLabels } from "../lib/ticket-status";
 import { errorText } from "../lib/user-error";
 import { WindowChrome } from "./WindowChrome";
 
+/** Priorities worth a mark on the card; normal is what a ticket means unless it says otherwise. */
+const MARKED_PRIORITIES: Partial<Record<TicketPriority, string>> = {
+  urgent: "text-destructive",
+  high: "text-warning",
+  low: "text-muted-foreground",
+};
+
 export function BoardPage() {
   const { t } = useLingui();
   const statuses = useTicketStatusLabels();
   const queries = useSpaceQueries();
   const queryClient = useQueryClient();
-  const ticketsOptions = queries.tickets.list.queryOptions({ input: {} });
+  const boardsQuery = useQuery(queries.boards.list.queryOptions());
+  const boards = boardsQuery.data ?? [];
+  const [chosenBoardId, setChosenBoardId] = useState<string | null>(null);
+  // The first board is the workspace's default, which is what older screens mean by "the board".
+  const board = boards.find((candidate) => candidate.id === chosenBoardId) ?? boards[0];
+  const ticketsOptions = queries.tickets.list.queryOptions({
+    input: board ? { boardId: board.id } : {},
+  });
   const ticketsQuery = useQuery(ticketsOptions);
   const botsQuery = useQuery(queries.bots.list.queryOptions());
   const tickets = ticketsQuery.data?.tickets ?? [];
   const bots = botsQuery.data ?? [];
   const [selected, setSelected] = useState<Ticket | "new" | null>(null);
+  const [creatingBoard, setCreatingBoard] = useState(false);
   const [streamError, setError] = useState("");
-  const loadFailed = ticketsQuery.error ?? botsQuery.error;
+  const loadFailed = ticketsQuery.error ?? botsQuery.error ?? boardsQuery.error;
   const error = streamError || (loadFailed ? errorText(loadFailed) : "");
   /** A read sent after a change, so an older one in flight cannot bring back the old board. */
   const reload = () => fetchFresh(queryClient, ticketsOptions).then(() => undefined);
+  // The live stream covers the whole workspace and stays open across board switches, so it
+  // refreshes whichever board is on screen rather than closing and reopening per board.
+  const ticketsOptionsRef = useRef(ticketsOptions);
+  ticketsOptionsRef.current = ticketsOptions;
 
   useEffect(() => {
     let currentController: AbortController | undefined;
@@ -72,14 +92,14 @@ export function BoardPage() {
             signal: controller.signal,
           });
           if (!active) return;
-          await fetchFresh(queryClient, ticketsOptions);
+          await fetchFresh(queryClient, ticketsOptionsRef.current);
           if (!active) return;
           refreshComments();
           setError("");
           for await (const event of stream) {
             if (!active) return;
             refreshComments(event.ticketId);
-            await fetchFresh(queryClient, ticketsOptions);
+            await fetchFresh(queryClient, ticketsOptionsRef.current);
           }
         } catch (cause) {
           failure = cause;
@@ -116,10 +136,25 @@ export function BoardPage() {
         >
           <ChevronLeft />
         </Link>
-        <h1 className="flex-1 font-medium">
-          <Trans>Board</Trans>
-        </h1>
-        <Button onClick={() => setSelected("new")} disabled={bots.length === 0}>
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          <h1 className="truncate font-medium">{board?.name ?? t`Board`}</h1>
+          <NativeSelect
+            aria-label={t`Board`}
+            className="h-8 w-auto"
+            value={board?.id ?? ""}
+            onChange={(event) => setChosenBoardId(event.target.value)}
+          >
+            {boards.map((candidate) => (
+              <NativeSelectOption key={candidate.id} value={candidate.id}>
+                {candidate.name} · {candidate.ticketPrefix}
+              </NativeSelectOption>
+            ))}
+          </NativeSelect>
+        </div>
+        <Button variant="ghost" onClick={() => setCreatingBoard(true)}>
+          <Trans>New board</Trans>
+        </Button>
+        <Button onClick={() => setSelected("new")} disabled={bots.length === 0 || !board}>
           <Trans>New ticket</Trans>
         </Button>
       </header>
@@ -128,30 +163,29 @@ export function BoardPage() {
           {error}
         </p>
       ) : null}
-      <main className="relative min-h-0 min-w-0 flex-1 overflow-auto p-4">
-        <div data-testid="board-columns" className="flex min-h-full gap-3">
-          {TICKET_STATUSES.map((status) => (
-            <section key={status} className="min-w-40 flex-1 space-y-2">
-              <h2 className="px-1 text-sm font-medium">{statuses[status]}</h2>
-              {tickets
-                .filter((ticket) => ticket.status === status)
-                .map((ticket) => (
-                  <Button
+      <main className="relative min-h-0 min-w-0 flex-1 overflow-auto">
+        <div data-testid="board-columns" className="flex min-h-full gap-4 p-4">
+          {TICKET_STATUSES.map((status) => {
+            const columnTickets = tickets.filter((ticket) => ticket.status === status);
+            return (
+              <section key={status} className="flex min-w-44 flex-1 flex-col gap-2">
+                <div className="flex items-baseline gap-2 px-1">
+                  <h2 className="text-sm font-medium">{statuses[status]}</h2>
+                  <span aria-hidden="true" className="text-xs tabular-nums text-faint-foreground">
+                    {columnTickets.length}
+                  </span>
+                </div>
+                {columnTickets.map((ticket) => (
+                  <TicketCard
                     key={ticket.id}
-                    data-testid={`board-card-${ticket.id}`}
-                    variant="outline"
-                    className="h-auto w-full flex-col items-start gap-1 whitespace-normal p-3 text-left font-normal"
-                    onClick={() => setSelected(ticket)}
-                  >
-                    <span className="text-xs text-muted-foreground">{ticket.ref}</span>
-                    <span>{ticket.title}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {bots.find((bot) => bot.id === ticket.assigneeBotId)?.name}
-                    </span>
-                  </Button>
+                    ticket={ticket}
+                    bot={bots.find((candidate) => candidate.id === ticket.assigneeBotId)}
+                    onOpen={() => setSelected(ticket)}
+                  />
                 ))}
-            </section>
-          ))}
+              </section>
+            );
+          })}
         </div>
         {tickets.length === 0 && !error ? (
           <p className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
@@ -164,22 +198,86 @@ export function BoardPage() {
           key={selected === "new" ? "new" : selected.id}
           ticket={selected === "new" ? null : selected}
           bots={bots}
+          boardId={board?.id}
           onClose={() => setSelected(null)}
           onSaved={reload}
+        />
+      ) : null}
+      {creatingBoard ? (
+        <NewBoardDialog
+          onClose={() => setCreatingBoard(false)}
+          onCreated={async (created) => {
+            setCreatingBoard(false);
+            setChosenBoardId(created.id);
+            await fetchFresh(queryClient, queries.boards.list.queryOptions());
+          }}
         />
       ) : null}
     </div>
   );
 }
 
+function TicketCard({
+  ticket,
+  bot,
+  onOpen,
+}: {
+  ticket: Ticket;
+  bot: Bot | undefined;
+  onOpen: () => void;
+}) {
+  const priorities = useTicketPriorityLabels();
+  const priorityTone = MARKED_PRIORITIES[ticket.priority];
+  const working = bot ? ACTIVE_RUN_STATUSES.some((status) => status === bot.status) : false;
+  return (
+    <Button
+      data-testid={`board-card-${ticket.id}`}
+      variant="outline"
+      className="h-auto w-full flex-col items-stretch gap-2 whitespace-normal rounded-xl p-3 text-left font-normal"
+      onClick={onOpen}
+    >
+      <span className="flex items-center gap-2">
+        <span className="font-mono text-[11px] text-faint-foreground">{ticket.ref}</span>
+        {priorityTone ? (
+          <span className={`text-[11px] font-medium ${priorityTone}`}>
+            {priorities[ticket.priority]}
+          </span>
+        ) : null}
+      </span>
+      <span className="line-clamp-3 text-[13.5px] leading-snug">{ticket.title}</span>
+      <span className="flex items-center gap-2 text-xs text-muted-foreground">
+        {bot ? (
+          <>
+            <BotAvatar
+              color={bot.color}
+              avatarSet={bot.avatarSet}
+              identity={bot.id}
+              status={bot.status}
+              size={18}
+            />
+            <span className="truncate">{bot.name}</span>
+            {working ? (
+              <span aria-hidden="true" className="ms-auto size-1.5 rounded-full bg-status-working" />
+            ) : null}
+          </>
+        ) : (
+          <Trans>Unassigned</Trans>
+        )}
+      </span>
+    </Button>
+  );
+}
+
 function TicketDialog({
   ticket,
   bots,
+  boardId,
   onClose,
   onSaved,
 }: {
   ticket: Ticket | null;
   bots: Bot[];
+  boardId?: string;
   onClose: () => void;
   onSaved: () => Promise<void>;
 }) {
@@ -195,7 +293,7 @@ function TicketDialog({
   const queries = useSpaceQueries();
   const queryClient = useQueryClient();
   const commentsOptions = queries.tickets.comments.queryOptions({
-    input: ticket ? { ticketId: ticket.id } : skipToken,
+    input: ticket ? { ticketId: ticket.id, boardId } : skipToken,
   });
   const commentsQuery = useQuery(commentsOptions);
   const comments = commentsQuery.data ?? [];
@@ -211,6 +309,7 @@ function TicketDialog({
       if (ticket)
         await rpc.tickets.update({
           id: ticket.id,
+          ...(boardId ? { boardId } : {}),
           ...(title !== ticket.title ? { title } : {}),
           ...(description !== (ticket.description ?? "") ? { description } : {}),
           ...(owner !== (ticket.assigneeBotId ?? bots[0]?.id ?? "")
@@ -221,6 +320,7 @@ function TicketDialog({
         });
       else
         await rpc.tickets.create({
+          ...(boardId ? { boardId } : {}),
           title,
           description,
           assigneeBotId: owner,
@@ -239,8 +339,14 @@ function TicketDialog({
     setBusy(true);
     setError("");
     try {
-      const row = await rpc.tickets.comment({ ticketId: ticket.id, body });
-      const options = queries.tickets.comments.queryOptions({ input: { ticketId: ticket.id } });
+      const row = await rpc.tickets.comment({
+        ticketId: ticket.id,
+        ...(boardId ? { boardId } : {}),
+        body,
+      });
+      const options = queries.tickets.comments.queryOptions({
+        input: { ticketId: ticket.id, boardId },
+      });
       // A list already on screen shows the comment at once, unless a read already brought it.
       if (queryClient.getQueryData(options.queryKey)) {
         await writeSaved(queryClient, options.queryKey, (previous = []) =>
@@ -396,6 +502,99 @@ function TicketDialog({
             {shownError}
           </p>
         ) : null}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/** A named board with a prefix of its own, so its tickets read `MKT-4` rather than a bare number. */
+function NewBoardDialog({
+  onClose,
+  onCreated,
+}: {
+  onClose: () => void;
+  onCreated: (board: Board) => Promise<void>;
+}) {
+  const { t } = useLingui();
+  const formId = useId();
+  const [name, setName] = useState("");
+  const [prefix, setPrefix] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function create() {
+    setBusy(true);
+    setError("");
+    try {
+      const board = await rpc.boards.create({
+        name: name.trim(),
+        ticketPrefix: prefix.trim().toUpperCase(),
+      });
+      await onCreated(board);
+    } catch (cause) {
+      setError(errorText(cause));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Dialog
+      open
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            <Trans>New board</Trans>
+          </DialogTitle>
+        </DialogHeader>
+        <form
+          className="space-y-3"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void create();
+          }}
+        >
+          <label htmlFor={`${formId}-name`} className="block space-y-1 text-sm">
+            <span>
+              <Trans>Name</Trans>
+            </span>
+            <Input
+              id={`${formId}-name`}
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder={t`Marketing`}
+              required
+            />
+          </label>
+          <label htmlFor={`${formId}-prefix`} className="block space-y-1 text-sm">
+            <span>
+              <Trans>Ticket prefix</Trans>
+            </span>
+            <Input
+              id={`${formId}-prefix`}
+              value={prefix}
+              onChange={(event) => setPrefix(event.target.value.toUpperCase())}
+              placeholder={t`MKT`}
+              pattern="[A-Za-z][A-Za-z0-9]*"
+              maxLength={12}
+              required
+            />
+          </label>
+          <div className="flex justify-end">
+            <Button type="submit" disabled={busy || !name.trim() || !prefix.trim()}>
+              <Trans>Create</Trans>
+            </Button>
+          </div>
+          {error ? (
+            <p role="alert" className="text-sm text-destructive">
+              {error}
+            </p>
+          ) : null}
+        </form>
       </DialogContent>
     </Dialog>
   );

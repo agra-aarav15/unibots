@@ -21,6 +21,8 @@ import {
   webTokensForAppearance,
 } from "./index.js";
 
+import { MARK_GRADIENT } from "./mark.js";
+
 describe("appearance preference", () => {
   it("defaults unknown values to system", () => {
     expect(normalizeAppearancePreference(null)).toBe("system");
@@ -53,6 +55,7 @@ describe("appearance preference", () => {
     expect(tokensForAppearance("light")).toBe(lightTokens);
     for (const key of Object.keys(darkTokens) as (keyof ColorTokens)[]) {
       if (
+        key === "brandForeground" ||
         key === "chatUserForeground" ||
         key === "destructiveForeground" ||
         key === "destructiveFill" ||
@@ -66,6 +69,9 @@ describe("appearance preference", () => {
     // Link icons keep a white plate in both themes; the light user bubble is near-black.
     expect(lightTokens.faviconPlate).toBe("#FFFFFF");
     expect(darkTokens.faviconPlate).toBe("#FFFFFF");
+    // The accent is a label colour on its own fill, so it keeps white ink in both themes.
+    expect(darkTokens.brandForeground).toBe("#FFFFFF");
+    expect(lightTokens.brandForeground).toBe("#FFFFFF");
   });
 
   it("keeps the working dot the same green in both themes", () => {
@@ -254,6 +260,9 @@ describe("web palette", () => {
     faintForeground: "#EBEBF573",
     accent: "#78788052",
     accentForeground: "#FFFFFF",
+    brand: "#EC4899",
+    brandForeground: "#FFFFFF",
+    brandMuted: "#EC48992E",
     destructive: "#FF9592",
     destructiveFill: "#E5484D",
     destructiveForeground: "#FFFFFF",
@@ -297,6 +306,9 @@ describe("web palette", () => {
     faintForeground: "#3C3C4394",
     accent: "#78788029",
     accentForeground: "#000000",
+    brand: "#DB2777",
+    brandForeground: "#FFFFFF",
+    brandMuted: "#DB27771F",
     destructive: "#CE2C31",
     destructiveFill: "#E5484D",
     destructiveForeground: "#FFFFFF",
@@ -396,5 +408,31 @@ describe.each([
 
   it.each(pairs)("%s on %s meets WCAG AA (4.5:1)", (text, surface) => {
     expect(contrastRatio(palette[text], palette[surface])).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+describe("brand accent", () => {
+  it("is the middle of the mark's gradient, so the logo and the interface agree", () => {
+    expect(darkTokens.brand.toLowerCase()).toBe(MARK_GRADIENT[1].color.toLowerCase());
+  });
+
+  it.each([
+    ["dark", webDarkTokens],
+    ["light", webLightTokens],
+  ] as const)("%s accent identifies the product without becoming ink or status", (_, palette) => {
+    // The accent exists only for identity, so it must never collapse onto the ink fill that
+    // ordinary buttons use, or onto a colour that means a state.
+    for (const [name, value] of Object.entries({
+      primary: palette.primary,
+      destructive: palette.destructive,
+      success: palette.success,
+      warning: palette.warning,
+    }))
+      expect(palette.brand, name).not.toBe(value);
+    // It is drawn as text on the page — a heading, the workspace you are in — so it meets AA.
+    expect(contrastRatio(palette.brand, palette.background)).toBeGreaterThanOrEqual(4.5);
+    // It is also a solid fill behind its own label on the sign-up call to action. That label
+    // is set large, so AA-large is the bar, exactly as for the destructive fill.
+    expect(contrastRatio(palette.brandForeground, palette.brand)).toBeGreaterThanOrEqual(3);
   });
 });

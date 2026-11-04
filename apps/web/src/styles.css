@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @import "@rakazo/ui-web/styles.css";
+/* Self-hosted, so the app looks the same everywhere and nothing is fetched from a third
+   party. Unicode-range subsets mean only the scripts actually on screen are downloaded. */
+@import "@fontsource-variable/inter-tight";
 
 @source "../../packages/ui-web/src/**/*.{ts,tsx}";
 @source "./src/**/*.{ts,tsx}";

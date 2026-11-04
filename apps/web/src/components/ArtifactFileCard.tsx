@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ArtifactTarget } from "../lib/artifact-open";
 import { downloadArtifact, downloadArtifactBytes, fetchArtifactBytes } from "../lib/artifact-open";
 import { errorText } from "../lib/user-error";
-import { BuiCard } from "./ai/primitives";
+import { CardShell } from "./ai/primitives";
 import { IconTooltip } from "./IconTooltip";
 import { PdfViewer } from "./PdfViewer";
 import { SandboxedHtmlViewer } from "./SandboxedHtmlViewer";
@@ -51,14 +51,14 @@ export function ArtifactFileCard(props: ArtifactFileCardProps) {
 
   if (isAttachmentAudioMimeType(props.mimeType)) {
     return (
-      <BuiCard className="min-w-[280px] p-4 text-foreground">
+      <CardShell className="min-w-[280px] p-4 text-foreground">
         <AudioArtifactPreview
           key={JSON.stringify([props.target, props.artifactId, props.mimeType])}
           {...props}
           onDownload={startDownload}
         />
         {downloadError ? <DownloadError message={downloadError} /> : null}
-      </BuiCard>
+      </CardShell>
     );
   }
 
@@ -84,7 +84,7 @@ export function ArtifactFileCard(props: ArtifactFileCardProps) {
   return (
     <>
       <div>
-        <BuiCard className="flex min-w-[280px] overflow-hidden text-left text-foreground">
+        <CardShell className="flex min-w-[280px] overflow-hidden text-left text-foreground">
           <button
             ref={previewButton}
             type="button"
@@ -116,7 +116,7 @@ export function ArtifactFileCard(props: ArtifactFileCardProps) {
               <Download size={19} strokeWidth={1.8} />
             </button>
           </IconTooltip>
-        </BuiCard>
+        </CardShell>
         {downloadError ? <DownloadError message={downloadError} /> : null}
       </div>
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>

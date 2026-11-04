@@ -28,7 +28,8 @@ function setup(ticketBoardEnabled: boolean, status = "todo") {
       findFirst: vi.fn(async () => ({ id: "bot-1", userId: "user-1", thread: { id: "thread-1" } })),
     },
     task: { create: createTask },
-    run: { create: createRun },
+    // No live run for this ticket, so the wake is allowed to start one.
+    run: { findFirst: vi.fn(async () => null), create: createRun },
   };
   const transaction = vi.fn(async (fn: (client: typeof tx) => Promise<unknown>) => fn(tx));
   const changes = createTicketChangeNotifier({

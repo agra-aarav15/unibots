@@ -1,15 +1,20 @@
 import type { JobPublisher } from "@rakazo/adapter-kit";
 import { runContinueJob } from "@rakazo/adapter-kit";
 import { isTicketCompletedStatus, TicketStatusSchema } from "@rakazo/contracts";
+import { ACTIVE_RUN_STATUSES } from "@rakazo/core";
 import type { PrismaClient } from "@rakazo/db";
 import { getLogger } from "@rakazo/logging";
 
-/** Assignment wakes only its current owner, without posting a chat message. */
+/**
+ * Assignment wakes only its current owner, without posting a chat message. Returns the new run
+ * id, or null when there was nothing to do — the ticket is closed, unassigned, or its owner is
+ * already working it.
+ */
 export async function wakeTicketAssignee(
   deps: { prisma: PrismaClient; jobs: JobPublisher; ticketBoardEnabled?: boolean },
   input: { spaceId: string; ticketId: string; botId: string },
-): Promise<void> {
-  if (!deps.ticketBoardEnabled) return;
+): Promise<string | null> {
+  if (!deps.ticketBoardEnabled) return null;
   const run = await deps.prisma.$transaction(async (tx) => {
     const ticket = await tx.ticket.findFirst({
       where: { id: input.ticketId, spaceId: input.spaceId, assigneeBotId: input.botId },
@@ -23,6 +28,17 @@ export async function wakeTicketAssignee(
       select: { id: true, userId: true, thread: { select: { id: true } } },
     });
     if (!bot?.thread) return null;
+    // One ticket, one run at a time: a wake that arrives while the owner is already working
+    // this ticket would queue the same work twice.
+    const alreadyWorking = await tx.run.findFirst({
+      where: {
+        spaceId: input.spaceId,
+        ticketId: ticket.id,
+        status: { in: [...ACTIVE_RUN_STATUSES] },
+      },
+      select: { id: true },
+    });
+    if (alreadyWorking) return null;
     const task = await tx.task.create({
       data: {
         spaceId: input.spaceId,
@@ -40,13 +56,15 @@ export async function wakeTicketAssignee(
         threadId: bot.thread.id,
         userId: bot.userId,
         taskId: task.id,
+        ticketId: ticket.id,
         trigger: "tickets",
         status: "queued",
       },
     });
   });
-  if (!run) return;
+  if (!run) return null;
   await deps.jobs.enqueue(runContinueJob(run.id)).catch((error) => {
     getLogger().warn("ticket wake deferred to reconciliation", error);
   });
+  return run.id;
 }

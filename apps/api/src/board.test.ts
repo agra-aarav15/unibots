@@ -51,7 +51,10 @@ describe("disabled ticket board", () => {
 it("rejects an out-of-range ticket reference before querying tickets", async () => {
   const findFirst = vi.fn(async () => null);
   const prisma = {
-    board: { findUnique: vi.fn(async () => ({ id: "board-1", ticketPrefix: "RAK" })) },
+    board: {
+      findFirst: vi.fn(async () => ({ id: "board-1", ticketPrefix: "RAK" })),
+      findUnique: vi.fn(async () => ({ id: "board-1", ticketPrefix: "RAK" })),
+    },
     ticket: { findFirst },
   };
   const client = createRouterClient(

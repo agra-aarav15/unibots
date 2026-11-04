@@ -9,7 +9,7 @@ import {
 import { Button, buttonVariants, Collapsible, CollapsibleContent, cn } from "@rakazo/ui-web";
 import { ChevronDown, Phone, PhoneIncoming, PhoneMissed } from "lucide-react";
 import { useState } from "react";
-import { BuiCard } from "../ai/primitives";
+import { CardShell } from "../ai/primitives";
 
 export function VoiceChatCard({
   group,
@@ -72,7 +72,7 @@ export function VoiceChatCard({
   const expandable = transcript.some((line) => line.text);
   const Icon = !request ? Phone : missed ? PhoneMissed : PhoneIncoming;
   return (
-    <BuiCard
+    <CardShell
       data-testid="voice-chat-card"
       data-call-status={request?.status}
       className={cn(
@@ -153,6 +153,6 @@ export function VoiceChatCard({
           </div>
         </CollapsibleContent>
       </Collapsible>
-    </BuiCard>
+    </CardShell>
   );
 }

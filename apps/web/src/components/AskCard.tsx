@@ -19,7 +19,7 @@ import { Check } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { rpc } from "../lib/rpc";
 import { errorText } from "../lib/user-error";
-import { BuiCard } from "./ai/primitives";
+import { CardShell } from "./ai/primitives";
 import { LoginFieldValue } from "./LoginFields";
 import { OptionRow, optionLetter } from "./OptionRow";
 
@@ -208,7 +208,7 @@ export function AskCard({
 
   if (block.instructionUpdate?.undoVersionId)
     return (
-      <BuiCard className="px-5 py-4">
+      <CardShell className="px-5 py-4">
         <div className="flex items-center gap-2 text-sm">
           <Trans>Instructions updated</Trans>
           <Button
@@ -236,11 +236,11 @@ export function AskCard({
           </Button>
           {error ? <span className="text-destructive">{error}</span> : null}
         </div>
-      </BuiCard>
+      </CardShell>
     );
 
   return (
-    <BuiCard
+    <CardShell
       data-testid={
         secretInput
           ? "secret-ask-card"
@@ -521,6 +521,6 @@ export function AskCard({
         </div>
       )}
       {error ? <p className="mt-3 text-[13px] text-destructive">{error}</p> : null}
-    </BuiCard>
+    </CardShell>
   );
 }

@@ -23,6 +23,7 @@ import {
   BoardSchema,
   CommentTicketInput,
   CreateTicketInput,
+  CreateBoardInput,
   GetTicketInput,
   ListTicketsInput,
   ListTicketsOutput,
@@ -816,6 +817,7 @@ export const appContract = {
   boards: {
     list: oc.output(z.array(BoardSchema)),
     get: oc.output(BoardSchema),
+    create: oc.input(CreateBoardInput).output(BoardSchema),
     rename: oc.input(RenameBoardInput).output(BoardSchema),
     subscribe: oc.output(eventIterator(BoardEventSchema)),
   },
@@ -826,7 +828,9 @@ export const appContract = {
     update: oc.input(UpdateTicketInput).output(TicketSchema),
     move: oc.input(MoveTicketInput).output(TicketSchema),
     comment: oc.input(CommentTicketInput).output(TicketCommentSchema),
-    comments: oc.input(z.object({ ticketId: Id })).output(z.array(TicketCommentSchema)),
+    comments: oc
+      .input(z.object({ ticketId: Id, boardId: Id.optional() }))
+      .output(z.array(TicketCommentSchema)),
   },
   skills: {
     list: oc.input(botId).output(z.array(TaughtSkillSchema)),

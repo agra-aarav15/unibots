@@ -1,28 +1,62 @@
+import { MARK, MARK_GRADIENT, MARK_STROKE_PATH } from "@rakazo/ui-tokens/mark";
 import { cn } from "@rakazo/ui-web";
-import { useEffect, useState } from "react";
-import "./beautiful-ui.css";
+import { useEffect, useId, useState } from "react";
+import "./ai-motion.css";
 
-/* Beautiful UI primitives — hand-ported from beautifului.dev
-   (github.com/TurboKach/ai-native-react-components, MIT © 2026 Turbo).
-   The upstream components are demo showcases; these ports keep their visual
-   and motion language (pixel-grid loader, shimmer sweep, pop-in success) and
-   expose real props. */
+/* The waiting and completion beats. Both are drawn from the product's own mark: the moment
+   a bot is working is the one moment the interface is allowed to show its gradient. */
+
+/** Centreline length of the mark, so the draw animation fits whatever the geometry becomes. */
+const MARK_PATH_LENGTH = 2 * (MARK.bowl - MARK.top) + Math.PI * MARK.bowlRadius;
+
+const MARK_VIEW_BOX = [
+  MARK.bounds.left - MARK.stroke / 2,
+  MARK.bounds.top - MARK.stroke / 2,
+  MARK.bounds.right - MARK.bounds.left + MARK.stroke,
+  MARK.bounds.bottom - MARK.bounds.top + MARK.stroke,
+].join(" ");
+
+/** The mark, drawing itself on and away again, in the product's gradient. */
+function WorkingMark() {
+  const gradientId = `working-mark-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  return (
+    <svg className="h-5 w-auto shrink-0" viewBox={MARK_VIEW_BOX} aria-hidden="true">
+      <defs>
+        <linearGradient
+          id={gradientId}
+          gradientUnits="userSpaceOnUse"
+          x1="0"
+          y1={MARK.bounds.top}
+          x2="0"
+          y2={MARK.bounds.bottom}
+        >
+          {MARK_GRADIENT.map((stop) => (
+            <stop key={stop.offset} offset={stop.offset} stopColor={stop.color} />
+          ))}
+        </linearGradient>
+      </defs>
+      <path
+        className="rk-working-mark"
+        d={MARK_STROKE_PATH}
+        fill="none"
+        stroke={`url(#${gradientId})`}
+        strokeWidth={MARK.stroke}
+        strokeLinecap="round"
+        strokeDasharray={`${MARK_PATH_LENGTH} ${MARK_PATH_LENGTH}`}
+        style={{ "--rk-mark-length": MARK_PATH_LENGTH } as React.CSSProperties}
+      />
+    </svg>
+  );
+}
 
 /** A light sweep travelling across a text label. */
 export function Shimmer({ children }: { children: React.ReactNode }) {
   return (
-    <span className="animate-[bui-shimmer-text_1.4s_linear_infinite] bg-linear-to-r from-muted-foreground from-35% via-foreground via-50% to-muted-foreground to-65% bg-size-[200%_100%] bg-clip-text text-transparent">
+    <span className="rk-shimmer bg-linear-to-r from-muted-foreground from-35% via-foreground via-50% to-muted-foreground to-65% bg-size-[200%_100%] bg-clip-text text-transparent">
       {children}
     </span>
   );
 }
-
-// Chevron wavefront: each 3×3 cell fires by column distance from the center row.
-const CHEVRON_DELAYS = Array.from({ length: 9 }, (_, i) => {
-  const row = Math.floor(i / 3);
-  const column = i % 3;
-  return (column + Math.abs(row - 1)) * 90;
-});
 
 /** Format wall-clock seconds since `startedAtMs` as `0.0s` / `1m 2.3s`. */
 export function formatElapsed(startedAtMs: number, nowMs: number): string {
@@ -43,20 +77,12 @@ function useElapsed(startedAtMs?: number): string {
   return formatElapsed(startedAtMs ?? mountedAt, now);
 }
 
-/** Pixel-grid loader with shimmering label and live elapsed timer. */
+/** The mark drawing itself, a shimmering label and a live elapsed timer. */
 function DefaultLoadingState({ label, startedAt }: { label: string; startedAt?: number }) {
   const elapsed = useElapsed(startedAt);
   return (
     <>
-      <span aria-hidden className="grid grid-cols-[repeat(3,4px)] gap-[1.5px]">
-        {CHEVRON_DELAYS.map((delay, i) => (
-          <span
-            key={i}
-            className="h-[4px] w-[4px] rounded-[1px] bg-foreground opacity-15"
-            style={{ animation: `bui-pixel-on 650ms ease-in-out ${delay}ms infinite` }}
-          />
-        ))}
-      </span>
+      <WorkingMark />
       <span className="text-[13.5px] font-medium">
         <Shimmer>{label}</Shimmer>
       </span>
@@ -90,14 +116,11 @@ export function LoadingState({
   );
 }
 
-/** Pop-in green check with a fading-up label — the approval-card success beat. */
+/** Pop-in check with a fading-up label, used wherever a step has just completed. */
 export function SuccessPop({ label }: { label: string }) {
   return (
     <span className="flex items-center gap-2">
-      <span
-        className="flex h-6 w-6 items-center justify-center rounded-full bg-success text-background"
-        style={{ animation: "bui-pop-in 300ms cubic-bezier(0.23,1,0.32,1) both" }}
-      >
+      <span className="rk-check-pop flex h-6 w-6 items-center justify-center rounded-full bg-success text-background">
         <svg
           width="12"
           height="12"
@@ -112,17 +135,12 @@ export function SuccessPop({ label }: { label: string }) {
           <path d="M20 6L9 17l-5-5" />
         </svg>
       </span>
-      <span
-        className="text-[13px] font-medium text-foreground"
-        style={{ animation: "bui-fade-up 350ms cubic-bezier(0.23,1,0.32,1) 100ms both" }}
-      >
-        {label}
-      </span>
+      <span className="rk-fade-up text-[13px] font-medium text-foreground">{label}</span>
     </span>
   );
 }
 
 /** Card shell for every card in the chat. */
-export function BuiCard({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+export function CardShell({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   return <div {...props} className={cn("rounded-[20px] bg-card", className)} />;
 }

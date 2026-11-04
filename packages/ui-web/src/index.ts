@@ -8,9 +8,9 @@ export {
   defaultBotAvatarValue,
   parseBotAvatar,
   resolvePersonaColorDef,
-  Wordmark,
 } from "./bot-avatar.js";
 export type { BotAvatarActivitySource } from "./bot-avatar-activity.js";
+export { BrandMark, Wordmark } from "./brand-mark.js";
 export { BotAvatarActivityProvider } from "./bot-avatar-activity.js";
 export * from "./components/ui/alert-dialog.js";
 export * from "./components/ui/badge.js";

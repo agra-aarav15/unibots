@@ -5,7 +5,7 @@ import { appConnectedInput, waitForConnection } from "@rakazo/core";
 import { Button, Dialog, DialogClose, DialogContent, DialogTitle } from "@rakazo/ui-web";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { BuiCard, SuccessPop } from "../../components/ai/primitives";
+import { CardShell, SuccessPop } from "../../components/ai/primitives";
 import { OptionRow } from "../../components/OptionRow";
 import type { ArtifactTarget } from "../../lib/artifact-open";
 import { chartViewport } from "../../lib/chart-viewport";
@@ -59,7 +59,7 @@ export function ChoiceCard({
 
   return (
     <div className="flex justify-start">
-      <BuiCard className="relative w-[420px] max-w-full px-[18px] py-[14px]">
+      <CardShell className="relative w-[420px] max-w-full px-[18px] py-[14px]">
         {!block.answerId ? (
           <Button
             variant="ghost"
@@ -96,7 +96,7 @@ export function ChoiceCard({
           ))}
         </div>
         {error ? <p className="mt-2 text-xs text-destructive">{error}</p> : null}
-      </BuiCard>
+      </CardShell>
     </div>
   );
 }
@@ -195,7 +195,7 @@ export function AppConnectCard({
     }
   }
   return (
-    <BuiCard
+    <CardShell
       role="group"
       aria-label={t`${block.name} connection`}
       className="w-full max-w-[440px] px-4 py-3.5"
@@ -227,7 +227,7 @@ export function AppConnectCard({
         )}
       </div>
       {error ? <p className="mt-2 text-xs text-destructive">{error}</p> : null}
-    </BuiCard>
+    </CardShell>
   );
 }
 
@@ -394,7 +394,7 @@ export function McpApprovalCard({
 
   const summary = endpoint ?? `stdio (${transport})`;
   return (
-    <BuiCard data-testid="mcp-approval-card" className="w-full min-w-0 max-w-xl p-4">
+    <CardShell data-testid="mcp-approval-card" className="w-full min-w-0 max-w-xl p-4">
       <div className="flex items-center gap-2">
         <span className="grid h-7 w-7 place-items-center rounded-lg bg-muted text-xs text-foreground">
           M
@@ -436,7 +436,7 @@ export function McpApprovalCard({
           <Trans>Dismissed. Reconnect anytime from MCP settings.</Trans>
         </p>
       ) : null}
-    </BuiCard>
+    </CardShell>
   );
 }
 

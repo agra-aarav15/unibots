@@ -8525,6 +8525,8 @@ describe("boards.rename", () => {
     );
     const prisma = {
       board: {
+        // `ensureBoard`/`resolveBoard` read the default board with `findFirst`.
+        findFirst: vi.fn(async () => boardRow(ticketPrefix)),
         findUnique: vi.fn(async () => boardRow(ticketPrefix)),
         update,
         updateManyAndReturn,
@@ -8656,17 +8658,20 @@ describe("boards.tickets.list", () => {
 
   function listDeps() {
     const findMany = vi.fn(async () => []);
+    const boardRow = {
+      id: "board-1",
+      spaceId: "workspace-1",
+      name: "Personal",
+      ticketPrefix: "RAK",
+      nextNumber: 2,
+      createdAt: new Date("2026-06-01T00:00:00.000Z"),
+      updatedAt: new Date("2026-06-01T00:00:00.000Z"),
+    };
     const prisma = {
       board: {
-        findUnique: vi.fn(async () => ({
-          id: "board-1",
-          spaceId: "workspace-1",
-          name: "Personal",
-          ticketPrefix: "RAK",
-          nextNumber: 2,
-          createdAt: new Date("2026-06-01T00:00:00.000Z"),
-          updatedAt: new Date("2026-06-01T00:00:00.000Z"),
-        })),
+        // `resolveBoard` reads the addressed board, or the default one, with `findFirst`.
+        findFirst: vi.fn(async () => boardRow),
+        findUnique: vi.fn(async () => boardRow),
       },
       ticket: { findMany },
     } as unknown as PrismaClient;

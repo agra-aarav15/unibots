@@ -61,8 +61,16 @@ export const BoardSchema = z.object({
 });
 export type Board = z.infer<typeof BoardSchema>;
 
+export const CreateBoardInput = z.object({
+  name: z.string().trim().min(1).max(80),
+  ticketPrefix: TicketPrefixSchema,
+});
+export type CreateBoardInput = z.infer<typeof CreateBoardInput>;
+
 export const RenameBoardInput = z
   .object({
+    /** Defaults to the workspace's default board, which is what older clients mean. */
+    boardId: Id.optional(),
     name: z.string().trim().min(1).max(80).optional(),
     ticketPrefix: TicketPrefixSchema.optional(),
   })
@@ -117,6 +125,8 @@ export const GetTicketInput = z
   .object({
     id: Id.optional(),
     ref: z.string().trim().min(1).max(120).optional(),
+    /** Narrows the reference to one board; omitted searches the workspace's default board. */
+    boardId: Id.optional(),
   })
   .refine((value) => Boolean(value.id) !== Boolean(value.ref), {
     message: "Provide exactly one of id or ref",
@@ -134,6 +144,7 @@ export type CreateTicketInput = z.infer<typeof CreateTicketInput>;
 
 export const UpdateTicketInput = z.object({
   id: Id,
+  boardId: Id.optional(),
   title: z.string().trim().min(1).max(TICKET_TITLE_MAX_LENGTH).optional(),
   description: z.string().max(TICKET_DESCRIPTION_MAX_LENGTH).nullable().optional(),
   priority: TicketPrioritySchema.nullable().optional(),
@@ -144,12 +155,14 @@ export type UpdateTicketInput = z.infer<typeof UpdateTicketInput>;
 
 export const MoveTicketInput = z.object({
   id: Id,
+  boardId: Id.optional(),
   status: TicketStatusSchema,
 });
 export type MoveTicketInput = z.infer<typeof MoveTicketInput>;
 
 export const CommentTicketInput = z.object({
   ticketId: Id,
+  boardId: Id.optional(),
   body: z.string().trim().min(1).max(TICKET_COMMENT_MAX_LENGTH),
 });
 export type CommentTicketInput = z.infer<typeof CommentTicketInput>;

@@ -9,7 +9,7 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, expect, it, vi } from "vitest";
 
 const api = vi.hoisted(() => ({
-  boards: { subscribe: vi.fn() },
+  boards: { subscribe: vi.fn(), list: vi.fn(), create: vi.fn() },
   bots: { list: vi.fn() },
   tickets: {
     list: vi.fn(),
@@ -40,6 +40,7 @@ vi.mock("@rakazo/chat-ui/web", () => ({
 vi.mock("@rakazo/ui-web", async (importOriginal) => {
   const Container = ({ children }: { children?: ReactNode }) => <div>{children}</div>;
   return {
+    BotAvatar: ({ color }: { color: string }) => <i data-color={color} />,
     Button: (props: ComponentProps<"button">) => <button {...props} />,
     buttonVariants: (await importOriginal<typeof UiWeb>()).buttonVariants,
     Dialog: Container,
@@ -106,6 +107,17 @@ async function renderBoard(stream?: AsyncIterable<{ ticketId?: string }>, refusa
       [Symbol.asyncIterator]: () => ({ next: () => new Promise(() => {}) }),
     },
   );
+  api.boards.list.mockReset();
+  api.boards.list.mockResolvedValue([
+    {
+      id: "board-1",
+      spaceId: "space-1",
+      name: "Marketing",
+      ticketPrefix: "MKT",
+      createdAt: "2026-01-01T00:00:00.000Z",
+      updatedAt: "2026-01-01T00:00:00.000Z",
+    },
+  ]);
   if (refusal) api.boards.subscribe.mockRejectedValueOnce(refusal);
   const container = document.createElement("div");
   document.body.append(container);
@@ -169,17 +181,21 @@ it("renders status columns and opens a ticket with comments", async () => {
       "5m ago",
       "5m ago",
     ]);
+    // The ticket dialog's three pickers span the dialog; the header's board switcher does not.
     expect(
-      Array.from(page.container.querySelectorAll("select")).every(
+      Array.from(page.container.querySelectorAll("select")).filter(
         (node) => node.className === "w-full",
       ),
-    ).toBe(true);
+    ).toHaveLength(3);
     const submitButtons = page.container.querySelectorAll('button[type="submit"]');
     expect(Array.from(submitButtons).map((node) => node.parentElement?.className)).toEqual([
       "flex justify-end",
       "flex justify-end",
     ]);
-    expect(api.tickets.comments).toHaveBeenCalledWith({ ticketId: "ticket-1" }, expect.anything());
+    expect(api.tickets.comments).toHaveBeenCalledWith(
+      { ticketId: "ticket-1", boardId: "board-1" },
+      expect.anything(),
+    );
   } finally {
     await page.cleanup();
   }
@@ -215,6 +231,7 @@ it("creates a ticket without a status picker", async () => {
         .dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })),
     );
     expect(api.tickets.create).toHaveBeenCalledWith({
+      boardId: "board-1",
       title: "Launch",
       description: "",
       assigneeBotId: "bot-1",
@@ -286,7 +303,11 @@ it("saves only edits and refreshes comments for the open ticket", async () => {
         .querySelector("form")!
         .dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })),
     );
-    expect(api.tickets.update).toHaveBeenCalledWith({ id: "ticket-1", title: "Ship today" });
+    expect(api.tickets.update).toHaveBeenCalledWith({
+      id: "ticket-1",
+      boardId: "board-1",
+      title: "Ship today",
+    });
   } finally {
     await page.cleanup();
   }

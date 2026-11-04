@@ -5,7 +5,7 @@ import { Button, Input, Label, Textarea } from "@rakazo/ui-web";
 import { useEffect, useId, useRef, useState } from "react";
 import { rpc } from "../../lib/rpc";
 import { errorText } from "../../lib/user-error";
-import { BuiCard } from "../ai/primitives";
+import { CardShell } from "../ai/primitives";
 
 type SkillDraftBlock = {
   kind: "skill_draft";
@@ -100,7 +100,7 @@ export function SkillDraftCard({
   const skillName = name || block.name || block.goal.slice(0, 80);
 
   return (
-    <BuiCard data-testid="skill-draft-card" className="w-[520px] max-w-full px-5 py-4">
+    <CardShell data-testid="skill-draft-card" className="w-[520px] max-w-full px-5 py-4">
       <div className="text-[15px] font-medium text-foreground">
         <Trans>Draft skill</Trans>
       </div>
@@ -194,6 +194,6 @@ export function SkillDraftCard({
         </Button>
       </div>
       {error ? <p className="mt-2 text-xs text-destructive">{error}</p> : null}
-    </BuiCard>
+    </CardShell>
   );
 }

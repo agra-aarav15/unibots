@@ -247,7 +247,8 @@ class SpaceImport {
   readonly receivedArtifacts = new Set<string>();
   readonly receivedHomeFiles = new Set<string>();
   boardId: string | null = null;
-  maxTicketNumber = 0;
+  /** Highest ticket number seen per board, so each board's counter resumes where it left off. */
+  readonly maxTicketNumberByBoard = new Map<string, number>();
   recordsDone = false;
   executablesDone = false;
   messages: WriteStream | null = null;
@@ -485,10 +486,10 @@ class AccountImporter implements ArchiveSink {
         if (parentBotId)
           await prisma.bot.update({ where: { id: link.botId }, data: { parentBotId } });
       }
-      if (space.boardId)
+      for (const [boardId, maxNumber] of space.maxTicketNumberByBoard)
         await prisma.board.update({
-          where: { id: space.boardId },
-          data: { nextNumber: space.maxTicketNumber + 1 },
+          where: { id: boardId },
+          data: { nextNumber: maxNumber + 1 },
         });
     });
     space.recordsDone = true;
@@ -680,8 +681,10 @@ class AccountImporter implements ArchiveSink {
         });
         return;
       case "board":
-        if (space.boardId) throw unreadable();
+        // A workspace holds several boards. Each board record opens a new one, and the tickets
+        // that follow belong to it, which is how the export streams them.
         space.boardId = newId();
+        space.maxTicketNumberByBoard.set(space.boardId, 0);
         await prisma.board.create({
           data: {
             id: space.boardId,
@@ -693,7 +696,11 @@ class AccountImporter implements ArchiveSink {
         return;
       case "ticket": {
         if (!space.boardId) throw missingRecord();
-        space.maxTicketNumber = Math.max(space.maxTicketNumber, record.number);
+        const boardId = space.boardId;
+        space.maxTicketNumberByBoard.set(
+          boardId,
+          Math.max(space.maxTicketNumberByBoard.get(boardId) ?? 0, record.number),
+        );
         await prisma.ticket.create({
           data: {
             id: newId(),

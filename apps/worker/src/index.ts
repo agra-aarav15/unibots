@@ -67,6 +67,7 @@ import {
   SpaceMemoryProviderResolver,
   sandboxProviderOptionsFromEnv,
   shutdownPiTelemetry,
+  sweepTicketWork,
   UserDevices,
   userDeviceForwardSecret,
   withRunWorker,
@@ -371,6 +372,10 @@ async function main() {
     ),
     reconcileHomeStorage: homeStorageSweeper(home),
     reconcileIdleComputers: createIdleComputerSweeper({ prisma, jobs }),
+    // The Grinder: an open, assigned ticket with no run gets picked up on the next pass.
+    reconcileTicketWork: async () => {
+      await sweepTicketWork({ prisma, jobs, ticketBoardEnabled });
+    },
     reconcileDeadJobs: inMemoryJobs ? undefined : createDeadJobPruner(pool),
   });
   let stopHealth: (() => Promise<void>) | undefined;

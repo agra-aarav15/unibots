@@ -42,9 +42,12 @@ describe("index.html theme bootstrap", () => {
     expect(root.dataset.os).toBe(os);
   });
 
-  it("raises regular text to 420 only on macOS", () => {
+  it("sets text in the app's own face, with the system stack only as a fallback", () => {
     const css = read("../../../../packages/ui-web/src/styles.css");
-    expect(css).toMatch(/:root\[data-os="mac"\] \{\s*--font-weight-normal: 420;\s*\}/);
+    // The family is declared once and the file is shipped by the web app, so the product
+    // looks the same on every machine instead of inheriting whatever the OS defaults to.
+    expect(css).toMatch(/--font-sans:\s*\n?\s*"Inter Tight Variable",[^;]*sans-serif;/);
+    expect(read("../styles.css")).toContain('@import "@fontsource-variable/inter-tight"');
     expect(read("../styles.css")).toContain("font-weight: var(--font-weight-normal);");
   });
 });

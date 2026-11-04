@@ -3,15 +3,16 @@ import {
   CommentTicketInput,
   CreateTicketInput,
   isTicketCompletedStatus,
+  parseTicketRef,
   TicketStatusSchema,
   UpdateTicketInput,
 } from "@rakazo/contracts";
 import type { PrismaClient } from "@rakazo/db";
 import {
   allocateTicketNumber,
-  ensureBoard,
   findTicket,
   listTicketComments,
+  resolveBoard,
   toTicketCommentDto,
   toTicketDto,
 } from "@rakazo/db";
@@ -68,6 +69,15 @@ function encodeTicketListCursor(row: { createdAt: Date; id: string }): string {
   return Buffer.from(`${row.createdAt.toISOString()}|${row.id}`, "utf8").toString("base64url");
 }
 
+/**
+ * Statuses where a bot is expected to be working. Moving a ticket into one of these is a
+ * request for work, so it wakes the assignee exactly as a fresh assignment does.
+ */
+export function isWorkableTicketStatus(value: string): boolean {
+  const parsed = TicketStatusSchema.safeParse(value);
+  return parsed.success && (parsed.data === "todo" || parsed.data === "doing");
+}
+
 function decodeTicketListCursor(
   cursor: string,
 ): { createdAt: Date; id: string } | { error: string } {
@@ -94,6 +104,7 @@ export async function listBoardTickets(
   deps: TicketToolDeps,
   input: {
     spaceId: string;
+    boardId?: string;
     status?: string;
     assigneeBotId?: string;
     cursor?: string;
@@ -112,7 +123,8 @@ export async function listBoardTickets(
     if ("error" in decoded) return decoded;
     pageCursor = decoded;
   }
-  const board = await ensureBoard(deps.prisma, input.spaceId);
+  const board = await resolveBoard(deps.prisma, input.spaceId, input.boardId);
+  if (!board) return { error: "Unknown board." };
   const rows = await deps.prisma.ticket.findMany({
     where: {
       spaceId: input.spaceId,
@@ -148,11 +160,24 @@ export async function getTicket(deps: TicketToolDeps, input: { spaceId: string; 
   if (!deps.ticketBoardEnabled) return { error: "Board unavailable." };
   const ref = input.ref.trim();
   if (!ref) return { error: "ref is required." };
-  const board = await ensureBoard(deps.prisma, input.spaceId);
+  // A reference carries its board's prefix, so it says which board it sits on.
+  const parsed = parseTicketRef(ref);
+  const byPrefix = parsed
+    ? await deps.prisma.board.findFirst({
+        where: { spaceId: input.spaceId, ticketPrefix: parsed.prefix },
+      })
+    : null;
   const row =
-    (await findTicket(deps.prisma, input.spaceId, board, { ref })) ??
-    (await findTicket(deps.prisma, input.spaceId, board, { id: ref }));
+    (byPrefix ? await findTicket(deps.prisma, input.spaceId, byPrefix, { ref }) : null) ??
+    (await deps.prisma.ticket.findFirst({ where: { id: ref, spaceId: input.spaceId } }));
   if (!row) return { error: `Ticket ${ref} not found.` };
+  const board =
+    byPrefix?.id === row.boardId
+      ? byPrefix
+      : await deps.prisma.board.findFirstOrThrow({
+          where: { id: row.boardId, spaceId: input.spaceId },
+          select: { id: true, ticketPrefix: true },
+        });
   const comments = await listTicketComments(deps.prisma, input.spaceId, row.id);
   return {
     ticket: toTicketDto(row, board.ticketPrefix),
@@ -166,6 +191,7 @@ export async function createTicket(
     spaceId: string;
     botId?: string;
     userId: string;
+    boardId?: string;
     title: string;
     description?: string;
     priority?: string;
@@ -180,7 +206,8 @@ export async function createTicket(
   if (!parsed.success) return { error: ticketInputError(parsed.error) };
   const data = parsed.data;
   if (!(await ownBotInSpace(deps, input, data.assigneeBotId))) return { error: "Unknown bot." };
-  const board = await ensureBoard(deps.prisma, input.spaceId);
+  const board = await resolveBoard(deps.prisma, input.spaceId, input.boardId);
+  if (!board) return { error: "Unknown board." };
   const row = await deps.prisma.$transaction(async (tx) => {
     const number = await allocateTicketNumber(tx, board.id);
     return tx.ticket.create({
@@ -214,6 +241,7 @@ export async function updateTicket(
     botId?: string;
     userId: string;
     id: string;
+    boardId?: string;
     title?: string;
     description?: string | null;
     priority?: string | null;
@@ -227,11 +255,20 @@ export async function updateTicket(
   const data = parsed.data;
   if (data.assigneeBotId && !(await ownBotInSpace(deps, input, data.assigneeBotId)))
     return { error: "Unknown bot." };
-  const board = await ensureBoard(deps.prisma, input.spaceId);
+  // Addressing a board narrows the ticket; without one, any board in the workspace is fair game,
+  // because a caller holding a ticket id (a bot in a comment, say) does not know the board.
+  const board = input.boardId
+    ? await resolveBoard(deps.prisma, input.spaceId, input.boardId)
+    : null;
+  if (input.boardId && !board) return { error: "Unknown board." };
   const result = await deps.prisma.$transaction(async (tx) => {
     await tx.$queryRaw`SELECT id FROM tickets WHERE id = ${data.id} AND "spaceId" = ${input.spaceId} FOR UPDATE`;
     const current = await tx.ticket.findFirst({
-      where: { id: data.id, spaceId: input.spaceId, boardId: board.id },
+      where: {
+        id: data.id,
+        spaceId: input.spaceId,
+        ...(board ? { boardId: board.id } : {}),
+      },
     });
     if (!current) return null;
     const row = await tx.ticket.update({
@@ -253,18 +290,32 @@ export async function updateTicket(
     });
     return {
       row,
+      previousStatus: current.status,
       reassigned: data.assigneeBotId !== undefined && data.assigneeBotId !== current.assigneeBotId,
     };
   });
   if (!result) return { error: "Ticket not found." };
+  const ticketBoard =
+    board?.id === result.row.boardId
+      ? board
+      : await deps.prisma.board.findFirstOrThrow({
+          where: { id: result.row.boardId, spaceId: input.spaceId },
+          select: { id: true, ticketPrefix: true },
+        });
   await deps.onTicketChange?.({
     spaceId: input.spaceId,
-    boardId: board.id,
+    boardId: ticketBoard.id,
     ticketId: result.row.id,
     assigneeBotId: result.row.assigneeBotId,
-    wakeAssignee: result.reassigned && result.row.assigneeBotId !== input.botId,
+    // A ticket that comes back into play is work again: a status change into an open state
+    // wakes its owner just as an assignment does.
+    wakeAssignee:
+      (result.reassigned ||
+        (result.row.status !== result.previousStatus &&
+          isWorkableTicketStatus(result.row.status))) &&
+      result.row.assigneeBotId !== input.botId,
   });
-  return { ticket: toTicketDto(result.row, board.ticketPrefix) };
+  return { ticket: toTicketDto(result.row, ticketBoard.ticketPrefix) };
 }
 
 export async function commentTicket(
@@ -274,14 +325,23 @@ export async function commentTicket(
     botId?: string;
     userId?: string;
     id: string;
+    boardId?: string;
     body: string;
   },
 ) {
   if (!deps.ticketBoardEnabled) return { error: "Board unavailable." };
   const parsed = CommentTicketInput.safeParse({ ticketId: input.id, body: input.body });
   if (!parsed.success) return { error: ticketInputError(parsed.error) };
-  const board = await ensureBoard(deps.prisma, input.spaceId);
-  const ticket = await findTicket(deps.prisma, input.spaceId, board, { id: input.id });
+  const board = input.boardId
+    ? await resolveBoard(deps.prisma, input.spaceId, input.boardId)
+    : null;
+  if (input.boardId && !board) return { error: "Unknown board." };
+  // Without a board, the id is enough: a commenter knows the ticket, not where it sits.
+  const ticket = board
+    ? await findTicket(deps.prisma, input.spaceId, board, { id: input.id })
+    : await deps.prisma.ticket.findFirst({
+        where: { id: input.id, spaceId: input.spaceId },
+      });
   if (!ticket) return { error: "Ticket not found." };
   const row = await deps.prisma.$transaction(async (tx) => {
     const comment = await tx.ticketComment.create({
@@ -299,7 +359,7 @@ export async function commentTicket(
   });
   await deps.onTicketChange?.({
     spaceId: input.spaceId,
-    boardId: board.id,
+    boardId: ticket.boardId,
     ticketId: ticket.id,
     assigneeBotId: ticket.assigneeBotId,
     wakeAssignee: false,

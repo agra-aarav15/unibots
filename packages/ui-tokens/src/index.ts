@@ -36,6 +36,17 @@ export type ColorTokens = {
   faintForeground: string;
   accent: string;
   accentForeground: string;
+  /**
+   * The product's own accent: the middle of the mark's gradient. It appears only where the
+   * interface says *us* rather than *state* — the mark, the sign-up call to action, the
+   * workspace you are in. Ordinary buttons stay ink, and health stays in the status colours
+   * below, so `brand` never means "something happened".
+   */
+  brand: string;
+  /** Ink on a solid `brand` fill. */
+  brandForeground: string;
+  /** A wash of `brand`, for selected rows, tracks and quiet fills. */
+  brandMuted: string;
   /** Destructive text and outlines. */
   destructive: string;
   /** Solid destructive fill (Hang up, a filled Delete); its text is `destructiveForeground`. */
@@ -64,6 +75,14 @@ export type ColorTokens = {
   scrollbarHover: string;
 };
 
+/**
+ * The product's accent: the middle stop of the mark's gradient in `mark.ts`, so the colour
+ * people see in the logo is the colour the interface identifies itself with. It is written
+ * as a literal because this module must load without a resolver that maps `./mark.js` to the
+ * TypeScript source; `appearance.test.ts` fails if it drifts from the gradient. Light mode
+ * uses a darker step of the same hue, because the logo stop only reaches 3.5:1 on white.
+ */
+
 export const darkTokens = {
   background: "#141414",
   dialog: "#1E1E1E",
@@ -85,6 +104,9 @@ export const darkTokens = {
   faintForeground: "#EBEBF573",
   accent: "#78788052",
   accentForeground: "#FFFFFF",
+  brand: "#EC4899",
+  brandForeground: "#FFFFFF",
+  brandMuted: "#EC48992E",
   destructive: "#FF9592",
   destructiveFill: "#E5484D",
   destructiveForeground: "#FFFFFF",
@@ -129,6 +151,9 @@ export const lightTokens = {
   faintForeground: "#3C3C4394",
   accent: "#78788029",
   accentForeground: "#000000",
+  brand: "#DB2777",
+  brandForeground: "#FFFFFF",
+  brandMuted: "#DB27771F",
   destructive: "#CE2C31",
   destructiveFill: "#E5484D",
   destructiveForeground: "#FFFFFF",

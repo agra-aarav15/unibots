@@ -1,0 +1,90 @@
+/* Motion for the waiting and completion beats in the chat.
+   These are drawn from the product's own mark, so a bot at work is drawn in the product's
+   gradient rather than by a generic spinner. */
+
+/* The mark draws itself on from the left stem, then slides away. `--rk-mark-length` is the
+   centreline length of the path, set on the element because only the geometry knows it. */
+@keyframes rk-mark-draw {
+  0% {
+    stroke-dashoffset: var(--rk-mark-length);
+  }
+  50% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: calc(-1 * var(--rk-mark-length));
+  }
+}
+
+@keyframes rk-mark-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* A light sweep travelling across a label. */
+@keyframes rk-shimmer {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+/* The completion beat: a check that pops in, then a label that fades up. */
+@keyframes rk-check-pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes rk-fade-up {
+  0% {
+    transform: translateY(3px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.rk-working-mark {
+  animation: rk-mark-draw 1.9s ease-in-out infinite;
+}
+
+.rk-shimmer {
+  animation: rk-shimmer 1.6s linear infinite;
+}
+
+.rk-check-pop {
+  animation: rk-check-pop 300ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.rk-fade-up {
+  animation: rk-fade-up 350ms cubic-bezier(0.23, 1, 0.32, 1) 100ms both;
+}
+
+/* Settle rather than stop: a stopped draw animation would leave the mark half-drawn. */
+@media (prefers-reduced-motion: reduce) {
+  .rk-working-mark {
+    animation: rk-mark-pulse 1.8s ease-in-out infinite;
+  }
+  .rk-shimmer {
+    animation-duration: 4.5s;
+  }
+  .rk-check-pop,
+  .rk-fade-up {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
+}

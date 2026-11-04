@@ -87,7 +87,10 @@ it("skips ticket reference lookup completely when disabled", async () => {
 it("does not query tickets for an out-of-range reference in a message", async () => {
   const findMany = vi.fn(async () => []);
   const prisma = {
-    board: { findUnique: vi.fn(async () => ({ id: "board-1", ticketPrefix: "RAK" })) },
+    board: {
+      findMany: vi.fn(async () => [{ id: "board-1", ticketPrefix: "RAK" }]),
+      findUnique: vi.fn(async () => ({ id: "board-1", ticketPrefix: "RAK" })),
+    },
     ticket: { findMany },
   } as never;
 

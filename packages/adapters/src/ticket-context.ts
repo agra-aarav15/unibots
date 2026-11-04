@@ -78,23 +78,25 @@ export async function loadAgentTicketContext(
 ): Promise<string | undefined> {
   if (!deps.ticketBoardEnabled || !TICKET_REF_HINT.test(input.text)) return undefined;
 
-  const board = await deps.prisma.board.findUnique({ where: { spaceId: input.spaceId } });
-  if (!board) return undefined;
-
-  const refs = extractTicketRefs(input.text, board.ticketPrefix);
-  if (refs.length === 0) return undefined;
-
-  const wanted = refs.flatMap((ref) => {
-    const parsed = parseTicketRef(ref, board.ticketPrefix);
-    return parsed ? [{ ref, number: parsed.number }] : [];
+  // A workspace can hold several boards, each with its own prefix, so every prefix is tried.
+  const boards = await deps.prisma.board.findMany({
+    where: { spaceId: input.spaceId },
+    select: { id: true, ticketPrefix: true },
   });
+  if (boards.length === 0) return undefined;
+
+  const wanted = boards.flatMap((board) =>
+    extractTicketRefs(input.text, board.ticketPrefix).flatMap((ref) => {
+      const parsed = parseTicketRef(ref, board.ticketPrefix);
+      return parsed ? [{ ref, boardId: board.id, number: parsed.number }] : [];
+    }),
+  );
   if (wanted.length === 0) return undefined;
 
   const rows = await deps.prisma.ticket.findMany({
     where: {
       spaceId: input.spaceId,
-      boardId: board.id,
-      number: { in: wanted.map((item) => item.number) },
+      OR: wanted.map((item) => ({ boardId: item.boardId, number: item.number })),
     },
   });
   if (rows.length === 0) return undefined;
@@ -118,11 +120,13 @@ export async function loadAgentTicketContext(
       })
     : [];
   const botNameById = new Map(bots.map((bot) => [bot.id, bot.name]));
-  const rowByNumber = new Map(rows.map((row) => [row.number, row]));
+  // Two boards can both have a ticket 4, so a row is found by its board as well as its number.
+  const rowKey = (boardId: string, number: number) => `${boardId}:${number}`;
+  const rowByKey = new Map(rows.map((row) => [rowKey(row.boardId, row.number), row]));
 
   const entries: TicketContextEntry[] = [];
   for (const item of wanted) {
-    const row = rowByNumber.get(item.number);
+    const row = rowByKey.get(rowKey(item.boardId, item.number));
     if (!row) continue;
     entries.push({
       ref: item.ref,
