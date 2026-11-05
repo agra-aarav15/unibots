@@ -6,9 +6,13 @@ const windowsEnv = { npm_execpath: undefined, ComSpec: "C:\\Windows\\system32\\c
 describe("pnpmCommand", () => {
   it("runs the JavaScript entry the invoking shell used", () => {
     expect(
-      pnpmCommand(["exec", "prisma", "migrate", "deploy"], {
-        npm_execpath: "C:\\Users\\Owner\\npm\\node_modules\\pnpm\\bin\\pnpm.cjs",
-      }),
+      pnpmCommand(
+        ["exec", "prisma", "migrate", "deploy"],
+        // The caller is Windows, and so is the entry: on any other platform this path is not
+        // absolute and the entry is deliberately ignored, so the platform is stated, not inherited.
+        { npm_execpath: "C:\\Users\\Owner\\npm\\node_modules\\pnpm\\bin\\pnpm.cjs" },
+        "win32",
+      ),
     ).toEqual({
       file: process.execPath,
       args: [
