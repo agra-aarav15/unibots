@@ -15,7 +15,10 @@ export function pnpmCommand(
   platform: NodeJS.Platform = process.platform,
 ): { file: string; args: string[] } {
   const entry = env.npm_execpath;
-  if (entry && path.isAbsolute(entry) && /^pnpm\.(?:cjs|mjs|js)$/i.test(path.basename(entry))) {
+  // The entry came from the shell that invoked us, so its path is read with that platform's rules
+  // rather than the running host's: a Windows path is not absolute when parsed as a POSIX one.
+  const paths = platform === "win32" ? path.win32 : path.posix;
+  if (entry && paths.isAbsolute(entry) && /^pnpm\.(?:cjs|mjs|js)$/i.test(paths.basename(entry))) {
     return { file: process.execPath, args: [entry, ...args] };
   }
   if (platform === "win32") {
