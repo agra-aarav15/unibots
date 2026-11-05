@@ -22,8 +22,8 @@ import {
   BoardEventSchema,
   BoardSchema,
   CommentTicketInput,
-  CreateTicketInput,
   CreateBoardInput,
+  CreateTicketInput,
   GetTicketInput,
   ListTicketsInput,
   ListTicketsOutput,
@@ -78,6 +78,7 @@ import {
   CreateGroupInput,
   CreateRoutineInput,
   CreateScratchpadItemInput,
+  CreateSpaceInvitationInput,
   DeploymentSettingsSchema,
   ExportManifestSchema,
   ExternalConversationPolicySchema,
@@ -123,6 +124,10 @@ import {
   SignupSurveySchema,
   SkillPlaybookSchema,
   SpaceAvailabilitySchema,
+  SpaceBotSchema,
+  SpaceInvitationSchema,
+  SpaceMemberRoleSchema,
+  SpaceMemberSchema,
   SpaceMemoryConfigSchema,
   SpaceNavigationSchema,
   SpaceSchema,
@@ -151,13 +156,13 @@ import {
 } from "./integration-settings.js";
 import { ModelHeadersSchema } from "./model-headers.js";
 import { ModelRoleSchema, ModelRoleUpdateSchema, ModelRoleViewSchema } from "./model-roles.js";
-import { PaymentWalletStatusSchema } from "./payments.js";
 import {
   CreateDevicePairingInputSchema,
   DevicePairingSchema,
   PairDeviceInputSchema,
   PairDeviceOutputSchema,
 } from "./pairing.js";
+import { PaymentWalletStatusSchema } from "./payments.js";
 import { MessageReactionSchema } from "./reactions.js";
 import { RoutineWatchSchema } from "./routine-watch.js";
 import {
@@ -307,6 +312,23 @@ export const appContract = {
     remove: oc
       .input(z.object({ spaceId: Id }))
       .output(z.object({ ok: z.literal(true), activeSpaceId: Id })),
+    /** Mints a link into one workspace. Earlier pending links for the same address stop working. */
+    invite: oc.input(CreateSpaceInvitationInput).output(SpaceInvitationSchema),
+    invitations: oc.input(z.object({ spaceId: Id })).output(z.array(SpaceInvitationSchema)),
+    revokeInvitation: oc
+      .input(z.object({ spaceId: Id, invitationId: Id }))
+      .output(z.object({ ok: z.literal(true) })),
+    /** Joins the workspace the link names. The signed-in address has to be the invited one. */
+    acceptInvite: oc
+      .input(z.object({ token: z.string().min(1) }))
+      .output(z.object({ spaceId: Id, name: z.string() })),
+    members: oc.input(z.object({ spaceId: Id })).output(z.array(SpaceMemberSchema)),
+    setMemberRole: oc
+      .input(z.object({ spaceId: Id, memberUserId: Id, role: SpaceMemberRoleSchema }))
+      .output(z.object({ ok: z.literal(true) })),
+    removeMember: oc
+      .input(z.object({ spaceId: Id, memberUserId: Id }))
+      .output(z.object({ ok: z.literal(true) })),
   },
   bootstrap: oc.input(z.object({ botId: Id.optional() })).output(AppBootstrapSchema),
   deployment: {
@@ -819,6 +841,8 @@ export const appContract = {
     get: oc.output(BoardSchema),
     create: oc.input(CreateBoardInput).output(BoardSchema),
     rename: oc.input(RenameBoardInput).output(BoardSchema),
+    /** The workspace's bots, whoever made them: what a ticket can be assigned to. */
+    assignees: oc.output(z.array(SpaceBotSchema)),
     subscribe: oc.output(eventIterator(BoardEventSchema)),
   },
   tickets: {

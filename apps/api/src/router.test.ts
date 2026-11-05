@@ -8696,6 +8696,41 @@ describe("boards.tickets.list", () => {
   });
 });
 
+describe("boards.assignees", () => {
+  const actor = {
+    spaceId: "workspace-1",
+    userId: "user-1",
+    email: "user@rakazo.test",
+    isDeploymentOwner: true,
+  } satisfies Actor;
+
+  function assigneeDeps() {
+    const findMany = vi.fn(async () => []);
+    const prisma = { bot: { findMany } } as unknown as PrismaClient;
+    const deps = { prisma, env: { ticketBoardEnabled: true } } as unknown as RouterDeps;
+    return { findMany, handler: new RPCHandler(createRouter(deps)) };
+  }
+
+  it("offers the whole workspace's bots, not only the caller's own", async () => {
+    const { findMany, handler } = assigneeDeps();
+    const { response } = await handler.handle(
+      new Request("http://127.0.0.1/rpc/boards/assignees", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ json: {} }),
+      }),
+      { prefix: "/rpc", context: { actor } },
+    );
+    expect(response?.status).toBe(200);
+    await expect(response?.json()).resolves.toEqual({ json: [] });
+    // The space is the boundary: a teammate's bot is assignable, so no user filter applies.
+    expect(findMany.mock.calls[0]?.[0]?.where).toEqual({
+      spaceId: { in: ["workspace-1"] },
+      archivedAt: null,
+    });
+  });
+});
+
 describe("export.bot", () => {
   const actor = {
     spaceId: "workspace-1",

@@ -1,6 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import { ChatMarkdown } from "@rakazo/chat-ui/web";
-import type { Board, Bot, Ticket, TicketPriority, TicketStatus } from "@rakazo/contracts";
+import type { Board, SpaceBot, Ticket, TicketPriority, TicketStatus } from "@rakazo/contracts";
 import {
   TICKET_COMMENT_MAX_LENGTH,
   TICKET_DESCRIPTION_MAX_LENGTH,
@@ -56,7 +56,7 @@ export function BoardPage() {
     input: board ? { boardId: board.id } : {},
   });
   const ticketsQuery = useQuery(ticketsOptions);
-  const botsQuery = useQuery(queries.bots.list.queryOptions());
+  const botsQuery = useQuery(queries.boards.assignees.queryOptions());
   const tickets = ticketsQuery.data?.tickets ?? [];
   const bots = botsQuery.data ?? [];
   const [selected, setSelected] = useState<Ticket | "new" | null>(null);
@@ -223,7 +223,7 @@ function TicketCard({
   onOpen,
 }: {
   ticket: Ticket;
-  bot: Bot | undefined;
+  bot: SpaceBot | undefined;
   onOpen: () => void;
 }) {
   const priorities = useTicketPriorityLabels();
@@ -257,7 +257,10 @@ function TicketCard({
             />
             <span className="truncate">{bot.name}</span>
             {working ? (
-              <span aria-hidden="true" className="ms-auto size-1.5 rounded-full bg-status-working" />
+              <span
+                aria-hidden="true"
+                className="ms-auto size-1.5 rounded-full bg-status-working"
+              />
             ) : null}
           </>
         ) : (
@@ -276,7 +279,7 @@ function TicketDialog({
   onSaved,
 }: {
   ticket: Ticket | null;
-  bots: Bot[];
+  bots: SpaceBot[];
   boardId?: string;
   onClose: () => void;
   onSaved: () => Promise<void>;

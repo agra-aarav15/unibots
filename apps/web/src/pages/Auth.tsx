@@ -20,6 +20,7 @@ import { PasskeySignIn } from "../components/PasskeySignIn";
 import { authClient } from "../lib/auth";
 import type { AuthCapabilities } from "../lib/auth-capabilities";
 import { fetchAuthCapabilities } from "../lib/auth-capabilities";
+import { rememberInvite } from "../lib/pending-invite";
 import { clearSpaceSelection } from "../lib/rpc";
 import { runSsoFlow } from "../lib/sso-flow";
 import { authErrorText, credentialIssueText } from "../lib/user-error";
@@ -46,6 +47,11 @@ export function AuthPage({ mode }: { mode: AuthMode }) {
   const [resetSent, setResetSent] = useState(false);
   // Signup triggers a session refresh that remounts the anonymous auth page.
   const sent = resetSent || searchParams.get("verify") === "email";
+  // An invitation is parked while they sign up and verify: those steps replace the query string.
+  const inviteToken = searchParams.get("invite");
+  useEffect(() => {
+    if (inviteToken) rememberInvite(inviteToken);
+  }, [inviteToken]);
   const [reset, setReset] = useState<AuthCapabilities | null>(null);
   const [capabilityError, setCapabilityError] = useState(false);
   const [capabilityAttempt, setCapabilityAttempt] = useState(0);
@@ -149,7 +155,9 @@ export function AuthPage({ mode }: { mode: AuthMode }) {
         return;
       }
       if (mode === "up" && signupRequiresEmailVerification(result.data)) {
-        setSearchParams({ verify: "email" });
+        setSearchParams(
+          inviteToken ? { verify: "email", invite: inviteToken } : { verify: "email" },
+        );
         return;
       }
       enterApp();

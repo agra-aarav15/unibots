@@ -123,6 +123,8 @@ Compose bot homes mount only their own subdirectory of the application volume us
   and alerts.
 - [Apps and clients](./self-host-clients.md): mobile and desktop apps, push, client updates and web
   page settings.
+- [Team access](./team-access.md): the same network, a tunnel, or a server — and the origins that
+  have to match.
 - [Billing](./self-host-billing.md): optional Stripe plans and model credits.
 - [Restricted networks](./self-host-restricted-network.md): mirrors when downloads are blocked.
 

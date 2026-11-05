@@ -70,6 +70,8 @@ function fixture({
   };
   const messages: TransactionalEmail[] = [];
   const members = new Set<string>();
+  /** Addresses holding an invitation into an existing workspace; empty unless a test says so. */
+  const invitedEmails = new Set<string>();
   const prisma = {
     authData: data,
     $executeRaw: vi.fn(async () => 0),
@@ -133,6 +135,13 @@ function fixture({
     spaceMember: {
       findFirst: vi.fn(async ({ where }: { where: { userId: string } }) =>
         members.has(where.userId) ? { spaceId: "space-1" } : null,
+      ),
+    },
+    invitation: {
+      findFirst: vi.fn(async ({ where }: { where?: { email?: { equals?: string } } }) =>
+        invitedEmails.has(String(where?.email?.equals ?? "").toLowerCase())
+          ? { id: "invitation-1" }
+          : null,
       ),
     },
   };
@@ -253,6 +262,7 @@ function fixture({
     policy,
     messages,
     members,
+    invitedEmails,
   };
 }
 
@@ -380,6 +390,18 @@ describe("identity trust through auth endpoints", () => {
       code: "REGISTRATION_CLOSED",
       message: "Registration is closed",
     });
+  });
+
+  it("admits an invited address while registration is closed", async () => {
+    const f = fixture();
+    f.policy.signupsEnabled = false;
+    // The owner invited this address into a workspace that already exists.
+    f.invitedEmails.add("invited@example.test");
+    expect((await f.signup("invited@example.test")).status).toBe(200);
+    expect(bootstrapUserSpace).toHaveBeenCalledTimes(1);
+    // Being invited admits the invited address, not whoever else asks.
+    expect((await f.signup("stranger@example.test")).status).toBe(400);
+    expect(bootstrapUserSpace).toHaveBeenCalledTimes(1);
   });
 
   it("permits ordinary unverified signup without granting admin or mailbox proof on open deployments", async () => {

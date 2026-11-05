@@ -677,13 +677,13 @@ msgstr ""
 msgid "Allow once"
 msgstr "今回のみ許可"
 
-#: src/lib/dictation.ts
-msgid "Allow Unibots to use Speech Recognition and the microphone in System Settings."
-msgstr ""
-
 #: src/components/ApprovalRulePreview.tsx
 msgid "Allow rule"
 msgstr "許可ルール"
+
+#: src/lib/dictation.ts
+msgid "Allow Unibots to use Speech Recognition and the microphone in System Settings."
+msgstr ""
 
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
 msgid "Allow writing"
@@ -777,6 +777,10 @@ msgstr "Anthropic API"
 #: src/pages/Paywall.tsx
 msgid "Any model, with your own key"
 msgstr "自分のキーで、あらゆるモデルを"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Anyone with the link"
+msgstr ""
 
 #: src/components/AskCard.tsx
 #: src/lib/localized-provider-hint.ts
@@ -1148,6 +1152,7 @@ msgstr "画像を読み取れません"
 #: src/pages/PluginSubmissionsPanel.tsx
 #: src/pages/shell/create-bot-dialog.tsx
 #: src/pages/shell/dialogs.tsx
+#: src/pages/SpaceMembersPanel.tsx
 #: src/pages/SpaceSettingOverrides.tsx
 msgid "Cancel"
 msgstr "キャンセル"
@@ -1676,6 +1681,7 @@ msgstr "コンテキスト上限"
 #: src/components/integrations/IntegrationSetup.tsx
 #: src/components/SignupSurvey.tsx
 #: src/pages/Auth.tsx
+#: src/pages/InviteJoin.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/dialogs.tsx
@@ -1706,6 +1712,7 @@ msgstr ""
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/agent-import.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Copied"
 msgstr "コピーしました"
 
@@ -1714,6 +1721,7 @@ msgstr "コピーしました"
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/message-hover-actions.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Copy"
 msgstr "コピー"
 
@@ -2190,6 +2198,10 @@ msgstr ""
 msgid "Could not start OAuth"
 msgstr "OAuthを開始できませんでした"
 
+#: src/components/PhoneAccess.tsx
+msgid "Could not start phone access"
+msgstr ""
+
 #: src/components/teach/TeachComputerOverlay.tsx
 msgid "Could not start teaching"
 msgstr "ティーチングを開始できませんでした"
@@ -2216,6 +2228,10 @@ msgstr "MCPサーバーをテストできませんでした"
 
 #: src/lib/dictation.ts
 msgid "Could not transcribe that recording."
+msgstr ""
+
+#: src/components/PhoneAccess.tsx
+msgid "Could not turn off phone access"
 msgstr ""
 
 #: src/pages/ScratchpadSection.tsx
@@ -2282,6 +2298,10 @@ msgstr ""
 msgid "Create"
 msgstr "作成"
 
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Create a link"
+msgstr ""
+
 #. placeholder {0}: bot.name
 #: src/pages/shell/dialogs.tsx
 msgid "Create a section and move {0} into it."
@@ -2294,6 +2314,10 @@ msgstr "アカウントを作成"
 #: src/pages/GroupPanel.tsx
 msgid "Create group"
 msgstr "グループを作成"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Create link"
+msgstr ""
 
 #: src/pages/RoutineEditor.tsx
 msgid "Create Routine"
@@ -2708,6 +2732,10 @@ msgstr "プロフィールを編集"
 msgid "Email"
 msgstr "メールアドレス"
 
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Email (optional)"
+msgstr ""
+
 #: src/lib/user-error.ts
 msgid "Email is not allowed to register"
 msgstr "このメールアドレスは登録できません"
@@ -2856,6 +2884,10 @@ msgstr "テーブルを拡大"
 #: src/components/CloudAgentCard.tsx
 msgid "expired"
 msgstr "期限切れ"
+
+#: src/components/PhoneAccess.tsx
+msgid "Expires in"
+msgstr ""
 
 #: src/pages/shell/bot-panel.tsx
 msgid "Export"
@@ -3316,8 +3348,17 @@ msgid "Invite friends"
 msgstr "友だちを招待"
 
 #: src/components/InviteDialog.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Invite link"
 msgstr "招待リンク"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Invite someone"
+msgstr ""
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Invite to this workspace"
+msgstr ""
 
 #: src/pages/MemorySettingsOverlay.tsx
 #: src/pages/shell/bot-panel.tsx
@@ -3522,6 +3563,14 @@ msgstr "小文字、数字、ハイフン、アンダースコアのみ使用で
 msgid "Main model"
 msgstr "メインモデル"
 
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Make member"
+msgstr ""
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Make owner"
+msgstr ""
+
 #: src/pages/BillingSettingsPanel.tsx
 #: src/pages/SettingsOverlay.tsx
 msgid "Manage"
@@ -3571,6 +3620,7 @@ msgstr "未読にする"
 msgid "Markdown table"
 msgstr "Markdown テーブル"
 
+#: src/pages/Board.tsx
 #: src/pages/PluginsOverlay.tsx
 msgid "Marketing"
 msgstr ""
@@ -3624,6 +3674,7 @@ msgid "Medium"
 msgstr "中"
 
 #: src/lib/identity-display.ts
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Member"
 msgstr "メンバー"
 
@@ -3750,6 +3801,10 @@ msgstr "分"
 msgid "Missed call"
 msgstr "不在着信"
 
+#: src/pages/Board.tsx
+msgid "MKT"
+msgstr ""
+
 #: src/components/ApprovalRulesSettings.tsx
 msgid "Mode"
 msgstr "モード"
@@ -3862,6 +3917,7 @@ msgstr "ミュート中"
 #: src/components/VaultSettings.tsx
 #: src/pages/AccountSettingsOverlay.tsx
 #: src/pages/Auth.tsx
+#: src/pages/Board.tsx
 #: src/pages/GroupPanel.tsx
 #: src/pages/McpServersOverlay.tsx
 #: src/pages/model-settings/providers-section.tsx
@@ -3925,6 +3981,10 @@ msgstr "確認しない"
 #: src/pages/shell/chat-context.tsx
 msgid "New"
 msgstr "新規"
+
+#: src/pages/Board.tsx
+msgid "New board"
+msgstr ""
 
 #: src/pages/Shell.tsx
 #: src/pages/shell/bot-picker.tsx
@@ -4111,13 +4171,13 @@ msgstr "未確認"
 msgid "Not imported"
 msgstr "インポートされていません"
 
-#: src/pages/shell/import-status.ts
-msgid "Not in Unibots's catalog"
-msgstr "Unibotsのカタログにありません"
-
 #: src/pages/PluginsOverlay.tsx
 msgid "Not in the plugin catalog"
 msgstr "プラグインカタログにありません"
+
+#: src/pages/shell/import-status.ts
+msgid "Not in Unibots's catalog"
+msgstr "Unibotsのカタログにありません"
 
 #: src/pages/shell/message-cards.tsx
 msgid "Not now"
@@ -4313,6 +4373,7 @@ msgstr "出力"
 
 #: src/lib/identity-display.ts
 #: src/pages/Board.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Owner"
 msgstr "オーナー"
 
@@ -4409,9 +4470,17 @@ msgstr "ペルソナ"
 msgid "Personal"
 msgstr "個人"
 
+#: src/components/PhoneAccess.tsx
+msgid "Phone"
+msgstr ""
+
 #: src/components/call/VoiceChatCard.tsx
 msgid "Phone call"
 msgstr "電話"
+
+#: src/components/PhoneAccess.tsx
+msgid "Phone on this network"
+msgstr ""
 
 #: src/pages/shell/chat-context.tsx
 #: src/pages/shell/chat-shared.ts
@@ -4544,15 +4613,6 @@ msgstr "プルリクエスト"
 #: src/pages/ActivityList.tsx
 msgid "Queued"
 msgstr "待機中"
-
-#: src/pages/shell/avatar-studio-popover.tsx
-msgid "Unibots"
-msgstr "Unibots"
-
-#: src/components/ModelCredits.tsx
-#: src/pages/Onboarding.tsx
-msgid "Unibots credits"
-msgstr "Unibotsクレジット"
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
 msgid "rakazo-shared and IDs starting with bot- are reserved for Unibots."
@@ -4734,6 +4794,7 @@ msgstr "再読み込み"
 #: src/pages/ModelRoleSettings.tsx
 #: src/pages/PluginsOverlay.tsx
 #: src/pages/ScratchpadSection.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Remove"
 msgstr "削除"
 
@@ -4933,6 +4994,7 @@ msgstr "ワークスペースを復元中"
 #: src/pages/ModelRoleSettings.tsx
 #: src/pages/PluginsOverlay.tsx
 #: src/pages/PluginSubmissionsPanel.tsx
+#: src/pages/SpaceMembersPanel.tsx
 #: src/pages/SpaceSettingOverrides.tsx
 msgid "Retry"
 msgstr "再試行"
@@ -4961,6 +5023,7 @@ msgid "Review provider settings and test again."
 msgstr "プロバイダー設定を確認して、もう一度テストしてください。"
 
 #: src/pages/MessagingSettingsPanel.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Revoke"
 msgstr "取り消す"
 
@@ -5724,6 +5787,10 @@ msgstr ""
 msgid "Testing…"
 msgstr "テスト中…"
 
+#: src/pages/InviteJoin.tsx
+msgid "That invitation is no longer valid."
+msgstr ""
+
 #: src/pages/shell/composer-error.tsx
 msgid "The bot can use the file but won't see the picture."
 msgstr "ボットはファイルを利用できますが、画像の内容は見えません。"
@@ -5786,6 +5853,10 @@ msgstr "ファイルまたは選択内容が一致しなくなりました。も
 #: src/components/VaultSettings.tsx
 msgid "These saved settings can't be read. Remove it and add it again."
 msgstr "保存された設定を読み取れません。削除してから再度追加してください。"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "They join this workspace when they open the link."
+msgstr ""
 
 #: src/components/call/CallCard.tsx
 #: src/pages/ModelRoleSettings.tsx
@@ -5934,6 +6005,10 @@ msgstr "今週"
 msgid "Thursday"
 msgstr "木曜日"
 
+#: src/pages/Board.tsx
+msgid "Ticket prefix"
+msgstr ""
+
 #: src/pages/RoutineSchedule.tsx
 msgid "Time of day"
 msgstr "時刻"
@@ -6051,6 +6126,14 @@ msgstr "もう一度テストしてください。"
 msgid "Tuesday"
 msgstr "火曜日"
 
+#: src/components/PhoneAccess.tsx
+msgid "Turn off"
+msgstr ""
+
+#: src/components/PhoneAccess.tsx
+msgid "Turn on"
+msgstr ""
+
 #: src/components/VaultSettings.tsx
 msgid "Type"
 msgstr "種類"
@@ -6063,6 +6146,7 @@ msgstr "録画せずに入力"
 msgid "Type your answer"
 msgstr "回答を入力"
 
+#: src/pages/Board.tsx
 #: src/pages/BotContextMenu.tsx
 #: src/pages/Shell.tsx
 msgid "Unassigned"
@@ -6071,6 +6155,15 @@ msgstr "未割り当て"
 #: src/components/AskCard.tsx
 msgid "Undo"
 msgstr "元に戻す"
+
+#: src/pages/shell/avatar-studio-popover.tsx
+msgid "Unibots"
+msgstr "Unibots"
+
+#: src/components/ModelCredits.tsx
+#: src/pages/Onboarding.tsx
+msgid "Unibots credits"
+msgstr "Unibotsクレジット"
 
 #: src/pages/PluginsOverlay.tsx
 msgid "Uninstall"
@@ -6214,13 +6307,13 @@ msgstr "自分のサブスクリプションまたはAPIキーを使用"
 msgid "Use Protected input for passwords."
 msgstr "パスワードには保護された入力を使用してください。"
 
-#: src/components/ModelCredits.tsx
-msgid "Use Unibots credits"
-msgstr "Unibotsクレジットを使用"
-
 #: src/pages/model-settings/space-bots-model.tsx
 msgid "Use space default"
 msgstr "スペースのデフォルトを使用"
+
+#: src/components/ModelCredits.tsx
+msgid "Use Unibots credits"
+msgstr "Unibotsクレジットを使用"
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
 msgid "Use up to 512 letters, digits, _ or -."

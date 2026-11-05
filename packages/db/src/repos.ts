@@ -182,11 +182,28 @@ export function createRepos(
   }
 
   async function listSpaceBotsForSpaces(actor: Actor, spaceIds: string[]): Promise<SpaceBot[]> {
+    return spaceBotsForSpaceIds(spaceIds, actor.userId);
+  }
+
+  /**
+   * Every bot of one space, whoever made it. A workspace's board is worked by all its members,
+   * so the board has to be able to name and offer the bots it can assign to; a person's own
+   * sidebar still lists only their own bots.
+   */
+  async function listWorkspaceBots(actor: Actor): Promise<SpaceBot[]> {
+    return spaceBotsForSpaceIds([actor.spaceId], null);
+  }
+
+  /** `userId` null reads the whole space; a caller's own id reads just their bots. */
+  async function spaceBotsForSpaceIds(
+    spaceIds: string[],
+    userId: string | null,
+  ): Promise<SpaceBot[]> {
     if (spaceIds.length === 0) return [];
     const rows = await prisma.bot.findMany({
       where: {
         spaceId: { in: spaceIds },
-        userId: actor.userId,
+        ...(userId ? { userId } : {}),
         archivedAt: null,
       },
       select: {
@@ -495,6 +512,22 @@ export function createRepos(
     },
 
     listSpaceBotsForSpaces,
+
+    listWorkspaceBots,
+
+    /**
+     * A bot that may be handed work in this space. A member assigns the workspace's bots, not
+     * only their own, because the board is the workspace's; the run is still created for the
+     * bot's owner, who pays for it. Editing or deleting a bot stays with whoever made it.
+     */
+    async assignableBot(actor: Actor, botId: string) {
+      const bot = await prisma.bot.findFirst({
+        where: { id: botId, spaceId: actor.spaceId, archivedAt: null },
+        select: { id: true },
+      });
+      if (!bot) throw new IsolationError();
+      return bot;
+    },
 
     async getBot(actor: Actor, botId: string, options: { includeArchived?: boolean } = {}) {
       const bot = await prisma.bot.findFirst({

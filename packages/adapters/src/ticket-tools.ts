@@ -40,18 +40,18 @@ function coerceInputStatus(value: string) {
   return parsed.success ? parsed.data : undefined;
 }
 /**
- * An assignee must be one of the acting user's own bots, as the HTTP API
- * requires through `repos.getBot`. Assigning wakes the bot, which runs as its
- * owner, so another member's bot in the same space is not a valid target.
+ * An assignee must be one of this space's bots. A workspace's board is worked by all its
+ * members, so a bot another member made is a valid target; the run is still created for the
+ * bot's owner, who spends their own model quota on it.
  */
-async function ownBotInSpace(
+async function assignableBotInSpace(
   deps: TicketToolDeps,
-  input: { spaceId: string; userId: string },
+  input: { spaceId: string },
   botId: string,
 ) {
   return Boolean(
     await deps.prisma.bot.findFirst({
-      where: { id: botId, spaceId: input.spaceId, userId: input.userId, archivedAt: null },
+      where: { id: botId, spaceId: input.spaceId, archivedAt: null },
       select: { id: true },
     }),
   );
@@ -205,7 +205,8 @@ export async function createTicket(
   });
   if (!parsed.success) return { error: ticketInputError(parsed.error) };
   const data = parsed.data;
-  if (!(await ownBotInSpace(deps, input, data.assigneeBotId))) return { error: "Unknown bot." };
+  if (!(await assignableBotInSpace(deps, input, data.assigneeBotId)))
+    return { error: "Unknown bot." };
   const board = await resolveBoard(deps.prisma, input.spaceId, input.boardId);
   if (!board) return { error: "Unknown board." };
   const row = await deps.prisma.$transaction(async (tx) => {
@@ -253,7 +254,7 @@ export async function updateTicket(
   const parsed = UpdateTicketInput.safeParse({ ...input, assigneeBotId: input.ownerBotId });
   if (!parsed.success) return { error: ticketInputError(parsed.error) };
   const data = parsed.data;
-  if (data.assigneeBotId && !(await ownBotInSpace(deps, input, data.assigneeBotId)))
+  if (data.assigneeBotId && !(await assignableBotInSpace(deps, input, data.assigneeBotId)))
     return { error: "Unknown bot." };
   // Addressing a board narrows the ticket; without one, any board in the workspace is fair game,
   // because a caller holding a ticket id (a bot in a comment, say) does not know the board.

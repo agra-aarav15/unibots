@@ -12,6 +12,7 @@ vi.mock("better-auth/adapters/prisma", async () => {
 });
 vi.mock("@rakazo/db", () => ({
   bootstrapUserSpace: vi.fn(async () => ({ spaceId: "space-1" })),
+  hasPendingInvitationForEmail: vi.fn(async () => false),
   recordSecurityEvent: vi.fn(async () => undefined),
 }));
 
@@ -36,6 +37,7 @@ function fixture({ breachedPasswordCheck = false } = {}) {
       })),
     },
     spaceMember: { findFirst: vi.fn(async () => ({ spaceId: "space-1" })) },
+    invitation: { findFirst: vi.fn(async () => null) },
   };
   const log = vi.fn();
   const auth = createAuth(prisma as never, {

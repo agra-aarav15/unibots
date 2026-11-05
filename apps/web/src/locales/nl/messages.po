@@ -677,13 +677,13 @@ msgstr ""
 msgid "Allow once"
 msgstr "Een keer toestaan"
 
-#: src/lib/dictation.ts
-msgid "Allow Unibots to use Speech Recognition and the microphone in System Settings."
-msgstr ""
-
 #: src/components/ApprovalRulePreview.tsx
 msgid "Allow rule"
 msgstr "Toestaanregel"
+
+#: src/lib/dictation.ts
+msgid "Allow Unibots to use Speech Recognition and the microphone in System Settings."
+msgstr ""
 
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
 msgid "Allow writing"
@@ -777,6 +777,10 @@ msgstr ""
 #: src/pages/Paywall.tsx
 msgid "Any model, with your own key"
 msgstr "Elk model, met je eigen sleutel"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Anyone with the link"
+msgstr ""
 
 #: src/components/AskCard.tsx
 #: src/lib/localized-provider-hint.ts
@@ -1148,6 +1152,7 @@ msgstr "Kan afbeeldingen niet lezen"
 #: src/pages/PluginSubmissionsPanel.tsx
 #: src/pages/shell/create-bot-dialog.tsx
 #: src/pages/shell/dialogs.tsx
+#: src/pages/SpaceMembersPanel.tsx
 #: src/pages/SpaceSettingOverrides.tsx
 msgid "Cancel"
 msgstr "Annuleren"
@@ -1676,6 +1681,7 @@ msgstr "Contextlimiet"
 #: src/components/integrations/IntegrationSetup.tsx
 #: src/components/SignupSurvey.tsx
 #: src/pages/Auth.tsx
+#: src/pages/InviteJoin.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/dialogs.tsx
@@ -1706,6 +1712,7 @@ msgstr ""
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/agent-import.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Copied"
 msgstr "Gekopieerd"
 
@@ -1714,6 +1721,7 @@ msgstr "Gekopieerd"
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/message-hover-actions.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Copy"
 msgstr "Kopiëren"
 
@@ -2190,6 +2198,10 @@ msgstr ""
 msgid "Could not start OAuth"
 msgstr "OAuth starten mislukt"
 
+#: src/components/PhoneAccess.tsx
+msgid "Could not start phone access"
+msgstr ""
+
 #: src/components/teach/TeachComputerOverlay.tsx
 msgid "Could not start teaching"
 msgstr "Onderwijs starten mislukt"
@@ -2216,6 +2228,10 @@ msgstr "MCP-server testen mislukt"
 
 #: src/lib/dictation.ts
 msgid "Could not transcribe that recording."
+msgstr ""
+
+#: src/components/PhoneAccess.tsx
+msgid "Could not turn off phone access"
 msgstr ""
 
 #: src/pages/ScratchpadSection.tsx
@@ -2282,6 +2298,10 @@ msgstr ""
 msgid "Create"
 msgstr "Aanmaken"
 
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Create a link"
+msgstr ""
+
 #. placeholder {0}: bot.name
 #: src/pages/shell/dialogs.tsx
 msgid "Create a section and move {0} into it."
@@ -2294,6 +2314,10 @@ msgstr "Account aanmaken"
 #: src/pages/GroupPanel.tsx
 msgid "Create group"
 msgstr "Groep aanmaken"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Create link"
+msgstr ""
 
 #: src/pages/RoutineEditor.tsx
 msgid "Create Routine"
@@ -2708,6 +2732,10 @@ msgstr "Profiel bewerken"
 msgid "Email"
 msgstr "E-mail"
 
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Email (optional)"
+msgstr ""
+
 #: src/lib/user-error.ts
 msgid "Email is not allowed to register"
 msgstr "Dit e-mailadres mag niet worden geregistreerd"
@@ -2856,6 +2884,10 @@ msgstr "Tabel uitvouwen"
 #: src/components/CloudAgentCard.tsx
 msgid "expired"
 msgstr "verlopen"
+
+#: src/components/PhoneAccess.tsx
+msgid "Expires in"
+msgstr ""
 
 #: src/pages/shell/bot-panel.tsx
 msgid "Export"
@@ -3316,8 +3348,17 @@ msgid "Invite friends"
 msgstr "Vrienden uitnodigen"
 
 #: src/components/InviteDialog.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Invite link"
 msgstr "Uitnodigingslink"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Invite someone"
+msgstr ""
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Invite to this workspace"
+msgstr ""
 
 #: src/pages/MemorySettingsOverlay.tsx
 #: src/pages/shell/bot-panel.tsx
@@ -3522,6 +3563,14 @@ msgstr "Kleine letters, cijfers, koppeltekens en underscores, beginnend met een 
 msgid "Main model"
 msgstr "Hoofdmodel"
 
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Make member"
+msgstr ""
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Make owner"
+msgstr ""
+
 #: src/pages/BillingSettingsPanel.tsx
 #: src/pages/SettingsOverlay.tsx
 msgid "Manage"
@@ -3571,6 +3620,7 @@ msgstr "Markeren als ongelezen"
 msgid "Markdown table"
 msgstr "Markdown-tabel"
 
+#: src/pages/Board.tsx
 #: src/pages/PluginsOverlay.tsx
 msgid "Marketing"
 msgstr ""
@@ -3624,6 +3674,7 @@ msgid "Medium"
 msgstr "Gemiddeld"
 
 #: src/lib/identity-display.ts
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Member"
 msgstr "Lid"
 
@@ -3750,6 +3801,10 @@ msgstr "minuten"
 msgid "Missed call"
 msgstr "Gemist gesprek"
 
+#: src/pages/Board.tsx
+msgid "MKT"
+msgstr ""
+
 #: src/components/ApprovalRulesSettings.tsx
 msgid "Mode"
 msgstr "Modus"
@@ -3862,6 +3917,7 @@ msgstr "Gedempt"
 #: src/components/VaultSettings.tsx
 #: src/pages/AccountSettingsOverlay.tsx
 #: src/pages/Auth.tsx
+#: src/pages/Board.tsx
 #: src/pages/GroupPanel.tsx
 #: src/pages/McpServersOverlay.tsx
 #: src/pages/model-settings/providers-section.tsx
@@ -3925,6 +3981,10 @@ msgstr "Nooit vragen"
 #: src/pages/shell/chat-context.tsx
 msgid "New"
 msgstr "Nieuw"
+
+#: src/pages/Board.tsx
+msgid "New board"
+msgstr ""
 
 #: src/pages/Shell.tsx
 #: src/pages/shell/bot-picker.tsx
@@ -4111,13 +4171,13 @@ msgstr "Nog niet gecontroleerd"
 msgid "Not imported"
 msgstr "Niet geïmporteerd"
 
-#: src/pages/shell/import-status.ts
-msgid "Not in Unibots's catalog"
-msgstr "Niet in de catalogus van Unibots"
-
 #: src/pages/PluginsOverlay.tsx
 msgid "Not in the plugin catalog"
 msgstr "Niet in de plugincatalogus"
+
+#: src/pages/shell/import-status.ts
+msgid "Not in Unibots's catalog"
+msgstr "Niet in de catalogus van Unibots"
 
 #: src/pages/shell/message-cards.tsx
 msgid "Not now"
@@ -4313,6 +4373,7 @@ msgstr "Uitvoer"
 
 #: src/lib/identity-display.ts
 #: src/pages/Board.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Owner"
 msgstr "Eigenaar"
 
@@ -4409,9 +4470,17 @@ msgstr "Persona"
 msgid "Personal"
 msgstr ""
 
+#: src/components/PhoneAccess.tsx
+msgid "Phone"
+msgstr ""
+
 #: src/components/call/VoiceChatCard.tsx
 msgid "Phone call"
 msgstr "Telefoongesprek"
+
+#: src/components/PhoneAccess.tsx
+msgid "Phone on this network"
+msgstr ""
 
 #: src/pages/shell/chat-context.tsx
 #: src/pages/shell/chat-shared.ts
@@ -4544,15 +4613,6 @@ msgstr "Pull request"
 #: src/pages/ActivityList.tsx
 msgid "Queued"
 msgstr "In wachtrij"
-
-#: src/pages/shell/avatar-studio-popover.tsx
-msgid "Unibots"
-msgstr "Unibots"
-
-#: src/components/ModelCredits.tsx
-#: src/pages/Onboarding.tsx
-msgid "Unibots credits"
-msgstr ""
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
 msgid "rakazo-shared and IDs starting with bot- are reserved for Unibots."
@@ -4734,6 +4794,7 @@ msgstr "Herladen"
 #: src/pages/ModelRoleSettings.tsx
 #: src/pages/PluginsOverlay.tsx
 #: src/pages/ScratchpadSection.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Remove"
 msgstr "Verwijderen"
 
@@ -4933,6 +4994,7 @@ msgstr "Je werkruimte herstellen"
 #: src/pages/ModelRoleSettings.tsx
 #: src/pages/PluginsOverlay.tsx
 #: src/pages/PluginSubmissionsPanel.tsx
+#: src/pages/SpaceMembersPanel.tsx
 #: src/pages/SpaceSettingOverrides.tsx
 msgid "Retry"
 msgstr "Opnieuw proberen"
@@ -4961,6 +5023,7 @@ msgid "Review provider settings and test again."
 msgstr "Controleer de aanbiedersinstellingen en test daarna opnieuw."
 
 #: src/pages/MessagingSettingsPanel.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Revoke"
 msgstr "Intrekken"
 
@@ -5724,6 +5787,10 @@ msgstr ""
 msgid "Testing…"
 msgstr "Bezig met testen…"
 
+#: src/pages/InviteJoin.tsx
+msgid "That invitation is no longer valid."
+msgstr ""
+
 #: src/pages/shell/composer-error.tsx
 msgid "The bot can use the file but won't see the picture."
 msgstr "De bot kan het bestand gebruiken, maar ziet de afbeelding niet."
@@ -5786,6 +5853,10 @@ msgstr "Deze bestanden of keuzes kloppen niet meer. Kies de bestanden opnieuw."
 #: src/components/VaultSettings.tsx
 msgid "These saved settings can't be read. Remove it and add it again."
 msgstr "Deze opgeslagen instellingen kunnen niet worden gelezen. Verwijder ze en voeg ze opnieuw toe."
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "They join this workspace when they open the link."
+msgstr ""
 
 #: src/components/call/CallCard.tsx
 #: src/pages/ModelRoleSettings.tsx
@@ -5934,6 +6005,10 @@ msgstr "Deze week"
 msgid "Thursday"
 msgstr "donderdag"
 
+#: src/pages/Board.tsx
+msgid "Ticket prefix"
+msgstr ""
+
 #: src/pages/RoutineSchedule.tsx
 msgid "Time of day"
 msgstr "Tijdstip van de dag"
@@ -6051,6 +6126,14 @@ msgstr "Probeer de test opnieuw."
 msgid "Tuesday"
 msgstr "dinsdag"
 
+#: src/components/PhoneAccess.tsx
+msgid "Turn off"
+msgstr ""
+
+#: src/components/PhoneAccess.tsx
+msgid "Turn on"
+msgstr ""
+
 #: src/components/VaultSettings.tsx
 msgid "Type"
 msgstr "Type"
@@ -6063,6 +6146,7 @@ msgstr "Typen zonder opname"
 msgid "Type your answer"
 msgstr "Typ je antwoord"
 
+#: src/pages/Board.tsx
 #: src/pages/BotContextMenu.tsx
 #: src/pages/Shell.tsx
 msgid "Unassigned"
@@ -6071,6 +6155,15 @@ msgstr "Niet toegewezen"
 #: src/components/AskCard.tsx
 msgid "Undo"
 msgstr "Ongedaan maken"
+
+#: src/pages/shell/avatar-studio-popover.tsx
+msgid "Unibots"
+msgstr "Unibots"
+
+#: src/components/ModelCredits.tsx
+#: src/pages/Onboarding.tsx
+msgid "Unibots credits"
+msgstr ""
 
 #: src/pages/PluginsOverlay.tsx
 msgid "Uninstall"
@@ -6214,12 +6307,12 @@ msgstr ""
 msgid "Use Protected input for passwords."
 msgstr "Gebruik Beveiligde invoer voor wachtwoorden."
 
-#: src/components/ModelCredits.tsx
-msgid "Use Unibots credits"
-msgstr ""
-
 #: src/pages/model-settings/space-bots-model.tsx
 msgid "Use space default"
+msgstr ""
+
+#: src/components/ModelCredits.tsx
+msgid "Use Unibots credits"
 msgstr ""
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx

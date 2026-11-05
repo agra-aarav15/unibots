@@ -677,13 +677,13 @@ msgstr ""
 msgid "Allow once"
 msgstr "एक बार अनुमति दें"
 
-#: src/lib/dictation.ts
-msgid "Allow Unibots to use Speech Recognition and the microphone in System Settings."
-msgstr ""
-
 #: src/components/ApprovalRulePreview.tsx
 msgid "Allow rule"
 msgstr "अनुमति नियम"
+
+#: src/lib/dictation.ts
+msgid "Allow Unibots to use Speech Recognition and the microphone in System Settings."
+msgstr ""
 
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
 msgid "Allow writing"
@@ -776,6 +776,10 @@ msgstr ""
 
 #: src/pages/Paywall.tsx
 msgid "Any model, with your own key"
+msgstr ""
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Anyone with the link"
 msgstr ""
 
 #: src/components/AskCard.tsx
@@ -1148,6 +1152,7 @@ msgstr "तस्वीरें नहीं पढ़ सकता"
 #: src/pages/PluginSubmissionsPanel.tsx
 #: src/pages/shell/create-bot-dialog.tsx
 #: src/pages/shell/dialogs.tsx
+#: src/pages/SpaceMembersPanel.tsx
 #: src/pages/SpaceSettingOverrides.tsx
 msgid "Cancel"
 msgstr "रद्द करें"
@@ -1676,6 +1681,7 @@ msgstr "कॉन्टेक्स्ट सीमा"
 #: src/components/integrations/IntegrationSetup.tsx
 #: src/components/SignupSurvey.tsx
 #: src/pages/Auth.tsx
+#: src/pages/InviteJoin.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/dialogs.tsx
@@ -1706,6 +1712,7 @@ msgstr ""
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/agent-import.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Copied"
 msgstr "कॉपी किया गया"
 
@@ -1714,6 +1721,7 @@ msgstr "कॉपी किया गया"
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/message-hover-actions.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Copy"
 msgstr "कॉपी करें"
 
@@ -2190,6 +2198,10 @@ msgstr ""
 msgid "Could not start OAuth"
 msgstr "OAuth शुरू नहीं हो सका"
 
+#: src/components/PhoneAccess.tsx
+msgid "Could not start phone access"
+msgstr ""
+
 #: src/components/teach/TeachComputerOverlay.tsx
 msgid "Could not start teaching"
 msgstr ""
@@ -2216,6 +2228,10 @@ msgstr "MCP सर्वर का परीक्षण नहीं हो स
 
 #: src/lib/dictation.ts
 msgid "Could not transcribe that recording."
+msgstr ""
+
+#: src/components/PhoneAccess.tsx
+msgid "Could not turn off phone access"
 msgstr ""
 
 #: src/pages/ScratchpadSection.tsx
@@ -2282,6 +2298,10 @@ msgstr ""
 msgid "Create"
 msgstr "बनाएं"
 
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Create a link"
+msgstr ""
+
 #. placeholder {0}: bot.name
 #: src/pages/shell/dialogs.tsx
 msgid "Create a section and move {0} into it."
@@ -2294,6 +2314,10 @@ msgstr "खाता बनाएं"
 #: src/pages/GroupPanel.tsx
 msgid "Create group"
 msgstr "समूह बनाएं"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Create link"
+msgstr ""
 
 #: src/pages/RoutineEditor.tsx
 msgid "Create Routine"
@@ -2708,6 +2732,10 @@ msgstr "प्रोफ़ाइल संपादित करें"
 msgid "Email"
 msgstr "ईमेल"
 
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Email (optional)"
+msgstr ""
+
 #: src/lib/user-error.ts
 msgid "Email is not allowed to register"
 msgstr "इस ईमेल को पंजीकरण की अनुमति नहीं है"
@@ -2856,6 +2884,10 @@ msgstr "तालिका बड़ी करें"
 #: src/components/CloudAgentCard.tsx
 msgid "expired"
 msgstr "समाप्त"
+
+#: src/components/PhoneAccess.tsx
+msgid "Expires in"
+msgstr ""
 
 #: src/pages/shell/bot-panel.tsx
 msgid "Export"
@@ -3316,8 +3348,17 @@ msgid "Invite friends"
 msgstr "दोस्तों को आमंत्रित करें"
 
 #: src/components/InviteDialog.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Invite link"
 msgstr "आमंत्रण लिंक"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Invite someone"
+msgstr ""
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Invite to this workspace"
+msgstr ""
 
 #: src/pages/MemorySettingsOverlay.tsx
 #: src/pages/shell/bot-panel.tsx
@@ -3522,6 +3563,14 @@ msgstr ""
 msgid "Main model"
 msgstr "मुख्य मॉडल"
 
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Make member"
+msgstr ""
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Make owner"
+msgstr ""
+
 #: src/pages/BillingSettingsPanel.tsx
 #: src/pages/SettingsOverlay.tsx
 msgid "Manage"
@@ -3571,6 +3620,7 @@ msgstr "अपठित चिह्नित करें"
 msgid "Markdown table"
 msgstr "Markdown तालिका"
 
+#: src/pages/Board.tsx
 #: src/pages/PluginsOverlay.tsx
 msgid "Marketing"
 msgstr ""
@@ -3624,6 +3674,7 @@ msgid "Medium"
 msgstr "मध्यम"
 
 #: src/lib/identity-display.ts
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Member"
 msgstr "सदस्य"
 
@@ -3750,6 +3801,10 @@ msgstr "मिनट"
 msgid "Missed call"
 msgstr "मिस्ड कॉल"
 
+#: src/pages/Board.tsx
+msgid "MKT"
+msgstr ""
+
 #: src/components/ApprovalRulesSettings.tsx
 msgid "Mode"
 msgstr "मोड"
@@ -3862,6 +3917,7 @@ msgstr "माइक बंद है"
 #: src/components/VaultSettings.tsx
 #: src/pages/AccountSettingsOverlay.tsx
 #: src/pages/Auth.tsx
+#: src/pages/Board.tsx
 #: src/pages/GroupPanel.tsx
 #: src/pages/McpServersOverlay.tsx
 #: src/pages/model-settings/providers-section.tsx
@@ -3924,6 +3980,10 @@ msgstr "कभी न पूछें"
 
 #: src/pages/shell/chat-context.tsx
 msgid "New"
+msgstr ""
+
+#: src/pages/Board.tsx
+msgid "New board"
 msgstr ""
 
 #: src/pages/Shell.tsx
@@ -4111,13 +4171,13 @@ msgstr "अभी तक जाँच नहीं हुई"
 msgid "Not imported"
 msgstr "इंपोर्ट नहीं हुआ"
 
-#: src/pages/shell/import-status.ts
-msgid "Not in Unibots's catalog"
-msgstr "Unibots के कैटलॉग में नहीं"
-
 #: src/pages/PluginsOverlay.tsx
 msgid "Not in the plugin catalog"
 msgstr ""
+
+#: src/pages/shell/import-status.ts
+msgid "Not in Unibots's catalog"
+msgstr "Unibots के कैटलॉग में नहीं"
 
 #: src/pages/shell/message-cards.tsx
 msgid "Not now"
@@ -4313,6 +4373,7 @@ msgstr "आउटपुट"
 
 #: src/lib/identity-display.ts
 #: src/pages/Board.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Owner"
 msgstr "मालिक"
 
@@ -4409,9 +4470,17 @@ msgstr "व्यक्तित्व"
 msgid "Personal"
 msgstr ""
 
+#: src/components/PhoneAccess.tsx
+msgid "Phone"
+msgstr ""
+
 #: src/components/call/VoiceChatCard.tsx
 msgid "Phone call"
 msgstr "फ़ोन कॉल"
+
+#: src/components/PhoneAccess.tsx
+msgid "Phone on this network"
+msgstr ""
 
 #: src/pages/shell/chat-context.tsx
 #: src/pages/shell/chat-shared.ts
@@ -4544,15 +4613,6 @@ msgstr "पुल अनुरोध"
 #: src/pages/ActivityList.tsx
 msgid "Queued"
 msgstr "कतार में"
-
-#: src/pages/shell/avatar-studio-popover.tsx
-msgid "Unibots"
-msgstr "Unibots"
-
-#: src/components/ModelCredits.tsx
-#: src/pages/Onboarding.tsx
-msgid "Unibots credits"
-msgstr ""
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
 msgid "rakazo-shared and IDs starting with bot- are reserved for Unibots."
@@ -4734,6 +4794,7 @@ msgstr "फिर से लोड करें"
 #: src/pages/ModelRoleSettings.tsx
 #: src/pages/PluginsOverlay.tsx
 #: src/pages/ScratchpadSection.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Remove"
 msgstr "हटाएं"
 
@@ -4933,6 +4994,7 @@ msgstr ""
 #: src/pages/ModelRoleSettings.tsx
 #: src/pages/PluginsOverlay.tsx
 #: src/pages/PluginSubmissionsPanel.tsx
+#: src/pages/SpaceMembersPanel.tsx
 #: src/pages/SpaceSettingOverrides.tsx
 msgid "Retry"
 msgstr "फिर कोशिश करें"
@@ -4961,6 +5023,7 @@ msgid "Review provider settings and test again."
 msgstr "प्रोवाइडर सेटिंग्स की समीक्षा करें और फिर से परीक्षण करें।"
 
 #: src/pages/MessagingSettingsPanel.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Revoke"
 msgstr ""
 
@@ -5724,6 +5787,10 @@ msgstr ""
 msgid "Testing…"
 msgstr "परीक्षण हो रहा है…"
 
+#: src/pages/InviteJoin.tsx
+msgid "That invitation is no longer valid."
+msgstr ""
+
 #: src/pages/shell/composer-error.tsx
 msgid "The bot can use the file but won't see the picture."
 msgstr "बॉट फ़ाइल का उपयोग कर सकता है, लेकिन तस्वीर नहीं देख पाएगा।"
@@ -5785,6 +5852,10 @@ msgstr "ये फ़ाइलें या विकल्प अब मेल 
 
 #: src/components/VaultSettings.tsx
 msgid "These saved settings can't be read. Remove it and add it again."
+msgstr ""
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "They join this workspace when they open the link."
 msgstr ""
 
 #: src/components/call/CallCard.tsx
@@ -5934,6 +6005,10 @@ msgstr ""
 msgid "Thursday"
 msgstr "गुरुवार"
 
+#: src/pages/Board.tsx
+msgid "Ticket prefix"
+msgstr ""
+
 #: src/pages/RoutineSchedule.tsx
 msgid "Time of day"
 msgstr "दिन का समय"
@@ -6051,6 +6126,14 @@ msgstr "परीक्षण फिर से आज़माएँ।"
 msgid "Tuesday"
 msgstr "मंगलवार"
 
+#: src/components/PhoneAccess.tsx
+msgid "Turn off"
+msgstr ""
+
+#: src/components/PhoneAccess.tsx
+msgid "Turn on"
+msgstr ""
+
 #: src/components/VaultSettings.tsx
 msgid "Type"
 msgstr ""
@@ -6063,6 +6146,7 @@ msgstr ""
 msgid "Type your answer"
 msgstr "अपना उत्तर लिखें"
 
+#: src/pages/Board.tsx
 #: src/pages/BotContextMenu.tsx
 #: src/pages/Shell.tsx
 msgid "Unassigned"
@@ -6071,6 +6155,15 @@ msgstr "असाइन नहीं किया गया"
 #: src/components/AskCard.tsx
 msgid "Undo"
 msgstr "पूर्ववत करें"
+
+#: src/pages/shell/avatar-studio-popover.tsx
+msgid "Unibots"
+msgstr "Unibots"
+
+#: src/components/ModelCredits.tsx
+#: src/pages/Onboarding.tsx
+msgid "Unibots credits"
+msgstr ""
 
 #: src/pages/PluginsOverlay.tsx
 msgid "Uninstall"
@@ -6214,12 +6307,12 @@ msgstr ""
 msgid "Use Protected input for passwords."
 msgstr ""
 
-#: src/components/ModelCredits.tsx
-msgid "Use Unibots credits"
-msgstr ""
-
 #: src/pages/model-settings/space-bots-model.tsx
 msgid "Use space default"
+msgstr ""
+
+#: src/components/ModelCredits.tsx
+msgid "Use Unibots credits"
 msgstr ""
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx

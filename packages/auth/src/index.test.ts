@@ -53,6 +53,8 @@ describe("auth policy", () => {
           count: vi.fn().mockRejectedValue(error),
           create: vi.fn().mockRejectedValue(error),
         },
+        // Sign-up reads pending invitations before it reads anything else.
+        invitation: { findFirst: vi.fn().mockRejectedValue(error) },
       } as never,
       {
         secret: "offline-auth-secret-at-least-32-characters",

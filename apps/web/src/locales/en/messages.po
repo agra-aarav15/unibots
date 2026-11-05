@@ -677,13 +677,13 @@ msgstr "Allow for this chat"
 msgid "Allow once"
 msgstr "Allow once"
 
-#: src/lib/dictation.ts
-msgid "Allow Unibots to use Speech Recognition and the microphone in System Settings."
-msgstr "Allow Unibots to use Speech Recognition and the microphone in System Settings."
-
 #: src/components/ApprovalRulePreview.tsx
 msgid "Allow rule"
 msgstr "Allow rule"
+
+#: src/lib/dictation.ts
+msgid "Allow Unibots to use Speech Recognition and the microphone in System Settings."
+msgstr "Allow Unibots to use Speech Recognition and the microphone in System Settings."
 
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
 msgid "Allow writing"
@@ -777,6 +777,10 @@ msgstr "Anthropic API"
 #: src/pages/Paywall.tsx
 msgid "Any model, with your own key"
 msgstr "Any model, with your own key"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Anyone with the link"
+msgstr "Anyone with the link"
 
 #: src/components/AskCard.tsx
 #: src/lib/localized-provider-hint.ts
@@ -1148,6 +1152,7 @@ msgstr "Can't read images"
 #: src/pages/PluginSubmissionsPanel.tsx
 #: src/pages/shell/create-bot-dialog.tsx
 #: src/pages/shell/dialogs.tsx
+#: src/pages/SpaceMembersPanel.tsx
 #: src/pages/SpaceSettingOverrides.tsx
 msgid "Cancel"
 msgstr "Cancel"
@@ -1676,6 +1681,7 @@ msgstr "Context limit"
 #: src/components/integrations/IntegrationSetup.tsx
 #: src/components/SignupSurvey.tsx
 #: src/pages/Auth.tsx
+#: src/pages/InviteJoin.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/dialogs.tsx
@@ -1706,6 +1712,7 @@ msgstr "Conversations"
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/agent-import.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Copied"
 msgstr "Copied"
 
@@ -1714,6 +1721,7 @@ msgstr "Copied"
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/message-hover-actions.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Copy"
 msgstr "Copy"
 
@@ -2190,6 +2198,10 @@ msgstr "Could not sign in"
 msgid "Could not start OAuth"
 msgstr "Could not start OAuth"
 
+#: src/components/PhoneAccess.tsx
+msgid "Could not start phone access"
+msgstr "Could not start phone access"
+
 #: src/components/teach/TeachComputerOverlay.tsx
 msgid "Could not start teaching"
 msgstr "Could not start teaching"
@@ -2217,6 +2229,10 @@ msgstr "Could not test MCP server"
 #: src/lib/dictation.ts
 msgid "Could not transcribe that recording."
 msgstr "Could not transcribe that recording."
+
+#: src/components/PhoneAccess.tsx
+msgid "Could not turn off phone access"
+msgstr "Could not turn off phone access"
 
 #: src/pages/ScratchpadSection.tsx
 msgid "Could not update"
@@ -2282,6 +2298,10 @@ msgstr "Couldn't update your wallet"
 msgid "Create"
 msgstr "Create"
 
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Create a link"
+msgstr "Create a link"
+
 #. placeholder {0}: bot.name
 #: src/pages/shell/dialogs.tsx
 msgid "Create a section and move {0} into it."
@@ -2294,6 +2314,10 @@ msgstr "Create account"
 #: src/pages/GroupPanel.tsx
 msgid "Create group"
 msgstr "Create group"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Create link"
+msgstr "Create link"
 
 #: src/pages/RoutineEditor.tsx
 msgid "Create Routine"
@@ -2708,6 +2732,10 @@ msgstr "Edit Profile"
 msgid "Email"
 msgstr "Email"
 
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Email (optional)"
+msgstr "Email (optional)"
+
 #: src/lib/user-error.ts
 msgid "Email is not allowed to register"
 msgstr "Email is not allowed to register"
@@ -2856,6 +2884,10 @@ msgstr "Expand table"
 #: src/components/CloudAgentCard.tsx
 msgid "expired"
 msgstr "expired"
+
+#: src/components/PhoneAccess.tsx
+msgid "Expires in"
+msgstr "Expires in"
 
 #: src/pages/shell/bot-panel.tsx
 msgid "Export"
@@ -3316,8 +3348,17 @@ msgid "Invite friends"
 msgstr "Invite friends"
 
 #: src/components/InviteDialog.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Invite link"
 msgstr "Invite link"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Invite someone"
+msgstr "Invite someone"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Invite to this workspace"
+msgstr "Invite to this workspace"
 
 #: src/pages/MemorySettingsOverlay.tsx
 #: src/pages/shell/bot-panel.tsx
@@ -3522,6 +3563,14 @@ msgstr "Lowercase letters, numbers, hyphens and underscores, starting with a let
 msgid "Main model"
 msgstr "Main model"
 
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Make member"
+msgstr "Make member"
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "Make owner"
+msgstr "Make owner"
+
 #: src/pages/BillingSettingsPanel.tsx
 #: src/pages/SettingsOverlay.tsx
 msgid "Manage"
@@ -3571,6 +3620,7 @@ msgstr "Mark as Unread"
 msgid "Markdown table"
 msgstr "Markdown table"
 
+#: src/pages/Board.tsx
 #: src/pages/PluginsOverlay.tsx
 msgid "Marketing"
 msgstr "Marketing"
@@ -3624,6 +3674,7 @@ msgid "Medium"
 msgstr "Medium"
 
 #: src/lib/identity-display.ts
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Member"
 msgstr "Member"
 
@@ -3750,6 +3801,10 @@ msgstr "minutes"
 msgid "Missed call"
 msgstr "Missed call"
 
+#: src/pages/Board.tsx
+msgid "MKT"
+msgstr "MKT"
+
 #: src/components/ApprovalRulesSettings.tsx
 msgid "Mode"
 msgstr "Mode"
@@ -3862,6 +3917,7 @@ msgstr "Muted"
 #: src/components/VaultSettings.tsx
 #: src/pages/AccountSettingsOverlay.tsx
 #: src/pages/Auth.tsx
+#: src/pages/Board.tsx
 #: src/pages/GroupPanel.tsx
 #: src/pages/McpServersOverlay.tsx
 #: src/pages/model-settings/providers-section.tsx
@@ -3925,6 +3981,10 @@ msgstr "Never ask"
 #: src/pages/shell/chat-context.tsx
 msgid "New"
 msgstr "New"
+
+#: src/pages/Board.tsx
+msgid "New board"
+msgstr "New board"
 
 #: src/pages/Shell.tsx
 #: src/pages/shell/bot-picker.tsx
@@ -4111,13 +4171,13 @@ msgstr "Not checked yet"
 msgid "Not imported"
 msgstr "Not imported"
 
-#: src/pages/shell/import-status.ts
-msgid "Not in Unibots's catalog"
-msgstr "Not in Unibots's catalog"
-
 #: src/pages/PluginsOverlay.tsx
 msgid "Not in the plugin catalog"
 msgstr "Not in the plugin catalog"
+
+#: src/pages/shell/import-status.ts
+msgid "Not in Unibots's catalog"
+msgstr "Not in Unibots's catalog"
 
 #: src/pages/shell/message-cards.tsx
 msgid "Not now"
@@ -4313,6 +4373,7 @@ msgstr "Output"
 
 #: src/lib/identity-display.ts
 #: src/pages/Board.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Owner"
 msgstr "Owner"
 
@@ -4409,9 +4470,17 @@ msgstr "Persona"
 msgid "Personal"
 msgstr "Personal"
 
+#: src/components/PhoneAccess.tsx
+msgid "Phone"
+msgstr "Phone"
+
 #: src/components/call/VoiceChatCard.tsx
 msgid "Phone call"
 msgstr "Phone call"
+
+#: src/components/PhoneAccess.tsx
+msgid "Phone on this network"
+msgstr "Phone on this network"
 
 #: src/pages/shell/chat-context.tsx
 #: src/pages/shell/chat-shared.ts
@@ -4544,15 +4613,6 @@ msgstr "Pull request"
 #: src/pages/ActivityList.tsx
 msgid "Queued"
 msgstr "Queued"
-
-#: src/pages/shell/avatar-studio-popover.tsx
-msgid "Unibots"
-msgstr "Unibots"
-
-#: src/components/ModelCredits.tsx
-#: src/pages/Onboarding.tsx
-msgid "Unibots credits"
-msgstr "Unibots credits"
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
 msgid "rakazo-shared and IDs starting with bot- are reserved for Unibots."
@@ -4734,6 +4794,7 @@ msgstr "Reload"
 #: src/pages/ModelRoleSettings.tsx
 #: src/pages/PluginsOverlay.tsx
 #: src/pages/ScratchpadSection.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Remove"
 msgstr "Remove"
 
@@ -4933,6 +4994,7 @@ msgstr "Restoring your workspace"
 #: src/pages/ModelRoleSettings.tsx
 #: src/pages/PluginsOverlay.tsx
 #: src/pages/PluginSubmissionsPanel.tsx
+#: src/pages/SpaceMembersPanel.tsx
 #: src/pages/SpaceSettingOverrides.tsx
 msgid "Retry"
 msgstr "Retry"
@@ -4961,6 +5023,7 @@ msgid "Review provider settings and test again."
 msgstr "Review provider settings and test again."
 
 #: src/pages/MessagingSettingsPanel.tsx
+#: src/pages/SpaceMembersPanel.tsx
 msgid "Revoke"
 msgstr "Revoke"
 
@@ -5724,6 +5787,10 @@ msgstr "Testing"
 msgid "Testing…"
 msgstr "Testing…"
 
+#: src/pages/InviteJoin.tsx
+msgid "That invitation is no longer valid."
+msgstr "That invitation is no longer valid."
+
 #: src/pages/shell/composer-error.tsx
 msgid "The bot can use the file but won't see the picture."
 msgstr "The bot can use the file but won't see the picture."
@@ -5786,6 +5853,10 @@ msgstr "These files or choices no longer match. Choose the files again."
 #: src/components/VaultSettings.tsx
 msgid "These saved settings can't be read. Remove it and add it again."
 msgstr "These saved settings can't be read. Remove it and add it again."
+
+#: src/pages/SpaceMembersPanel.tsx
+msgid "They join this workspace when they open the link."
+msgstr "They join this workspace when they open the link."
 
 #: src/components/call/CallCard.tsx
 #: src/pages/ModelRoleSettings.tsx
@@ -5934,6 +6005,10 @@ msgstr "This week"
 msgid "Thursday"
 msgstr "Thursday"
 
+#: src/pages/Board.tsx
+msgid "Ticket prefix"
+msgstr "Ticket prefix"
+
 #: src/pages/RoutineSchedule.tsx
 msgid "Time of day"
 msgstr "Time of day"
@@ -6051,6 +6126,14 @@ msgstr "Try the test again."
 msgid "Tuesday"
 msgstr "Tuesday"
 
+#: src/components/PhoneAccess.tsx
+msgid "Turn off"
+msgstr "Turn off"
+
+#: src/components/PhoneAccess.tsx
+msgid "Turn on"
+msgstr "Turn on"
+
 #: src/components/VaultSettings.tsx
 msgid "Type"
 msgstr "Type"
@@ -6063,6 +6146,7 @@ msgstr "Type without recording"
 msgid "Type your answer"
 msgstr "Type your answer"
 
+#: src/pages/Board.tsx
 #: src/pages/BotContextMenu.tsx
 #: src/pages/Shell.tsx
 msgid "Unassigned"
@@ -6071,6 +6155,15 @@ msgstr "Unassigned"
 #: src/components/AskCard.tsx
 msgid "Undo"
 msgstr "Undo"
+
+#: src/pages/shell/avatar-studio-popover.tsx
+msgid "Unibots"
+msgstr "Unibots"
+
+#: src/components/ModelCredits.tsx
+#: src/pages/Onboarding.tsx
+msgid "Unibots credits"
+msgstr "Unibots credits"
 
 #: src/pages/PluginsOverlay.tsx
 msgid "Uninstall"
@@ -6214,13 +6307,13 @@ msgstr "Use my subscription or API key"
 msgid "Use Protected input for passwords."
 msgstr "Use Protected input for passwords."
 
-#: src/components/ModelCredits.tsx
-msgid "Use Unibots credits"
-msgstr "Use Unibots credits"
-
 #: src/pages/model-settings/space-bots-model.tsx
 msgid "Use space default"
 msgstr "Use space default"
+
+#: src/components/ModelCredits.tsx
+msgid "Use Unibots credits"
+msgstr "Use Unibots credits"
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
 msgid "Use up to 512 letters, digits, _ or -."

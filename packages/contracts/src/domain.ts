@@ -368,6 +368,38 @@ export const SpaceNavigationSchema = z.object({
 });
 export type SpaceNavigation = z.infer<typeof SpaceNavigationSchema>;
 
+export const SpaceMemberRoleSchema = z.enum(["owner", "member"]);
+
+export const SpaceMemberSchema = z.object({
+  userId: Id,
+  name: z.string(),
+  email: z.string(),
+  role: SpaceMemberRoleSchema,
+  createdAt: z.string(),
+  /** True for the member reading the roster, who is not offered a way to remove themselves. */
+  isSelf: z.boolean(),
+});
+export type SpaceMember = z.infer<typeof SpaceMemberSchema>;
+
+/** A working link into a workspace. The token is a secret and only owners ever receive it. */
+export const SpaceInvitationSchema = z.object({
+  id: Id,
+  email: z.string().nullable(),
+  role: SpaceMemberRoleSchema,
+  token: z.string(),
+  expiresAt: z.string(),
+  createdAt: z.string(),
+});
+export type SpaceInvitation = z.infer<typeof SpaceInvitationSchema>;
+
+export const CreateSpaceInvitationInput = z.object({
+  spaceId: Id,
+  /** Naming an address binds the link to it; the person must then sign in as that address. */
+  email: z.string().trim().max(254).email().optional(),
+  role: SpaceMemberRoleSchema.optional(),
+});
+export type CreateSpaceInvitationInput = z.infer<typeof CreateSpaceInvitationInput>;
+
 export const BOT_NAME_MAX_LENGTH = 80;
 export const BOT_DESCRIPTION_MAX_LENGTH = 4000;
 export const BOT_INSTRUCTIONS_MAX_LENGTH = 20000;

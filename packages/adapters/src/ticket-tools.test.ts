@@ -394,7 +394,7 @@ describe("ticket mutations", () => {
       where: { number: 1, spaceId: "ws", boardId: "board-1" },
     });
   });
-  it("only assigns the acting user's own bots", async () => {
+  it("assigns any bot of the space, whoever made it, and refuses one outside it", async () => {
     const s = mutationDeps();
     s.prisma.bot.findFirst.mockResolvedValue(null as never);
     await expect(
@@ -415,8 +415,9 @@ describe("ticket mutations", () => {
       }),
     ).resolves.toEqual({ error: "Unknown bot." });
     for (const [query] of s.prisma.bot.findFirst.mock.calls as unknown as [unknown][]) {
+      // The space is the boundary, not who made the bot: a teammate's bot is assignable here.
       expect(query).toEqual({
-        where: { id: "other-members-bot", spaceId: "ws", userId: "user-1", archivedAt: null },
+        where: { id: "other-members-bot", spaceId: "ws", archivedAt: null },
         select: { id: true },
       });
     }

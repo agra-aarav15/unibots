@@ -9,8 +9,7 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, expect, it, vi } from "vitest";
 
 const api = vi.hoisted(() => ({
-  boards: { subscribe: vi.fn(), list: vi.fn(), create: vi.fn() },
-  bots: { list: vi.fn() },
+  boards: { subscribe: vi.fn(), list: vi.fn(), create: vi.fn(), assignees: vi.fn() },
   tickets: {
     list: vi.fn(),
     update: vi.fn(),
@@ -144,7 +143,7 @@ async function renderBoard(stream?: AsyncIterable<{ ticketId?: string }>, refusa
 
 it("renders status columns and opens a ticket with comments", async () => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
-  api.bots.list.mockResolvedValue([bot("bot-1", "Helper")]);
+  api.boards.assignees.mockResolvedValue([bot("bot-1", "Helper")]);
   api.tickets.list.mockResolvedValue({
     tickets: [ticket("Ship", "ticket-1", "todo", "RAK-1", "bot-1", "Details")],
   });
@@ -203,7 +202,7 @@ it("renders status columns and opens a ticket with comments", async () => {
 
 it("creates a ticket without a status picker", async () => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
-  api.bots.list.mockResolvedValue([bot("bot-1", "Helper")]);
+  api.boards.assignees.mockResolvedValue([bot("bot-1", "Helper")]);
   api.tickets.list.mockResolvedValue({ tickets: [] });
   api.tickets.create.mockResolvedValue({});
   const page = await renderBoard();
@@ -263,7 +262,7 @@ function liveStream() {
 
 it("saves only edits and refreshes comments for the open ticket", async () => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
-  api.bots.list.mockResolvedValue([bot("bot-1", "Helper"), bot("bot-2", "Other")]);
+  api.boards.assignees.mockResolvedValue([bot("bot-1", "Helper"), bot("bot-2", "Other")]);
   api.tickets.list.mockResolvedValue({
     tickets: [ticket("Ship", "ticket-1", "todo", "RAK-1", "bot-1", "Details")],
   });
@@ -316,7 +315,7 @@ it("saves only edits and refreshes comments for the open ticket", async () => {
 it("closes the subscription before retrying a failed ticket refresh", async () => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
   vi.useFakeTimers();
-  api.bots.list.mockResolvedValue([bot("bot-1", "Helper")]);
+  api.boards.assignees.mockResolvedValue([bot("bot-1", "Helper")]);
   api.tickets.list
     .mockReset()
     .mockResolvedValueOnce({ tickets: [] })
@@ -352,7 +351,7 @@ it.each(["end", "error"] as const)(
   async (failure) => {
     vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
     vi.useFakeTimers();
-    api.bots.list.mockResolvedValue([bot("bot-1", "Helper")]);
+    api.boards.assignees.mockResolvedValue([bot("bot-1", "Helper")]);
     api.tickets.list.mockReset().mockResolvedValue({ tickets: [] });
     const live = liveStream();
     const page = await renderBoard(live.stream);
@@ -388,7 +387,7 @@ it.each([
 ])("after a %i subscribing, reconnect attempts total %i", async (status, attempts) => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
   vi.useFakeTimers();
-  api.bots.list.mockResolvedValue([]);
+  api.boards.assignees.mockResolvedValue([]);
   api.tickets.list.mockReset().mockResolvedValue({ tickets: [] });
   const page = await renderBoard(undefined, Object.assign(new Error("Refused"), { status }));
   try {
@@ -402,7 +401,7 @@ it.each([
 
 it("renders the back control as a plain link", async () => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
-  api.bots.list.mockResolvedValue([]);
+  api.boards.assignees.mockResolvedValue([]);
   api.tickets.list.mockResolvedValue({ tickets: [] });
   const page = await renderBoard();
   try {
@@ -418,7 +417,7 @@ it("renders the back control as a plain link", async () => {
 
 it("reopens with cached tickets and refreshes them in the background", async () => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
-  api.bots.list.mockResolvedValue([bot("bot-1", "Helper")]);
+  api.boards.assignees.mockResolvedValue([bot("bot-1", "Helper")]);
   api.tickets.list.mockReset().mockResolvedValue({ tickets: [ticket("Cached", "ticket-1")] });
   const first = await renderBoard();
   expect(first.container.textContent).toContain("Cached");
@@ -465,7 +464,7 @@ function commentsText(page: { container: HTMLElement }) {
 
 it("shows every comment when one is posted before the first read lands", async () => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
-  api.bots.list.mockResolvedValue([bot("bot-1", "Helper")]);
+  api.boards.assignees.mockResolvedValue([bot("bot-1", "Helper")]);
   api.tickets.list.mockResolvedValue({
     tickets: [ticket("Ship", "ticket-1", "todo", "RAK-1", "bot-1")],
   });
@@ -492,7 +491,7 @@ it("shows every comment when one is posted before the first read lands", async (
 
 it("does not repeat a posted comment a refresh already brought", async () => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
-  api.bots.list.mockResolvedValue([bot("bot-1", "Helper")]);
+  api.boards.assignees.mockResolvedValue([bot("bot-1", "Helper")]);
   api.tickets.list.mockResolvedValue({
     tickets: [ticket("Ship", "ticket-1", "todo", "RAK-1", "bot-1")],
   });

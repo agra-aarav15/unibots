@@ -46,6 +46,11 @@ vi.mock("./SpaceSettingOverrides", () => ({
   SpaceSettingOverrides: () => <div data-testid="space-setting-overrides" />,
 }));
 
+// The roster reads and writes over the network; this file is about the name and the delete flow.
+vi.mock("./SpaceMembersPanel", () => ({
+  SpaceMembersPanel: () => <div data-testid="space-members" />,
+}));
+
 import { SpaceSettingsPanel } from "./SpaceSettingsPanel";
 
 let container: HTMLDivElement;

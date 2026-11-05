@@ -423,6 +423,7 @@ model Space {
   boards                      Board[]
   tickets                     Ticket[]
   ticketComments              TicketComment[]
+  invitations                 Invitation[]
   agentSkillSpaces            AgentSkillSpace[]
   mcpServerSpaces             McpServerSpace[]
   capabilityInstallSpaces     CapabilityInstallSpace[]
@@ -472,13 +473,22 @@ model SpaceMember {
   @@map("space_members")
 }
 
+/// A way into one workspace. `status` is pending, accepted or revoked; an accepted or
+/// expired row is kept so the person who invited can see who joined.
 model Invitation {
   id             String       @id
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  email          String
+  spaceId        String?
+  space          Space?       @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  /// Set when the link is meant for one address, which then has to sign in as that address.
+  /// Null makes the link itself the only secret.
+  email          String?
   role           String?
   status         String
+  /// The link's secret. Only this row's accepted state, expiry and email decide if it works.
+  token          String?      @unique
+  acceptedAt     DateTime?
   expiresAt      DateTime
   createdAt      DateTime     @default(now())
   inviterId      String
@@ -486,6 +496,7 @@ model Invitation {
 
   @@index([organizationId])
   @@index([email])
+  @@index([spaceId])
   @@map("invitation")
 }
 

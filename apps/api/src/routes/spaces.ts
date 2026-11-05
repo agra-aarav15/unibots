@@ -1,22 +1,35 @@
 import { ORPCError } from "@orpc/server";
-import type { Actor, SpaceNavigation } from "@rakazo/contracts";
+import type { Actor, SpaceInvitation, SpaceMember, SpaceNavigation } from "@rakazo/contracts";
 import type { createGroupRepos, createRepos, PrismaClient } from "@rakazo/db";
 import {
+  AlreadySpaceMemberError,
+  acceptSpaceInvitation,
   CannotDeleteDefaultSpaceError,
   CannotDeleteLastSpaceError,
   CannotDeleteSpaceAsNonOwnerError,
+  CannotRemoveLastOwnerError,
   CannotRenameSpaceAsNonOwnerError,
   createExternalConversationRepos,
   createSpaceForMember,
+  createSpaceInvitation,
   InvalidSpaceNameError,
+  InvitationEmailMismatchError,
+  InvitationNotFoundError,
   IsolationError,
+  listSpaceInvitations,
+  listSpaceMembers,
+  NotSpaceMemberError,
+  NotSpaceOwnerError,
+  removeSpaceMember,
   renameSpaceForMember,
+  revokeSpaceInvitation,
   runAsSystem,
   runAsTenant,
   SPACE_DELETION_CLAIM_TIMEOUT_MS,
   SpaceDeletionInProgressError,
   SpaceLimitError,
   SpaceNotFoundError,
+  setSpaceMemberRole,
   setSpaceSettingOverride,
   spaceSettingOverrides,
 } from "@rakazo/db";
@@ -43,6 +56,76 @@ async function asMemberOf<T>(
   });
   if (!member) throw new ORPCError("NOT_FOUND", { message: new SpaceNotFoundError().message });
   return runAsTenant({ spaceId, userId: actor.userId }, fn);
+}
+
+/** Workspace-membership refusals, translated once for every procedure that shares them. */
+function rethrowMembershipError(error: unknown): never {
+  if (
+    error instanceof IsolationError ||
+    error instanceof SpaceNotFoundError ||
+    error instanceof NotSpaceMemberError ||
+    error instanceof InvitationNotFoundError
+  ) {
+    throw new ORPCError("NOT_FOUND", { message: error.message });
+  }
+  if (error instanceof NotSpaceOwnerError || error instanceof InvitationEmailMismatchError) {
+    throw new ORPCError("FORBIDDEN", { message: error.message });
+  }
+  if (error instanceof AlreadySpaceMemberError) {
+    throw new ORPCError("CONFLICT", { message: error.message });
+  }
+  if (error instanceof SpaceDeletionInProgressError) {
+    throw new ORPCError("CONFLICT", { message: error.message });
+  }
+  if (error instanceof CannotRemoveLastOwnerError) {
+    throw new ORPCError("BAD_REQUEST", { message: error.message });
+  }
+  throw error;
+}
+
+async function membershipOp<T>(fn: () => Promise<T>): Promise<T> {
+  try {
+    return await fn();
+  } catch (error) {
+    return rethrowMembershipError(error);
+  }
+}
+
+/** The token is a secret, so only the owner who minted it ever sees it. */
+function invitationDto(invitation: {
+  id: string;
+  email: string | null;
+  role: string;
+  token: string;
+  expiresAt: Date;
+  createdAt: Date;
+}): SpaceInvitation {
+  return {
+    id: invitation.id,
+    email: invitation.email,
+    role: invitation.role === "owner" ? "owner" : "member",
+    token: invitation.token,
+    expiresAt: invitation.expiresAt.toISOString(),
+    createdAt: invitation.createdAt.toISOString(),
+  };
+}
+
+function memberDto(member: {
+  userId: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: Date;
+  isSelf: boolean;
+}): SpaceMember {
+  return {
+    userId: member.userId,
+    name: member.name,
+    email: member.email,
+    role: member.role === "owner" ? "owner" : "member",
+    createdAt: member.createdAt.toISOString(),
+    isSelf: member.isSelf,
+  };
 }
 
 export function spacesRoutes(ctx: RouterContext) {
@@ -149,6 +232,94 @@ export function spacesRoutes(ctx: RouterContext) {
             throw error;
           }
         }),
+      ),
+      // Mints a link into this Space. Only an owner may hand out a way in.
+      invite: authed.spaces.invite.handler(({ context, input }) =>
+        asMemberOf(deps.prisma, context.actor, input.spaceId, () =>
+          membershipOp(async () =>
+            invitationDto(
+              await createSpaceInvitation(deps.prisma, {
+                spaceId: input.spaceId,
+                invitedByUserId: context.actor.userId,
+                email: input.email,
+                role: input.role,
+              }),
+            ),
+          ),
+        ),
+      ),
+      invitations: authed.spaces.invitations.handler(({ context, input }) =>
+        asMemberOf(deps.prisma, context.actor, input.spaceId, () =>
+          membershipOp(async () => {
+            const invitations = await listSpaceInvitations(deps.prisma, {
+              spaceId: input.spaceId,
+              userId: context.actor.userId,
+            });
+            return invitations.map(invitationDto);
+          }),
+        ),
+      ),
+      revokeInvitation: authed.spaces.revokeInvitation.handler(({ context, input }) =>
+        asMemberOf(deps.prisma, context.actor, input.spaceId, () =>
+          membershipOp(async () => {
+            await revokeSpaceInvitation(deps.prisma, {
+              spaceId: input.spaceId,
+              userId: context.actor.userId,
+              invitationId: input.invitationId,
+            });
+            return { ok: true as const };
+          }),
+        ),
+      ),
+      // Runs as the System, not as the caller's own Space: the link decides which Space is
+      // joined, and the only row written for the caller is their own seat in it.
+      acceptInvite: authed.spaces.acceptInvite.handler(({ context, input }) =>
+        runAsSystem("accept a workspace invitation", () =>
+          membershipOp(async () => {
+            const { spaceId, name } = await acceptSpaceInvitation(deps.prisma, {
+              token: input.token,
+              userId: context.actor.userId,
+              email: context.actor.email,
+            });
+            return { spaceId, name };
+          }),
+        ),
+      ),
+      members: authed.spaces.members.handler(({ context, input }) =>
+        asMemberOf(deps.prisma, context.actor, input.spaceId, () =>
+          membershipOp(async () => {
+            const members = await listSpaceMembers(deps.prisma, {
+              spaceId: input.spaceId,
+              userId: context.actor.userId,
+            });
+            return members.map(memberDto);
+          }),
+        ),
+      ),
+      setMemberRole: authed.spaces.setMemberRole.handler(({ context, input }) =>
+        asMemberOf(deps.prisma, context.actor, input.spaceId, () =>
+          membershipOp(async () => {
+            await setSpaceMemberRole(deps.prisma, {
+              spaceId: input.spaceId,
+              actorUserId: context.actor.userId,
+              memberUserId: input.memberUserId,
+              role: input.role,
+            });
+            return { ok: true as const };
+          }),
+        ),
+      ),
+      removeMember: authed.spaces.removeMember.handler(({ context, input }) =>
+        asMemberOf(deps.prisma, context.actor, input.spaceId, () =>
+          membershipOp(async () => {
+            await removeSpaceMember(deps.prisma, {
+              spaceId: input.spaceId,
+              actorUserId: context.actor.userId,
+              memberUserId: input.memberUserId,
+            });
+            return { ok: true as const };
+          }),
+        ),
       ),
     },
     bootstrap: authed.bootstrap.handler(async ({ context, input }) => {

@@ -39,6 +39,7 @@ import { syncLogOutFailure } from "./lib/sign-out";
 import { completeSsoCallback, SSO_CALLBACK_PATH } from "./lib/sso-flow";
 import { IntegrationCallbackPage } from "./pages/IntegrationCallback";
 import { IntegrationSetupPage } from "./pages/IntegrationSetup";
+import { InviteJoin } from "./pages/InviteJoin";
 import { McpOAuthCallbackPage } from "./pages/McpOAuthCallback";
 import { ShellPage } from "./pages/Shell";
 import { SlackInstallCallbackPage } from "./pages/SlackInstallCallback";
@@ -178,22 +179,16 @@ function SessionApp() {
         <div className="h-full" data-rakazo-app-state="ready">
           <Suspense fallback={<PageLoading />}>
             <Routes>
-              <Route path="/" element={user ? <Navigate to="/app" replace /> : <WelcomePage />} />
+              <Route path="/" element={user ? <InviteJoin to="/app" /> : <WelcomePage />} />
               <Route
                 path="/sign-in"
                 element={
-                  user ? (
-                    <Navigate to={signInDestination} replace />
-                  ) : (
-                    <AuthPage key="in" mode="in" />
-                  )
+                  user ? <InviteJoin to={signInDestination} /> : <AuthPage key="in" mode="in" />
                 }
               />
               <Route
                 path="/sign-up"
-                element={
-                  user ? <Navigate to="/onboarding" replace /> : <AuthPage key="up" mode="up" />
-                }
+                element={user ? <InviteJoin to="/onboarding" /> : <AuthPage key="up" mode="up" />}
               />
               <Route
                 path="/forgot-password"

@@ -10,7 +10,12 @@ import {
   signupPolicyFromEnv,
 } from "@rakazo/core";
 import type { PrismaClient, SecurityEventType } from "@rakazo/db";
-import { bootstrapUserSpace, personalOrganizationIds, recordSecurityEvent } from "@rakazo/db";
+import {
+  bootstrapUserSpace,
+  hasPendingInvitationForEmail,
+  personalOrganizationIds,
+  recordSecurityEvent,
+} from "@rakazo/db";
 import type { BetterAuthOptions, BetterAuthPlugin } from "better-auth";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
@@ -388,25 +393,31 @@ export function createAuth(prisma: PrismaClient, env: AuthEnv) {
             : undefined;
         let requireEmailVerification = false;
         if (ctx.path === "/sign-up/email") {
-          if (!policy?.enabled) {
-            throw new APIError("BAD_REQUEST", {
-              code: "REGISTRATION_CLOSED",
-              message: "Registration is closed",
-            });
-          }
           const email = String(ctx.body?.email ?? "");
-          if (!emailAllowed(email, policy.allowlist)) {
-            throw new APIError("BAD_REQUEST", {
-              code: "EMAIL_NOT_ALLOWED",
-              message: "Email is not allowed to register",
-            });
+          // Holding an invitation into a workspace admits that address too: a deployment whose
+          // signups are closed, or limited to an allowlist, still lets in who it invited. The
+          // link is the proof, so it also stands in for mailbox verification.
+          const invited = await hasPendingInvitationForEmail(prisma, email);
+          if (!invited) {
+            if (!policy?.enabled) {
+              throw new APIError("BAD_REQUEST", {
+                code: "REGISTRATION_CLOSED",
+                message: "Registration is closed",
+              });
+            }
+            if (!emailAllowed(email, policy.allowlist)) {
+              throw new APIError("BAD_REQUEST", {
+                code: "EMAIL_NOT_ALLOWED",
+                message: "Email is not allowed to register",
+              });
+            }
+            if (policy.allowlist.length > 0 && !env.email) {
+              throw new APIError("BAD_REQUEST", {
+                message: "Registration requires email delivery",
+              });
+            }
           }
-          if (policy.allowlist.length > 0 && !env.email) {
-            throw new APIError("BAD_REQUEST", {
-              message: "Registration requires email delivery",
-            });
-          }
-          requireEmailVerification = policy.allowlist.length > 0;
+          requireEmailVerification = (policy?.allowlist.length ?? 0) > 0 && !invited;
         } else if (policy) {
           requireEmailVerification = policy.allowlist.length > 0;
         }
@@ -514,7 +525,11 @@ export function createAuth(prisma: PrismaClient, env: AuthEnv) {
                 message: "Email verification required",
               });
             }
-            if (!user.emailVerified && policy.allowlist.length > 0 && !bypassAllowlist) {
+            // Holding an invitation into a workspace is an admission of its own, so a deployment
+            // whose signups are closed still lets in the people it invited.
+            const invited = await hasPendingInvitationForEmail(prisma, user.email);
+            const admitted = bypassAllowlist || invited;
+            if (!user.emailVerified && policy.allowlist.length > 0 && !admitted) {
               throw new APIError("FORBIDDEN", {
                 code: "EMAIL_VERIFICATION_REQUIRED",
                 message: "Email verification required",
@@ -523,10 +538,7 @@ export function createAuth(prisma: PrismaClient, env: AuthEnv) {
             // Only admitted sessions provision a workspace; never assign administration.
             const membership = await prisma.spaceMember.findFirst({ where: { userId: user.id } });
             if (!membership) {
-              if (
-                !policy.enabled ||
-                (!bypassAllowlist && !emailAllowed(user.email, policy.allowlist))
-              ) {
+              if (!admitted && (!policy.enabled || !emailAllowed(user.email, policy.allowlist))) {
                 throw new APIError("FORBIDDEN", {
                   code: "REGISTRATION_CLOSED",
                   message: "Registration is closed",
