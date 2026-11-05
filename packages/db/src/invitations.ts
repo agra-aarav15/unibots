@@ -268,34 +268,39 @@ export async function acceptSpaceInvitation(
           throw new InvitationEmailMismatchError();
         }
         const role = newRole(invitation.role ?? undefined);
-        // The organization membership comes first: a SpaceMember row points at it.
-        await tx.member
-          .create({
-            data: {
-              id: randomUUID(),
+        // Upserts rather than insert-and-ignore: a rejected insert aborts the whole transaction in
+        // Postgres, so catching the conflict would leave every later statement here dead. Someone
+        // already in the organization keeps the role they have; the roster is where roles change.
+        await tx.member.upsert({
+          where: {
+            organizationId_userId: {
               organizationId: invitation.organizationId,
               userId: input.userId,
-              role,
-              createdAt: new Date(),
             },
-          })
-          .catch((error: unknown) => {
-            if (!isUniqueViolation(error)) throw error;
-          });
-        await tx.spaceMember
-          .create({
-            data: {
-              id: randomUUID(),
-              spaceId: invitation.spaceId!,
-              organizationId: invitation.organizationId,
-              userId: input.userId,
-              role,
-              createdAt: new Date(),
-            },
-          })
-          .catch((error: unknown) => {
-            if (!isUniqueViolation(error)) throw error;
-          });
+          },
+          create: {
+            id: randomUUID(),
+            organizationId: invitation.organizationId,
+            userId: input.userId,
+            role,
+            createdAt: new Date(),
+          },
+          update: {},
+        });
+        await tx.spaceMember.upsert({
+          where: {
+            spaceId_userId: { spaceId: invitation.spaceId!, userId: input.userId },
+          },
+          create: {
+            id: randomUUID(),
+            spaceId: invitation.spaceId!,
+            organizationId: invitation.organizationId,
+            userId: input.userId,
+            role,
+            createdAt: new Date(),
+          },
+          update: {},
+        });
         await tx.invitation.update({
           where: { id: invitation.id },
           data: { status: INVITATION_ACCEPTED, acceptedAt: new Date() },
@@ -429,8 +434,4 @@ async function assertAnotherOwnerRemains(
     where: { spaceId: input.spaceId, role: "owner", userId: { not: input.memberUserId } },
   });
   if (others === 0) throw new CannotRemoveLastOwnerError();
-}
-
-function isUniqueViolation(error: unknown): boolean {
-  return Boolean(error && typeof error === "object" && "code" in error && error.code === "P2002");
 }

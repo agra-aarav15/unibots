@@ -28,10 +28,14 @@ describePostgres("workspace invitations (PostgreSQL)", () => {
   const spaceId = `invite-space-${suffix}`;
   const ownerId = `invite-owner-${suffix}`;
   const memberId = `invite-member-${suffix}`;
+  const inviteeId = `invite-invitee-${suffix}`;
   const strangerId = `invite-stranger-${suffix}`;
   const ownerEmail = `${ownerId}@example.test`;
   const memberEmail = `${memberId}@example.test`;
+  const inviteeEmail = `${inviteeId}@example.test`;
   const strangerEmail = `${strangerId}@example.test`;
+  /** An address nobody holds: a link can be minted for one and never used. */
+  const spareEmail = `invite-spare-${suffix}@example.test`;
   let prisma: PrismaClient;
   let fixtures: PrismaClient;
   let close: () => Promise<void>;
@@ -48,6 +52,7 @@ describePostgres("workspace invitations (PostgreSQL)", () => {
       data: [
         { id: ownerId, name: "Owner", email: ownerEmail },
         { id: memberId, name: "Member", email: memberEmail },
+        { id: inviteeId, name: "Invitee", email: inviteeEmail },
         { id: strangerId, name: "Stranger", email: strangerEmail },
       ],
     });
@@ -67,6 +72,13 @@ describePostgres("workspace invitations (PostgreSQL)", () => {
           id: `${suffix}-plain-member`,
           organizationId,
           userId: memberId,
+          role: "member",
+          createdAt: new Date(),
+        },
+        {
+          id: `${suffix}-invitee-member`,
+          organizationId,
+          userId: inviteeId,
           role: "member",
           createdAt: new Date(),
         },
@@ -114,7 +126,9 @@ describePostgres("workspace invitations (PostgreSQL)", () => {
     if (!prisma) return;
     await fixtures.invitation.deleteMany({ where: { organizationId } });
     await fixtures.organization.delete({ where: { id: organizationId } });
-    await fixtures.user.deleteMany({ where: { id: { in: [ownerId, memberId, strangerId] } } });
+    await fixtures.user.deleteMany({
+      where: { id: { in: [ownerId, memberId, inviteeId, strangerId] } },
+    });
     await close();
   });
 
@@ -122,41 +136,62 @@ describePostgres("workspace invitations (PostgreSQL)", () => {
     const invitation = await createSpaceInvitation(prisma, {
       spaceId,
       invitedByUserId: ownerId,
-      email: strangerEmail,
+      email: inviteeEmail,
     });
     expect(invitation.token).toEqual(expect.any(String));
     expect(invitation.role).toBe("member");
     // Holding the invitation is what admits the address, before it is used.
-    expect(await hasPendingInvitationForEmail(prisma, strangerEmail)).toBe(true);
+    expect(await hasPendingInvitationForEmail(prisma, inviteeEmail)).toBe(true);
     expect(await hasPendingInvitationForEmail(prisma, "nobody@example.test")).toBe(false);
 
     const joined = await runAsSystem("accept an invitation", () =>
       acceptSpaceInvitation(prisma, {
         token: invitation.token,
-        userId: strangerId,
-        email: strangerEmail,
+        userId: inviteeId,
+        email: inviteeEmail,
       }),
     );
     expect(joined).toEqual({ spaceId, name: "Company" });
     const seat = await fixtures.spaceMember.findUnique({
-      where: { spaceId_userId: { spaceId, userId: strangerId } },
+      where: { spaceId_userId: { spaceId, userId: inviteeId } },
     });
     expect(seat?.role).toBe("member");
-    expect(await hasPendingInvitationForEmail(prisma, strangerEmail)).toBe(false);
+    expect(await hasPendingInvitationForEmail(prisma, inviteeEmail)).toBe(false);
     await expect(
       acceptSpaceInvitation(prisma, {
         token: invitation.token,
-        userId: strangerId,
-        email: strangerEmail,
+        userId: inviteeId,
+        email: inviteeEmail,
       }),
     ).rejects.toBeInstanceOf(InvitationNotFoundError);
+  });
+
+  it("joins an address that is already a member of the organization", async () => {
+    // The invited person is already in the organization, which is the ordinary case for a second
+    // workspace: the membership row exists, the seat in this workspace does not.
+    const invitation = await createSpaceInvitation(prisma, {
+      spaceId,
+      invitedByUserId: ownerId,
+      email: strangerEmail,
+    });
+    await expect(
+      runAsSystem("accept an invitation", () =>
+        acceptSpaceInvitation(prisma, {
+          token: invitation.token,
+          userId: strangerId,
+          email: strangerEmail,
+        }),
+      ),
+    ).resolves.toEqual({ spaceId, name: "Company" });
+    expect(await fixtures.spaceMember.count({ where: { spaceId, userId: strangerId } })).toBe(1);
+    expect(await fixtures.member.count({ where: { organizationId, userId: strangerId } })).toBe(1);
   });
 
   it("refuses a link addressed to somebody else", async () => {
     const invitation = await createSpaceInvitation(prisma, {
       spaceId,
       invitedByUserId: ownerId,
-      email: strangerEmail,
+      email: spareEmail,
     });
     await expect(
       acceptSpaceInvitation(prisma, {
@@ -171,13 +206,13 @@ describePostgres("workspace invitations (PostgreSQL)", () => {
     const invitation = await createSpaceInvitation(prisma, {
       spaceId,
       invitedByUserId: ownerId,
-      email: strangerEmail,
+      email: spareEmail,
     });
     await fixtures.invitation.update({
       where: { id: invitation.id },
       data: { expiresAt: new Date(Date.now() - 1_000) },
     });
-    expect(await hasPendingInvitationForEmail(prisma, strangerEmail)).toBe(false);
+    expect(await hasPendingInvitationForEmail(prisma, spareEmail)).toBe(false);
     await expect(
       acceptSpaceInvitation(prisma, {
         token: invitation.token,
@@ -191,12 +226,12 @@ describePostgres("workspace invitations (PostgreSQL)", () => {
     const first = await createSpaceInvitation(prisma, {
       spaceId,
       invitedByUserId: ownerId,
-      email: memberEmail,
+      email: spareEmail,
     });
     const second = await createSpaceInvitation(prisma, {
       spaceId,
       invitedByUserId: ownerId,
-      email: memberEmail,
+      email: spareEmail,
     });
     const pending = await listSpaceInvitations(prisma, { spaceId, userId: ownerId });
     expect(pending.map((row) => row.id)).toContain(second.id);
@@ -204,8 +239,8 @@ describePostgres("workspace invitations (PostgreSQL)", () => {
     await expect(
       acceptSpaceInvitation(prisma, {
         token: first.token,
-        userId: memberId,
-        email: memberEmail,
+        userId: strangerId,
+        email: strangerEmail,
       }),
     ).rejects.toBeInstanceOf(InvitationNotFoundError);
   });
