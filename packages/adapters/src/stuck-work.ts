@@ -1,6 +1,6 @@
-import type { JobPublisher, NotificationMessage, NotificationProvider } from "@rakazo/adapter-kit";
-import { runContinueJob } from "@rakazo/adapter-kit";
-import type { StuckWorkStatus } from "@rakazo/core";
+import type { JobPublisher, NotificationMessage, NotificationProvider } from "@unibot/adapter-kit";
+import { runContinueJob } from "@unibot/adapter-kit";
+import type { StuckWorkStatus } from "@unibot/core";
 import {
   isStuckWorkStatus,
   STUCK_WORK_NOTICE,
@@ -10,10 +10,10 @@ import {
   stuckWorkDueAfterMs,
   stuckWorkReminder,
   stuckWorkStoppedNotification,
-} from "@rakazo/core";
-import type { Prisma, PrismaClient, ThreadEvents } from "@rakazo/db";
-import { appendEventInTransaction, expireStuckRun, withTransactionRetry } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/core";
+import type { Prisma, PrismaClient, ThreadEvents } from "@unibot/db";
+import { appendEventInTransaction, expireStuckRun, withTransactionRetry } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { ExpoPushProvider } from "./expo-push.js";
 
 type StuckCursor = { at: Date; id: string };

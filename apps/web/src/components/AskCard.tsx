@@ -1,20 +1,20 @@
 import { t } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { ChatMarkdown } from "@rakazo/chat-ui/web";
-import type { LoginFieldInput, ThreadMessage } from "@rakazo/contracts";
+import { ChatMarkdown } from "@unibot/chat-ui/web";
+import type { LoginFieldInput, ThreadMessage } from "@unibot/contracts";
 import {
   BOT_INSTRUCTIONS_MAX_LENGTH,
   commandVariableName,
   LoginSecretValue,
   loginCardFields,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import {
   isApprovalAskBlock,
   isSecretAskBlock,
   resolveAskChoice,
   selectedAskActionLabel,
-} from "@rakazo/core";
-import { Button, Input, Label, Switch, Textarea } from "@rakazo/ui-web";
+} from "@unibot/core";
+import { Button, Input, Label, Switch, Textarea } from "@unibot/ui-web";
 import { Check } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { rpc } from "../lib/rpc";

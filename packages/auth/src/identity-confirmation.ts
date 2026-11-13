@@ -1,6 +1,6 @@
 import { createHash, randomInt, timingSafeEqual } from "node:crypto";
-import type { TransactionalEmailProvider } from "@rakazo/adapter-kit";
-import { recordSecurityEvent } from "@rakazo/db";
+import type { TransactionalEmailProvider } from "@unibot/adapter-kit";
+import { recordSecurityEvent } from "@unibot/db";
 import type { BetterAuthPlugin } from "better-auth";
 import { APIError, createAuthEndpoint, sessionMiddleware } from "better-auth/api";
 import { oidcProofKey } from "./account-security.js";

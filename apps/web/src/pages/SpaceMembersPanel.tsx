@@ -1,5 +1,5 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { SpaceInvitation, SpaceMember } from "@rakazo/contracts";
+import type { SpaceInvitation, SpaceMember } from "@unibot/contracts";
 import {
   Button,
   Dialog,
@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   Input,
-} from "@rakazo/ui-web";
+} from "@unibot/ui-web";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";

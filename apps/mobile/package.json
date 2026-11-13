@@ -1,7 +1,7 @@
 {
-  "name": "@rakazo/mobile",
+  "name": "@unibot/mobile",
   "version": "0.1.0",
-  "author": "agra-aarav15",
+  "author": "Aarav Agrawal",
   "license": "Apache-2.0",
   "main": "index.ts",
   "expo": {
@@ -20,11 +20,11 @@
   "dependencies": {
     "@expo/metro-runtime": "57.0.17",
     "@expo/ui": "57.0.26",
-    "@rakazo/chat-ui": "workspace:*",
-    "@rakazo/contracts": "workspace:*",
-    "@rakazo/core": "workspace:*",
-    "@rakazo/logging": "workspace:*",
-    "@rakazo/ui-tokens": "workspace:*",
+    "@unibot/chat-ui": "workspace:*",
+    "@unibot/contracts": "workspace:*",
+    "@unibot/core": "workspace:*",
+    "@unibot/logging": "workspace:*",
+    "@unibot/ui-tokens": "workspace:*",
     "@react-native-vector-icons/ionicons": "13.1.4",
     "@react-native-vector-icons/material-design-icons": "13.1.4",
     "@sentry/react-native": "7.11.0",

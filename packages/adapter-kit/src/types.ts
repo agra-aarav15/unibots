@@ -4,7 +4,7 @@ import type {
   ModelApiProtocol,
   PurchaseCardField,
   SandboxKind,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 
 export interface AdapterContext {
   operationId: string;
@@ -483,6 +483,10 @@ export interface AgentRunModel {
   gatewayId?: string;
   baseUrl?: string;
   apiProtocol?: ModelApiProtocol;
+  /** A command connection's template, with its placeholders, and where to run it. */
+  command?: string;
+  cwd?: string;
+  timeoutMs?: number;
   headers?: Record<string, string>;
   /** The connection owner may reach a private or loopback `baseUrl`; absent means deny. */
   allowPrivateEndpoint?: boolean;

@@ -5,8 +5,8 @@ import type {
   Bot,
   ExternalConversation,
   ExternalConversationPolicy,
-} from "@rakazo/contracts";
-import type { ListenMode } from "@rakazo/core";
+} from "@unibot/contracts";
+import type { ListenMode } from "@unibot/core";
 import {
   AUTOMATED_SENDER_MODES,
   ambientValue,
@@ -15,7 +15,7 @@ import {
   senderPolicy,
   withRollupHours,
   withSenderMode,
-} from "@rakazo/core";
+} from "@unibot/core";
 import {
   Button,
   Input,
@@ -24,7 +24,7 @@ import {
   Textarea,
   ToggleGroup,
   ToggleGroupItem,
-} from "@rakazo/ui-web";
+} from "@unibot/ui-web";
 import { RotateCcw } from "lucide-react";
 import { useId, useMemo, useState } from "react";
 import { SuccessPop } from "../components/ai/primitives";

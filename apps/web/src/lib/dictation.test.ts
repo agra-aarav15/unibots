@@ -149,7 +149,7 @@ describe("Dictation recorder fallback", () => {
   });
 
   it("keeps transcription in the space where recording started", async () => {
-    const store = new Map<string, string>([["rakazo:space-id", "space-support"]]);
+    const store = new Map<string, string>([["unibot:space-id", "space-support"]]);
     const localStorage = {
       getItem: (key: string) => store.get(key) ?? null,
       setItem: (key: string, value: string) => {
@@ -192,7 +192,7 @@ describe("Dictation recorder fallback", () => {
     const onFinal = vi.fn();
     const dictation = new Dictation();
     await dictation.listen({ mode: "hold", transcribe: true, onFinal });
-    store.set("rakazo:space-id", "space-other");
+    store.set("unibot:space-id", "space-other");
     dictation.submitHold();
     await vi.waitFor(() => expect(onFinal).toHaveBeenCalledWith("hello"));
 
@@ -761,7 +761,7 @@ describe("dictation engine choice", () => {
   it("listens through the desktop app's system recognizer when it offers one", () => {
     vi.stubGlobal("window", {
       webkitSpeechRecognition: class {},
-      rakazoDesktop: { platform: "darwin", speech: {} },
+      unibotDesktop: { platform: "darwin", speech: {} },
     });
     expect(webSpeechAvailable()).toBe(true);
   });
@@ -769,7 +769,7 @@ describe("dictation engine choice", () => {
   it("treats Electron as having no usable Web Speech", () => {
     vi.stubGlobal("window", {
       webkitSpeechRecognition: class {},
-      rakazoDesktop: { platform: "darwin" },
+      unibotDesktop: { platform: "darwin" },
     });
     expect(webSpeechAvailable()).toBe(false);
   });
@@ -805,7 +805,7 @@ describe("dictation engine choice", () => {
         },
       );
       const start = vi.fn();
-      vi.stubGlobal("window", { rakazoDesktop: { platform: "darwin", speech: { start } } });
+      vi.stubGlobal("window", { unibotDesktop: { platform: "darwin", speech: { start } } });
       const dictation = new Dictation();
       await dictation.listen({ mode, transcribe: true, onFinal: vi.fn() });
       expect(navigator.mediaDevices.getUserMedia).toHaveBeenCalledOnce();
@@ -823,7 +823,7 @@ describe("dictation engine choice", () => {
         start = start;
         abort() {}
       },
-      ...(host === "desktop" ? { rakazoDesktop: { platform: "darwin" } } : {}),
+      ...(host === "desktop" ? { unibotDesktop: { platform: "darwin" } } : {}),
     });
     const dictation = new Dictation();
     await dictation.listen({ mode: "hold", transcribe: true, onFinal: vi.fn() });
@@ -1286,7 +1286,7 @@ describe("Dictation web speech", () => {
     }
     vi.stubGlobal("window", {
       webkitSpeechRecognition: FakeRecognition,
-      rakazoDesktop: { platform: "darwin" },
+      unibotDesktop: { platform: "darwin" },
     });
     const fetchMock = vi.fn(async () => Response.json({ text: "from fish" }));
     stubRecorderFallback(fetchMock);

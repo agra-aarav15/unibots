@@ -1,5 +1,5 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { SettingsScope } from "@rakazo/contracts";
+import type { SettingsScope } from "@unibot/contracts";
 import {
   compatibleConnectionName,
   connectionDisplayName,
@@ -7,7 +7,7 @@ import {
   OLLAMA_CLOUD_BASE_URL,
   OPENAI_COMPATIBLE_PROVIDER_ID,
   savedCompatibleEndpointMatches,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,12 +25,13 @@ import {
   DialogTitle,
   ModelThinkingOptions,
   Spinner,
-} from "@rakazo/ui-web";
+} from "@unibot/ui-web";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { ModelCredential } from "../lib/model-auth";
 import type { ModelRoleConnectIntent } from "./ModelRoleSettings";
 import { ModelRoleSettings } from "./ModelRoleSettings";
+import { CliModelFields } from "./model-settings/cli-model-fields";
 import { CompatibleModelFields } from "./model-settings/compatible-model-fields";
 import { CompatibleKeyControls, ConnectionControls } from "./model-settings/connection-controls";
 import { ConnectionNameField, ProvidersSection } from "./model-settings/providers-section";
@@ -72,6 +73,7 @@ export function ModelSettingsOverlay({
     hostCredentialSource,
     intentRef,
     isOpenAiCompatible,
+    isCli,
     loading,
     maxTokens,
     me,
@@ -182,6 +184,23 @@ export function ModelSettingsOverlay({
       <>
         <CompatibleModelFields {...model} />
         <CompatibleKeyControls {...model} />
+        {disconnectButton}
+      </>
+    ) : isCli ? (
+      <>
+        <CliModelFields {...model} />
+        {settingsDirty ? (
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            className="mt-4"
+            disabled={busy}
+            onClick={() => void connectKey({ settingsOnly: true })}
+          >
+            {pending === "settings" ? <Trans>Saving...</Trans> : <Trans>Save</Trans>}
+          </Button>
+        ) : null}
         {disconnectButton}
       </>
     ) : credential ? (

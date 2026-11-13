@@ -4,14 +4,14 @@ import type {
   TeamChatInboundMessage,
   TeamChatSendRequest,
   TeamChatSendResult,
-} from "@rakazo/adapter-kit";
-import { runContinueJob } from "@rakazo/adapter-kit";
-import type { MessageBlock } from "@rakazo/contracts";
-import { ATTACHMENT_MAX_COUNT, AutomatedSenderPoliciesSchema } from "@rakazo/contracts";
-import { botMessageMaxHops, messageBlockForArtifact, promptTextForAttachments } from "@rakazo/core";
-import type { PrismaClient, ThreadEvents } from "@rakazo/db";
-import { clearEndedRunState } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/adapter-kit";
+import { runContinueJob } from "@unibot/adapter-kit";
+import type { MessageBlock } from "@unibot/contracts";
+import { ATTACHMENT_MAX_COUNT, AutomatedSenderPoliciesSchema } from "@unibot/contracts";
+import { botMessageMaxHops, messageBlockForArtifact, promptTextForAttachments } from "@unibot/core";
+import type { PrismaClient, ThreadEvents } from "@unibot/db";
+import { clearEndedRunState } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import type { MessagingReceipts } from "./messaging-receipts.js";
 import type { TeamChatEngagementJudge } from "./team-chat-judge.js";
 import {
@@ -501,7 +501,7 @@ export class TeamChatBridge {
       conversation.spaceId !== target.spaceId ||
       !conversation.thread
     ) {
-      throw new Error("Team chat conversation belongs to a different Unibots target");
+      throw new Error("Team chat conversation belongs to a different UniBot target");
     }
     return { ...conversation, thread: conversation.thread };
   }
@@ -687,7 +687,7 @@ export class TeamChatBridge {
     const pending = this.mirroring.get(message.id);
     if (pending) return pending;
     const mirroring = (async () => {
-      if (!conversation.thread) throw new Error("Team chat conversation has no Unibots thread");
+      if (!conversation.thread) throw new Error("Team chat conversation has no UniBot thread");
       // Fetchers cannot survive a restart; reuse any completed per-file uploads.
       const stored = attachments
         ? await this.storeAttachments(
@@ -994,7 +994,7 @@ export class TeamChatBridge {
       const blocks = Array.isArray(response?.blocks) ? (response.blocks as MessageBlock[]) : [];
       const content =
         run.status === "failed"
-          ? `${target.name} could not complete the delegated request. Open Unibots for details.`
+          ? `${target.name} could not complete the delegated request. Open UniBot for details.`
           : teamChatResponseText(blocks, target.name, true);
       if (content) {
         await this.deps.send({
@@ -1244,7 +1244,7 @@ export class TeamChatBridge {
     };
   }): Promise<void> {
     const thread = message.externalConversation.thread;
-    if (!thread) throw new Error("Team chat conversation has no Unibots thread");
+    if (!thread) throw new Error("Team chat conversation has no UniBot thread");
     // In-flight routine wakes own the row via engagementReason; never start a
     // fallback TeamChat agent until that claim is cleared.
     if (isRoutingOwnershipReason(message.engagementReason)) {
@@ -1464,7 +1464,7 @@ export class TeamChatBridge {
     await this.sendOnce(message.id, {
       conversationId: message.externalConversation.conversationId,
       replyThreadId: message.replyThreadId,
-      content: `${this.target?.name ?? "The agent"} could not complete that request. Open Unibots for details.`,
+      content: `${this.target?.name ?? "The agent"} could not complete that request. Open UniBot for details.`,
       idempotencyKey: `external-message:${message.id}:failure`,
     });
   }

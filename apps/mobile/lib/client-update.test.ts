@@ -29,7 +29,7 @@ vi.mock("react-native", () => rn);
 vi.mock("./api", () => ({ configureClientBuild: vi.fn() }));
 vi.mock("./i18n", () => ({ t: (message: string) => message }));
 
-import { ANDROID_APK_URL } from "@rakazo/contracts";
+import { ANDROID_APK_URL } from "@unibot/contracts";
 import {
   applyRequiredUpdate,
   clientBuildHeaders,
@@ -56,7 +56,7 @@ function pressUpdate() {
 describe("mobile client build", () => {
   it("names the running bundle by when its update was created", () => {
     expect(mobileClientBuild()).toBe("20261022093015");
-    expect(clientBuildHeaders()).toEqual({ "x-rakazo-client-build": "mobile/20261022093015" });
+    expect(clientBuildHeaders()).toEqual({ "x-unibot-client-build": "mobile/20261022093015" });
   });
 
   it("names no build where expo-updates is off", () => {

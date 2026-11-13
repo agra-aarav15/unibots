@@ -3,11 +3,11 @@ import type {
   AdapterContext,
   HttpPaymentAuthorization,
   PaymentWalletProvider,
-} from "@rakazo/adapter-kit";
-import { PaidRequestInput } from "@rakazo/contracts";
-import { stableJsonValue } from "@rakazo/core/node/approval-effect-key";
-import type { Purchase } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/adapter-kit";
+import { PaidRequestInput } from "@unibot/contracts";
+import { stableJsonValue } from "@unibot/core/node/approval-effect-key";
+import type { Purchase } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { redactConnectorPayload } from "./connector-safety.js";
 import type { PurchaseDeps } from "./purchase-service.js";
 import {

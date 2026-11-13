@@ -1,11 +1,11 @@
 // Draws a Wuying cloud desktop with the Wuying Web SDK and reports its state to the app the way
-// the /novnc screen pages do, through { rakazoScreen } messages to the parent frame.
+// the /novnc screen pages do, through { unibotScreen } messages to the parent frame.
 (() => {
   const params = new URLSearchParams(window.location.hash.slice(1));
   // Opaque frames cannot rewrite a URL with history.replaceState. The fragment is never sent
   // in HTTP requests or Referer headers.
 
-  const report = (state) => window.parent.postMessage({ rakazoScreen: state }, "*");
+  const report = (state) => window.parent.postMessage({ unibotScreen: state }, "*");
 
   const desktopId = params.get("desktop_id");
   const regionId = params.get("region_id") || "cn-hangzhou";
@@ -17,7 +17,7 @@
   }
 
   report("connecting");
-  const session = window.Wuying.WebSDK.createSession("rakazo-desktop", {
+  const session = window.Wuying.WebSDK.createSession("unibot-desktop", {
     iframeId: "session",
     openType: "inline",
     resourceType: "local",
@@ -38,7 +38,7 @@
   });
   session.addHandle("onError", () => report("failed"));
   window.addEventListener("message", (event) => {
-    if (event.source === window.parent && event.data?.rakazoScreenFocus) {
+    if (event.source === window.parent && event.data?.unibotScreenFocus) {
       document.getElementById("session")?.focus();
     }
   });

@@ -1,8 +1,8 @@
-import type { MessageBlock } from "@rakazo/contracts";
-import type { ActionApprovalRule } from "@rakazo/core";
-import { connectorKindFromToolName, inboundRoutinePrompts, siteAlwaysAllowed } from "@rakazo/core";
-import { sitesInText, urlSite } from "@rakazo/core/egress";
-import { findAutoReviewPreference, listApprovalRules, storedBatchActions } from "@rakazo/db";
+import type { MessageBlock } from "@unibot/contracts";
+import type { ActionApprovalRule } from "@unibot/core";
+import { connectorKindFromToolName, inboundRoutinePrompts, siteAlwaysAllowed } from "@unibot/core";
+import { sitesInText, urlSite } from "@unibot/core/egress";
+import { findAutoReviewPreference, listApprovalRules, storedBatchActions } from "@unibot/db";
 import { SITE_SENDING_TOOLS } from "./approval-ask.js";
 import { boundDirectApprovalDetails, catalogApprovalDetails } from "./approval-effect.js";
 import type { ExecutorDeps } from "./executor-deps.js";

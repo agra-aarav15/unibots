@@ -1,5 +1,5 @@
-import type { AdapterContext, MessagingPlatformDescriptor } from "@rakazo/adapter-kit";
-import { getLogger } from "@rakazo/logging";
+import type { AdapterContext, MessagingPlatformDescriptor } from "@unibot/adapter-kit";
+import { getLogger } from "@unibot/logging";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createMessagingReceipts } from "./messaging-receipts.js";
 

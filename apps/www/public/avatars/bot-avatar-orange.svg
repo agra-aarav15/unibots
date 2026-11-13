@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
-  <title id="title">Orange Unibots bot avatar</title>
+  <title id="title">Orange UniBot bot avatar</title>
   <circle cx="32" cy="32" r="30" fill="#1A1A1D" />
   <g transform="translate(13 9.5) scale(0.5)">
     <path fill="#F5A03C" d="M 38 14 H 62 A 26 26 0 0 1 88 40 V 78 A 26 26 0 0 1 62 104 H 38 A 26 26 0 0 1 12 78 V 40 A 26 26 0 0 1 38 14 Z" />

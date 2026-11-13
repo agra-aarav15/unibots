@@ -1,4 +1,4 @@
-import { logSinkHealth } from "@rakazo/logging";
+import { logSinkHealth } from "@unibot/logging";
 import { Hono } from "hono";
 
 /**

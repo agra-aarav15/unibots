@@ -1,5 +1,5 @@
 import { randomBytes, randomUUID } from "node:crypto";
-import type { PrismaClient, SpaceKeyRecord, SpaceKeyStore } from "@rakazo/db";
+import type { PrismaClient, SpaceKeyRecord, SpaceKeyStore } from "@unibot/db";
 import {
   asSystem,
   ContentKeyRing,
@@ -7,7 +7,7 @@ import {
   LocalKeyProvider,
   provisionMessagingIdentity,
   runAsSystem,
-} from "@rakazo/db";
+} from "@unibot/db";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaAgentHomeRecords } from "./home-object-store.js";
 

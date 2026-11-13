@@ -1,5 +1,5 @@
-import type { Actor } from "@rakazo/contracts";
-import type { PrismaClient } from "@rakazo/db";
+import type { Actor } from "@unibot/contracts";
+import type { PrismaClient } from "@unibot/db";
 import { describe, expect, it, vi } from "vitest";
 import type { ThreadTarget } from "./thread-target.js";
 import { markThreadRead, markThreadUnreadFrom } from "./thread-target.js";

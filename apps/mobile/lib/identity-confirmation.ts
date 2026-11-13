@@ -1,4 +1,4 @@
-import type { AccountSecurity } from "@rakazo/contracts";
+import type { AccountSecurity } from "@unibot/contracts";
 import { t } from "./i18n";
 
 export type IdentityMethod = "sso" | "email";

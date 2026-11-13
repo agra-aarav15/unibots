@@ -13,7 +13,7 @@ and set:
 BETTER_AUTH_URL=https://agents.example.com
 WEB_ORIGIN=https://agents.example.com
 API_URL=https://agents.example.com
-RAKAZO_HOST=agents.example.com
+UNIBOT_HOST=agents.example.com
 ```
 
 Create the owner account, then close sign-ups so nobody else can make one:

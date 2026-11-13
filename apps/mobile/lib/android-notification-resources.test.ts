@@ -10,19 +10,19 @@ const resources = resolve(
   "modules/rakazo-notifications/android/src/main/res",
 );
 const keys = [
-  "rakazo_channel_live",
-  "rakazo_channel_messages",
-  "rakazo_channel_scheduled",
-  "rakazo_channel_attention",
-  "rakazo_live_one",
-  "rakazo_live_many",
-  "rakazo_live_working",
-  "rakazo_scheduled_title",
-  "rakazo_replied_group",
-  "rakazo_replied",
-  "rakazo_attention_failed",
-  "rakazo_attention_takeover",
-  "rakazo_attention_input",
+  "unibot_channel_live",
+  "unibot_channel_messages",
+  "unibot_channel_scheduled",
+  "unibot_channel_attention",
+  "unibot_live_one",
+  "unibot_live_many",
+  "unibot_live_working",
+  "unibot_scheduled_title",
+  "unibot_replied_group",
+  "unibot_replied",
+  "unibot_attention_failed",
+  "unibot_attention_takeover",
+  "unibot_attention_input",
 ];
 
 const resourceDirectories = {

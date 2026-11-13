@@ -1,5 +1,5 @@
-import type { PluginMarketplaceEntry, PluginPart } from "@rakazo/contracts";
-import { PluginPartSchema } from "@rakazo/contracts";
+import type { PluginMarketplaceEntry, PluginPart } from "@unibot/contracts";
+import { PluginPartSchema } from "@unibot/contracts";
 
 export const PLUGIN_CATEGORIES = [
   "productivity",

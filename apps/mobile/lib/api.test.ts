@@ -2,12 +2,12 @@ import { getArtifactById } from "./artifacts";
 
 vi.mock("./ai-consent", () => ({ promptAiConsent: vi.fn() }));
 
-import type { RpcInput } from "@rakazo/contracts";
+import type { RpcInput } from "@unibot/contracts";
 import {
   dismissableAskMessageIds,
   isServerUnreachable,
   withLiveStreamingProgress,
-} from "@rakazo/core";
+} from "@unibot/core";
 import * as SecureStore from "expo-secure-store";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { promptAiConsent } from "./ai-consent";
@@ -240,7 +240,7 @@ describe("mobile API authentication", () => {
       "http://127.0.0.1:3100/api/auth/sign-in/email",
       expect.objectContaining({
         method: "POST",
-        headers: { "content-type": "application/json", origin: "rakazo://" },
+        headers: { "content-type": "application/json", origin: "unibot://" },
         body: JSON.stringify({ email: "ada@example.com", password: "correct horse" }),
       }),
     );
@@ -276,7 +276,7 @@ describe("mobile API authentication", () => {
       "http://127.0.0.1:3100/api/auth/sign-up/email",
       expect.objectContaining({
         method: "POST",
-        headers: { "content-type": "application/json", origin: "rakazo://" },
+        headers: { "content-type": "application/json", origin: "unibot://" },
         body: JSON.stringify({
           email: "new@example.com",
           password: "correct horse",
@@ -302,7 +302,7 @@ describe("mobile API authentication", () => {
       "http://127.0.0.1:3100/api/auth/email-otp/send-verification-otp",
       expect.objectContaining({
         method: "POST",
-        headers: { "content-type": "application/json", origin: "rakazo://" },
+        headers: { "content-type": "application/json", origin: "unibot://" },
         body: JSON.stringify({ email: "ada@example.test", type: "sign-in" }),
       }),
     );
@@ -311,7 +311,7 @@ describe("mobile API authentication", () => {
       "http://127.0.0.1:3100/api/auth/sign-in/email-otp",
       expect.objectContaining({
         method: "POST",
-        headers: { "content-type": "application/json", origin: "rakazo://" },
+        headers: { "content-type": "application/json", origin: "unibot://" },
         body: JSON.stringify({ email: "ada@example.test", otp: "123456", name: "Ada" }),
       }),
     );
@@ -400,7 +400,7 @@ describe("mobile API authentication", () => {
     expect(fetchMock.mock.calls[0]?.[0]).toContain("/api/auth/update-user");
     expect(fetchMock.mock.calls[0]?.[1]).toMatchObject({
       method: "POST",
-      headers: expect.objectContaining({ origin: "rakazo://" }),
+      headers: expect.objectContaining({ origin: "unibot://" }),
       body: JSON.stringify({ name: "Alex Rivera" }),
     });
   });

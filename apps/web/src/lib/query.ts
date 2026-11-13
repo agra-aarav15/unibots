@@ -1,10 +1,12 @@
 import type { RouterUtils } from "@orpc/tanstack-query";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
-import type { AppBootstrap } from "@rakazo/contracts";
-import { isRetryableError } from "@rakazo/core";
+import type { AppBootstrap } from "@unibot/contracts";
+import { isRetryableError } from "@unibot/core";
 import type { DataTag, QueryKey } from "@tanstack/react-query";
 import { QueryClient } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
+import { lastQueryUser, rememberQueryUser } from "./last-user";
+import { clearPersistedQueryCache } from "./query-persist";
 import type { RpcClient } from "./rpc";
 import { createSpaceRpc, rpcForSpace, selectedSpaceId } from "./rpc";
 import { useBoundSpaceId } from "./space-rpc";
@@ -120,6 +122,11 @@ let cachedUserId: string | null | undefined;
 
 /** Forgets everything cached for another user, so sign-out or a switch never shows their data. */
 export function setQueryUser(userId: string | null): void {
-  if (cachedUserId !== undefined && cachedUserId !== userId) queryClient.clear();
+  if (cachedUserId !== undefined && cachedUserId !== userId) {
+    queryClient.clear();
+    void clearPersistedQueryCache();
+  }
   cachedUserId = userId;
+  // Kept for the next reload, which reads it before the session answers.
+  rememberQueryUser(userId);
 }

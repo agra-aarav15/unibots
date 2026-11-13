@@ -11,6 +11,8 @@ __pycache__/
 .turbo
 # Local tooling: bundled runtimes, generated installers, and release keystores. Never committed.
 .tools/
+# Working notes and logs from the agent session, including the handoff file. Never committed.
+.zcode/
 dist
 build
 coverage
@@ -48,6 +50,9 @@ verify-report
 .last-deployed-revision
 design/
 PRODUCT_PLAN.md
+# A pasted report about an unrelated project, dropped in the checkout root. It quotes local paths
+# and a personal address, so it must never reach this public repository. The file stays where it is.
+/prompt from user.md
 
 # Lingui compiled catalogs — Vite plugin compiles .po at build time
 apps/web/src/locales/**/*.mjs

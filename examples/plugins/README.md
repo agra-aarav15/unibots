@@ -4,4 +4,4 @@
 - [Hello world](hello-world/README.md): a skill without an MCP server.
 
 Copy an example into a public GitHub repository, then follow [Build a plugin](https://github.com/agra-aarav15/unibots/blob/main/docs/build-a-plugin.md)
-to test and submit it. Unibots reads plugin files; it never runs repository code.
+to test and submit it. UniBot reads plugin files; it never runs repository code.

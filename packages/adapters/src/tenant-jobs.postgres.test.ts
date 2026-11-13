@@ -5,9 +5,9 @@ import type {
   MemoryStore,
   SandboxProvider,
   SecretStore,
-} from "@rakazo/adapter-kit";
-import type { PrismaClient, ThreadEvents } from "@rakazo/db";
-import { createDb, runAsSystem, runAsTenant } from "@rakazo/db";
+} from "@unibot/adapter-kit";
+import type { PrismaClient, ThreadEvents } from "@unibot/db";
+import { createDb, runAsSystem, runAsTenant } from "@unibot/db";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { createBackgroundJobHandlers } from "./background-job-handlers.js";
 import type { createRunExecutor } from "./executor.js";

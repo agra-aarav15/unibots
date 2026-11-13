@@ -1,6 +1,7 @@
 import { useLingui } from "@lingui/react/macro";
-import type { Me, ModelHeaderRow, SettingsScope, ThinkingLevel } from "@rakazo/contracts";
+import type { Me, ModelHeaderRow, SettingsScope, ThinkingLevel } from "@unibot/contracts";
 import {
+  CLI_PROVIDER_ID,
   CLOUDFLARE_AI_GATEWAY_PROVIDER_ID,
   cloudflareModelRouting,
   compatibleConnectionName,
@@ -14,11 +15,12 @@ import {
   OPENAI_COMPATIBLE_PROVIDER_ID,
   openAiCompatibleProbeSuccessMessage,
   savedCompatibleEndpointMatches,
-} from "@rakazo/contracts";
-import type { ConnectionFormFields } from "@rakazo/core";
+} from "@unibot/contracts";
+import type { ConnectionFormFields } from "@unibot/core";
 import {
   COMPATIBLE_THINKING_LEVELS,
   clampCatalogThinkingLevel,
+  cliConnectionReady,
   compatibleConnectionReady,
   compatibleModelRows,
   connectionFormFields,
@@ -29,8 +31,8 @@ import {
   modelConnectRequest,
   popularModelProvidersFirst,
   savedCompatibleModelIds,
-} from "@rakazo/core";
-import { fetchFresh } from "@rakazo/core/query";
+} from "@unibot/core";
+import { fetchFresh } from "@unibot/core/query";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useCopyText } from "../../lib/copy-text";
@@ -103,6 +105,8 @@ export function useModelSettings(onClose: () => void, scope: SettingsScope) {
   const [accountId, setAccountId] = useState("");
   const [gatewayId, setGatewayId] = useState("");
   const [baseUrl, setBaseUrl] = useState("");
+  const [command, setCommand] = useState("");
+  const [cwd, setCwd] = useState("");
   const [headerRows, setHeaderRows] = useState<ModelHeaderRow[] | null>(null);
   const [reasoning, setReasoning] = useState(false);
   const [thinkingLevel, setThinkingLevel] = useState<ThinkingLevel | null>(null);
@@ -224,6 +228,8 @@ export function useModelSettings(onClose: () => void, scope: SettingsScope) {
   function applyFields(fields: ConnectionFormFields) {
     setEnabledModelIds(fields.enabledModelIds);
     setBaseUrl(fields.baseUrl);
+    setCommand(fields.command);
+    setCwd(fields.cwd);
     setReasoning(fields.reasoning);
     setThinkingLevel(fields.thinkingLevel);
     setMaxTokens(fields.maxTokens);
@@ -295,6 +301,7 @@ export function useModelSettings(onClose: () => void, scope: SettingsScope) {
   const disconnectName = selectedConnectionName;
   const hostCredentialSource = me?.hostCredentialSource ?? "";
   const isOpenAiCompatible = provider === OPENAI_COMPATIBLE_PROVIDER_ID;
+  const isCli = provider === CLI_PROVIDER_ID;
   const isCloudflareGateway = provider === CLOUDFLARE_AI_GATEWAY_PROVIDER_ID;
   const isCloudflare = isCloudflareModelProvider(provider);
   const cloudflareRoutingReady =
@@ -309,7 +316,7 @@ export function useModelSettings(onClose: () => void, scope: SettingsScope) {
   // Effort levels for the staged catalog model — "off" stays out, matching the
   // per-bot Thinking picker.
   const catalogThinkingLevels =
-    !isOpenAiCompatible && selected
+    !isOpenAiCompatible && !isCli && selected
       ? (selected.thinkingLevels ?? []).filter((level) => level !== "off")
       : [];
   const busy = pending !== null || oauthPending;
@@ -328,14 +335,21 @@ export function useModelSettings(onClose: () => void, scope: SettingsScope) {
     probeModels,
   );
   const defaultModelOptions = [...new Set([...enabledModelIds, modelId])];
+  const cliReady = cliConnectionReady({ command, modelId });
   // Saved-connection settings edited without a new key (output limit, gateway ids).
   const settingsDirty =
     !isOpenAiCompatible &&
     Boolean(credential) &&
-    (maxTokens.trim() !== connectionMaxTokensField(provider, credential?.maxTokens) ||
-      (isCloudflare &&
-        (accountId.trim() !== (credential?.accountId ?? "") ||
-          gatewayId.trim() !== (credential?.gatewayId ?? ""))));
+    ((isCli &&
+      (command.trim() !== (credential?.command ?? "") ||
+        cwd.trim() !== (credential?.cwd ?? "") ||
+        modelId.trim() !== (credential?.modelId ?? "") ||
+        maxTokens.trim() !== connectionMaxTokensField(provider, credential?.maxTokens))) ||
+      (!isCli &&
+        (maxTokens.trim() !== connectionMaxTokensField(provider, credential?.maxTokens) ||
+          (isCloudflare &&
+            (accountId.trim() !== (credential?.accountId ?? "") ||
+              gatewayId.trim() !== (credential?.gatewayId ?? ""))))));
 
   function invalidatePreflight() {
     preflightRevisionRef.current += 1;
@@ -523,6 +537,8 @@ export function useModelSettings(onClose: () => void, scope: SettingsScope) {
         modelId,
         enabledModelIds,
         baseUrl,
+        command,
+        cwd,
         headerRows,
         reasoning,
         thinkingLevel,
@@ -576,7 +592,7 @@ export function useModelSettings(onClose: () => void, scope: SettingsScope) {
           credentialId: saved?.id,
         });
       // A fresh connection speaks for itself through the Active model row.
-      if (isOpenAiCompatible || savingLimitOnly) setNotice(t`Saved.`);
+      if (isOpenAiCompatible || isCli || savingLimitOnly) setNotice(t`Saved.`);
     } catch (err) {
       if (stillSelected()) setError(errorText(err, t`Could not connect this provider`));
     } finally {
@@ -647,8 +663,10 @@ export function useModelSettings(onClose: () => void, scope: SettingsScope) {
     catalog,
     catalogThinkingLevels,
     chooseProvider,
+    cliReady,
     cloudflareRoutingReady,
     codeCopied,
+    command,
     compatibleRows,
     confirmDisconnect,
     connectKey,
@@ -658,6 +676,7 @@ export function useModelSettings(onClose: () => void, scope: SettingsScope) {
     credentialByProvider,
     credentials,
     currentEntry,
+    cwd,
     defaultModelOptions,
     disconnectCredential,
     disconnectName,
@@ -671,6 +690,7 @@ export function useModelSettings(onClose: () => void, scope: SettingsScope) {
     invalidatePreflight,
     isCloudflare,
     isCloudflareGateway,
+    isCli,
     isOpenAiCompatible,
     loading,
     maxImagesPerPrompt,
@@ -699,8 +719,10 @@ export function useModelSettings(onClose: () => void, scope: SettingsScope) {
     selectedProviderName,
     selectionRevisionRef,
     setAccountId,
+    setCommand,
     setConfirmDisconnect,
     setContextWindow,
+    setCwd,
     setEnabledModelIds,
     setError,
     setGatewayId,

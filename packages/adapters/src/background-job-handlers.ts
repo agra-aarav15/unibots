@@ -10,11 +10,11 @@ import type {
   PaymentWalletProvider,
   SandboxProvider,
   SecretStore,
-} from "@rakazo/adapter-kit";
-import { messagingDeliverJob } from "@rakazo/adapter-kit";
-import type { PrismaClient, ThreadEvents } from "@rakazo/db";
-import { runAsSystem, runAsTenant } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/adapter-kit";
+import { messagingDeliverJob } from "@unibot/adapter-kit";
+import type { PrismaClient, ThreadEvents } from "@unibot/db";
+import { runAsSystem, runAsTenant } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { settleCallRequest } from "./call-request.js";
 import type { CloudAgentConnection } from "./cloud-agent-factory.js";
 import { pollCloudAgent } from "./cloud-agent-poll.js";

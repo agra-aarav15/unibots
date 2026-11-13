@@ -1,5 +1,5 @@
 import { Duplex, Readable, Writable } from "node:stream";
-import { resolveSupervisorToken } from "@rakazo/core";
+import { resolveSupervisorToken } from "@unibot/core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { computerCommandEnv } from "./supervisor-logic.js";
 
@@ -51,7 +51,7 @@ function post(path: string, body: unknown) {
     headers: {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
-      "x-rakazo-bot-id": "bot",
+      "x-unibot-bot-id": "bot",
       "x-rakazo-space-id": "space",
     },
     body: JSON.stringify(body),

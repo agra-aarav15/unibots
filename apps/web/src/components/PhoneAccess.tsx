@@ -1,6 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useEffect, useState } from "react";
-import { Button } from "@rakazo/ui-web";
+import { Button } from "@unibot/ui-web";
 import { fetchAuthCapabilities } from "../lib/auth-capabilities";
 import { desktopBridge } from "../lib/desktop";
 import { SettingsGroup, SettingsRow } from "./SettingsRows";

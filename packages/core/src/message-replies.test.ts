@@ -1,5 +1,5 @@
-import type { MessageBlock } from "@rakazo/contracts";
-import { ReplyPreviewSchema } from "@rakazo/contracts";
+import type { MessageBlock } from "@unibot/contracts";
+import { ReplyPreviewSchema } from "@unibot/contracts";
 import { describe, expect, it } from "vitest";
 import {
   channelMessageSender,

@@ -5,7 +5,7 @@ import type {
   SpaceMemoryConfig,
   ThreadMessage,
   VoiceStatus,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import {
   answerableAskMessageIds,
   channelMessageSender,
@@ -15,11 +15,11 @@ import {
   isActive,
   isRunWorking,
   memberName,
-} from "@rakazo/core";
-import { fetchFresh, writeSaved } from "@rakazo/core/query";
-import type { GroupAvatarMember } from "@rakazo/ui-web";
-import { Button } from "@rakazo/ui-web";
-import { useIsMobile } from "@rakazo/ui-web/hooks/use-mobile";
+} from "@unibot/core";
+import { fetchFresh, writeSaved } from "@unibot/core/query";
+import type { GroupAvatarMember } from "@unibot/ui-web";
+import { Button } from "@unibot/ui-web";
+import { useIsMobile } from "@unibot/ui-web/hooks/use-mobile";
 import { useQuery } from "@tanstack/react-query";
 import { Lock, Monitor, Moon, Plug, Plus, ScrollText, Sun, Users } from "lucide-react";
 import {
@@ -55,6 +55,8 @@ import { computersAreUnavailable } from "../lib/computer-sandbox";
 import { desktopBridge } from "../lib/desktop";
 import { markAfterPaint, markOnce } from "../lib/performance";
 import { usePreloadRecoveryState } from "../lib/preload-recovery";
+import { lastQueryUser } from "../lib/last-user";
+import { useLocalOwner } from "../lib/local-owner";
 import { lastChatKey, lastChatOf, queryClient, spaceQueries, spaceSeedKey } from "../lib/query";
 import { rightPanelStorageKey } from "../lib/right-panel-state";
 import { createSpaceRpc, selectedSpaceId, selectSpace } from "../lib/rpc";
@@ -119,7 +121,15 @@ function SpaceShell() {
   const [shellSpaceId] = useState(selectedSpaceId);
   const [rpc] = useState(() => createSpaceRpc(shellSpaceId));
   const session = authClient.useSession();
-  const userId = session.data?.user.id;
+  // A reload knows which user it last ran as, so the space reopens from its cached snapshot
+  // while the session request is still in flight. The session still decides access; a sign-out
+  // forgets the remembered user, so a different account never opens on the previous one's data.
+  // A local server names its owner in the public capabilities, which needs no session at all.
+  const owner = useLocalOwner();
+  const userId =
+    session.data?.user.id ??
+    owner?.id ??
+    (session.isPending ? (lastQueryUser() ?? undefined) : undefined);
   const [createMenuOpen, setCreateMenuOpen] = useCreateMenu();
   // A revisited space, or the shell reopened from another page, starts from what it showed
   // last time while its fresh bootstrap loads.

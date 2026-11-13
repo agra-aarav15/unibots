@@ -1,5 +1,5 @@
-import type { MessageBlock, ReplyPreview } from "@rakazo/contracts";
-import { ReplyPreviewSchema } from "@rakazo/contracts";
+import type { MessageBlock, ReplyPreview } from "@unibot/contracts";
+import { ReplyPreviewSchema } from "@unibot/contracts";
 import { displayName } from "./display-name.js";
 import { plainTextFromMarkdown } from "./markdown-plain.js";
 

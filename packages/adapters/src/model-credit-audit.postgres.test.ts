@@ -1,5 +1,5 @@
-import type { AgentRuntimeEvent, AgentUsage, ModelUsageLookup } from "@rakazo/adapter-kit";
-import type { PrismaClient } from "@rakazo/db";
+import type { AgentRuntimeEvent, AgentUsage, ModelUsageLookup } from "@unibot/adapter-kit";
+import type { PrismaClient } from "@unibot/db";
 import {
   asSystem,
   createDb,
@@ -8,7 +8,7 @@ import {
   recordModelCreditReceipt,
   recordUsage,
   reserveModelCredits,
-} from "@rakazo/db";
+} from "@unibot/db";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { createModelCreditReconciler } from "./model-credit-reconciler.js";
 

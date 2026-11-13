@@ -2,15 +2,15 @@ import { randomBytes } from "node:crypto";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import type { JobPublisher, SandboxProvider } from "@rakazo/adapter-kit";
-import { LocalAgentHomeStore } from "@rakazo/adapters";
-import type { AccountExportRecord, Actor } from "@rakazo/contracts";
+import type { JobPublisher, SandboxProvider } from "@unibot/adapter-kit";
+import { LocalAgentHomeStore } from "@unibot/adapters";
+import type { AccountExportRecord, Actor } from "@unibot/contracts";
 import {
   AccountExportManifestSchema,
   AccountExportRecordSchema,
   accountExportPaths,
-} from "@rakazo/contracts";
-import type { PrismaClient } from "@rakazo/db";
+} from "@unibot/contracts";
+import type { PrismaClient } from "@unibot/db";
 import {
   createDb,
   createThreadMessage,
@@ -18,7 +18,7 @@ import {
   masterKeysFromEnv,
   readAccountExport,
   runAsSystem,
-} from "@rakazo/db";
+} from "@unibot/db";
 import { unzipSync } from "fflate";
 import { Hono } from "hono";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -241,7 +241,7 @@ describePostgres("account export (PostgreSQL)", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("content-type")).toBe("application/zip");
     expect(response.headers.get("content-disposition")).toMatch(
-      /^attachment; filename="rakazo-export-\d{4}-\d{2}-\d{2}\.zip"$/,
+      /^attachment; filename="unibot-export-\d{4}-\d{2}-\d{2}\.zip"$/,
     );
     const entries = unzipSync(new Uint8Array(await response.arrayBuffer()));
     const decode = (path: string) => new TextDecoder().decode(entries[path]);
@@ -343,7 +343,7 @@ describePostgres("account export (PostgreSQL)", () => {
       );
     const archive = await download(exporter);
 
-    const root = await mkdtemp(path.join(tmpdir(), "rakazo-account-roundtrip-"));
+    const root = await mkdtemp(path.join(tmpdir(), "unibot-account-roundtrip-"));
     const noop = new Proxy({}, { get: () => async () => undefined });
     const actor: Actor = {
       userId: importer,

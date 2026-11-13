@@ -1,6 +1,6 @@
 # Letting a team reach your instance
 
-Unibots runs on a machine you control, and by default it listens on `127.0.0.1` only: nothing
+UniBot runs on a machine you control, and by default it listens on `127.0.0.1` only: nothing
 outside that machine can reach it. To let a few people use the same instance, pick one of the
 paths below, then give them a way in.
 
@@ -55,7 +55,7 @@ Set all four to the origin people actually type, with no trailing slash:
 | `WEB_ORIGIN` | Where the web app is served, e.g. `https://bots.example.com` |
 | `BETTER_AUTH_URL` | The same origin: sessions and cookies are bound to it |
 | `API_URL` | The API's public origin, e.g. `https://bots.example.com` |
-| `RAKAZO_HOST` | The hostname for the reverse proxy's virtual host |
+| `UNIBOT_HOST` | The hostname for the reverse proxy's virtual host |
 
 An origin that does not match is refused: sign-in posts, cookies and websockets all fail closed
 rather than silently working insecurely.

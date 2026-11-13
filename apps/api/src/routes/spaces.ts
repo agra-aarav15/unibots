@@ -1,6 +1,6 @@
 import { ORPCError } from "@orpc/server";
-import type { Actor, SpaceInvitation, SpaceMember, SpaceNavigation } from "@rakazo/contracts";
-import type { createGroupRepos, createRepos, PrismaClient } from "@rakazo/db";
+import type { Actor, SpaceInvitation, SpaceMember, SpaceNavigation } from "@unibot/contracts";
+import type { createGroupRepos, createRepos, PrismaClient } from "@unibot/db";
 import {
   AlreadySpaceMemberError,
   acceptSpaceInvitation,
@@ -32,7 +32,7 @@ import {
   setSpaceMemberRole,
   setSpaceSettingOverride,
   spaceSettingOverrides,
-} from "@rakazo/db";
+} from "@unibot/db";
 import type { RouterDeps } from "../router.js";
 import { listRoutinesDto } from "../routines.js";
 import { deleteSpaceWithContent } from "../space-deletion.js";

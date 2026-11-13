@@ -1,9 +1,9 @@
 import { hostname } from "node:os";
 import { setTimeout as sleep } from "node:timers/promises";
-import type { JobPublisher, JobWorkerHost } from "@rakazo/adapter-kit";
-import { ComposioConnector, IntegrationProviderSettings } from "@rakazo/adapters";
-import { phoneCallSettings } from "@rakazo/core";
-import { loadRootEnv } from "@rakazo/core/node/load-root-env";
+import type { JobPublisher, JobWorkerHost } from "@unibot/adapter-kit";
+import { ComposioConnector, IntegrationProviderSettings } from "@unibot/adapters";
+import { phoneCallSettings } from "@unibot/core";
+import { loadRootEnv } from "@unibot/core/node/load-root-env";
 import { startWorkerHealth } from "./health.js";
 import { createWorkerSecretStore } from "./secret-store.js";
 
@@ -72,8 +72,8 @@ import {
   userDeviceForwardSecret,
   withRunWorker,
   withSecretPersistence,
-} from "@rakazo/adapters";
-import { resolveEncryptionKey, resolveSupervisorToken, uploadSizeFromEnv } from "@rakazo/core";
+} from "@unibot/adapters";
+import { resolveEncryptionKey, resolveSupervisorToken, uploadSizeFromEnv } from "@unibot/core";
 import {
   createBoardEvents,
   createDb,
@@ -90,10 +90,10 @@ import {
   securityEventRetentionDays,
   verifyContentKeys,
   withPostgresAdvisoryLock,
-} from "@rakazo/db";
-import { SERVICE_NAMES } from "@rakazo/logging";
-import { createRootLogger } from "@rakazo/logging/axiom";
-import { MarkdownMemoryStore } from "@rakazo/memory";
+} from "@unibot/db";
+import { SERVICE_NAMES } from "@unibot/logging";
+import { createRootLogger } from "@unibot/logging/axiom";
+import { MarkdownMemoryStore } from "@unibot/memory";
 
 const logger = createRootLogger(SERVICE_NAMES.worker);
 
@@ -110,7 +110,7 @@ async function main() {
   // A larger max competes for Postgres max_connections (53300).
   const created = createDb(databaseUrl, {
     poolMax,
-    applicationName: "rakazo-worker",
+    applicationName: "unibot-worker",
     keyProvider: contentKeyProviderFromEnv(),
   });
   const { pool } = created;
@@ -289,7 +289,8 @@ async function main() {
       process.env.TYPESAFE_API_KEY ?? "",
     ].filter(Boolean),
     secretStore: secrets,
-    mcpAllowPrivateEndpoint: process.env.MCP_ALLOW_PRIVATE_ENDPOINT === "true",
+    mcpAllowPrivateEndpoint:
+      process.env.AUTH_MODE === "local" || process.env.MCP_ALLOW_PRIVATE_ENDPOINT === "true",
     mcpStdio,
     deploymentModelKey,
     deploymentModelConfigured,

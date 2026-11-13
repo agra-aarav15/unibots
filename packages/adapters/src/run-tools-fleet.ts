@@ -1,5 +1,5 @@
-import { BOT_INSTRUCTIONS_MAX_LENGTH } from "@rakazo/contracts";
-import { redactSecrets } from "@rakazo/core";
+import { BOT_INSTRUCTIONS_MAX_LENGTH } from "@unibot/contracts";
+import { redactSecrets } from "@unibot/core";
 import {
   createSpaceForMember,
   InstructionConflictError,
@@ -7,8 +7,8 @@ import {
   runAsSystem,
   SpaceLimitError,
   writeBotInstructions,
-} from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { uncertainEffectResult } from "./approval-effect.js";
 import { archiveSpawnedBot, spawnBot } from "./child-bots.js";
 import {

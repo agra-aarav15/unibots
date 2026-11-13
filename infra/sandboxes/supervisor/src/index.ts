@@ -11,11 +11,11 @@ import {
   readBoundedJsonResponse,
   resolveSupervisorToken,
   uploadSizeFromEnv,
-} from "@rakazo/core";
-import { loadRootEnv } from "@rakazo/core/node/load-root-env";
-import { getLogger, SERVICE_NAMES } from "@rakazo/logging";
-import { createRootLogger } from "@rakazo/logging/axiom";
-import { requestLogging } from "@rakazo/logging/hono";
+} from "@unibot/core";
+import { loadRootEnv } from "@unibot/core/node/load-root-env";
+import { getLogger, SERVICE_NAMES } from "@unibot/logging";
+import { createRootLogger } from "@unibot/logging/axiom";
+import { requestLogging } from "@unibot/logging/hono";
 import Docker from "dockerode";
 import type { MiddlewareHandler } from "hono";
 import { Hono } from "hono";
@@ -111,7 +111,7 @@ loadRootEnv();
 const dockerSocketPath = resolveDockerSocketPath();
 const docker = dockerSocketPath ? new Docker({ socketPath: dockerSocketPath }) : new Docker();
 const computerContext =
-  process.env.RAKAZO_COMPUTER_CONTEXT ??
+  process.env.UNIBOT_COMPUTER_CONTEXT ??
   path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../computer");
 const ensureComputerImage = computerImageEnsurer(docker, COMPUTER_IMAGE, computerContext);
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
@@ -224,7 +224,7 @@ app.post("/computers", async (c) => {
     })
     .parse(await c.req.json());
   try {
-    assertRequestIdentity(c.req.header("x-rakazo-bot-id"), c.req.header("x-rakazo-space-id"), {
+    assertRequestIdentity(c.req.header("x-unibot-bot-id"), c.req.header("x-rakazo-space-id"), {
       botId: body.botId,
       spaceId: body.spaceId,
     });
@@ -403,7 +403,7 @@ app.get("/computers/:id", async (c) => {
   try {
     const { info } = await managedContainer(
       id,
-      c.req.header("x-rakazo-bot-id"),
+      c.req.header("x-unibot-bot-id"),
       c.req.header("x-rakazo-space-id"),
     );
     return c.json({
@@ -433,13 +433,13 @@ app.post("/computers/:id/exec", async (c) => {
   try {
     const managed = await managedContainer(
       id,
-      c.req.header("x-rakazo-bot-id"),
+      c.req.header("x-unibot-bot-id"),
       c.req.header("x-rakazo-space-id"),
     );
     // Docker would fail the exec inside the stream; answer up front so the caller can boot it.
     if (!managed.info.State.Running) return c.json({ error: "computer is not running" }, 409);
     container = managed.container;
-    const screenId = c.req.header("x-rakazo-screen-id") || c.req.header("x-rakazo-bot-id") || id;
+    const screenId = c.req.header("x-unibot-screen-id") || c.req.header("x-unibot-bot-id") || id;
     const screenIndex = computerScreens.get(id)?.get(screenId)?.index ?? 0;
     layout = screenPorts(screenIndex);
   } catch (error) {
@@ -468,7 +468,7 @@ app.post("/computers/:id/exec", async (c) => {
           container,
           body.argv.length ? body.argv : ["/bin/echo", "ready"],
           {
-            workingDir: body.cwd ?? "/home/rakazo",
+            workingDir: body.cwd ?? "/home/unibot",
             env: [
               ...computerCommandEnv(layout),
               ...Object.entries(body.env ?? {}).map(([k, v]) => `${k}=${v}`),
@@ -585,10 +585,10 @@ app.post("/computers/:id/browser", async (c) => {
   const screen = (reuseRecent: boolean) =>
     managedScreen(
       c.req.param("id"),
-      c.req.header("x-rakazo-bot-id"),
+      c.req.header("x-unibot-bot-id"),
       c.req.header("x-rakazo-space-id"),
-      c.req.header("x-rakazo-screen-id"),
-      c.req.header("x-rakazo-screen-lease-id"),
+      c.req.header("x-unibot-screen-id"),
+      c.req.header("x-unibot-screen-lease-id"),
       true,
       reuseRecent,
     );
@@ -600,20 +600,20 @@ app.post("/computers/:id/browser", async (c) => {
       // also keep the argv copy so a computer still on an older image keeps working until it is
       // replaced.
       [
-        "/usr/local/bin/rakazo-page-browser",
+        "/usr/local/bin/unibot-page-browser",
         body.command,
         ...(carriesSavedLogin ? [] : [JSON.stringify(body)]),
       ],
       {
         env: [
           `DISPLAY=${layout.display}`,
-          `RAKAZO_CDP_PORT=${layout.debugPort}`,
-          "HOME=/home/rakazo",
+          `UNIBOT_CDP_PORT=${layout.debugPort}`,
+          "HOME=/home/unibot",
           "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-          "RAKAZO_BROWSER_WATCH_STDIN=1",
-          "RAKAZO_BROWSER_ARGS_STDIN=1",
-          ...(process.env.RAKAZO_BROWSER_UPLOAD_MAX_BYTES !== undefined
-            ? [`RAKAZO_BROWSER_UPLOAD_MAX_BYTES=${process.env.RAKAZO_BROWSER_UPLOAD_MAX_BYTES}`]
+          "UNIBOT_BROWSER_WATCH_STDIN=1",
+          "UNIBOT_BROWSER_ARGS_STDIN=1",
+          ...(process.env.UNIBOT_BROWSER_UPLOAD_MAX_BYTES !== undefined
+            ? [`UNIBOT_BROWSER_UPLOAD_MAX_BYTES=${process.env.UNIBOT_BROWSER_UPLOAD_MAX_BYTES}`]
             : []),
         ],
         timeoutMs: 25_000,
@@ -658,10 +658,10 @@ app.post("/computers/:id/observe", async (c) => {
   try {
     const { container, info, layout, browserProfile } = await managedScreen(
       c.req.param("id"),
-      c.req.header("x-rakazo-bot-id"),
+      c.req.header("x-unibot-bot-id"),
       c.req.header("x-rakazo-space-id"),
-      c.req.header("x-rakazo-screen-id"),
-      c.req.header("x-rakazo-screen-lease-id"),
+      c.req.header("x-unibot-screen-id"),
+      c.req.header("x-unibot-screen-lease-id"),
     );
     const control = computerControlEndpoint(info);
     const observation = await preferComputerControl(
@@ -699,10 +699,10 @@ app.post("/computers/:id/actions", async (c) => {
   try {
     const { container, info, layout, browserProfile } = await managedScreen(
       c.req.param("id"),
-      c.req.header("x-rakazo-bot-id"),
+      c.req.header("x-unibot-bot-id"),
       c.req.header("x-rakazo-space-id"),
-      c.req.header("x-rakazo-screen-id"),
-      c.req.header("x-rakazo-screen-lease-id"),
+      c.req.header("x-unibot-screen-id"),
+      c.req.header("x-unibot-screen-lease-id"),
     );
     const endpoint = computerControlEndpoint(info);
     const control =
@@ -745,7 +745,7 @@ app.get("/computers/:id/files", async (c) => {
   try {
     const { container } = await managedContainer(
       c.req.param("id"),
-      c.req.header("x-rakazo-bot-id"),
+      c.req.header("x-unibot-bot-id"),
       c.req.header("x-rakazo-space-id"),
     );
     const relative = normalizeWorkspaceRelative(c.req.query("path") ?? "");
@@ -808,7 +808,7 @@ app.post("/computers/:id/files", async (c) => {
   try {
     const { container } = await managedContainer(
       c.req.param("id"),
-      c.req.header("x-rakazo-bot-id"),
+      c.req.header("x-unibot-bot-id"),
       c.req.header("x-rakazo-space-id"),
     );
     const target = workspaceTarget(normalizeWorkspaceRelative(body.path));
@@ -830,10 +830,10 @@ app.get("/computers/:id/screen", async (c) => {
   try {
     const { container, info, layout, viewToken } = await managedScreen(
       id,
-      c.req.header("x-rakazo-bot-id"),
+      c.req.header("x-unibot-bot-id"),
       c.req.header("x-rakazo-space-id"),
-      c.req.header("x-rakazo-screen-id"),
-      c.req.header("x-rakazo-screen-lease-id"),
+      c.req.header("x-unibot-screen-id"),
+      c.req.header("x-unibot-screen-lease-id"),
       false,
     );
     const screenUrl = await publishedScreenUrl(container, info, layout.viewPort);
@@ -859,10 +859,10 @@ app.post("/computers/:id/screen-mode", async (c) => {
     .parse(await c.req.json());
   try {
     const id = c.req.param("id");
-    const botId = c.req.header("x-rakazo-bot-id");
+    const botId = c.req.header("x-unibot-bot-id");
     const spaceId = c.req.header("x-rakazo-space-id");
-    const screenId = c.req.header("x-rakazo-screen-id");
-    const screenLeaseId = c.req.header("x-rakazo-screen-lease-id");
+    const screenId = c.req.header("x-unibot-screen-id");
+    const screenLeaseId = c.req.header("x-unibot-screen-lease-id");
     const { container, info } = await managedContainer(id, botId, spaceId);
     const { layout, viewToken } = await withComputerScreenLock(id, async () => {
       const screen = await ensureManagedScreen(
@@ -916,7 +916,7 @@ app.post("/computers/:id/terminal", async (c) => {
     .parse(await c.req.json());
   try {
     const id = c.req.param("id");
-    const botId = c.req.header("x-rakazo-bot-id");
+    const botId = c.req.header("x-unibot-bot-id");
     const { container, info } = await managedContainer(
       id,
       botId,
@@ -929,8 +929,8 @@ app.post("/computers/:id/terminal", async (c) => {
         id,
         container,
         botId,
-        c.req.header("x-rakazo-screen-id"),
-        c.req.header("x-rakazo-screen-lease-id"),
+        c.req.header("x-unibot-screen-id"),
+        c.req.header("x-unibot-screen-lease-id"),
         false,
       );
       const result = await runContainerCommand(
@@ -980,10 +980,10 @@ app.post("/computers/:id/input", async (c) => {
   try {
     const { container, layout } = await managedScreen(
       id,
-      c.req.header("x-rakazo-bot-id"),
+      c.req.header("x-unibot-bot-id"),
       c.req.header("x-rakazo-space-id"),
-      c.req.header("x-rakazo-screen-id"),
-      c.req.header("x-rakazo-screen-lease-id"),
+      c.req.header("x-unibot-screen-id"),
+      c.req.header("x-unibot-screen-lease-id"),
     );
     const result = await runContainerCommand(container, [
       "env",
@@ -1007,14 +1007,14 @@ app.delete("/computers/:id/screen", async (c) => {
     const id = c.req.param("id");
     const { container } = await managedContainer(
       id,
-      c.req.header("x-rakazo-bot-id"),
+      c.req.header("x-unibot-bot-id"),
       c.req.header("x-rakazo-space-id"),
     );
     containerFound = true;
-    const screenId = c.req.header("x-rakazo-screen-id") || c.req.header("x-rakazo-bot-id") || id;
-    const cancelRunWork = c.req.header("x-rakazo-cancel-run-work") === "1";
-    const keepScreenWarm = c.req.header("x-rakazo-preserve-screen") === "1" && !cancelRunWork;
-    const screenLeaseId = c.req.header("x-rakazo-screen-lease-id");
+    const screenId = c.req.header("x-unibot-screen-id") || c.req.header("x-unibot-bot-id") || id;
+    const cancelRunWork = c.req.header("x-unibot-cancel-run-work") === "1";
+    const keepScreenWarm = c.req.header("x-unibot-preserve-screen") === "1" && !cancelRunWork;
+    const screenLeaseId = c.req.header("x-unibot-screen-lease-id");
     await withComputerScreenLock(id, async () => {
       const info = await container.inspect();
       const assigned = currentComputerScreens(
@@ -1093,7 +1093,7 @@ app.delete("/computers/:id/screen", async (c) => {
 
 app.post("/computers/:id/stop", async (c) => {
   const id = c.req.param("id");
-  const botId = c.req.header("x-rakazo-bot-id");
+  const botId = c.req.header("x-unibot-bot-id");
   try {
     const { container } = await managedContainer(id, botId, c.req.header("x-rakazo-space-id"));
     await withComputerScreenLock(id, async () => {
@@ -1133,7 +1133,7 @@ app.post("/computers/:id/stop", async (c) => {
 
 app.delete("/computers/:id", async (c) => {
   const id = c.req.param("id");
-  const botId = c.req.header("x-rakazo-bot-id");
+  const botId = c.req.header("x-unibot-bot-id");
   try {
     if (!botId) throw new Error("missing computer identity");
     return await withBotLifecycleLock(botId, async () => {
@@ -1162,7 +1162,7 @@ app.delete("/computers/:id", async (c) => {
 function startSupervisor() {
   const logger = createRootLogger(SERVICE_NAMES.supervisor);
   // Resolve the ceilings before binding the port. They are otherwise parsed inside
-  // containerCreateOptions, so a malformed RAKAZO_COMPUTER_* value would let the supervisor start
+  // containerCreateOptions, so a malformed UNIBOT_COMPUTER_* value would let the supervisor start
   // and pass its healthcheck, then fail the first POST /computers with a 500 that reads like a
   // Docker problem. Failing here names the variable while the deployment is still coming up.
   computerResourceLimits();
@@ -1213,7 +1213,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   startSupervisor();
 }
 
-// Enforcement is host-side (DOCKER-USER/INPUT on rakazo-c* bridges); the flag only
+// Enforcement is host-side (DOCKER-USER/INPUT on unibot-c* bridges); the flag only
 // names the interfaces. Refuse restricted computers until a probe shows the host
 // rules are in place. Only success is cached, so installing the rules needs no restart.
 // `auto` keeps the first answer a completed probe gives: restricted when the rules are in place,
@@ -1265,7 +1265,7 @@ async function findBotContainer(botId: string, spaceId: string) {
   for (const item of listed) {
     const container = docker.getContainer(item.Id);
     const info = await container.inspect();
-    if (isRakazoContainer(info, botId, spaceId)) return container;
+    if (isUniBotContainer(info, botId, spaceId)) return container;
   }
   return undefined;
 }
@@ -1273,7 +1273,7 @@ async function findBotContainer(botId: string, spaceId: string) {
 /** Count managed computers for a space, including legacy workspaceId / unlabeled-managed. */
 export async function countSpaceContainers(spaceId: string): Promise<number> {
   // Do not filter by rakazo.managed=true: legacy computers are still managed via
-  // COMPUTER_IMAGE + rakazo.workspaceId (same rule as isRakazoContainer).
+  // COMPUTER_IMAGE + rakazo.workspaceId (same rule as isUniBotContainer).
   const listed = await docker.listContainers({ all: true });
   let count = 0;
   for (const item of listed) {
@@ -1294,7 +1294,7 @@ async function isManagedSpaceContainer(
     if (labels["rakazo.managed"] === "true" || item.Image === COMPUTER_IMAGE) return true;
     // Space matches but Image may be an ID after the tag moved — confirm via inspect.
   }
-  // Missing list Labels: inspect with the same managed rule as isRakazoContainer.
+  // Missing list Labels: inspect with the same managed rule as isUniBotContainer.
   try {
     const info = await docker.getContainer(item.Id).inspect();
     const infoLabels = info.Config?.Labels ?? {};
@@ -1314,7 +1314,7 @@ async function managedContainer(id: string, botId?: string, spaceId?: string) {
   if (!botId || !spaceId) throw new ComputerIdentityError("missing computer identity");
   const container = docker.getContainer(id);
   const info = await container.inspect();
-  if (!isRakazoContainer(info, botId, spaceId))
+  if (!isUniBotContainer(info, botId, spaceId))
     throw new ComputerIdentityError("computer identity mismatch");
   return { container, info };
 }
@@ -1476,7 +1476,7 @@ async function ensureManagedScreenAttempt(
     const browserLog = await runContainerCommand(container, [
       "bash",
       "-c",
-      `tail -c 4000 /tmp/rakazo/screen-${layout.displayNumber}-browser.log 2>/dev/null || true`,
+      `tail -c 4000 /tmp/unibot/screen-${layout.displayNumber}-browser.log 2>/dev/null || true`,
     ]).catch(() => ({ stdout: "", stderr: "", code: 1 }));
     releaseAssignedScreen(assigned, screenKey);
     await teardownReleasedScreen(assigned, screenKey, index, () =>
@@ -1501,7 +1501,7 @@ async function ensureManagedScreenAttempt(
   };
 }
 
-function isRakazoContainer(info: Docker.ContainerInspectInfo, botId: string, spaceId: string) {
+function isUniBotContainer(info: Docker.ContainerInspectInfo, botId: string, spaceId: string) {
   const labels = info.Config.Labels ?? {};
   const managed = labels["rakazo.managed"] === "true" || info.Config.Image === COMPUTER_IMAGE;
   return managed && hasComputerIdentity(labels, botId, spaceId);
@@ -1516,8 +1516,8 @@ function assertBotHomePath(homePath: string, botId: string) {
 
 function computerControlEndpoint(info: Docker.ContainerInspectInfo) {
   const token = info.Config.Env?.find((value) =>
-    value.startsWith("RAKAZO_COMPUTER_CONTROL_TOKEN="),
-  )?.slice("RAKAZO_COMPUTER_CONTROL_TOKEN=".length);
+    value.startsWith("UNIBOT_COMPUTER_CONTROL_TOKEN="),
+  )?.slice("UNIBOT_COMPUTER_CONTROL_TOKEN=".length);
   const publishedHostPort = controlViaLoopback
     ? publishedLoopbackControlHostPort(info.NetworkSettings?.Ports)
     : undefined;
@@ -1665,7 +1665,7 @@ async function setInteractiveScreen(
     interactiveScreenCommand(interactive, controlToken, layout),
   ]);
   if (result.code !== 0) throw new Error(result.stderr || "control screen failed to start");
-  return interactive || !controlToken || result.stdout.includes("RAKAZO_CONTROL_RELEASED\n");
+  return interactive || !controlToken || result.stdout.includes("UNIBOT_CONTROL_RELEASED\n");
 }
 
 // Each bot's computer gets its own Docker network so containers cannot reach
@@ -2013,7 +2013,7 @@ async function runContainerCommand(
   options.signal?.throwIfAborted();
   const timeoutMs = options.timeoutMs;
   const completionMarker = timeoutMs
-    ? `/tmp/rakazo-command-${randomUUID()}.completed-124`
+    ? `/tmp/unibot-command-${randomUUID()}.completed-124`
     : undefined;
   const command =
     completionMarker && timeoutMs !== undefined
@@ -2024,10 +2024,10 @@ async function runContainerCommand(
     AttachStdout: true,
     AttachStderr: true,
     ...(options.signal ? { AttachStdin: true } : {}),
-    WorkingDir: options.workingDir ?? "/home/rakazo",
+    WorkingDir: options.workingDir ?? "/home/unibot",
     Env: options.env ?? [
       "DISPLAY=:1",
-      "HOME=/home/rakazo",
+      "HOME=/home/unibot",
       "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
     ],
   });
@@ -2152,8 +2152,8 @@ async function writeContainerFile(
     AttachStdin: true,
     AttachStdout: true,
     AttachStderr: true,
-    WorkingDir: "/home/rakazo",
-    Env: ["HOME=/home/rakazo"],
+    WorkingDir: "/home/unibot",
+    Env: ["HOME=/home/unibot"],
   });
   const stream = await exec.start({ hijack: true, stdin: true });
   const chunks: Buffer[] = [];

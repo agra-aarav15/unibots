@@ -8,8 +8,8 @@ import {
   githubToolResultHasSeededRelease,
   RELEASE_WATCH_GITHUB_TOOL_NAMES,
   resolveReleaseWatchEvalModelId,
-} from "@rakazo/adapters";
-import { loadRootEnv } from "@rakazo/core/node/load-root-env";
+} from "@unibot/adapters";
+import { loadRootEnv } from "@unibot/core/node/load-root-env";
 import { afterAll, describe, expect, it } from "vitest";
 import { sessionCookieHeader } from "./index.js";
 
@@ -38,8 +38,8 @@ describeLive("live release-watch eval (GPT 5.6 Luna + GitHub emulator)", () => {
     const { modelId, label } = resolveReleaseWatchEvalModelId(process.env);
     process.env.PI_DEFAULT_MODEL = modelId;
 
-    const { createApp } = await import("@rakazo/api/app");
-    dataDir = mkdtempSync(path.join(tmpdir(), "rakazo-release-watch-"));
+    const { createApp } = await import("@unibot/api/app");
+    dataDir = mkdtempSync(path.join(tmpdir(), "unibot-release-watch-"));
     const handles = await createApp({
       databaseUrl: process.env.DATABASE_URL!,
       dataDir,
@@ -118,7 +118,7 @@ describeLive("live release-watch eval (GPT 5.6 Luna + GitHub emulator)", () => {
     );
     expect(routines.length).toBeGreaterThan(0);
     const routine =
-      routines.find((row) => /rakazo|release/i.test(`${row.name}\n${row.prompt}`)) ?? routines[0]!;
+      routines.find((row) => /unibot|release/i.test(`${row.name}\n${row.prompt}`)) ?? routines[0]!;
 
     const dueAt = new Date(Date.now() - 1_000);
     await handles.prisma.routine.update({

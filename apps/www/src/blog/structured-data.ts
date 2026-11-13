@@ -31,7 +31,7 @@ export function blogPostStructuredData(input: {
           url: `${SITE_URL}/`,
           logo: {
             "@type": "ImageObject",
-            url: `${SITE_URL}/brand/unibots-mark.png`,
+            url: `${SITE_URL}/brand/unibot-mark.png`,
           },
         },
         image: [input.image],

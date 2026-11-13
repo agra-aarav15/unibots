@@ -8,7 +8,7 @@ import type {
   SemanticMemoryResponse,
   SemanticMemoryResult,
   SemanticMemorySaveRequest,
-} from "@rakazo/adapter-kit";
+} from "@unibot/adapter-kit";
 import { egressRefused } from "./network-address.js";
 import type { SerenityConnectionConfig, SerenityNetworkDependencies } from "./serenity-client.js";
 import {
@@ -160,12 +160,12 @@ export function sanitizeSerenityBrainLabel(label: string): string {
 // adding a path segment.
 export function serenityBotEntity(botId: string, brainLabel = ""): string {
   const label = sanitizeSerenityBrainLabel(brainLabel);
-  return label ? `rakazo-bot/${label}--${botId}` : `rakazo-bot/${botId}`;
+  return label ? `unibot-bot/${label}--${botId}` : `unibot-bot/${botId}`;
 }
 
 export function serenitySpaceEntity(spaceId: string, brainLabel = ""): string {
   const label = sanitizeSerenityBrainLabel(brainLabel);
-  return label ? `rakazo-space/${label}--${spaceId}` : `rakazo-space/${spaceId}`;
+  return label ? `unibot-space/${label}--${spaceId}` : `unibot-space/${spaceId}`;
 }
 
 function recallEntities(
@@ -196,7 +196,7 @@ function rememberOperationKey(runScope: string, entity: string, fact: string): s
     .update(`${runScope}\n${entity}\n${fact.trim()}`)
     .digest("hex")
     .slice(0, 48);
-  return `rakazo:${digest}`;
+  return `unibot:${digest}`;
 }
 
 const wordSegmenter = new Intl.Segmenter("en", { granularity: "word" });
@@ -262,7 +262,7 @@ export class SerenityMemoryProvider implements SemanticMemoryProvider {
     request: SemanticMemoryRecallRequest,
     context: AdapterContext,
   ): Promise<SemanticMemoryResponse<SemanticMemoryResult[]>> {
-    // History compaction stays in Unibots; Serenity is the durable brain only.
+    // History compaction stays in UniBot; Serenity is the durable brain only.
     const entities = recallEntities(
       request.scope,
       request.botId,
@@ -322,7 +322,7 @@ export class SerenityMemoryProvider implements SemanticMemoryProvider {
       context.spaceId,
       this.connection.brainLabel,
     );
-    const provenance = `rakazo space:${context.spaceId} bot:${request.botId}`;
+    const provenance = `unibot space:${context.spaceId} bot:${request.botId}`;
     const result = await rememberSerenity(request.content, provenance, this.connection, {
       entity,
       operationKey: rememberOperationKey(

@@ -1,7 +1,7 @@
 import { useLingui } from "@lingui/react/macro";
-import type { ReplyPreview, ThreadMessage } from "@rakazo/contracts";
-import { formatTimeSeparator, isPeerReceiptBlocks, replyLabel } from "@rakazo/core";
-import { cn } from "@rakazo/ui-web";
+import type { ReplyPreview, ThreadMessage } from "@unibot/contracts";
+import { formatTimeSeparator, isPeerReceiptBlocks, replyLabel } from "@unibot/core";
+import { cn } from "@unibot/ui-web";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { ArtifactTarget } from "../../lib/artifact-open";

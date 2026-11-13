@@ -1,6 +1,6 @@
 # Local-first
 
-Unibots runs on your own computer or your own server. No hosted service is involved: the desktop
+UniBot runs on your own computer or your own server. No hosted service is involved: the desktop
 app either runs the whole stack locally in Docker or connects to an instance you run, and the
 phone connects to one of those two. This page lists where data lives, what leaves the machine,
 and how to back up, recover, and turn things off.
@@ -9,13 +9,13 @@ and how to back up, recover, and turn things off.
 
 The desktop app keeps the Compose project in its user data directory:
 
-- Windows: `%APPDATA%\Unibots\stack`
-- macOS: `~/Library/Application Support/Unibots/stack`
-- Linux: `~/.config/Unibots/stack`
+- Windows: `%APPDATA%\UniBot\stack`
+- macOS: `~/Library/Application Support/UniBot/stack`
+- Linux: `~/.config/UniBot/stack`
 
 That folder holds `.env` (generated secrets), `docker-compose.images.yml`, the LAN overlay, and
 the private stack token. It does not hold your data. The data is in Docker volumes named after
-the project (`rakazo-desktop_...`):
+the project (`unibot-desktop_...`):
 
 | Volume | Holds |
 | --- | --- |
@@ -23,15 +23,15 @@ the project (`rakazo-desktop_...`):
 | `appdata` | `/data`: uploads, artifacts, and bot homes under `/data/homes` |
 | `webassets` | Hashed web assets from earlier builds, so open tabs keep loading |
 
-A source checkout or VPS uses the same layout with the `data/` directory and the `rakazo` Compose
+A source checkout or VPS uses the same layout with the `data/` directory and the `unibot` Compose
 project. See [self-host storage](./self-host-storage.md) for what is in Postgres versus `DATA_DIR`.
 
 ## What leaves the machine
 
 - The model provider you configure, for the bot's replies and for memory curation.
-- The image registry, when the stack pulls Unibots images the first time.
+- The image registry, when the stack pulls UniBot images the first time.
 - Any integration you set up yourself (messaging, voice, object storage).
-- Update checks only when you ask for one, or when you set `RAKAZO_AUTO_UPDATE=on`.
+- Update checks only when you ask for one, or when you set `UNIBOT_AUTO_UPDATE=on`.
 
 There is no analytics, error tracking, email, billing, or hosted control plane. With no model
 configured, a local install makes no outbound request during signup, chat, or settings.
@@ -46,8 +46,8 @@ ollama pull llama3.2
 ```
 
 ```bash
-RAKAZO_LOCAL_MODELS=llama3.2
-RAKAZO_LOCAL_MODELS_URL=http://host.docker.internal:11434/v1
+UNIBOT_LOCAL_MODELS=llama3.2
+UNIBOT_LOCAL_MODELS_URL=http://host.docker.internal:11434/v1
 ```
 
 Restart the stack. The model connection screen then offers a keyless local provider next to any
@@ -63,8 +63,8 @@ restored. See [backup and restore](./self-host-backups.md). For the desktop stac
 
 ```bash
 docker compose --env-file .env -f docker-compose.images.yml exec -T postgres \
-  pg_dump -U rakazo rakazo > rakazo.sql
-docker run --rm -v rakazo-desktop_appdata:/data -v "$PWD":/backup busybox \
+  pg_dump -U unibot unibot > rakazo.sql
+docker run --rm -v unibot-desktop_appdata:/data -v "$PWD":/backup busybox \
   tar czf /backup/appdata.tgz -C /data .
 ```
 

@@ -1,4 +1,4 @@
-import type { ModelCredential } from "@rakazo/contracts";
+import type { ModelCredential } from "@unibot/contracts";
 import { describe, expect, it } from "vitest";
 import type { ConnectionFormDraft } from "./model-connection-form.js";
 import {
@@ -36,6 +36,8 @@ function draft(overrides: Partial<ConnectionFormDraft> = {}): ConnectionFormDraf
     modelId: "",
     enabledModelIds: [],
     baseUrl: "",
+    command: "",
+    cwd: "",
     headerRows: null,
     reasoning: false,
     thinkingLevel: null,
@@ -109,6 +111,8 @@ describe("connectionFormFields", () => {
     ).toEqual({
       enabledModelIds: [],
       baseUrl: "https://ollama.com/v1",
+      command: "",
+      cwd: "",
       reasoning: false,
       thinkingLevel: null,
       maxTokens: "4096",

@@ -1,4 +1,4 @@
-import type { AvailabilityKind, SpaceAvailability } from "@rakazo/contracts";
+import type { AvailabilityKind, SpaceAvailability } from "@unibot/contracts";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { rpc } from "../lib/api";

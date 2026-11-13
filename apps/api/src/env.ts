@@ -1,4 +1,4 @@
-import type { TelegramBotCredentials } from "@rakazo/adapters";
+import type { TelegramBotCredentials } from "@unibot/adapters";
 import {
   boatApiKeyFromEnv,
   boatApiUrlFromEnv,
@@ -8,10 +8,10 @@ import {
   resolveSandboxProvider,
   secretStoreOptionsFromEnv,
   telegramBotsFromEnv,
-} from "@rakazo/adapters";
-import type { OidcConfig } from "@rakazo/auth";
-import type { MinimumClientBuilds, NavLink } from "@rakazo/contracts";
-import { parseMinimumClientBuilds, parseNavLinks } from "@rakazo/contracts";
+} from "@unibot/adapters";
+import type { OidcConfig } from "@unibot/auth";
+import type { MinimumClientBuilds, NavLink } from "@unibot/contracts";
+import { parseMinimumClientBuilds, parseNavLinks } from "@unibot/contracts";
 import {
   attachmentCountFromEnv,
   phoneCallSettings,
@@ -21,10 +21,10 @@ import {
   resolveScreenProxySecret,
   resolveSupervisorToken,
   uploadSizeFromEnv,
-} from "@rakazo/core";
-import { monitoringPseudonymSecret } from "@rakazo/logging";
+} from "@unibot/core";
+import { monitoringPseudonymSecret } from "@unibot/logging";
 
-export { resolveCloudAgentProvider, resolveSandboxProvider } from "@rakazo/adapters";
+export { resolveCloudAgentProvider, resolveSandboxProvider } from "@unibot/adapters";
 
 export interface AppEnv {
   passwordAuth?: boolean;
@@ -50,6 +50,12 @@ export interface AppEnv {
   clientIpHeader: string;
   signupsEnabled: string | undefined;
   signupAllowlist: string | undefined;
+  /**
+   * `AUTH_MODE=local` runs this server for the one person whose machine it is: every request is
+   * that owner, and no one is asked to sign in. It is refused unless the server binds a loopback
+   * host, so it can never be reached from another machine.
+   */
+  localMode: boolean;
   encryptionKey: string;
   contentEncryption: boolean;
   dataDir: string;
@@ -58,9 +64,9 @@ export interface AppEnv {
   ticketBoardEnabled: boolean;
   /** USER_DEVICES_ENABLED=false stops users connecting their own computers. Default on. */
   userDevicesEnabled: boolean;
-  /** Operator menu links that frame a same-origin page (RAKAZO_NAV_LINKS). */
+  /** Operator menu links that frame a same-origin page (UNIBOT_NAV_LINKS). */
   navLinks?: NavLink[];
-  /** Verified accounts that review plugin submissions (RAKAZO_ADMIN_EMAILS), lowercased. */
+  /** Verified accounts that review plugin submissions (UNIBOT_ADMIN_EMAILS), lowercased. */
   adminEmails: string[];
   phoneCallsEnabled: boolean;
   phoneCallRingSeconds: number;
@@ -154,7 +160,7 @@ export interface AppEnv {
   mcpAllowPrivateEndpoint: boolean;
   port: number;
   gitSha: string | undefined;
-  /** Oldest client build per kind the API still serves (RAKAZO_MIN_CLIENT_BUILD). */
+  /** Oldest client build per kind the API still serves (UNIBOT_MIN_CLIENT_BUILD). */
   minimumClientBuilds?: MinimumClientBuilds;
   /** Browser error reporting, served to the web app at runtime. The DSN is public by design. */
   browserMonitoring:
@@ -192,6 +198,7 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
       throw new Error(`${key} must be true or false`);
   }
   const passwordAuth = source.AUTH_PASSWORD_ENABLED !== "false";
+  const localMode = source.AUTH_MODE?.trim().toLowerCase() === "local";
   if (!passwordAuth && !issuer)
     throw new Error("AUTH_PASSWORD_ENABLED=false requires OIDC configuration");
   const oidc =
@@ -218,7 +225,7 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
     nodeEnv: source.NODE_ENV ?? "",
     databaseUrl: required(source, "DATABASE_URL"),
     realtimeDatabaseUrl: source.REALTIME_DATABASE_URL ?? required(source, "DATABASE_URL"),
-    desktopStackToken: optional(source.RAKAZO_DESKTOP_STACK_TOKEN),
+    desktopStackToken: optional(source.UNIBOT_DESKTOP_STACK_TOKEN),
     authSecret,
     authUrl: source.BETTER_AUTH_URL ?? source.WEB_ORIGIN ?? "http://127.0.0.1:5173",
     webOrigin: source.WEB_ORIGIN ?? "http://127.0.0.1:5173",
@@ -234,14 +241,15 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
     clientIpHeader: optional(source.CLIENT_IP_HEADER)?.toLowerCase() ?? "x-forwarded-for",
     signupsEnabled: source.SIGNUPS_ENABLED,
     signupAllowlist: source.SIGNUP_ALLOWLIST,
+    localMode,
     encryptionKey: resolveEncryptionKey(source),
     contentEncryption: resolveContentEncryption(source),
     dataDir: source.DATA_DIR ?? "./data",
     piSessionRecording: source.PI_SESSION_RECORDING === "true",
     ticketBoardEnabled: source.TICKET_BOARD_ENABLED === "true",
     userDevicesEnabled: source.USER_DEVICES_ENABLED !== "false",
-    navLinks: parseNavLinks(source.RAKAZO_NAV_LINKS),
-    adminEmails: list(source.RAKAZO_ADMIN_EMAILS).map((email) => email.toLowerCase()),
+    navLinks: parseNavLinks(source.UNIBOT_NAV_LINKS),
+    adminEmails: list(source.UNIBOT_ADMIN_EMAILS).map((email) => email.toLowerCase()),
     ...phoneCallSettings(source),
     maxUploadSizeBytes: uploadSizeFromEnv(source),
     maxAttachmentsPerMessage: attachmentCountFromEnv(source),
@@ -311,7 +319,7 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
     larkEncryptKey: optional(source.LARK_ENCRYPT_KEY),
     larkDomain: optional(source.LARK_DOMAIN),
     messagingOpenSignup: source.MESSAGING_OPEN_SIGNUP === "true",
-    teamChatBotId: optional(source.TEAM_CHAT_BOT_ID) ?? optional(source.SLACK_RAKAZO_BOT_ID),
+    teamChatBotId: optional(source.TEAM_CHAT_BOT_ID) ?? optional(source.SLACK_UNIBOT_BOT_ID),
     teamChatJudgeProvider: optional(source.TEAM_CHAT_JUDGE_PROVIDER),
     teamChatJudgeModel: optional(source.TEAM_CHAT_JUDGE_MODEL),
     defaultProvider: deploymentModel.provider,
@@ -323,10 +331,10 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
       .map((value) => value.trim())
       .filter(Boolean),
     mcpStdio: mcpStdioOptionsFromEnv(source),
-    mcpAllowPrivateEndpoint: source.MCP_ALLOW_PRIVATE_ENDPOINT === "true",
+    mcpAllowPrivateEndpoint: localMode || source.MCP_ALLOW_PRIVATE_ENDPOINT === "true",
     port: Number(source.API_PORT ?? 3100),
-    gitSha: optional(source.GIT_SHA) ?? optional(source.RAKAZO_GIT_SHA),
-    minimumClientBuilds: parseMinimumClientBuilds(source.RAKAZO_MIN_CLIENT_BUILD),
+    gitSha: optional(source.GIT_SHA) ?? optional(source.UNIBOT_GIT_SHA),
+    minimumClientBuilds: parseMinimumClientBuilds(source.UNIBOT_MIN_CLIENT_BUILD),
     browserMonitoring: browserMonitoringFromEnv(source),
   };
 }

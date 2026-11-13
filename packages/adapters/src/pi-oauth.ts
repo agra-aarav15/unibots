@@ -10,7 +10,7 @@ import type {
   ModelCredentialFailedState,
   ModelCredentialRetireReason,
   SecretStore,
-} from "@rakazo/adapter-kit";
+} from "@unibot/adapter-kit";
 import type {
   ModelApiProtocol,
   ModelContextLimits,
@@ -18,7 +18,7 @@ import type {
   ModelOAuthSignInMode,
   SettingsScope,
   ThinkingLevel,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import {
   canonicalPiProviderId,
   MAX_MODEL_CONTEXT_WINDOW,
@@ -27,10 +27,10 @@ import {
   ModelContextLimitsSchema,
   parseModelHeaders,
   ThinkingLevelSchema,
-} from "@rakazo/contracts";
-import type { PrismaClient } from "@rakazo/db";
-import { retireModelCredential, runAsSystem, runAsTenant } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/contracts";
+import type { PrismaClient } from "@unibot/db";
+import { retireModelCredential, runAsSystem, runAsTenant } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { createManualAnthropicOAuthLogin } from "./pi-anthropic-oauth.js";
 
 export const CHATGPT_OAUTH_PROVIDER = "openai-codex";
@@ -52,19 +52,19 @@ export const SUBSCRIPTION_SIGN_IN_PROVIDERS: Record<
     loginLabel: "Sign in with ChatGPT",
     hint: "ChatGPT Plus/Pro",
     billing:
-      "Sign in with ChatGPT Plus or Pro. Uses your OpenAI subscription. Unibots does not pay.",
+      "Sign in with ChatGPT Plus or Pro. Uses your OpenAI subscription. UniBot does not pay.",
   },
   [COPILOT_OAUTH_PROVIDER]: {
     mode: "device-code",
     loginLabel: "Sign in with GitHub Copilot",
     hint: "Copilot",
-    billing: "Sign in with GitHub Copilot. Uses your Copilot subscription. Unibots does not pay.",
+    billing: "Sign in with GitHub Copilot. Uses your Copilot subscription. UniBot does not pay.",
   },
   [XAI_OAUTH_PROVIDER]: {
     mode: "device-code",
     loginLabel: "Sign in with SuperGrok or X Premium",
     hint: "SuperGrok / key",
-    billing: "Sign in with SuperGrok or X Premium, or paste an xAI API key. Unibots does not pay.",
+    billing: "Sign in with SuperGrok or X Premium, or paste an xAI API key. UniBot does not pay.",
   },
   [ANTHROPIC_OAUTH_PROVIDER]: {
     mode: "auth-url",
@@ -299,6 +299,14 @@ export type StoredModelSecret =
       visionModelIds?: string[];
       enabledModelIds?: string[];
       maxImagesPerPrompt?: number;
+    } & StoredModelLimits)
+  | ({
+      kind: "cli";
+      command: string;
+      cwd?: string;
+      timeoutMs?: number;
+      maxTokens?: number;
+      contextWindow?: number;
     } & StoredModelLimits);
 
 export type PiOAuthConnected = {
@@ -452,6 +460,34 @@ export function parseModelSecret(plaintext: string): StoredModelSecret {
     // Treat malformed JSON as a literal API key.
     return { kind: "api_key", key: plaintext };
   }
+  if (parsed.kind === "cli") {
+    const command = typeof parsed.command === "string" ? parsed.command.trim() : "";
+    if (!command) throw new Error(CORRUPT_MODEL_SECRET_MESSAGE);
+    const cwd = typeof parsed.cwd === "string" && parsed.cwd.trim() ? parsed.cwd.trim() : undefined;
+    const timeoutMs =
+      typeof parsed.timeoutMs === "number" &&
+      Number.isInteger(parsed.timeoutMs) &&
+      parsed.timeoutMs >= 1
+        ? parsed.timeoutMs
+        : undefined;
+    const cliMaxTokens = parsedMaxTokens(parsed.maxTokens);
+    const cliContextWindow =
+      typeof parsed.contextWindow === "number" &&
+      Number.isInteger(parsed.contextWindow) &&
+      parsed.contextWindow >= 1 &&
+      parsed.contextWindow <= MAX_MODEL_CONTEXT_WINDOW
+        ? parsed.contextWindow
+        : undefined;
+    return {
+      kind: "cli",
+      command,
+      ...(cwd !== undefined ? { cwd } : {}),
+      ...(timeoutMs !== undefined ? { timeoutMs } : {}),
+      ...(cliMaxTokens !== undefined ? { maxTokens: cliMaxTokens } : {}),
+      ...(cliContextWindow !== undefined ? { contextWindow: cliContextWindow } : {}),
+      ...modelLimits(parsed),
+    };
+  }
   if (parsed.kind === "openai_compatible") {
     if (typeof parsed.baseUrl !== "string" || !parsed.baseUrl.trim()) {
       throw new Error(CORRUPT_MODEL_SECRET_MESSAGE);
@@ -549,6 +585,17 @@ export function serializeModelSecret(secret: StoredModelSecret): string {
       maxTokens: secret.maxTokens,
     });
   }
+  if (secret.kind === "cli") {
+    return JSON.stringify({
+      kind: "cli",
+      ...modelLimits(secret as unknown as Record<string, unknown>),
+      command: secret.command,
+      ...(secret.cwd !== undefined ? { cwd: secret.cwd } : {}),
+      ...(secret.timeoutMs !== undefined ? { timeoutMs: secret.timeoutMs } : {}),
+      ...(secret.maxTokens !== undefined ? { maxTokens: secret.maxTokens } : {}),
+      ...(secret.contextWindow !== undefined ? { contextWindow: secret.contextWindow } : {}),
+    });
+  }
   if (secret.kind === "openai_compatible") {
     return JSON.stringify({
       kind: "openai_compatible",
@@ -593,6 +640,8 @@ const MIN_REDACTED_HEADER_VALUE_LENGTH = 8;
 
 export function secretValuesToRedact(secret: StoredModelSecret): string[] {
   if (secret.kind === "api_key") return secret.key ? [secret.key] : [];
+  // A command is configuration, not a credential; there is nothing to hide.
+  if (secret.kind === "cli") return [];
   if (secret.kind === "openai_compatible")
     return [
       secret.apiKey,
@@ -683,6 +732,7 @@ export async function resolveModelAuth(
   if (parsed.kind === "openai_compatible") {
     return { secret: parsed, apiKey: parsed.apiKey ?? "" };
   }
+  if (parsed.kind === "cli") return { secret: parsed, apiKey: "" };
   if (parsed.reconnectRequired) {
     throw new RetiredModelCredentialError(OAUTH_RECONNECT_REQUIRED_ERROR);
   }

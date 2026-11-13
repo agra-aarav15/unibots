@@ -1,4 +1,4 @@
-import type { AgentRuntimeEvent } from "@rakazo/adapter-kit";
+import type { AgentRuntimeEvent } from "@unibot/adapter-kit";
 import {
   DEFAULT_CONTEXT_STRATEGY,
   historyCompactJob,
@@ -7,7 +7,7 @@ import {
   runContinueJob,
   SandboxRateLimitError,
   TransientModelError,
-} from "@rakazo/adapter-kit";
+} from "@unibot/adapter-kit";
 import {
   containsSecret,
   displayName,
@@ -17,10 +17,10 @@ import {
   TAKEOVER_COMPUTER_PENDING_STATE,
   userRunError,
   withoutLastToolStepNotes,
-} from "@rakazo/core";
-import { RunHistoryWriteError, recordUsage } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
-import { sanitizedError } from "@rakazo/logging/monitoring";
+} from "@unibot/core";
+import { RunHistoryWriteError, recordUsage } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
+import { sanitizedError } from "@unibot/logging/monitoring";
 import { isToolPauseResult } from "./approval-effect.js";
 import { returnBotMessageOutcome } from "./bot-messages.js";
 import { scheduleComputerSleep } from "./computer-idle.js";
@@ -246,7 +246,9 @@ async function streamText(ctx: RunContext, event: RuntimeEvent<"text">) {
   tryFlushPendingTools(reply);
   reply.pendingProgress += reply.redactor.push(event.text);
   const now = Date.now();
-  if (!ctx.scripted && reply.pendingProgress && now - reply.lastProgressAt >= 250) {
+  // Text reaches the screen in eighths of a second rather than quarters: each flush is one insert
+  // and one notify, and at this interval a reply reads as it is written instead of in steps.
+  if (!ctx.scripted && reply.pendingProgress && now - reply.lastProgressAt >= 80) {
     await flushProgress(ctx);
   }
 }

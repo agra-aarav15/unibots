@@ -3,12 +3,12 @@ import type {
   ProductEvent,
   ThreadMessage,
   ThreadSnapshot,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import {
   answerableAskMessageIds,
   dismissableAskMessageIds,
   withLiveStreamingProgress,
-} from "@rakazo/core";
+} from "@unibot/core";
 import { describe, expect, it } from "vitest";
 import {
   activeThreadRuns,

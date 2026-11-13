@@ -1,7 +1,8 @@
 import { getSupportedThinkingLevels } from "@earendil-works/pi-ai";
-import type { ModelConnectInput, ModelCredential, ThinkingLevel } from "@rakazo/contracts";
+import type { ModelConnectInput, ModelCredential, ThinkingLevel } from "@unibot/contracts";
 import {
   assertHeaderSafeApiKey,
+  CLI_PROVIDER_ID,
   OPENAI_COMPATIBLE_PROVIDER_ID as CONTRACT_OPENAI_COMPAT,
   canonicalPiProviderId,
   cloudflareModelConfigMessage,
@@ -9,7 +10,7 @@ import {
   isCloudflareModelProvider,
   MAX_ENABLED_MODEL_IDS,
   modelOutputLeavesInputRoom,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import { enabledOpenAiCompatibleModelIds } from "./model-selection.js";
 import { modelIdSupportsImages, updateModelImageCapabilities } from "./model-vision.js";
 import { normalizeOpenAiCompatibleBaseUrl } from "./openai-compatible-url.js";
@@ -70,6 +71,28 @@ export function buildModelConnectPlaintext(
     ...(cacheCapabilities !== undefined ? { cacheCapabilities } : {}),
     ...(contextWindow !== undefined ? { contextWindow } : {}),
   };
+  if (input.provider === CLI_PROVIDER_ID) {
+    const command = input.command?.trim();
+    const modelId = input.modelId?.trim();
+    if (!command) throw new Error("A command is required for command-line models");
+    if (!modelId) throw new Error("Model id is required for command-line models");
+    const previousCli = previous?.kind === "cli" ? previous : undefined;
+    const timeoutMs = input.timeoutMs ?? previousCli?.timeoutMs;
+    const maxTokens = connectMaxTokens(input.maxTokens, previousCli?.maxTokens);
+    const cliContextWindow = input.contextWindow ?? previousCli?.contextWindow;
+    const cwd = input.cwd !== undefined ? input.cwd.trim() : (previousCli?.cwd ?? "");
+    if (!modelOutputLeavesInputRoom(maxTokens, cliContextWindow)) {
+      throw new Error("Maximum output tokens must leave room for input");
+    }
+    return serializeModelSecret({
+      kind: "cli",
+      command,
+      ...(cwd ? { cwd } : {}),
+      ...(timeoutMs !== undefined ? { timeoutMs } : {}),
+      ...(maxTokens !== undefined ? { maxTokens } : {}),
+      ...(cliContextWindow !== undefined ? { contextWindow: cliContextWindow } : {}),
+    });
+  }
   if (input.provider === OPENAI_COMPATIBLE_PROVIDER_ID) {
     const policy = { allowPrivate: options?.allowPrivateEndpoint };
     const prepared = prepareOpenAiCompatibleConnect(input, policy);
@@ -298,6 +321,9 @@ export function modelCredentialDto(
       ...credential,
       authKind: modelCredentialAuthKind(parsed),
       ...(parsed.kind === "oauth" && parsed.reconnectRequired ? { reconnectRequired: true } : {}),
+      ...(parsed.kind === "cli"
+        ? { command: parsed.command, ...(parsed.cwd ? { cwd: parsed.cwd } : {}) }
+        : {}),
       ...(parsed.maxTokens !== undefined ? { maxTokens: parsed.maxTokens } : {}),
       ...(parsed.kind !== "oauth"
         ? {

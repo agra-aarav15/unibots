@@ -15,8 +15,8 @@ import type {
   SandboxProvider,
   SecretStore,
   WebProvider,
-} from "@rakazo/adapter-kit";
-import type { PrismaClient, RunLease, ThreadEvents } from "@rakazo/db";
+} from "@unibot/adapter-kit";
+import type { PrismaClient, RunLease, ThreadEvents } from "@unibot/db";
 import type { CloudAgentConnection } from "./cloud-agent-factory.js";
 import type { McpStdioPolicy } from "./mcp-transport.js";
 import type { MemoryProviderResolver } from "./memory-provider-factory.js";

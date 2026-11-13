@@ -32,9 +32,9 @@ describe.skipIf(!enabled)("short original product history", () => {
           response: { type: "text" as const, text: "ORBIT-731. Batch size 37; approval pending." },
         })),
       });
-      const dataDir = await mkdtemp(path.join(tmpdir(), "rakazo-short-history-"));
+      const dataDir = await mkdtemp(path.join(tmpdir(), "unibot-short-history-"));
       try {
-        const { createApp } = await import("@rakazo/api/app");
+        const { createApp } = await import("@unibot/api/app");
         const result = await runTrial(
           {
             id: `synthetic-short-history-${strategy}`,

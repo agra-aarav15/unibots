@@ -1,20 +1,20 @@
-# Unibots
+# UniBot
 
 [English](./README.md) | [简体中文](./README.zh-CN.md) | [日本語](./README.ja.md)
 
 [![GitHub stars](https://img.shields.io/github/stars/agra-aarav15/unibots?labelColor=black&style=for-the-badge&color=2563EB)](https://github.com/agra-aarav15/unibots/stargazers)
 [![Android APK をダウンロード](https://img.shields.io/badge/Android-Download%20APK-black?labelColor=black&style=for-the-badge&logo=android&logoColor=white)](https://github.com/agra-aarav15/unibots/releases/download/android/unibots.apk)
 
-![Unibots：本当に自分のものにできる AI チームメイト](./docs/readme-hero.png)
+![UniBot：本当に自分のものにできる AI チームメイト](./docs/readme-hero.png)
 
-Unibots は、常駐型の AI チームメイトを持てるオープンソースの AI エージェントです。自分のマシンで動かせる
+UniBot は、常駐型の AI チームメイトを持てるオープンソースの AI エージェントです。自分のマシンで動かせる
 セルフホスト型の AI アシスタントでもあります。Web 版、Electron デスクトップアプリ、
 モデルやコンピューターのプロバイダーは自分で選べるほか、スタック全体をローカルで動かすこともできます。
 
 Grok Bot、Meta Muse、OpenAI Dots、Instinct、OpenClaw、Hermes Agent、Claude Duet の
 オープンソースかつセルフホスト可能な代替ツールです。
 
-Unibots は現在ベータ版です。詳しくは [the project repository](https://github.com/agra-aarav15/unibots) をご覧ください。
+UniBot は現在ベータ版です。詳しくは [the project repository](https://github.com/agra-aarav15/unibots) をご覧ください。
 
 このドキュメントは[英語版 README](./README.md) の日本語訳です。リンク先のドキュメントは現在英語のみです。
 
@@ -35,12 +35,12 @@ https://github.com/user-attachments/assets/dccdeddb-2134-4a56-8eed-b2e591736b1c
 
 ## 謝辞
 
-- [PromptLayer](https://promptlayer.com/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [Inbox Zero](https://getinboxzero.com/?utm_source=github&utm_medium=referral&utm_campaign=rakazo_readme)
-- [ConnectorMap](https://connectormap.luinbytes.dev/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [CodeRabbit](https://www.coderabbit.ai/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [Greptile](https://www.greptile.com/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [Snyk](https://snyk.io/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
+- [PromptLayer](https://promptlayer.com/?utm_source=github&utm_medium=referral&utm_campaign=unibot_readme)
+- [Inbox Zero](https://getinboxzero.com/?utm_source=github&utm_medium=referral&utm_campaign=unibot_readme)
+- [ConnectorMap](https://connectormap.luinbytes.dev/?utm_source=github&utm_medium=referral&utm_campaign=unibot_readme)
+- [CodeRabbit](https://www.coderabbit.ai/?utm_source=github&utm_medium=referral&utm_campaign=unibot_readme)
+- [Greptile](https://www.greptile.com/?utm_source=github&utm_medium=referral&utm_campaign=unibot_readme)
+- [Snyk](https://snyk.io/?utm_source=github&utm_medium=referral&utm_campaign=unibot_readme)
 
 ## 技術スタック
 
@@ -60,12 +60,12 @@ https://github.com/user-attachments/assets/dccdeddb-2134-4a56-8eed-b2e591736b1c
 Docker Engine、Compose プラグイン、curl、OpenSSL が必要です。リポジトリのクローンや Node のインストールは不要です。
 
 ```bash
-mkdir -p unibots && cd unibots &&
+mkdir -p unibot && cd unibot &&
 curl -fsSLO https://raw.githubusercontent.com/agra-aarav15/unibots/main/infra/compose/install-images.sh &&
 bash install-images.sh
 ```
 
-インストーラーは Compose ファイルをダウンロードし、ランダムなシークレットを含む `.env` を作成して Unibots を起動します。
+インストーラーは Compose ファイルをダウンロードし、ランダムなシークレットを含む `.env` を作成して UniBot を起動します。
 再実行時は既存の `.env` をそのまま残します。
 
 [http://127.0.0.1:5173](http://127.0.0.1:5173) を開き、アカウントを作成してモデルを接続します。
@@ -75,8 +75,8 @@ bash install-images.sh
 デフォルトのイメージタグは `edge`（main ブランチのビルド、`linux/amd64` と `linux/arm64`）です。詳細とタグは
 [セルフホストガイド](./docs/self-host.md#published-images-no-checkout)を参照してください。
 
-制限のあるネットワークでは、インストーラーのダウンロード元（`RAKAZO_DOWNLOAD_BASE`）を上書きする、
-既存の Compose ファイルをスキップする（`--local` / `RAKAZO_DOWNLOAD_SKIP_EXISTING`）、またはブートストラップ
+制限のあるネットワークでは、インストーラーのダウンロード元（`UNIBOT_DOWNLOAD_BASE`）を上書きする、
+既存の Compose ファイルをスキップする（`--local` / `UNIBOT_DOWNLOAD_SKIP_EXISTING`）、またはブートストラップ
 スクリプトの URL をミラーする方法があります。詳しくは
 [制限のあるネットワーク / ミラーからのダウンロード](./docs/self-host.md#restricted-networks--mirror-downloads)を参照してください。
 
@@ -89,7 +89,7 @@ bash install-images.sh
 
 ```bash
 bash install-images.sh --prepare-only
-# edit .env: SANDBOX_PROVIDER=boat (or e2b / daytona / createos) with its API key, RAKAZO_HOST=your.domain
+# edit .env: SANDBOX_PROVIDER=boat (or e2b / daytona / createos) with its API key, UNIBOT_HOST=your.domain
 bash install-images.sh
 ```
 
@@ -97,7 +97,7 @@ bash install-images.sh
 [docs/self-host-production.md](./docs/self-host-production.md#public-single-vm-deployment) で説明しています。デスクトップアプリでは
 **Existing instance**（既存のインスタンス）を選び、`https://` のアドレスを入力します。
 
-または [Railway にデプロイ](https://railway.com/new/template/rakazo-template)することもできます。[Railway セットアップガイド](./infra/railway/README.md)を参照してください。
+または [Railway にデプロイ](https://railway.com/new/template/unibot-template)することもできます。[Railway セットアップガイド](./infra/railway/README.md)を参照してください。
 
 ## ローカル開発（ソースから実行）
 
@@ -106,13 +106,13 @@ pnpm 9、Docker が必要です。Node.js 23.x と 25.x はサポートしてい
 
 ```bash
 git clone https://github.com/agra-aarav15/unibots.git
-cd unibots
+cd unibot
 cp .env.example .env
 ```
 
 `POSTGRES_PASSWORD` と `POSTGRES_APP_PASSWORD` に `openssl rand -hex 16` で生成した 2 つの値を設定し、
 それらを `DATABASE_MIGRATION_URL` と `DATABASE_URL` に記入します。アプリは専用の
-`rakazo_app` ログインで接続し、行レベルセキュリティが適用されます。マイグレーションはオーナーとして実行されます
+`unibot_app` ログインで接続し、行レベルセキュリティが適用されます。マイグレーションはオーナーとして実行されます
 （[データベースロール](docs/self-host-configuration.md#database-roles)）。`BETTER_AUTH_SECRET`、`ENCRYPTION_KEY`、`SCREEN_PROXY_SECRET` には
 それぞれ独立した長いランダム値を設定します。Docker サンドボックスには専用の
 `SANDBOX_SUPERVISOR_TOKEN` も必要です。`OPENROUTER_API_KEY` を設定するか、オンボーディング中に
@@ -185,22 +185,22 @@ Railway のサンドボックス利用は従量課金です。
 
 ## デスクトップとモバイル
 
-Electron アプリと Expo アプリは、Web アプリと同じ Unibots API を使うクライアントです。
+Electron アプリと Expo アプリは、Web アプリと同じ UniBot API を使うクライアントです。
 
 開発用スタックを起動した状態で、次のコマンドで Electron を起動します。
 
 ```bash
-pnpm --filter @rakazo/desktop dev
+pnpm --filter @unibot/desktop dev
 ```
 
-初回起動時、デスクトップアプリは Unibots をこのコンピューターで動かすか、既存のサーバーに接続するかを
+初回起動時、デスクトップアプリは UniBot をこのコンピューターで動かすか、既存のサーバーに接続するかを
 尋ねます。**This computer**（このコンピューター）を選ぶと、アプリのデータディレクトリに Docker Compose で公開イメージを
 インストールして起動します（`infra/compose/install-images.sh` と同じファイルを使います）。そのため Docker Desktop、
 OrbStack、Docker Engine のいずれかが必要です。インストールされていない場合、アプリからそれらへのリンクを案内します。インストール済みの
 ビルドはイメージタグを自身のバージョンに固定し、パッケージ化されていないビルドは `edge` を取得します。
 `pnpm dev` を実行している開発者は、代わりに **Existing instance**（既存のインスタンス）を選び `http://127.0.0.1:5173` を指定してください。公開サーバーは
 HTTPS を使う必要があります。HTTP はループバックとプライベート LAN のアドレスでのみ受け付けます（リンクローカルは除く）。
-アプリは保存前に Unibots のヘルスチェックエンドポイントを確認し、以降の起動ではそのインスタンスに直接接続します。
+アプリは保存前に UniBot のヘルスチェックエンドポイントを確認し、以降の起動ではそのインスタンスに直接接続します。
 アプリを終了してもスタックは動き続けます。停止するには、アプリケーションメニューの **Stop Local Stack**（ローカルスタックを停止）を使います。
 
 Linux では、デスクトップアプリは AppImage として配布されており、FUSE 2（`libfuse.so.2`）が必要です。Fedora Silverblue や
@@ -210,16 +210,16 @@ Ubuntu 24.04 では `libfuse2t64`、それ以前の Ubuntu や Debian では `li
 AppImage を実行してください。
 
 ```bash
-chmod +x Unibots-*.AppImage
-./Unibots-*.AppImage --appimage-extract-and-run
+chmod +x UniBot-*.AppImage
+./UniBot-*.AppImage --appimage-extract-and-run
 ```
 
 **This computer** は `docker` CLI を探し、Podman は検出しません。`compose` コマンドに対応した別の
-Docker 互換 CLI を試すには、アプリを起動する前に `RAKAZO_DOCKER_BINARY` にそのパスを設定してください。
+Docker 互換 CLI を試すには、アプリを起動する前に `UNIBOT_DOCKER_BINARY` にそのパスを設定してください。
 
-接続先を変えるには、アプリケーションメニューの **Change Unibots Server…**（Unibots サーバーを変更）を使います。保存せずに
-そのウィンドウを閉じると、以前のインスタンスに戻ります。開発の自動化では、`RAKAZO_WEB_URL` を設定すると
-保存済みのインスタンスを変えずにシェルの接続先を変更でき、`RAKAZO_FORCE_SETUP=1` を設定するとセットアップを
+接続先を変えるには、アプリケーションメニューの **Change UniBot Server…**（UniBot サーバーを変更）を使います。保存せずに
+そのウィンドウを閉じると、以前のインスタンスに戻ります。開発の自動化では、`UNIBOT_WEB_URL` を設定すると
+保存済みのインスタンスを変えずにシェルの接続先を変更でき、`UNIBOT_FORCE_SETUP=1` を設定するとセットアップを
 再実行できます。
 
 モバイルのビルドとリリースの手順は [docs/mobile-release.md](./docs/mobile-release.md) にあります。
@@ -266,7 +266,7 @@ pnpm test:e2e
 - [パフォーマンステスト](./docs/performance.md)
 - [作成したボットの管理](./docs/fleet-management.md)
 
-## Unibots と他製品の比較
+## UniBot と他製品の比較
 
 - [Grok Bot](https://github.com/agra-aarav15/unibots/grok-bot-alternative/)
 - [Muse](https://github.com/agra-aarav15/unibots/muse-alternative/)
@@ -281,6 +281,6 @@ pnpm test:e2e
 コントリビューションを歓迎します。プルリクエストを作成する前に [CONTRIBUTING.md](./CONTRIBUTING.md) をお読みください。
 セキュリティ上の脆弱性は、公開の Issue を作成せず、[SECURITY.md](./SECURITY.md) の手順に従って報告してください。
 
-Unibots は [Apache License 2.0](./LICENSE) のもとでライセンスされています。
+UniBot は [Apache License 2.0](./LICENSE) のもとでライセンスされています。
 
 質問やアイデアは [GitHub Issues](https://github.com/agra-aarav15/unibots/issues) でお気軽にどうぞ。

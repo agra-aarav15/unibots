@@ -1,10 +1,10 @@
-import type { AgentRuntime, MemoryStore } from "@rakazo/adapter-kit";
+import type { AgentRuntime, MemoryStore } from "@unibot/adapter-kit";
 import {
   MEMORY_CURATE_DELAY_MS,
   MEMORY_REVISION_CONFLICT_ERROR,
   memoryCurateJob,
-} from "@rakazo/adapter-kit";
-import type { PrismaClient } from "@rakazo/db";
+} from "@unibot/adapter-kit";
+import type { PrismaClient } from "@unibot/db";
 import { describe, expect, it, vi } from "vitest";
 import {
   buildMemoryCurationPrompt,

@@ -1,6 +1,6 @@
 import { RPCHandler } from "@orpc/server/fetch";
-import type { Actor } from "@rakazo/contracts";
-import type { PrismaClient } from "@rakazo/db";
+import type { Actor } from "@unibot/contracts";
+import type { PrismaClient } from "@unibot/db";
 import { describe, expect, it, vi } from "vitest";
 import type { RouterDeps } from "./router.js";
 import { createRouter } from "./router.js";
@@ -274,7 +274,7 @@ function messagingDeps(
       addresses: { sendblue: "+15550001111" },
       openSignup: false,
     },
-    dataDir: "/tmp/rakazo-router-test",
+    dataDir: "/tmp/unibot-router-test",
   } as unknown as RouterDeps;
   const actor = {
     spaceId: "ws-1",

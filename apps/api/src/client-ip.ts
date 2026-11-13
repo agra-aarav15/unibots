@@ -3,8 +3,9 @@ import { existsSync } from "node:fs";
 import { BlockList, isIP } from "node:net";
 import { networkInterfaces } from "node:os";
 import { getConnInfo } from "@hono/node-server/conninfo";
-import { CLIENT_IP_HEADER } from "@rakazo/auth";
-import { withSecurityRequest } from "@rakazo/db";
+import { CLIENT_IP_HEADER } from "@unibot/auth";
+import { isLoopbackHost } from "@unibot/contracts";
+import { withSecurityRequest } from "@unibot/db";
 import type { Context, MiddlewareHandler } from "hono";
 
 export interface ClientIpConfig {
@@ -160,6 +161,19 @@ export function clientIpMiddleware(resolver: ClientIpResolver, header: string): 
 
 export function requestClientIp(c: Context): string | undefined {
   return c.get(CLIENT_IP_KEY) as string | undefined;
+}
+
+/**
+ * Whether a caller may act as the local owner. A local install is its own owner, but only from the
+ * machine itself: a connection from the network signs in or pairs like any other. An in-process
+ * call (tests, a route mounted in the same app) has no socket, so the bind decides — it can only be
+ * local when the server is not listening on the network.
+ */
+export function callerIsLocalOwner(
+  clientIp: string | undefined,
+  boundToLoopback: boolean,
+): boolean {
+  return clientIp === undefined ? boundToLoopback : isLoopbackHost(clientIp);
 }
 
 function socketPeer(c: Context): string | undefined {

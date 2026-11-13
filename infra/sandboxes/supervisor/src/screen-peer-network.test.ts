@@ -1,6 +1,6 @@
 import type * as NodeHttp from "node:http";
 import { Readable } from "node:stream";
-import { resolveSupervisorToken } from "@rakazo/core";
+import { resolveSupervisorToken } from "@unibot/core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
@@ -92,9 +92,9 @@ async function observe() {
     method: "POST",
     headers: {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
-      "x-rakazo-bot-id": "bot",
+      "x-unibot-bot-id": "bot",
       "x-rakazo-space-id": "space",
-      "x-rakazo-screen-id": "writer",
+      "x-unibot-screen-id": "writer",
     },
   });
 }
@@ -106,9 +106,9 @@ async function openScreen() {
     headers: {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
-      "x-rakazo-bot-id": "bot",
+      "x-unibot-bot-id": "bot",
       "x-rakazo-space-id": "space",
-      "x-rakazo-screen-id": "writer",
+      "x-unibot-screen-id": "writer",
     },
     body: JSON.stringify({ interactive: false }),
   });

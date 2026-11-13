@@ -1,11 +1,11 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { Bot, BotSection, Group, Space } from "@rakazo/contracts";
+import type { Bot, BotSection, Group, Space } from "@unibot/contracts";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@rakazo/ui-web";
+} from "@unibot/ui-web";
 import { Settings, Trash2 } from "lucide-react";
 import type { ComponentProps, RefObject } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";

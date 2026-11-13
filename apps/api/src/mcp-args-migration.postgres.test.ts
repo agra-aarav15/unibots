@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
-import { EncryptedSecretStore, withSecretPersistence } from "@rakazo/adapters";
-import type { PrismaClient } from "@rakazo/db";
-import { createDb, runAsSystem } from "@rakazo/db";
+import { EncryptedSecretStore, withSecretPersistence } from "@unibot/adapters";
+import type { PrismaClient } from "@unibot/db";
+import { createDb, runAsSystem } from "@unibot/db";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { moveMcpArgsIntoSecrets } from "./mcp-args-migration.js";
 

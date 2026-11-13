@@ -1,5 +1,5 @@
-import type { ChatModelChoice } from "@rakazo/core";
-import { chatModelChoices, connectedModelChoices } from "@rakazo/core";
+import type { ChatModelChoice } from "@unibot/core";
+import { chatModelChoices, connectedModelChoices } from "@unibot/core";
 import type { MobileMe, MobileModel, MobileModelCredential } from "./api";
 
 /** What a chat's model picker lists, with the space default named after its model. */

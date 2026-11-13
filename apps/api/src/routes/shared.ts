@@ -4,13 +4,13 @@ import {
   hostCredentialSource,
   mcpStdioAvailable,
   resolveMemberMainModel,
-} from "@rakazo/adapters";
-import type { Actor, Me } from "@rakazo/contracts";
-import { attachmentMaxBytes, attachmentMaxCount, canonicalPiProviderId } from "@rakazo/contracts";
+} from "@unibot/adapters";
+import type { Actor, Me } from "@unibot/contracts";
+import { attachmentMaxBytes, attachmentMaxCount, canonicalPiProviderId } from "@unibot/contracts";
 import { isAdmin } from "../plugin-submissions.js";
 import type { RouterDeps } from "../router.js";
 
-export { createAdapterContext as computerContext } from "@rakazo/adapter-kit";
+export { createAdapterContext as computerContext } from "@unibot/adapter-kit";
 
 function hostCredentials(active: boolean, provider: string) {
   return active

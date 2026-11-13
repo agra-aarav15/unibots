@@ -1,7 +1,7 @@
-import type { JobPublisher } from "@rakazo/adapter-kit";
-import { ACTIVE_RUN_STATUSES } from "@rakazo/core";
-import type { PrismaClient } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+import type { JobPublisher } from "@unibot/adapter-kit";
+import { ACTIVE_RUN_STATUSES } from "@unibot/core";
+import type { PrismaClient } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { wakeTicketAssignee } from "./ticket-wake.js";
 
 /** How many tickets one pass picks up. Small on purpose: a pass runs every 30 seconds. */

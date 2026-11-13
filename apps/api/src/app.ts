@@ -14,14 +14,14 @@ import type {
   RealtimeFanout,
   SandboxProvider,
   TransactionalEmailProvider,
-} from "@rakazo/adapter-kit";
+} from "@unibot/adapter-kit";
 import {
   SandboxDamagedError,
   SandboxRateLimitError,
   SandboxUnavailableError,
   SandboxUnresponsiveError,
   VoiceAccountError,
-} from "@rakazo/adapter-kit";
+} from "@unibot/adapter-kit";
 import type {
   ComposioProvider,
   ConnectorRegistry,
@@ -29,7 +29,7 @@ import type {
   PluginTextReader,
   RemoteConnectorDependencies,
   UserDeviceGateway,
-} from "@rakazo/adapters";
+} from "@unibot/adapters";
 import {
   applyMessagingOutboundStatus,
   ChatSdkMessagingSurface,
@@ -96,16 +96,17 @@ import {
   userDeviceInternalAddress,
   verifyModelServesAgents,
   withSecretPersistence,
-} from "@rakazo/adapters";
-import { createAuth, isBlockedAuthPath, loopbackTwinOrigins } from "@rakazo/auth";
-import type { Actor, AuthCapabilities } from "@rakazo/contracts";
+} from "@unibot/adapters";
+import { createAuth, isBlockedAuthPath, loopbackTwinOrigins } from "@unibot/auth";
+import type { Actor, AuthCapabilities } from "@unibot/contracts";
 import {
   isLocalhostOrLoopbackIp,
+  isLoopbackHost,
   PLUGIN_SUBMISSIONS_PATH,
   SERVER_BUILD_HEADER,
-} from "@rakazo/contracts";
-import { encryptionKeyWarning, signupPolicyFromEnv } from "@rakazo/core";
-import type { Pool, PrismaClient } from "@rakazo/db";
+} from "@unibot/contracts";
+import { encryptionKeyWarning, signupPolicyFromEnv } from "@unibot/core";
+import type { Pool, PrismaClient } from "@unibot/db";
 import {
   createBoardEvents,
   createDb,
@@ -125,17 +126,17 @@ import {
   securityEventRetentionDays,
   verifyContentKeys,
   withPostgresAdvisoryLock,
-} from "@rakazo/db";
-import type { Logger } from "@rakazo/logging";
+} from "@unibot/db";
+import type { Logger } from "@unibot/logging";
 import {
   createServiceLogger,
   enrichLogContext,
   getLogger,
   installLogger,
   SERVICE_NAMES,
-} from "@rakazo/logging";
-import { requestLogging } from "@rakazo/logging/hono";
-import { MarkdownMemoryStore } from "@rakazo/memory";
+} from "@unibot/logging";
+import { requestLogging } from "@unibot/logging/hono";
+import { MarkdownMemoryStore } from "@unibot/memory";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { deleteAccountContent } from "./account-deletion.js";
@@ -147,6 +148,7 @@ import { createBillingService } from "./billing.js";
 import { mountBillingRoutes } from "./billing-webhook.js";
 import { clientBuildMiddleware, readDeployedWebBuild } from "./client-build.js";
 import {
+  callerIsLocalOwner,
   clientIpMiddleware,
   createClientIpResolver,
   defaultTrustedProxies,
@@ -159,6 +161,7 @@ import { configuredEmailProvider } from "./email.js";
 import type { AppEnv } from "./env.js";
 import { loadEnv } from "./env.js";
 import { healthRoutes } from "./health.js";
+import { createLocalOwnerLookup } from "./local-owner.js";
 import { mountLocalComputerHost } from "./local-settings.js";
 import { marketingEmailRoutes, sendWelcomeEmail } from "./marketing-email.js";
 import {
@@ -194,7 +197,7 @@ import { mountWebhookHttpRoutes } from "./webhook.js";
  * The loopback entries are the Expo web dev server.
  */
 export const MOBILE_AUTH_ORIGINS = [
-  "rakazo://",
+  "unibot://",
   "http://localhost:8081",
   "http://127.0.0.1:8081",
   "http://localhost:19006",
@@ -279,7 +282,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
     ? { prisma: prismaOverride, pool: undefined }
     : createDb(env.databaseUrl, {
         poolMax: parsePositiveInteger(process.env.DB_POOL_MAX, 4),
-        applicationName: "rakazo-api",
+        applicationName: "unibot-api",
         keyProvider: contentKeyProviderFromEnv(),
         encryptContent: env.contentEncryption,
       });
@@ -345,7 +348,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
   if (!inMemoryJobs && !created.pool) {
     ownedJobPool = createPool(env.databaseUrl, {
       poolMax: parsePositiveInteger(process.env.DB_POOL_MAX, 4),
-      applicationName: "rakazo-api-jobs",
+      applicationName: "unibot-api-jobs",
     });
   }
   const jobPool = created.pool ?? ownedJobPool;
@@ -443,6 +446,16 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
       : undefined;
   if (localEmailEmulator && !isLocalhostOrLoopbackIp(env.apiHost)) {
     throw new Error("EMAIL_EMULATOR requires API_HOST to be a loopback host");
+  }
+  // One local owner with no sign-in belongs to the machine, not to whoever can reach the port, so
+  // the shortcut follows the caller: only a loopback connection acts as the owner. A bind on the
+  // LAN is then usable (a phone pairing to the computer) without handing it out to the network.
+  const localOwner = env.localMode ? createLocalOwnerLookup(prisma) : undefined;
+  const localOwnerBindIsLoopback = isLocalhostOrLoopbackIp(env.apiHost);
+  if (env.localMode && !localOwnerBindIsLoopback) {
+    getLogger().warn(
+      `AUTH_MODE=local with API_HOST=${env.apiHost}: only connections from this machine are the owner.`,
+    );
   }
   const email: TransactionalEmailProvider | undefined = configuredEmail ?? localEmailEmulator;
   const onEmailError = (error: unknown) =>
@@ -834,6 +847,8 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
       billing: Boolean(billing),
       passkeyRpId: auth.passkeyRpId,
       nativePasskeys: nativePasskeys(env, auth.passkeyRpId),
+      // The client opens the app as this owner instead of showing a sign-in screen.
+      localOwner: localOwner ? await localOwner.ensure() : undefined,
     } satisfies AuthCapabilities);
   });
   mountAppAssociation(app, env);
@@ -896,16 +911,24 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
     sandboxProvider: env.sandboxProvider,
     prisma,
   });
-  const requestSession = async (request: Request) => {
+  const requestSession = async (request: Request, clientIp?: string) => {
+    // A local machine is its owner: nothing is asked for and no cookie is required. In every other
+    // mode, and for every other caller, the session decides exactly as before.
+    const owner =
+      localOwner && callerIsLocalOwner(clientIp, localOwnerBindIsLoopback)
+        ? await localOwner.ensure()
+        : undefined;
     // The bearer plugin turns a signed `Authorization: Bearer` into the session cookie.
-    const session = await auth.api.getSession({ headers: request.headers });
-    if (!session?.user) return null;
+    const session = owner ? undefined : await auth.api.getSession({ headers: request.headers });
+    const userId = owner?.id ?? session?.user.id;
+    if (!userId) return null;
     const actor = await actorFromMembership(
-      requireMembership(prisma, session.user.id, request.headers.get("x-rakazo-space-id")),
+      requireMembership(prisma, userId, request.headers.get("x-rakazo-space-id")),
     );
-    return actor && { actor, sessionId: session.session.id };
+    return actor && { actor, sessionId: session?.session.id };
   };
-  const sessionActor = async (request: Request) => (await requestSession(request))?.actor ?? null;
+  const sessionActor = async (request: Request, clientIp?: string) =>
+    (await requestSession(request, clientIp))?.actor ?? null;
   if (userDeviceHub && userDevices) {
     mountUserDeviceRoutes(app, {
       prisma,
@@ -933,7 +956,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
     }),
   );
   app.use("/rpc/*", async (c, next) => {
-    const session = await requestSession(c.req.raw);
+    const session = await requestSession(c.req.raw, requestClientIp(c));
     const actor = session?.actor ?? null;
     if (actor) {
       enrichLogContext({ "user.id": actor.userId, "space.id": actor.spaceId });
@@ -948,7 +971,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
         // Same user in the same space, so leaving the space also ends a stream.
         // A database failure rejects this check; only a missing membership is unauthorized.
         stillAuthorized: async () => {
-          const current = await sessionActor(c.req.raw);
+          const current = await sessionActor(c.req.raw, requestClientIp(c));
           return Boolean(
             actor && current?.userId === actor.userId && current.spaceId === actor.spaceId,
           );
@@ -960,7 +983,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
   });
   mountAccountExportRoute(app, { prisma, auth, artifacts, home });
   mountVoiceHttpRoutes(app, { prisma, secrets, env }, async (c) => {
-    const actor = await sessionActor(c.req.raw);
+    const actor = await sessionActor(c.req.raw, requestClientIp(c));
     if (actor) enrichLogContext({ "user.id": actor.userId, "space.id": actor.spaceId });
     return actor;
   });
@@ -1435,7 +1458,7 @@ export function isTrustedOrigin(
   env: Pick<AppEnv, "webOrigin" | "apiUrl" | "authUrl">,
 ) {
   if (!origin) return true;
-  if (origin.startsWith("rakazo://")) return true;
+  if (origin.startsWith("unibot://")) return true;
   const allowed = new Set(
     [env.webOrigin, env.apiUrl, env.authUrl, ...MOBILE_AUTH_ORIGINS].flatMap(originVariants),
   );
@@ -1443,7 +1466,7 @@ export function isTrustedOrigin(
 }
 
 function originVariants(origin: string): string[] {
-  if (!origin || origin === "rakazo://") return [];
+  if (!origin || origin === "unibot://") return [];
   const variants = [origin, ...loopbackTwinOrigins(origin)];
   try {
     const url = new URL(origin);

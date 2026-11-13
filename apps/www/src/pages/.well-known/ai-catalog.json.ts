@@ -17,14 +17,14 @@ export const GET: APIRoute = () => {
     entries: [
       {
         identifier: "urn:air:docs:llms",
-        displayName: "Unibots agent guide",
+        displayName: "UniBot agent guide",
         type: "text/plain",
         url: `${SITE_URL}/llms.txt`,
         description: "Product overview, agent-assisted setup guidance, and canonical resources.",
       },
       {
         identifier: "urn:air:docs:overview",
-        displayName: "Unibots overview",
+        displayName: "UniBot overview",
         type: "text/markdown",
         url: `${SITE_URL}/index.md`,
         description: "Features, model choices, self-hosting, and common questions.",

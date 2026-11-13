@@ -1,10 +1,10 @@
 # Mobile builds and store releases
 
-Unibots's public repository does not contain production App Store Connect,
+UniBot's public repository does not contain production App Store Connect,
 Google Play, Apple team, or private EAS submission identifiers. Those values
 belong in the release operator's private configuration.
 
-Self-hosters normally do not need to publish their own mobile app: the Unibots
+Self-hosters normally do not need to publish their own mobile app: the UniBot
 client can select a compatible server from the sign-in screen. If you distribute
 your own branded build, use your own Expo and store accounts.
 
@@ -17,7 +17,7 @@ your own branded build, use your own Expo and store accounts.
 4. Keep store application IDs, team IDs, signing credentials, API keys, and
    review-account credentials out of Git.
 5. Before a native iOS or Android build, run
-   `pnpm --filter @rakazo/mobile exec expo install --check`. Attachment pickers
+   `pnpm --filter @unibot/mobile exec expo install --check`. Attachment pickers
    and other Expo native modules must match the SDK (SDK 57 needs
    `expo-image-picker@~57.0.11`, not 17.x). Use `pnpm exec expo install --fix`
    from `apps/mobile` if that check fails.
@@ -62,7 +62,7 @@ alone.
 
 ## Android APK
 
-Until Unibots is on Google Play, Android users can install an APK.
+Until UniBot is on Google Play, Android users can install an APK.
 `release-mobile` publishes it, or run the `release-android-apk` workflow from
 `main` on its own. It replaces the rolling `android` GitHub release, so the
 download link stays the same:
@@ -81,11 +81,11 @@ The workflow signs in one of two ways:
   | --- | --- |
   | `ANDROID_KEYSTORE_BASE64` | `base64 -w0 release.jks` |
   | `ANDROID_KEYSTORE_PASSWORD` | the keystore password |
-  | `ANDROID_KEY_ALIAS` | the key alias, for example `unibots` |
+  | `ANDROID_KEY_ALIAS` | the key alias, for example `unibot` |
   | `ANDROID_KEY_PASSWORD` | the key password |
 
   Create the keystore once with
-  `keytool -genkeypair -v -keystore release.jks -alias unibots -keyalg RSA -keysize 4096 -validity 10000`
+  `keytool -genkeypair -v -keystore release.jks -alias unibot -keyalg RSA -keysize 4096 -validity 10000`
   and keep it and its passwords out of Git. Losing it means a new APK cannot
   upgrade an installed one.
 

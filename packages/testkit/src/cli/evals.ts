@@ -4,9 +4,9 @@ import { mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import type { AgentRunRequest } from "@rakazo/adapter-kit";
-import { ModelConnectInputSchema } from "@rakazo/contracts";
-import { loadRootEnv } from "@rakazo/core/node/load-root-env";
+import type { AgentRunRequest } from "@unibot/adapter-kit";
+import { ModelConnectInputSchema } from "@unibot/contracts";
+import { loadRootEnv } from "@unibot/core/node/load-root-env";
 import type { StartedPostgreSqlContainer } from "@testcontainers/postgresql";
 import { EVAL_CASES, HISTORY_EVAL_CASES } from "../evals/cases.js";
 import { HISTORY_FIXTURE_VERSION } from "../evals/history-fixtures.js";
@@ -415,7 +415,7 @@ async function main() {
     return;
   }
   // This CLI owns a disposable database. Never migrate or evaluate against an inherited database.
-  const dataDir = mkdtempSync(path.join(tmpdir(), "rakazo-evals-"));
+  const dataDir = mkdtempSync(path.join(tmpdir(), "unibot-evals-"));
   let postgres: StartedPostgreSqlContainer | undefined;
   let stopRequested = false;
   const stop = new AbortController();
@@ -461,18 +461,18 @@ async function main() {
       CLOUD_AGENT_PROVIDER: "",
       MODEL_API_KEY: "",
     });
-    execFileSync("pnpm", ["--filter", "@rakazo/db", "generate"], {
+    execFileSync("pnpm", ["--filter", "@unibot/db", "generate"], {
       stdio: "pipe",
       timeout: 120_000,
     });
-    execFileSync("pnpm", ["--filter", "@rakazo/db", "exec", "prisma", "migrate", "deploy"], {
+    execFileSync("pnpm", ["--filter", "@unibot/db", "exec", "prisma", "migrate", "deploy"], {
       stdio: "pipe",
       timeout: 120_000,
     });
     // Import runtime modules only after generation; their barrel exports load Prisma.
-    const { createApp } = await import("@rakazo/api/app");
+    const { createApp } = await import("@unibot/api/app");
     const { runTrial } = await import("../evals/runner.js");
-    const { dispatcherFetch, PiAgentRuntime } = await import("@rakazo/adapters");
+    const { dispatcherFetch, PiAgentRuntime } = await import("@unibot/adapters");
     const { EvalSandboxProvider } = await import("../evals/sandbox.js");
     for (let i = 0; i < trials.length; i++) {
       if (stopRequested) {

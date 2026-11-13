@@ -1,5 +1,5 @@
 /**
- * The Unibots mark, defined once as geometry.
+ * The UniBot mark, defined once as geometry.
  *
  * Every icon, favicon, splash, installer plate, and notification silhouette is
  * rasterised from these values, so a single edit updates the whole product.

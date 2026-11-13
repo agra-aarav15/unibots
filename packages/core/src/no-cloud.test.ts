@@ -21,12 +21,12 @@ describe("no hosted service", () => {
     const { scanForCloudReferences } = await cloudGuard();
     const files: Record<string, string> = {
       "apps/desktop/src/setup.js": 'const url = "https://app.rakazo.com";\n',
-      "apps/www/src/site.ts": 'export const NAME = "Unibots Cloud";\n',
+      "apps/www/src/site.ts": 'export const NAME = "UniBot Cloud";\n',
     };
     const hits = await scanForCloudReferences(Object.keys(files), async (file) => files[file]!);
     expect(hits).toEqual([
       "apps/desktop/src/setup.js:1: app.rakazo.com",
-      "apps/www/src/site.ts:1: Unibots Cloud",
+      "apps/www/src/site.ts:1: UniBot Cloud",
     ]);
   });
 

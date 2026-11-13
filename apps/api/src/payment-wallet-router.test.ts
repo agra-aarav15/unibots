@@ -1,8 +1,8 @@
 import { RPCHandler } from "@orpc/server/fetch";
-import type { PaymentWalletProvider } from "@rakazo/adapter-kit";
-import { createPaymentWalletProvider } from "@rakazo/adapters";
-import type { Actor } from "@rakazo/contracts";
-import type { PrismaClient } from "@rakazo/db";
+import type { PaymentWalletProvider } from "@unibot/adapter-kit";
+import { createPaymentWalletProvider } from "@unibot/adapters";
+import type { Actor } from "@unibot/contracts";
+import type { PrismaClient } from "@unibot/db";
 import { describe, expect, it, vi } from "vitest";
 import type { RouterDeps } from "./router.js";
 import { createRouter } from "./router.js";
@@ -78,7 +78,7 @@ function walletDeps(paymentWallet: PaymentWalletProvider | null) {
       screenProxySecret: "fake-test-secret",
       sandboxProvider: "fake",
     },
-    dataDir: "/tmp/rakazo-router-test",
+    dataDir: "/tmp/unibot-router-test",
   } as unknown as RouterDeps;
   const handler = new RPCHandler(createRouter(deps));
   async function call(path: "status" | "connect" | "disconnect") {

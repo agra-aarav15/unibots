@@ -8,8 +8,8 @@ import type {
   Me,
   Space,
   ThreadSnapshot,
-} from "@rakazo/contracts";
-import { isRetryableError, reorderBotTo } from "@rakazo/core";
+} from "@unibot/contracts";
+import { isRetryableError, reorderBotTo } from "@unibot/core";
 import type { RefObject } from "react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { takeInitialBootstrap } from "../../lib/bootstrap";

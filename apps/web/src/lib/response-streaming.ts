@@ -1,9 +1,9 @@
-import type { ResponseStreamingPreference } from "@rakazo/core";
+import type { ResponseStreamingPreference } from "@unibot/core";
 import {
   normalizeResponseStreamingPreference,
   RESPONSE_STREAMING_STORAGE_KEY,
   responseStreamingEnabled,
-} from "@rakazo/core";
+} from "@unibot/core";
 
 export type { ResponseStreamingPreference };
 

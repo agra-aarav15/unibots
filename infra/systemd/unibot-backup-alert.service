@@ -1,0 +1,11 @@
+[Unit]
+Description=Notify operators when a production backup fails
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/unibot-host-alert backup-failure "Nightly backup failed. Inspect unibot-backup.service on the server."
+StateDirectory=unibot/alerts
+StateDirectoryMode=0700
+ProtectSystem=strict
+ReadWritePaths=/var/lib/unibot/alerts
+PrivateTmp=true

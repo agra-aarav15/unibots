@@ -9,9 +9,9 @@ import type {
   ConnectorProvider,
   ConnectorTool,
   ManagedConnectorProvider,
-} from "@rakazo/adapter-kit";
-import { ConnectorAuthUnavailableError } from "@rakazo/adapter-kit";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/adapter-kit";
+import { ConnectorAuthUnavailableError } from "@unibot/adapter-kit";
+import { getLogger } from "@unibot/logging";
 import { COMPOSIO_MULTI_EXECUTE_TOOL, composioToolBatch } from "./composio-batch.js";
 import type { ToolkitDirectoryEntry } from "./composio-catalog-cache.js";
 import {
@@ -500,7 +500,7 @@ export class ComposioConnector implements ComposioProvider {
   }
 
   private async loadDirectory(): Promise<ToolkitDirectoryEntry[]> {
-    const session = await this.sessionFor("__rakazo_catalog__");
+    const session = await this.sessionFor("__unibot_catalog__");
     const toolkits = await collectPages((cursor) => session.toolkits({ limit: 50, cursor }));
     return toolkits.map((toolkit) => ({
       slug: toolkit.slug,

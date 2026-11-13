@@ -7,11 +7,13 @@ import type {
 } from "@earendil-works/pi-ai";
 import { clampThinkingLevel } from "@earendil-works/pi-ai";
 import { builtinModels } from "@earendil-works/pi-ai/providers/all";
-import type { AgentRunRequest } from "@rakazo/adapter-kit";
-import { canonicalPiProviderId, usableModelId } from "@rakazo/contracts";
+import type { AgentRunRequest } from "@unibot/adapter-kit";
+import type { CliModelCommand } from "@unibot/contracts";
+import { canonicalPiProviderId, usableModelId } from "@unibot/contracts";
 import { DEFAULT_OPENROUTER_MODEL_ID } from "./deployment-model.js";
 import { PiRuntimeCredentialStore, toOAuthCredential } from "./pi-credentials.js";
 import { liveModelSibling, withLiveImageInput } from "./pi-live-model.js";
+import { CLI_PROVIDER_ID, registerCliCatalog, registerCliRuntime } from "./pi-cli-provider.js";
 import { registerLocalProvider } from "./pi-local-provider.js";
 import { applyPiModelCompatibility } from "./pi-model-compat.js";
 import { CHATGPT_OAUTH_PROVIDER } from "./pi-oauth.js";
@@ -112,7 +114,8 @@ export function resolveRuntimeModel(modelConfig: AgentRunRequest["model"]): {
   }
   const apiKey = modelConfig.oauth
     ? undefined
-    : modelConfig.provider === OPENAI_COMPATIBLE_PROVIDER_ID
+    : modelConfig.provider === OPENAI_COMPATIBLE_PROVIDER_ID ||
+        modelConfig.provider === CLI_PROVIDER_ID
       ? modelConfig.apiKey || "local"
       : // Only OpenRouter may fall back to the OpenRouter env key. Handing it to
         // another provider would ship our key to a vendor it was not issued for.
@@ -145,6 +148,23 @@ export function modelsForRequest(
   if (store) {
     return registerOpenAiCompatibleCatalog(
       registerLocalProvider(applyPiModelCompatibility(builtinModels({ credentials: store }))),
+    );
+  }
+  if (provider === CLI_PROVIDER_ID && request.model.command?.trim()) {
+    const command: CliModelCommand = {
+      command: request.model.command,
+      ...(request.model.cwd ? { cwd: request.model.cwd } : {}),
+      ...(request.model.timeoutMs !== undefined ? { timeoutMs: request.model.timeoutMs } : {}),
+      ...(request.model.maxTokens !== undefined ? { maxTokens: request.model.maxTokens } : {}),
+      ...(request.model.contextWindow !== undefined
+        ? { contextWindow: request.model.contextWindow }
+        : {}),
+    };
+    return registerCliRuntime(
+      registerOpenAiCompatibleCatalog(
+        registerLocalProvider(applyPiModelCompatibility(builtinModels())),
+      ),
+      { ...command, modelId: request.model.id.trim() },
     );
   }
   if (

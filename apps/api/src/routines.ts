@@ -1,14 +1,14 @@
 import { ORPCError } from "@orpc/server";
-import { routineWakeupJob } from "@rakazo/adapter-kit";
-import { parseRoutineWatch, parseRoutineWatchState } from "@rakazo/adapters";
-import type { Actor, CreateRoutineInput, Routine } from "@rakazo/contracts";
-import { canonicalPiProviderId } from "@rakazo/contracts";
+import { routineWakeupJob } from "@unibot/adapter-kit";
+import { parseRoutineWatch, parseRoutineWatchState } from "@unibot/adapters";
+import type { Actor, CreateRoutineInput, Routine } from "@unibot/contracts";
+import { canonicalPiProviderId } from "@unibot/contracts";
 import {
   hasMixedOneShotSchedule,
   isOneShotRoutineCrons,
   nextCronDateAcrossStrict,
-} from "@rakazo/core";
-import type { Prisma } from "@rakazo/db";
+} from "@unibot/core";
+import type { Prisma } from "@unibot/db";
 import type { RouterDeps } from "./router.js";
 
 export function assertRoutineSchedule(input: CreateRoutineInput): void {

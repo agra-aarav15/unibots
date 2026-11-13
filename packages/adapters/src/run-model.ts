@@ -4,14 +4,15 @@ import type {
   AgentRuntime,
   ModelCredentialFailedState,
   ModelCredentialRetireReason,
-} from "@rakazo/adapter-kit";
+} from "@unibot/adapter-kit";
 import {
+  CLI_PROVIDER_ID,
   CLOUDFLARE_AI_GATEWAY_CONFIG_MESSAGE,
   CLOUDFLARE_WORKERS_AI_PROVIDER_ID,
   cloudflareModelConfigMessage,
   OPENAI_COMPATIBLE_PROVIDER_ID,
-} from "@rakazo/contracts";
-import { MISSING_MODEL_RUN_ERROR } from "@rakazo/core";
+} from "@unibot/contracts";
+import { MISSING_MODEL_RUN_ERROR } from "@unibot/core";
 import { cloudflareProviderEnv } from "./cloudflare-ai-gateway.js";
 import { resolveDeploymentModel } from "./deployment-model.js";
 import type { ExecutorDeps } from "./executor-deps.js";
@@ -130,10 +131,14 @@ function assertCompatibleModelEnabled(
   if (credential.provider !== OPENAI_COMPATIBLE_PROVIDER_ID) return;
   if (secret.kind !== "openai_compatible") return;
   if (secret.enabledModelIds !== undefined) {
-    if (!enabledOpenAiCompatibleModelIds(secret, credential.defaultModel).includes(modelId)) {
-      throw new UnavailableModelForAuthError("Unknown model for that provider");
+    if (
+      secret.enabledModelIds.includes("*") ||
+      secret.enabledModelIds.length === 0 ||
+      enabledOpenAiCompatibleModelIds(secret, credential.defaultModel).includes(modelId)
+    ) {
+      return;
     }
-    return;
+    throw new UnavailableModelForAuthError("Unknown model for that provider");
   }
 }
 
@@ -166,6 +171,8 @@ export async function resolveModelKey(...args: Parameters<typeof resolveModelKey
   const keyless =
     provider === LOCAL_PROVIDER_ID ||
     (provider === OPENAI_COMPATIBLE_PROVIDER_ID && Boolean(material.baseUrl)) ||
+    // A command connection authenticates through its own tool, not us.
+    (provider === CLI_PROVIDER_ID && Boolean(material.command)) ||
     (provider === "scripted" && deps.runtime?.describe().capabilities.scripted) ||
     (!credential && deployment.provider === provider && deployment.hostCredentials);
   // Match Pi's OpenRouter fallback only when no explicit key overrides it.
@@ -202,6 +209,9 @@ async function resolveModelKeyMaterial(
   gatewayId?: string;
   baseUrl?: string;
   apiProtocol?: AgentRunRequest["model"]["apiProtocol"];
+  command?: string;
+  cwd?: string;
+  timeoutMs?: number;
   headers?: Record<string, string>;
   allowPrivateEndpoint?: boolean;
   cacheCapabilities?: AgentRunRequest["model"]["cacheCapabilities"];
@@ -231,7 +241,10 @@ async function resolveModelKeyMaterial(
         if (await modelCreditBillingEnabled(deps))
           throw new Error("Connect that model provider again.");
         if (requireStoredSecret) throw new Error("Backup model credential is no longer available");
-        if (credential.provider === OPENAI_COMPATIBLE_PROVIDER_ID) {
+        if (
+          credential.provider === OPENAI_COMPATIBLE_PROVIDER_ID ||
+          credential.provider === CLI_PROVIDER_ID
+        ) {
           throw new UnavailableModelForAuthError("Unknown model for that provider");
         }
         cloudflareProviderEnv({ provider });
@@ -286,7 +299,11 @@ async function resolveModelKeyMaterial(
       const baseUrl =
         resolved.secret.kind === "openai_compatible" ? resolved.secret.baseUrl : undefined;
       // Recheck operator configuration for saved private connections on every run.
-      const allowPrivateEndpoint = baseUrl ? deps.mcpAllowPrivateEndpoint === true : undefined;
+      const allowPrivateEndpoint = baseUrl
+        ? deps.mcpAllowPrivateEndpoint === true ||
+          process.env.MCP_ALLOW_PRIVATE_ENDPOINT === "true" ||
+          process.env.AUTH_MODE === "local"
+        : undefined;
       if (baseUrl) {
         try {
           // The public gate stays with the request-time fetch guard.
@@ -316,6 +333,15 @@ async function resolveModelKeyMaterial(
         accountId,
         gatewayId,
         baseUrl,
+        ...(resolved.secret.kind === "cli"
+          ? {
+              command: resolved.secret.command,
+              ...(resolved.secret.cwd !== undefined ? { cwd: resolved.secret.cwd } : {}),
+              ...(resolved.secret.timeoutMs !== undefined
+                ? { timeoutMs: resolved.secret.timeoutMs }
+                : {}),
+            }
+          : {}),
         apiProtocol:
           resolved.secret.kind === "openai_compatible" ? resolved.secret.apiProtocol : undefined,
         headers: resolved.secret.kind === "openai_compatible" ? resolved.secret.headers : undefined,

@@ -4,4 +4,4 @@
 services:
   api:
     ports:
-      - "${RAKAZO_LAN_BIND:-0.0.0.0}:${RAKAZO_LAN_PORT:-3100}:3100"
+      - "${UNIBOT_LAN_BIND:-0.0.0.0}:${UNIBOT_LAN_PORT:-3100}:3100"

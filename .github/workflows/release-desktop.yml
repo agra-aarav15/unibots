@@ -124,11 +124,11 @@ jobs:
       - name: Generate the database client for desktop compilation
         run: pnpm db:generate
         env:
-          DATABASE_URL: postgres://rakazo:rakazo@127.0.0.1:5433/rakazo
+          DATABASE_URL: postgres://unibot:unibot@127.0.0.1:5433/unibot
       - name: Build renderer and Electron main process
-        run: pnpm --filter @rakazo/web build && pnpm --filter @rakazo/desktop build
+        run: pnpm --filter @unibot/web build && pnpm --filter @unibot/desktop build
         env:
-          RAKAZO_ALLOW_DEV_SECRETS: "1"
+          UNIBOT_ALLOW_DEV_SECRETS: "1"
 
       - name: Require macOS signing and notarization credentials
         if: runner.os == 'macOS'
@@ -161,7 +161,7 @@ jobs:
           APPLE_API_KEY: ${{ runner.temp }}/apple-api-key.p8
         run: |
           set -eo pipefail
-          pnpm --filter @rakazo/desktop exec electron-builder \
+          pnpm --filter @unibot/desktop exec electron-builder \
             --mac --universal --publish never -c.forceCodeSigning=true
       - name: Remove the App Store Connect API key from the runner
         if: always() && runner.os == 'macOS'
@@ -174,7 +174,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          app="apps/desktop/out/mac-universal/Unibots.app"
+          app="apps/desktop/out/mac-universal/UniBot.app"
           codesign --verify --deep --strict --verbose=2 "$app"
           # Without this entitlement the hardened runtime silences the microphone.
           # Check the app and every helper it signs, and require the value to be true.
@@ -192,27 +192,27 @@ jobs:
           spctl --assess --type execute --verbose=2 "$app"
           grep -Fqx "provider: github" "$app/Contents/Resources/app-update.yml"
           grep -Fqx "owner: agra-aarav15" "$app/Contents/Resources/app-update.yml"
-          grep -Fqx "repo: unibots" "$app/Contents/Resources/app-update.yml"
+          grep -Fqx "repo: unibot" "$app/Contents/Resources/app-update.yml"
 
       - name: Verify packaged native dependencies
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          app="apps/desktop/out/mac-universal/Unibots.app"
+          app="apps/desktop/out/mac-universal/UniBot.app"
           native="$app/Contents/Resources/app.asar.unpacked/node_modules"
           lipo "$native/@koromix/koffi-darwin-x64/darwin_x64/koffi.node" -verify_arch x86_64
           lipo "$native/@koromix/koffi-darwin-arm64/darwin_arm64/koffi.node" -verify_arch arm64
           lipo "$native/@oxc-parser/binding-darwin-x64/parser.darwin-x64.node" -verify_arch x86_64
           lipo "$native/@oxc-parser/binding-darwin-arm64/parser.darwin-arm64.node" -verify_arch arm64
           # Dictation's system recognizer captures audio itself, so it needs the microphone entitlement too.
-          speech="$app/Contents/Resources/speech/rakazo-speech"
+          speech="$app/Contents/Resources/speech/unibot-speech"
           lipo "$speech" -verify_arch x86_64 arm64
           entitlements="$(mktemp)"
           codesign -d --entitlements :- "$speech" > "$entitlements" 2>/dev/null
           test "$(/usr/libexec/PlistBuddy -c "Print :com.apple.security.device.audio-input" "$entitlements")" = true
           rm -f "$entitlements"
           "$speech" xx < /dev/null | grep -Fq '"language-not-supported"'
-          ELECTRON_RUN_AS_NODE=1 "$app/Contents/MacOS/Unibots" -e '
+          ELECTRON_RUN_AS_NODE=1 "$app/Contents/MacOS/UniBot" -e '
             const { createRequire } = require("node:module");
             const appRequire = createRequire(`${process.argv[1]}/Contents/Resources/app.asar/package.json`);
             const koffi = appRequire("koffi");
@@ -259,7 +259,7 @@ jobs:
           SIGNING_PUBLISHER: ${{ vars.DESKTOP_WIN_PUBLISHER }}
         run: |
           set -euo pipefail
-          pnpm --filter @rakazo/desktop exec electron-builder \
+          pnpm --filter @unibot/desktop exec electron-builder \
             --win --x64 --publish never -c.forceCodeSigning=true \
             "-c.win.azureSignOptions.endpoint=$SIGNING_ENDPOINT" \
             "-c.win.azureSignOptions.codeSigningAccountName=$SIGNING_ACCOUNT" \
@@ -268,7 +268,7 @@ jobs:
       - name: Package unsigned x64 Windows app
         if: runner.os == 'Windows' && needs.validate.outputs.windows_signed != 'true'
         run: >-
-          pnpm --filter @rakazo/desktop exec electron-builder
+          pnpm --filter @unibot/desktop exec electron-builder
           --win --x64 --publish never
       - name: Verify Windows Authenticode signature and publisher-bound update feed
         if: runner.os == 'Windows'
@@ -285,7 +285,7 @@ jobs:
           if ($executables.Count -lt 2) { throw "Windows installer or application was not created." }
           $config = "apps/desktop/out/win-unpacked/resources/app-update.yml"
           $feed = Get-Content -Raw $config
-          foreach ($expected in @("provider: github", "owner: agra-aarav15", "repo: unibots")) {
+          foreach ($expected in @("provider: github", "owner: agra-aarav15", "repo: unibot")) {
             if ($feed -notmatch "(?m)^$([regex]::Escape($expected))\r?$") {
               throw "Windows update config missing '$expected'."
             }
@@ -312,7 +312,7 @@ jobs:
       - name: Package x64 Linux AppImage
         if: runner.os == 'Linux'
         run: >-
-          pnpm --filter @rakazo/desktop exec electron-builder
+          pnpm --filter @unibot/desktop exec electron-builder
           --linux --x64 --publish never
       - name: Verify Linux update feed is pinned to the official GitHub channel
         if: runner.os == 'Linux'
@@ -329,7 +329,7 @@ jobs:
           test -f "$config"
           grep -Fqx "provider: github" "$config"
           grep -Fqx "owner: agra-aarav15" "$config"
-          grep -Fqx "repo: unibots" "$config"
+          grep -Fqx "repo: unibot" "$config"
           test -f apps/desktop/out/latest-linux.yml
           grep -Fqx "version: $RELEASE_VERSION" apps/desktop/out/latest-linux.yml
 
@@ -416,7 +416,7 @@ jobs:
           RELEASE_TAG: ${{ needs.validate.outputs.tag }}
         run: >-
           gh release create "$RELEASE_TAG" release-artifacts/*
-          --draft --generate-notes --title "Unibots $RELEASE_TAG" --verify-tag
+          --draft --generate-notes --title "UniBot $RELEASE_TAG" --verify-tag
       - name: Publish the completed release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

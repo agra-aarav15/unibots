@@ -1,9 +1,9 @@
-import { MARK, MARK_GRADIENT, MARK_STROKE_PATH } from "@rakazo/ui-tokens/mark";
+import { MARK, MARK_GRADIENT, MARK_STROKE_PATH } from "@unibot/ui-tokens/mark";
 import { useId } from "react";
 import { cn } from "./lib/utils.js";
 
 /**
- * The product mark: the gradient "U", drawn from the same geometry in `@rakazo/ui-tokens`
+ * The product mark: the gradient "U", drawn from the same geometry in `@unibot/ui-tokens`
  * that every icon, favicon and splash is rasterised from, so the interface and the artwork
  * cannot drift apart.
  *
@@ -71,8 +71,8 @@ export function Wordmark({
   return (
     <span className={cn("flex items-center gap-3", className)}>
       <BrandMark className={cn("h-10 w-auto", markClassName)} />
-      <span className={cn("text-[28px] leading-none tracking-tight text-foreground", textClassName)}>
-        Unibots
+      <span className={cn("text-[28px] leading-none tracking-tight text-foreground font-semibold", textClassName)}>
+        UniBot
       </span>
     </span>
   );

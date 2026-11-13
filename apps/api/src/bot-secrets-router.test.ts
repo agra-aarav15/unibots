@@ -1,13 +1,13 @@
 import { RPCHandler } from "@orpc/server/fetch";
-import type { Actor } from "@rakazo/contracts";
-import { encodeLoginSecret } from "@rakazo/contracts";
-import type { PrismaClient } from "@rakazo/db";
+import type { Actor } from "@unibot/contracts";
+import { encodeLoginSecret } from "@unibot/contracts";
+import type { PrismaClient } from "@unibot/db";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { RouterDeps } from "./router.js";
 import { createRouter } from "./router.js";
 
 const events = vi.hoisted(() => ({ record: vi.fn() }));
-vi.mock("@rakazo/db", async (original) => ({
+vi.mock("@unibot/db", async (original) => ({
   ...(await original<Record<string, unknown>>()),
   recordSecurityEvent: events.record,
 }));
@@ -124,7 +124,7 @@ function botSecretDeps(seed: Row[] = []) {
       screenProxySecret: "fake-test-secret",
       sandboxProvider: "fake",
     },
-    dataDir: "/tmp/rakazo-router-test",
+    dataDir: "/tmp/unibot-router-test",
   } as unknown as RouterDeps;
   const handler = new RPCHandler(createRouter(deps));
   async function call(path: string, input: unknown) {
@@ -183,7 +183,7 @@ describe("botSecrets router", () => {
   });
 
   it("rejects another user's bot and a missing bot before any secret access", async () => {
-    vi.stubEnv("RAKAZO_SECRETS_ALLOW_PRIVATE_HTTP", "1");
+    vi.stubEnv("UNIBOT_SECRETS_ALLOW_PRIVATE_HTTP", "1");
     const { prisma, secrets, call } = botSecretDeps();
     for (const botId of ["bot-other", "missing-bot"]) {
       const results = [
@@ -248,7 +248,7 @@ describe("botSecrets router", () => {
   });
 
   it("stores a LAN http origin only with the private-HTTP opt-in", async () => {
-    vi.stubEnv("RAKAZO_SECRETS_ALLOW_PRIVATE_HTTP", "1");
+    vi.stubEnv("UNIBOT_SECRETS_ALLOW_PRIVATE_HTTP", "1");
     const allowed = botSecretDeps();
     const saved = await allowed.call("put", putInput("http://192.168.1.20:8080"));
     expect(saved.status).toBe(200);
@@ -268,7 +268,7 @@ describe("botSecrets router", () => {
     expect(allowed.rows).toHaveLength(1);
     expect(allowed.rows[0]).toMatchObject({ userId: "user-1", spaceId: null });
 
-    vi.stubEnv("RAKAZO_SECRETS_ALLOW_PRIVATE_HTTP", "");
+    vi.stubEnv("UNIBOT_SECRETS_ALLOW_PRIVATE_HTTP", "");
     const denied = botSecretDeps();
     const rejected = await denied.call("put", putInput("http://192.168.1.20:8080"));
     expect(rejected.status).toBe(400);
@@ -280,7 +280,7 @@ describe("botSecrets router", () => {
 
   it("rejects public plain http and cloud-metadata hosts in both modes", async () => {
     for (const flag of ["1", ""]) {
-      vi.stubEnv("RAKAZO_SECRETS_ALLOW_PRIVATE_HTTP", flag);
+      vi.stubEnv("UNIBOT_SECRETS_ALLOW_PRIVATE_HTTP", flag);
       for (const origin of [
         "http://example.com",
         "http://100.100.100.200",
@@ -397,7 +397,7 @@ describe("botSecrets router", () => {
   });
 
   it("lists a private-HTTP origin as remove-only when the opt-in is off", async () => {
-    vi.stubEnv("RAKAZO_SECRETS_ALLOW_PRIVATE_HTTP", "");
+    vi.stubEnv("UNIBOT_SECRETS_ALLOW_PRIVATE_HTTP", "");
     const created = new Date("2026-08-01T00:00:00.000Z");
     const { call } = botSecretDeps([
       {

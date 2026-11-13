@@ -21,6 +21,7 @@ export * from "./bot-sender-name.js";
 export * from "./call-nonce.js";
 export * from "./call-request.js";
 export * from "./call-session.js";
+export * from "./chief-persona.js";
 export * from "./client-id.js";
 export * from "./cloud-agent.js";
 export * from "./compose-update.js";

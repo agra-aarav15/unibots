@@ -6,10 +6,10 @@
     <key>CFBundleIdentifier</key>
     <string>dev.rakazo.desktop.speech</string>
     <key>CFBundleName</key>
-    <string>Unibots</string>
+    <string>UniBot</string>
     <key>NSSpeechRecognitionUsageDescription</key>
-    <string>Unibots turns what you say into text for dictation and voice calls with your bots.</string>
+    <string>UniBot turns what you say into text for dictation and voice calls with your bots.</string>
     <key>NSMicrophoneUsageDescription</key>
-    <string>Unibots uses the microphone for dictation and voice calls with your bots.</string>
+    <string>UniBot uses the microphone for dictation and voice calls with your bots.</string>
   </dict>
 </plist>

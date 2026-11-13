@@ -4,7 +4,7 @@ import {
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH,
   signupRequiresEmailVerification,
-} from "@rakazo/core";
+} from "@unibot/core";
 import {
   BrandMark,
   Button,
@@ -13,7 +13,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
   Label,
-} from "@rakazo/ui-web";
+} from "@unibot/ui-web";
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { PasskeySignIn } from "../components/PasskeySignIn";
@@ -66,9 +66,9 @@ export function AuthPage({ mode }: { mode: AuthMode }) {
     sent || codeStep ? (
       <Trans>Check your email</Trans>
     ) : mode === "in" ? (
-      <Trans>Sign in to Unibots</Trans>
+      <Trans>Sign in to UniBot</Trans>
     ) : mode === "up" ? (
-      <Trans>Create your Unibots</Trans>
+      <Trans>Create your UniBot</Trans>
     ) : (
       <Trans>Reset your password</Trans>
     );

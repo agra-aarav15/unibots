@@ -1,7 +1,7 @@
-import { BillingEmulator } from "@rakazo/adapters";
-import type { Actor } from "@rakazo/contracts";
-import type { PrismaClient } from "@rakazo/db";
-import { asSystem, billingAccountForOrganization, createDb } from "@rakazo/db";
+import { BillingEmulator } from "@unibot/adapters";
+import type { Actor } from "@unibot/contracts";
+import type { PrismaClient } from "@unibot/db";
+import { asSystem, billingAccountForOrganization, createDb } from "@unibot/db";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createBillingService, TRIAL_DAYS } from "./billing.js";
 

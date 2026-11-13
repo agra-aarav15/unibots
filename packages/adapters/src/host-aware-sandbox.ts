@@ -13,8 +13,8 @@ import type {
   TerminalRequest,
   WorkspaceDirectoryRequest,
   WorkspaceExportLimits,
-} from "@rakazo/adapter-kit";
-import type { PrismaClient } from "@rakazo/db";
+} from "@unibot/adapter-kit";
+import type { PrismaClient } from "@unibot/db";
 import { cancelComputerRunWork } from "./computer-idle.js";
 import { manageComputerWorkspaceDirectories } from "./computer-workspace.js";
 import { assertHostCommandsAllowed, DesktopSandboxProvider } from "./desktop-sandbox.js";

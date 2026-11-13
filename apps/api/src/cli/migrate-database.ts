@@ -4,22 +4,22 @@
 import { existsSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
-import { migrateJobQueue } from "@rakazo/adapters";
-import { loadRootEnv } from "@rakazo/core/node/load-root-env";
+import { migrateJobQueue } from "@unibot/adapters";
+import { loadRootEnv } from "@unibot/core/node/load-root-env";
 import {
   databaseUrls,
   deployMigrations,
   provisionRuntimeRole,
   RUNTIME_ROLE,
   SINGLE_DATABASE_URL_WARNING,
-} from "@rakazo/db";
+} from "@unibot/db";
 
 /**
  * The directory of a workspace package, found from its resolved entry point.
  *
- * This used to shell out to `pnpm --filter @rakazo/db exec pwd`, which cannot work on Windows: Node
- * cannot spawn pnpm's `.cmd` shim, and under Git Bash `pwd` answers in MSYS form (`/f/UNIBOTS/...`),
- * which Node then reads as `F:\f\UNIBOTS\...`.
+ * This used to shell out to `pnpm --filter @unibot/db exec pwd`, which cannot work on Windows: Node
+ * cannot spawn pnpm's `.cmd` shim, and under Git Bash `pwd` answers in MSYS form (`/f/UNIBOT/...`),
+ * which Node then reads as `F:\f\UNIBOT\...`.
  */
 function packageDirOf(entry: string, name: string): string {
   for (let dir = path.dirname(entry); ; dir = path.dirname(dir)) {
@@ -36,7 +36,7 @@ loadRootEnv();
 const urls = databaseUrls(process.env);
 await deployMigrations({
   migrationUrl: urls.migrationUrl,
-  dbPackageDir: packageDirOf(createRequire(import.meta.url).resolve("@rakazo/db"), "@rakazo/db"),
+  dbPackageDir: packageDirOf(createRequire(import.meta.url).resolve("@unibot/db"), "@unibot/db"),
 });
 await migrateJobQueue(urls.migrationUrl);
 

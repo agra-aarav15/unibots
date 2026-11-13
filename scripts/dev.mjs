@@ -7,7 +7,7 @@
 // unmerged schema changes never reach the shared one.
 //
 // The database is `.env`'s DATABASE_URL when it accepts a connection. Otherwise a local
-// Postgres container (`rakazo-dev-postgres`) is started and reused by every checkout.
+// Postgres container (`unibot-dev-postgres`) is started and reused by every checkout.
 // Setting WEB_PORT or API_PORT, in the shell or `.env`, turns off port selection. A relative
 // DATA_DIR resolves in the main checkout, so checkouts sharing the database share its files.
 // Branch databases, and their copied files, are dropped once the branch is deleted or merged.
@@ -37,14 +37,14 @@ const dotenv = require("dotenv");
 const DEFAULT_PORTS = { web: 5173, api: 3100, supervisor: 7091 };
 const PORT_STEP = 10;
 const MANAGED = {
-  container: "rakazo-dev-postgres",
+  container: "unibot-dev-postgres",
   image: "postgres:18",
   port: 54318,
-  owner: "rakazo",
-  runtime: "rakazo_dev",
-  database: "rakazo",
+  owner: "unibot",
+  runtime: "unibot_dev",
+  database: "unibot",
 };
-const SERVICES = ["@rakazo/api", "@rakazo/worker", "@rakazo/web", "@rakazo/sandbox-supervisor"];
+const SERVICES = ["@unibot/api", "@unibot/worker", "@unibot/web", "@unibot/sandbox-supervisor"];
 
 const fileEnv = existsSync(path.join(root, ".env"))
   ? dotenv.parse(readFileSync(path.join(root, ".env")))
@@ -108,12 +108,78 @@ function withDatabase(url, database) {
   return parsed.toString();
 }
 
+/**
+ * The portable server this checkout can run without Docker: PostgreSQL binaries unpacked into
+ * `.tools/pgsql` and a cluster in `.tools/pgdata`, both ignored by git. It listens on the same port
+ * and takes the same login as the Docker container, so DATABASE_URL does not change either way.
+ */
+function portablePostgres() {
+  const binaries = path.join(root, ".tools", "pgsql");
+  const data = path.join(root, ".tools", "pgdata");
+  const pgCtl = path.join(binaries, "bin", "pg_ctl.exe");
+  if (!existsSync(pgCtl) || !existsSync(path.join(data, "PG_VERSION"))) return null;
+  return {
+    pgCtl,
+    data,
+    logFile: path.join(root, ".zcode", "postgres.log"),
+    status: () => {
+      try {
+        run(path.join(binaries, "bin", "pg_isready.exe"), [
+          "-h",
+          "127.0.0.1",
+          "-p",
+          String(MANAGED.port),
+          "-q",
+        ]);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    start: () => {
+      log(`Starting the local Postgres in ${path.relative(root, data)}`);
+      // `pg_ctl start` leaves the postmaster running as its child. With captured pipes the parent
+      // command never sees EOF and blocks forever on Windows, so give it no pipes at all and let
+      // the server's own log file carry its output.
+      execFileSync(
+        pgCtl,
+        [
+          "-D",
+          data,
+          "-l",
+          path.join(root, ".zcode", "postgres.log"),
+          "-o",
+          `-p ${MANAGED.port} -c listen_addresses=127.0.0.1`,
+          "-w",
+          "start",
+        ],
+        { stdio: "ignore", timeout: 120_000 },
+      );
+    },
+  };
+}
+
 async function startManagedPostgres() {
+  const portable = portablePostgres();
+  if (portable) {
+    if (!portable.status()) portable.start();
+    for (let attempt = 0; attempt < 60 && !portable.status(); attempt += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+    if (!portable.status()) {
+      throw new Error(`The local Postgres did not start; see ${portable.logFile}`);
+    }
+    const server = `127.0.0.1:${MANAGED.port}`;
+    return {
+      url: `postgres://${MANAGED.runtime}:${MANAGED.runtime}@${server}/${MANAGED.database}`,
+      migrationUrl: `postgres://${MANAGED.owner}:${MANAGED.owner}@${server}/${MANAGED.database}`,
+    };
+  }
   try {
     run("docker", ["version", "--format", "{{.Server.Version}}"]);
   } catch {
     throw new Error(
-      "DATABASE_URL in .env does not accept a connection and Docker is not running to start a local Postgres.",
+      "DATABASE_URL in .env does not accept a connection and there is no local Postgres to start. Unpack PostgreSQL into .tools/pgsql (see README) or start Docker.",
     );
   }
   const state = (() => {
@@ -167,7 +233,7 @@ async function sharedDatabase() {
   const url = setting("DATABASE_URL");
   const migrationUrl = setting("DATABASE_MIGRATION_URL") || url;
   if (url && (await connects(migrationUrl))) return { url, migrationUrl };
-  if (url) log("DATABASE_URL in .env does not accept a connection; using the local container");
+  if (url) log("DATABASE_URL in .env does not accept a connection; starting a local server");
   return startManagedPostgres();
 }
 
@@ -218,7 +284,7 @@ function branchMigrations(branch) {
 }
 
 // Marks a finished branch database and records which repository and branch own it.
-const BRANCH_DATABASE_COMMENT = "rakazo dev branch: ";
+const BRANCH_DATABASE_COMMENT = "unibot dev branch: ";
 
 function branchDatabaseComment(branch) {
   return BRANCH_DATABASE_COMMENT + JSON.stringify({ repo: repositoryId(), branch });
@@ -246,7 +312,7 @@ function branchDatabaseName(sharedName, branch) {
 
 /** A branch database's files, kept apart so deleting one never removes a file main still uses. */
 function branchDataDir(sharedDataDir, name) {
-  return path.join(path.dirname(sharedDataDir), ".rakazo-dev-branches", name, "data");
+  return path.join(path.dirname(sharedDataDir), ".unibot-dev-branches", name, "data");
 }
 
 async function branchDatabase(shared, sharedDataDir) {
@@ -356,11 +422,34 @@ function generateClientIfStale(env) {
   const schema = path.join(dbPackage, "prisma/schema.prisma");
   if (existsSync(client) && statSync(client).mtimeMs >= statSync(schema).mtimeMs) return;
   log("Generating the Prisma client");
-  runPnpm(["--filter", "@rakazo/db", "generate"], {
+  runPnpm(["--filter", "@unibot/db", "generate"], {
     cwd: root,
     env,
     stdio: "inherit",
   });
+}
+
+/** Whether the shipped web bundle predates any of its sources, so `pnpm app` builds only then. */
+function webBuildStale() {
+  const webDir = path.join(root, "apps/web");
+  const indexHtml = path.join(webDir, "dist/index.html");
+  const built = statSync(indexHtml, { throwIfNoEntry: false })?.mtimeMs;
+  if (!built) return true;
+  const newestIn = (target) => {
+    const stats = statSync(target, { throwIfNoEntry: false });
+    if (!stats) return 0;
+    if (!stats.isDirectory()) return stats.mtimeMs;
+    let newest = 0;
+    for (const entry of readdirSync(target, { withFileTypes: true })) {
+      if (entry.name === "node_modules") continue;
+      const child = path.join(target, entry.name);
+      newest = Math.max(newest, entry.isDirectory() ? newestIn(child) : (statSync(child, { throwIfNoEntry: false })?.mtimeMs ?? 0));
+    }
+    return newest;
+  };
+  return ["src", "index.html", "vite.config.ts", "package.json"]
+    .map((entry) => path.join(webDir, entry))
+    .some((target) => newestIn(target) > built);
 }
 
 const env = { ...process.env, COREPACK_ENABLE_DOWNLOAD_PROMPT: "0" };
@@ -397,19 +486,60 @@ generateClientIfStale(env);
 const migrationLock = new Client({ connectionString: shared.migrationUrl });
 await migrationLock.connect();
 try {
-  await migrationLock.query("SELECT pg_advisory_lock(hashtext('rakazo dev migrate'))");
+  await migrationLock.query("SELECT pg_advisory_lock(hashtext('unibot dev migrate'))");
   runPnpm(["db:migrate"], { cwd: root, env, stdio: "inherit" });
 } finally {
   await migrationLock.end();
 }
 
 if (ports) log(`Open http://127.0.0.1:${ports.web}`);
+
+// `pnpm app` serves the built bundle instead of Vite's dev module graph: one hashed file per
+// chunk instead of hundreds of module requests, which is what makes a reload feel instant. It is
+// the mode to use when the point is using the app, not editing it.
+const previewWeb = process.argv.includes("--preview") || setting("WEB_MODE") === "preview";
+env.WEB_PORT = String(setting("WEB_PORT") ?? ports?.web ?? DEFAULT_PORTS.web);
+let previewServer = null;
+if (previewWeb) {
+  if (webBuildStale()) {
+    log("Building the web app (skipped when dist is newer than its sources)");
+    runPnpm(["--filter", "@unibot/web", "build"], { cwd: root, env, stdio: "inherit" });
+  } else {
+    log("Serving the existing web build");
+  }
+}
+
 const turbo = spawnPnpm(
-  ["exec", "turbo", "dev", "--env-mode=loose", ...SERVICES.map((name) => `--filter=${name}`)],
+  [
+    "exec",
+    "turbo",
+    "dev",
+    "--env-mode=loose",
+    ...SERVICES.filter((name) => !(previewWeb && name === "@unibot/web")).map(
+      (name) => `--filter=${name}`,
+    ),
+  ],
   { cwd: root, env, stdio: "inherit" },
 );
-for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, () => turbo.kill(signal));
+if (previewWeb) {
+  previewServer = spawnPnpm(["--filter", "@unibot/web", "preview", "--strictPort"], {
+    cwd: root,
+    env,
+    stdio: "inherit",
+  });
+}
+for (const signal of ["SIGINT", "SIGTERM"]) {
+  process.on(signal, () => {
+    previewServer?.kill(signal);
+    turbo.kill(signal);
+  });
+}
+previewServer?.on("exit", (code) => {
+  // A preview that cannot bind is a startup failure, not a reason to keep half a stack running.
+  if (code) process.exit(code);
+});
 turbo.on("exit", (code, signal) => {
+  previewServer?.kill();
   if (signal) process.kill(process.pid, signal);
   else process.exit(code ?? 0);
 });

@@ -90,7 +90,7 @@ it.each([
       );
       expect(close).toHaveBeenCalledOnce();
       expect(container.textContent).toBe("You can close this window.");
-      expect(container.querySelector("[data-rakazo-app-state]")).toBeNull();
+      expect(container.querySelector("[data-unibot-app-state]")).toBeNull();
     } finally {
       await act(async () => root.unmount());
       close.mockRestore();

@@ -1,12 +1,12 @@
 [Unit]
-Description=Create and verify a Unibots production backup
+Description=Create and verify a UniBot production backup
 Requires=docker.service
 After=docker.service
 
 [Service]
 Type=oneshot
-EnvironmentFile=-/etc/rakazo/backup.env
-ExecStart=/usr/local/sbin/rakazo-backup
+EnvironmentFile=-/etc/unibot/backup.env
+ExecStart=/usr/local/sbin/unibot-backup
 Nice=10
 IOSchedulingClass=best-effort
 IOSchedulingPriority=7

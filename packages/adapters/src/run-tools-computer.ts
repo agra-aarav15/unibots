@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto";
-import type { SandboxProvider } from "@rakazo/adapter-kit";
-import type { ComputerCommand } from "@rakazo/contracts";
-import { COMPUTER_COMMAND_OUTPUT_MAX_CHARS } from "@rakazo/contracts";
-import { redactSecrets, sandboxCommandTimeoutMs } from "@rakazo/core";
-import { RunHistoryWriteError } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+import type { SandboxProvider } from "@unibot/adapter-kit";
+import type { ComputerCommand } from "@unibot/contracts";
+import { COMPUTER_COMMAND_OUTPUT_MAX_CHARS } from "@unibot/contracts";
+import { redactSecrets, sandboxCommandTimeoutMs } from "@unibot/core";
+import { RunHistoryWriteError } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { redactShellStreams } from "./agent-environment.js";
 import { resolveLoginFill, shellCommandEnvironment } from "./bot-secrets.js";
 import {
@@ -352,7 +352,7 @@ export const computerTools: ToolHandlers = {
                   "bash",
                   "-c",
                   BACKGROUND_WORK_LAUNCH,
-                  "rakazo-background-launch",
+                  "unibot-background-launch",
                   // Marker id must match sleepComputerIfIdle's probe (DB id), not ComputerRef.id
                   // (providerRef via toComputerRef). Scope launches to this run for cancel teardown.
                   ctx.computer.stored.id,

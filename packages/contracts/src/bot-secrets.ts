@@ -111,12 +111,12 @@ const RESERVED_COMMAND_VARIABLE_NAMES = new Set([
   "SSH_ASKPASS",
   "SSH_ASKPASS_REQUIRE",
 ]);
-// Whole families a single variable name cannot enumerate: dynamic-loader injection, Unibots's own
+// Whole families a single variable name cannot enumerate: dynamic-loader injection, UniBot's own
 // namespace, git's config file set, and npm's configuration overrides.
 const RESERVED_COMMAND_VARIABLE_PREFIXES = [
   "LD_",
   "DYLD_",
-  "RAKAZO_",
+  "UNIBOT_",
   "GIT_CONFIG_",
   "NPM_CONFIG_",
 ];

@@ -1,4 +1,4 @@
-import type { MessageBlock } from "@rakazo/contracts";
+import type { MessageBlock } from "@unibot/contracts";
 import { messageReaction } from "./message-reactions.js";
 
 type PresentableMessage = {

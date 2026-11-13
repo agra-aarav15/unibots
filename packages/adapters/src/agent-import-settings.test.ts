@@ -1,4 +1,4 @@
-import { agentImportUpload, readAgentImportFolder } from "@rakazo/core";
+import { agentImportUpload, readAgentImportFolder } from "@unibot/core";
 import { describe, expect, it } from "vitest";
 import {
   intervalCron,
@@ -213,7 +213,7 @@ describe("OpenClaw settings", () => {
     });
   });
 
-  it("maps MCP servers and skips what Unibots cannot express", () => {
+  it("maps MCP servers and skips what UniBot cannot express", () => {
     const settings = openclaw(false);
     expect(settings.mcpServers.map((server) => [server.title, server.config])).toEqual([
       [

@@ -1,11 +1,11 @@
-import { listPiCatalog } from "@rakazo/adapters";
-import type { Actor, AnalyticsErrorKind, AnalyticsModelConnectMethod } from "@rakazo/contracts";
+import { listPiCatalog } from "@unibot/adapters";
+import type { Actor, AnalyticsErrorKind, AnalyticsModelConnectMethod } from "@unibot/contracts";
 import {
   canonicalPiProviderId,
   MODEL_KEY_REJECTED_ERROR,
   OPENAI_COMPATIBLE_PROVIDER_ID,
-} from "@rakazo/contracts";
-import { normalizeRunError } from "@rakazo/core";
+} from "@unibot/contracts";
+import { normalizeRunError } from "@unibot/core";
 import type { RouterDeps } from "./router.js";
 import { modelSetup } from "./routes/shared.js";
 

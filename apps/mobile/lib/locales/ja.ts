@@ -1,4 +1,11 @@
 export const JA_MESSAGES: Record<string, string> = {
+  "Command": "コマンド",
+  "Command to run": "実行するコマンド",
+  "Connect command": "コマンドを接続",
+  "Folder": "フォルダ",
+  "Model name": "モデル名",
+  "Working folder": "作業フォルダ",
+  "Use {prompt} for the message and {model} for the model name.": "メッセージには {prompt}、モデル名には {model} を使います。",
   "How other bots see it": "他のボットからの見え方",
   "Share to": "共有先",
   "{count} files": "{count}個のファイル",
@@ -108,8 +115,8 @@ export const JA_MESSAGES: Record<string, string> = {
   "Your model provider": "お使いのモデルプロバイダー",
   "Connect a model in Settings before running bots.":
     "ボットを実行する前に、設定でモデルを接続してください。",
-  "Connect your own API key in Models or choose Unibots credits in Billing.":
-    "モデルで自分のAPIキーを接続するか、請求でUnibotsクレジットを選択してください。",
+  "Connect your own API key in Models or choose UniBot credits in Billing.":
+    "モデルで自分のAPIキーを接続するか、請求でUniBotクレジットを選択してください。",
   "The model provider returned an error.": "モデルプロバイダーがエラーを返しました。",
   "{provider} is rate limiting requests. Try again shortly.":
     "{provider}がリクエストを制限しています。しばらくしてからもう一度お試しください。",
@@ -159,8 +166,8 @@ export const JA_MESSAGES: Record<string, string> = {
   "Chat Settings": "チャット設定",
   "Configure a plugin catalog on the server to connect apps.":
     "アプリを接続するには、サーバーでプラグインカタログを設定してください。",
-  "Paste the OpenAI-compatible address from your server. Unibots adds /v1 if needed.":
-    "サーバーのOpenAI互換アドレスを貼り付けてください。必要に応じてUnibotsが/v1を追加します。",
+  "Paste the OpenAI-compatible address from your server. UniBot adds /v1 if needed.":
+    "サーバーのOpenAI互換アドレスを貼り付けてください。必要に応じてUniBotが/v1を追加します。",
   "Settings: General": "設定: 一般",
   "Settings: Usage": "設定: 使用量",
   "Sign-in did not return a session": "ログインでセッションが返されませんでした",
@@ -200,9 +207,9 @@ export const JA_MESSAGES: Record<string, string> = {
   "Reset your password": "パスワードをリセット",
   "Send reset link": "リセットリンクを送信",
   Server: "サーバー",
-  "Sign in to Unibots": "Unibotsにログイン",
+  "Sign in to UniBot": "UniBotにログイン",
   "Sign up": "新規登録",
-  "Sign up for Unibots": "Unibotsに新規登録",
+  "Sign up for UniBot": "UniBotに新規登録",
   "Use a custom server": "カスタムサーバーを使用",
   "Use default server": "デフォルトのサーバーを使用",
   "Pair with computer": "コンピューターとペアリング",
@@ -521,8 +528,8 @@ export const JA_MESSAGES: Record<string, string> = {
   "Supports images": "画像に対応",
   "Supports thinking": "思考に対応",
   "Then paste the code here.": "その後、ここにコードを貼り付けてください。",
-  "This subscription sign-in is not available in Unibots yet. Use a deployment credential or choose another provider.":
-    "このサブスクリプションでのログインはUnibotsではまだ利用できません。デプロイの認証情報を使うか、別のプロバイダーを選択してください。",
+  "This subscription sign-in is not available in UniBot yet. Use a deployment credential or choose another provider.":
+    "このサブスクリプションでのログインはUniBotではまだ利用できません。デプロイの認証情報を使うか、別のプロバイダーを選択してください。",
   "Use a found model": "見つかったモデルを使用",
   "Waiting for sign-in…": "ログインを待っています…",
   "exact-model-id": "exact-model-id",
@@ -789,7 +796,7 @@ export const JA_MESSAGES: Record<string, string> = {
   "Enter a server URL": "サーバーのURLを入力してください",
   "Public servers need https://. HTTP only works on your local network.":
     "公開サーバーには https:// が必要です。HTTPはローカルネットワークでのみ使用できます。",
-  "That URL did not look like a Unibots server": "そのURLはUnibotsサーバーではないようです",
+  "That URL did not look like a UniBot server": "そのURLはUniBotサーバーではないようです",
   "That URL is missing a host": "URLにホストがありません",
   "That doesn’t look like a URL": "URLではないようです",
   "Use an http or https URL": "http または https のURLを使用してください",
@@ -859,7 +866,7 @@ export const JA_MESSAGES: Record<string, string> = {
   "AI models": "AIモデル",
   Memory: "メモリ",
   "Privacy policies": "プライバシーポリシー",
-  Unibots: "Unibots",
+  UniBot: "UniBot",
   "Withdraw all permissions": "すべての許可を取り消す",
   "Withdraw all permissions?": "すべての許可を取り消しますか？",
   "New mobile actions won't send data to these services. Runs already in progress and routines keep going until you stop them.":
@@ -981,13 +988,13 @@ export const JA_MESSAGES: Record<string, string> = {
   Subscribe: "登録する",
   "Monthly credits expire at renewal. Top-ups do not expire.":
     "月間クレジットは更新時に失効します。追加購入分は失効しません。",
-  "Use Unibots credits": "Unibotsクレジットを使用",
+  "Use UniBot credits": "UniBotクレジットを使用",
   "Choose a plan": "プランを選択",
   "Change plan": "プランを変更",
   Plan: "プラン",
   None: "なし",
   "Free trial": "無料トライアル",
-  "Unibots credits": "Unibotsクレジット",
+  "UniBot credits": "UniBotクレジット",
   "Free until": "無料期間の終了日",
   Ends: "終了日",
   Renews: "更新日",
@@ -1016,7 +1023,7 @@ export const JA_MESSAGES: Record<string, string> = {
   "Your free trial has started": "無料トライアルが始まりました",
   "Free until {date}": "{date}まで無料",
   "Connect your AI": "AIを接続",
-  "Start using Unibots": "Unibotsを使い始める",
+  "Start using UniBot": "UniBotを使い始める",
   "1 unread": "未読1件",
   "{count} unread": "未読{count}件",
   "{count} need attention": "{count}件が要対応",
@@ -1024,11 +1031,11 @@ export const JA_MESSAGES: Record<string, string> = {
   "{label}, below": "{label}、下",
   Work: "仕事",
   Both: "両方",
-  "How will you use Unibots?": "Unibotsをどのように使いますか？",
-  "What do you most want Unibots to help with?": "Unibotsで一番手伝ってほしいことは何ですか？",
+  "How will you use UniBot?": "UniBotをどのように使いますか？",
+  "What do you most want UniBot to help with?": "UniBotで一番手伝ってほしいことは何ですか？",
   "How big is your team?": "チームの規模はどのくらいですか？",
-  "How did you hear about us?": "Unibotsを何で知りましたか？",
-  "Welcome to Unibots": "Unibotsへようこそ",
+  "How did you hear about us?": "UniBotを何で知りましたか？",
+  "Welcome to UniBot": "UniBotへようこそ",
   "Stop all workers and confirm that provider operations have stopped before releasing this computer.":
     "このコンピューターを解放する前に、すべてのワーカーを停止し、プロバイダーの処理が停止したことを確認してください。",
   "Workers and operations are stopped": "ワーカーと処理は停止済み",
@@ -1048,8 +1055,8 @@ export const JA_MESSAGES: Record<string, string> = {
   Loading: "読み込み中",
   "Members ({min}–{max})": "メンバー（{min}–{max}）",
   "Open computer →": "コンピューターを開く →",
-  "Point this app at your self-hosted Unibots origin, the same HTTPS URL you open in a browser.":
-    "ブラウザで開くのと同じHTTPSのURLで、セルフホストのUnibotsオリジンを指定してください。",
+  "Point this app at your self-hosted UniBot origin, the same HTTPS URL you open in a browser.":
+    "ブラウザで開くのと同じHTTPSのURLで、セルフホストのUniBotオリジンを指定してください。",
   Recover: "復旧",
   "Remove thumbs-up": "いいねを削除",
   Searching: "検索中",

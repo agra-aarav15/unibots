@@ -1,6 +1,6 @@
-import type { MessageBlock } from "@rakazo/contracts";
-import { appConnectedInput, waitForConnection } from "@rakazo/core";
-import { fontWeight, typeScale } from "@rakazo/ui-tokens";
+import type { MessageBlock } from "@unibot/contracts";
+import { appConnectedInput, waitForConnection } from "@unibot/core";
+import { fontWeight, typeScale } from "@unibot/ui-tokens";
 import { useEffect, useRef, useState } from "react";
 import type { ViewProps } from "react-native";
 import { Linking, Text, View } from "react-native";

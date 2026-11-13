@@ -1,14 +1,14 @@
 import { EventEmitter } from "node:events";
-import type { UserDeviceSocket } from "@rakazo/adapters";
+import type { UserDeviceSocket } from "@unibot/adapters";
 import {
   hashUserDeviceToken,
   USER_DEVICE_FORWARD_PATH,
   UserDeviceHub,
   UserDevices,
   userDeviceForwardSecret,
-} from "@rakazo/adapters";
-import type { PrismaClient } from "@rakazo/db";
-import { installSecurityEventStore } from "@rakazo/db";
+} from "@unibot/adapters";
+import type { PrismaClient } from "@unibot/db";
+import { installSecurityEventStore } from "@unibot/db";
 import { Hono } from "hono";
 import { afterEach, describe, expect, it } from "vitest";
 import { mountUserDeviceRoutes } from "./user-devices.js";

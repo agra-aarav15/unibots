@@ -16,8 +16,8 @@ import {
   signup,
 } from "./helpers";
 
-const LOCAL_MODEL_ID = "rakazo-e2e-local";
-const SECOND_MODEL_ID = "rakazo-e2e-second";
+const LOCAL_MODEL_ID = "unibot-e2e-local";
+const SECOND_MODEL_ID = "unibot-e2e-second";
 const LOCAL_MODEL_REPLY = "OpenAI-compatible endpoint verified end to end.";
 
 test.afterEach(async ({ page }) => {
@@ -164,7 +164,7 @@ test("connects, lists, and uses an OpenAI-compatible endpoint", async ({ page },
       const created = Math.floor(Date.now() / 1_000);
       response.write(
         `data: ${JSON.stringify({
-          id: "chatcmpl-rakazo-e2e",
+          id: "chatcmpl-unibot-e2e",
           object: "chat.completion.chunk",
           created,
           model: LOCAL_MODEL_ID,
@@ -179,7 +179,7 @@ test("connects, lists, and uses an OpenAI-compatible endpoint", async ({ page },
       );
       response.write(
         `data: ${JSON.stringify({
-          id: "chatcmpl-rakazo-e2e",
+          id: "chatcmpl-unibot-e2e",
           object: "chat.completion.chunk",
           created,
           model: LOCAL_MODEL_ID,

@@ -43,11 +43,11 @@ describe("with-release-signing", () => {
   });
 
   it("adds a release signing config and switches the release build type to it", () => {
-    const dir = mkdtempSync(join(tmpdir(), "unibots-keystore-"));
+    const dir = mkdtempSync(join(tmpdir(), "unibot-keystore-"));
     process.env.ANDROID_KEYSTORE_PATH = join(dir, "release.jks");
     writeFileSync(process.env.ANDROID_KEYSTORE_PATH, "not a real keystore");
     process.env.ANDROID_KEYSTORE_PASSWORD = "secret";
-    process.env.ANDROID_KEY_ALIAS = "unibots";
+    process.env.ANDROID_KEY_ALIAS = "unibot";
     process.env.ANDROID_KEY_PASSWORD = "secret";
     try {
       const gradle = runPlugin(GRADLE);
@@ -90,11 +90,11 @@ describe("with-release-signing", () => {
     }
 }
 `;
-    const dir = mkdtempSync(join(tmpdir(), "unibots-keystore-"));
+    const dir = mkdtempSync(join(tmpdir(), "unibot-keystore-"));
     process.env.ANDROID_KEYSTORE_PATH = join(dir, "release.jks");
     writeFileSync(process.env.ANDROID_KEYSTORE_PATH, "not a real keystore");
     process.env.ANDROID_KEYSTORE_PASSWORD = "secret";
-    process.env.ANDROID_KEY_ALIAS = "unibots";
+    process.env.ANDROID_KEY_ALIAS = "unibot";
     process.env.ANDROID_KEY_PASSWORD = "secret";
     try {
       const gradle = runPlugin(template);

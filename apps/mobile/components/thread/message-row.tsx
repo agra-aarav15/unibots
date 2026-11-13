@@ -1,8 +1,8 @@
-import { markdownCodeBlocks } from "@rakazo/chat-ui/native";
-import type { BotAvatarSet, LoginFieldInput, MessageReaction } from "@rakazo/contracts";
-import { canReactToThreadMessage, MESSAGE_REACTIONS } from "@rakazo/contracts";
-import type { ChildBotBlock, PeerExchange } from "@rakazo/core";
-import { canMarkMessageUnread, isPeerReceiptBlocks, liveMessageComposing } from "@rakazo/core";
+import { markdownCodeBlocks } from "@unibot/chat-ui/native";
+import type { BotAvatarSet, LoginFieldInput, MessageReaction } from "@unibot/contracts";
+import { canReactToThreadMessage, MESSAGE_REACTIONS } from "@unibot/contracts";
+import type { ChildBotBlock, PeerExchange } from "@unibot/core";
+import { canMarkMessageUnread, isPeerReceiptBlocks, liveMessageComposing } from "@unibot/core";
 import * as Clipboard from "expo-clipboard";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GestureResponderEvent, LayoutChangeEvent } from "react-native";

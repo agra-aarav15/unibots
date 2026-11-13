@@ -26,7 +26,7 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "passThroughEnv": ["RAKAZO_HOST", "RAKAZO_DEV_HOST", "RAKAZO_ALLOWED_HOSTS"]
+      "passThroughEnv": ["UNIBOT_HOST", "UNIBOT_DEV_HOST", "UNIBOT_ALLOWED_HOSTS"]
     }
   }
 }

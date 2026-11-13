@@ -1,8 +1,8 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { SCRIPTED_MPEG, SCRIPTED_TRANSCRIPT, SCRIPTED_VOICE_ID } from "@rakazo/adapters";
-import type { PrismaClient } from "@rakazo/db";
+import { SCRIPTED_MPEG, SCRIPTED_TRANSCRIPT, SCRIPTED_VOICE_ID } from "@unibot/adapters";
+import type { PrismaClient } from "@unibot/db";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { BotIntroHarness } from "./discard-bot-intro.js";
 import { discardBotIntroFromCreate } from "./discard-bot-intro.js";
@@ -24,10 +24,10 @@ describeVoice("voice credentials and speech HTTP", () => {
   let prisma: PrismaClient;
   let stop: () => Promise<void>;
   const stamp = Date.now();
-  const dataDir = mkdtempSync(path.join(tmpdir(), "rakazo-voice-"));
+  const dataDir = mkdtempSync(path.join(tmpdir(), "unibot-voice-"));
 
   beforeAll(async () => {
-    const { createApp } = await import("@rakazo/api/app");
+    const { createApp } = await import("@unibot/api/app");
     const handles = await createApp({
       databaseUrl: process.env.DATABASE_URL!,
       dataDir,

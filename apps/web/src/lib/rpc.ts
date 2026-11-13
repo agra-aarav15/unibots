@@ -1,17 +1,17 @@
 import { createORPCClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import type { ContractRouterClient } from "@orpc/contract";
-import type { AppContract, ProductEvent } from "@rakazo/contracts";
-import { CLIENT_BUILD_HEADER, formatClientBuild } from "@rakazo/contracts";
-import { displayIdentityEvent, displayIdentityResult } from "@rakazo/core";
-import { clientCorrelationHeaders, responseCorrelation } from "@rakazo/logging/monitoring";
+import type { AppContract, ProductEvent } from "@unibot/contracts";
+import { CLIENT_BUILD_HEADER, formatClientBuild } from "@unibot/contracts";
+import { displayIdentityEvent, displayIdentityResult } from "@unibot/core";
+import { clientCorrelationHeaders, responseCorrelation } from "@unibot/logging/monitoring";
 import { authClient } from "./auth";
 import { CLIENT_BUILD } from "./client-build";
 import { i18n } from "./i18n";
 import { identityLabels } from "./identity-display";
 import { reportClientError } from "./monitoring";
 
-const SPACE_STORAGE_KEY = "rakazo:space-id";
+const SPACE_STORAGE_KEY = "unibot:space-id";
 
 type RpcClientContext = { spaceId?: string | null };
 

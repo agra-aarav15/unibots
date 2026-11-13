@@ -5,8 +5,8 @@ import {
   PAIRING_MAX_ATTEMPTS,
   isLoopbackHost,
   isPrivateNetworkHost,
-} from "@rakazo/contracts";
-import { recordSecurityEvent, runAsSystem } from "@rakazo/db";
+} from "@unibot/contracts";
+import { recordSecurityEvent, runAsSystem } from "@unibot/db";
 import type { RouterContext } from "./context.js";
 
 /** Five wrong codes from one device close the door for the rest of the code's life. */

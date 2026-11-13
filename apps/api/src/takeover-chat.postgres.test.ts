@@ -2,8 +2,8 @@ import { randomUUID } from "node:crypto";
 import { mkdtemp, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { RPCHandler } from "@orpc/server/fetch";
-import type { AgentRunRequest, JobPublisher } from "@rakazo/adapter-kit";
-import { computerControlExpireJobKey } from "@rakazo/adapter-kit";
+import type { AgentRunRequest, JobPublisher } from "@unibot/adapter-kit";
+import { computerControlExpireJobKey } from "@unibot/adapter-kit";
 import {
   createRunExecutor,
   EncryptedSecretStore,
@@ -11,15 +11,15 @@ import {
   FakeSandboxProvider,
   LocalAgentHomeStore,
   ScriptedAgentRuntime,
-} from "@rakazo/adapters";
-import type { Actor } from "@rakazo/contracts";
+} from "@unibot/adapters";
+import type { Actor } from "@unibot/contracts";
 import {
   stuckWorkStatusMessage,
   TAKEOVER_COMPUTER_PENDING_STATE,
   TAKEOVER_COMPUTER_SKIPPED_STATE,
   TAKEOVER_WAIT_EXPIRE_AFTER_MS,
-} from "@rakazo/core";
-import type { PrismaClient } from "@rakazo/db";
+} from "@unibot/core";
+import type { PrismaClient } from "@unibot/db";
 import {
   asSystem,
   createDb,
@@ -28,8 +28,8 @@ import {
   expireStuckRun,
   runAsSystem,
   runAsTenant,
-} from "@rakazo/db";
-import { MarkdownMemoryStore } from "@rakazo/memory";
+} from "@unibot/db";
+import { MarkdownMemoryStore } from "@unibot/memory";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import type { RouterDeps } from "./router.js";
 import { createRouter } from "./router.js";

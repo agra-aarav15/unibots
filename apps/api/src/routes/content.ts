@@ -1,10 +1,10 @@
 import { ORPCError } from "@orpc/server";
-import type { UsageOperationKind } from "@rakazo/adapter-kit";
-import { resolveBotWorkspacePath } from "@rakazo/adapters";
-import type { ExportManifest } from "@rakazo/contracts";
-import { attachmentMaxBytes, resolveBotAvatarSet } from "@rakazo/contracts";
-import { AttachmentValidationError } from "@rakazo/core";
-import { IsolationError, parseComputerMode } from "@rakazo/db";
+import type { UsageOperationKind } from "@unibot/adapter-kit";
+import { resolveBotWorkspacePath } from "@unibot/adapters";
+import type { ExportManifest } from "@unibot/contracts";
+import { attachmentMaxBytes, resolveBotAvatarSet } from "@unibot/contracts";
+import { AttachmentValidationError } from "@unibot/core";
+import { IsolationError, parseComputerMode } from "@unibot/db";
 import {
   ArtifactListCursorError,
   createOwnedArtifact,

@@ -3,11 +3,11 @@ import type {
   PaymentWalletCredential,
   PaymentWalletProvider,
   SecretStore,
-} from "@rakazo/adapter-kit";
-import { PaymentWalletDisconnected, SecretStoreUnavailableError } from "@rakazo/adapter-kit";
-import type { PaymentWalletStatus } from "@rakazo/contracts";
-import type { PaymentWallet, Prisma, PrismaClient } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/adapter-kit";
+import { PaymentWalletDisconnected, SecretStoreUnavailableError } from "@unibot/adapter-kit";
+import type { PaymentWalletStatus } from "@unibot/contracts";
+import type { PaymentWallet, Prisma, PrismaClient } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { deleteSecretBestEffort, holdSecretNotifications } from "./secret-store-factory.js";
 
 export interface PaymentWalletDeps {
@@ -272,7 +272,7 @@ export async function connectPaymentWallet(
   const provider = deps.paymentWallet;
   if (!provider) throw new Error("No payment wallet is configured");
   const start = await provider.beginConnect(
-    { clientName: "Unibots" },
+    { clientName: "UniBot" },
     providerContext(actor, "connect"),
   );
   const ciphertext = await storeMaterial(deps, actor, {

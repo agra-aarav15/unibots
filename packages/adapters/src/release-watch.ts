@@ -30,11 +30,11 @@ export type EmulatedGithubRelease = {
   htmlUrl: string;
 };
 
-/** Seeded Unibots releases so evals succeed without the public internet. */
-export const DEFAULT_UNIBOTS_EMULATED_RELEASES: readonly EmulatedGithubRelease[] = [
+/** Seeded UniBot releases so evals succeed without the public internet. */
+export const DEFAULT_UNIBOT_EMULATED_RELEASES: readonly EmulatedGithubRelease[] = [
   {
     owner: "agra-aarav15",
-    repo: "unibots",
+    repo: "unibot",
     tag: "v0.4.2",
     name: "v0.4.2 — routine tools + connector emulators",
     body: "Routines can bind connector tools. Composio emulator covers GitHub releases offline.",
@@ -43,7 +43,7 @@ export const DEFAULT_UNIBOTS_EMULATED_RELEASES: readonly EmulatedGithubRelease[]
   },
   {
     owner: "agra-aarav15",
-    repo: "unibots",
+    repo: "unibot",
     tag: "v0.4.1",
     name: "v0.4.1 — computer + plugin guidance",
     body: "Prefer connected plugins over browsing when reading app data.",
@@ -85,7 +85,7 @@ export function assessReleaseWatchRoutinePrompt(prompt: string): {
     };
   }
 
-  const mentionsRepo = /unibots|agra-aarav15/i.test(text);
+  const mentionsRepo = /unibot|agra-aarav15/i.test(text);
   const mentionsReleases = /release/i.test(text);
   const mentionsGithubTool =
     /GITHUB_LIST_RELEASES|GITHUB_GET_RELEASE|list(?:\s+\w+){0,4}\s+releases|github\s+(tool|integration|plugin|connector|api)/i.test(

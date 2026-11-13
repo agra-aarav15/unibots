@@ -18,15 +18,15 @@ import type {
   SpaceNavigation,
   ThreadMessage,
   ThreadSnapshot,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import {
   accountSecuritySchema,
   authCapabilitiesSchema,
   CLIENT_UPDATE_REQUIRED_STATUS,
   legacyAccountSecurity,
   legacyAuthCapabilitiesSchema,
-} from "@rakazo/contracts";
-import type { ThreadHistory } from "@rakazo/core";
+} from "@unibot/contracts";
+import type { ThreadHistory } from "@unibot/core";
 import {
   aiConsentTarget,
   aiDataUsesForProcedure,
@@ -56,8 +56,8 @@ import {
   updateCloudAgentMessages,
   upsertMessageById,
   withAbort,
-} from "@rakazo/core";
-import { clientCorrelationHeaders, responseCorrelation } from "@rakazo/logging/monitoring";
+} from "@unibot/core";
+import { clientCorrelationHeaders, responseCorrelation } from "@unibot/logging/monitoring";
 import * as SecureStore from "expo-secure-store";
 import { promptAiConsent } from "./ai-consent";
 import type { EndpointResult } from "./endpoint";
@@ -548,7 +548,7 @@ async function postAuth(path: string, input: Record<string, string>) {
     `${currentApiBase()}/api/auth/${path}`,
     {
       method: "POST",
-      headers: { "content-type": "application/json", origin: "rakazo://" },
+      headers: { "content-type": "application/json", origin: "unibot://" },
       body: JSON.stringify(input),
     },
     {},
@@ -613,7 +613,7 @@ export type PasswordResetCapabilities = AuthCapabilities;
 export async function passwordResetCapabilities(): Promise<PasswordResetCapabilities> {
   const { response, body } = await fetchMobileJson<unknown>(
     `${currentApiBase()}/api/auth/capabilities`,
-    { headers: { origin: "rakazo://" } },
+    { headers: { origin: "unibot://" } },
   );
   if (!response.ok) throw new Error(t("Could not load sign-in options"));
   return authCapabilitiesSchema.or(legacyAuthCapabilitiesSchema).parse(body);
@@ -624,7 +624,7 @@ export async function requestPasswordReset(email: string, redirectTo: string): P
     `${currentApiBase()}/api/auth/request-password-reset`,
     {
       method: "POST",
-      headers: { "content-type": "application/json", origin: "rakazo://" },
+      headers: { "content-type": "application/json", origin: "unibot://" },
       body: JSON.stringify({ email, redirectTo }),
     },
     {},
@@ -646,7 +646,7 @@ export async function updateAccountName(name: string): Promise<void> {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        origin: "rakazo://",
+        origin: "unibot://",
         ...(await authHeaders()),
       },
       body: JSON.stringify({ name: nextName }),
@@ -681,7 +681,7 @@ async function replaceSessionAfterPasswordChange(currentPassword: string, newPas
       method: "POST",
       headers: {
         "content-type": "application/json",
-        origin: "rakazo://",
+        origin: "unibot://",
         ...headers,
       },
       body: JSON.stringify({ currentPassword, newPassword, revokeOtherSessions: true }),
@@ -765,7 +765,7 @@ export async function signOut() {
         `${currentApiBase()}/api/auth/sign-out`,
         {
           method: "POST",
-          headers: { "content-type": "application/json", origin: "rakazo://", ...headers },
+          headers: { "content-type": "application/json", origin: "unibot://", ...headers },
           body: "{}",
           signal: controller.signal,
         },
@@ -790,7 +790,7 @@ export async function deleteAccount(password?: string, token?: string) {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        origin: "rakazo://",
+        origin: "unibot://",
         ...(await authHeaders()),
       },
       body: JSON.stringify({ password, token }),
@@ -909,7 +909,7 @@ async function request(
           method: "POST",
           headers: {
             "content-type": "application/json",
-            origin: "rakazo://",
+            origin: "unibot://",
             ...requestHeaders,
             ...correlation,
           },
@@ -1330,7 +1330,7 @@ export async function subscribeThread(
       headers: {
         "content-type": "application/json",
         accept: "text/event-stream",
-        origin: "rakazo://",
+        origin: "unibot://",
         ...context.headers,
       },
       body: JSON.stringify({ json: { ...target, cursor } }),
@@ -1805,7 +1805,7 @@ export { loadSessionToken };
 export async function fetchAccountSecurity(): Promise<AccountSecurity> {
   const { response, body } = await fetchMobileJson<unknown>(
     `${currentApiBase()}/api/auth/account-security`,
-    { headers: { origin: "rakazo://", ...(await authHeaders()) } },
+    { headers: { origin: "unibot://", ...(await authHeaders()) } },
     null,
   );
   // Older servers support password accounts and the original change/delete endpoints.
@@ -1825,7 +1825,7 @@ async function postSignedInAuth(path: string, payload: Record<string, string> = 
       method: "POST",
       headers: {
         "content-type": "application/json",
-        origin: "rakazo://",
+        origin: "unibot://",
         ...(await authHeaders()),
       },
       body: JSON.stringify(payload),

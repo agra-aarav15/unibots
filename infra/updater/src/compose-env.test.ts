@@ -46,17 +46,21 @@ const NOT_PASSED: Record<string, string> = {
   OWNER_PASSWORD: "bootstrap-owner CLI input, passed on its own command line",
   PM2_HOME: "restart-supervisor detection for PM2 hosts; Compose restarts containers",
   INVOCATION_ID: "restart-supervisor detection for systemd hosts; Compose restarts containers",
-  RAKAZO_ALLOW_DEV_SECRETS: "development-only escape hatch for placeholder secrets",
-  RAKAZO_NEW_PASSWORD: "reset-password CLI input, passed on its own command line",
+  UNIBOT_ALLOW_DEV_SECRETS: "development-only escape hatch for placeholder secrets",
+  // A command connection resolves its program through the process's own search path, which the
+  // image sets. A pass-through entry would replace the container's PATH with the host's.
+  PATH: "the container image sets the search path for spawned commands",
+  PATHEXT: "only meaningful on a Windows host; the containers are Linux",
+  UNIBOT_NEW_PASSWORD: "reset-password CLI input, passed on its own command line",
   EMAIL_EMULATOR: "ignored when NODE_ENV=production",
   GIT_SHA: "baked into the image at build time; a pass-through entry would unset it",
   SHELL: "host shell for the desktop computer, which only the Electron app runs",
   CLOUDFLARE_ACCOUNT_ID: "written into Pi's environment from stored gateway settings",
   CLOUDFLARE_GATEWAY_ID: "written into Pi's environment from stored gateway settings",
   COMPOSE_PROJECT_NAME: "read by the updater sidecar, which has its own environment",
-  RAKAZO_COMPOSE_PROJECT_NAME: "read by the updater sidecar, which has its own environment",
-  RAKAZO_IMAGE_TAG: "read by deployment tooling and the updater sidecar, not app processes",
-  RAKAZO_IMAGE_TAG_PREVIOUS: "read by the updater sidecar, which has its own environment",
+  UNIBOT_COMPOSE_PROJECT_NAME: "read by the updater sidecar, which has its own environment",
+  UNIBOT_IMAGE_TAG: "read by deployment tooling and the updater sidecar, not app processes",
+  UNIBOT_IMAGE_TAG_PREVIOUS: "read by the updater sidecar, which has its own environment",
   KUBERNETES_SANDBOX_COMPUTER_IMAGE: KUBERNETES_SANDBOX,
   KUBERNETES_SANDBOX_HOME_CLAIM: KUBERNETES_SANDBOX,
   KUBERNETES_SANDBOX_HOME_COLOCATE_LABELS: KUBERNETES_SANDBOX,
@@ -86,8 +90,8 @@ const INDIRECT = {
     // core/secrets-guard.ts resolves these by name.
     "SANDBOX_SUPERVISOR_TOKEN",
     // pi-local-provider.ts reads these through a small helper.
-    "RAKAZO_LOCAL_CONTEXT_WINDOW",
-    "RAKAZO_LOCAL_MAX_TOKENS",
+    "UNIBOT_LOCAL_CONTEXT_WINDOW",
+    "UNIBOT_LOCAL_MAX_TOKENS",
     // The OTLP exporter reads its standard settings itself.
     "OTEL_EXPORTER_OTLP_HEADERS",
     "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
@@ -236,13 +240,13 @@ describe("api and worker environment allowlists", () => {
         "BETTER_AUTH_SECRET",
         "OIDC_CLIENT_SECRET",
         "SCREEN_PROXY_SECRET",
-        "RAKAZO_UPDATER_TOKEN",
+        "UNIBOT_UPDATER_TOKEN",
         "STRIPE_SECRET_KEY",
         "POSTGRES_PASSWORD",
       ]) {
         expect(worker).not.toHaveProperty(key);
       }
-      expect(stackEnvironment(files, "api")).not.toHaveProperty("RAKAZO_UPDATER_TOKEN");
+      expect(stackEnvironment(files, "api")).not.toHaveProperty("UNIBOT_UPDATER_TOKEN");
       // The database password reaches both processes only inside DATABASE_URL.
       expect(stackEnvironment(files, "api")).not.toHaveProperty("POSTGRES_PASSWORD");
       // The owner login goes only to the migrate container, which gets nothing else.

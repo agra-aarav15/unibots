@@ -2,23 +2,23 @@
 set -euo pipefail
 umask 077
 
-PROJECT_DIR="${RAKAZO_DEPLOY_DIR:-/srv/rakazo}"
-[[ "${PROJECT_DIR}" == /* ]] || { echo "RAKAZO_DEPLOY_DIR must be an absolute path" >&2; exit 1; }
+PROJECT_DIR="${UNIBOT_DEPLOY_DIR:-/srv/unibot}"
+[[ "${PROJECT_DIR}" == /* ]] || { echo "UNIBOT_DEPLOY_DIR must be an absolute path" >&2; exit 1; }
 COMPOSE_FILE="${PROJECT_DIR}/infra/compose/docker-compose.prod.yml"
 ENV_FILE="${PROJECT_DIR}/.env"
-BACKUP_ROOT="/var/backups/rakazo"
+BACKUP_ROOT="/var/backups/unibot"
 STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 SNAPSHOT_DIR="${BACKUP_ROOT}/${STAMP}"
 # Verified snapshots kept on this host.
-KEEP="${RAKAZO_BACKUP_KEEP:-3}"
-[[ "${KEEP}" =~ ^[1-9][0-9]*$ ]] || { echo "RAKAZO_BACKUP_KEEP must be a positive whole number" >&2; exit 1; }
-OFFSITE="${RAKAZO_BACKUP_OFFSITE_REMOTE:-}"
+KEEP="${UNIBOT_BACKUP_KEEP:-3}"
+[[ "${KEEP}" =~ ^[1-9][0-9]*$ ]] || { echo "UNIBOT_BACKUP_KEEP must be a positive whole number" >&2; exit 1; }
+OFFSITE="${UNIBOT_BACKUP_OFFSITE_REMOTE:-}"
 # Off-site snapshots to keep; 0 leaves pruning to the destination's own lifecycle rules.
-OFFSITE_KEEP="${RAKAZO_BACKUP_OFFSITE_KEEP:-14}"
-[[ "${OFFSITE_KEEP}" =~ ^(0|[1-9][0-9]*)$ ]] || { echo "RAKAZO_BACKUP_OFFSITE_KEEP must be a whole number" >&2; exit 1; }
+OFFSITE_KEEP="${UNIBOT_BACKUP_OFFSITE_KEEP:-14}"
+[[ "${OFFSITE_KEEP}" =~ ^(0|[1-9][0-9]*)$ ]] || { echo "UNIBOT_BACKUP_OFFSITE_KEEP must be a whole number" >&2; exit 1; }
 
-MIN_FREE_GB="${RAKAZO_BACKUP_MIN_FREE_GB:-5}"
-MAX_GB="${RAKAZO_BACKUP_MAX_GB:-50}"
+MIN_FREE_GB="${UNIBOT_BACKUP_MIN_FREE_GB:-5}"
+MAX_GB="${UNIBOT_BACKUP_MAX_GB:-50}"
 for value in "${MIN_FREE_GB}" "${MAX_GB}"; do
   [[ "${value}" =~ ^[1-9][0-9]*$ ]] || { echo "Backup space limits must be positive whole GiB" >&2; exit 1; }
 done
@@ -26,12 +26,12 @@ done
 # Encrypt every artifact to public age recipients. The private key never lives on this host,
 # and plaintext is streamed straight into age, so it never touches disk.
 age_args=()
-read -r -a recipients <<<"${RAKAZO_BACKUP_AGE_RECIPIENTS:-}"
+read -r -a recipients <<<"${UNIBOT_BACKUP_AGE_RECIPIENTS:-}"
 for recipient in "${recipients[@]}"; do age_args+=(-r "${recipient}"); done
-RECIPIENTS_FILE="${RAKAZO_BACKUP_AGE_RECIPIENTS_FILE:-}"
+RECIPIENTS_FILE="${UNIBOT_BACKUP_AGE_RECIPIENTS_FILE:-}"
 if [[ -n "${RECIPIENTS_FILE}" ]]; then
   [[ -r "${RECIPIENTS_FILE}" && -s "${RECIPIENTS_FILE}" ]] || {
-    echo "RAKAZO_BACKUP_AGE_RECIPIENTS_FILE is not a readable, non-empty file" >&2; exit 1;
+    echo "UNIBOT_BACKUP_AGE_RECIPIENTS_FILE is not a readable, non-empty file" >&2; exit 1;
   }
   age_args+=(-R "${RECIPIENTS_FILE}")
 fi
@@ -45,16 +45,16 @@ fi
 # instead of quietly falling back to plaintext.
 ENCRYPTED_MARKER="${BACKUP_ROOT}/.encrypted"
 if [[ -z "${suffix}" ]]; then
-  if [[ -e "${ENCRYPTED_MARKER}" && "${RAKAZO_BACKUP_ALLOW_PLAINTEXT:-0}" != 1 ]]; then
-    echo "Backups on this host are encrypted; refusing to write plaintext. Set RAKAZO_BACKUP_AGE_RECIPIENTS, or RAKAZO_BACKUP_ALLOW_PLAINTEXT=1 to accept plaintext." >&2
+  if [[ -e "${ENCRYPTED_MARKER}" && "${UNIBOT_BACKUP_ALLOW_PLAINTEXT:-0}" != 1 ]]; then
+    echo "Backups on this host are encrypted; refusing to write plaintext. Set UNIBOT_BACKUP_AGE_RECIPIENTS, or UNIBOT_BACKUP_ALLOW_PLAINTEXT=1 to accept plaintext." >&2
     exit 1
   fi
-  echo "WARNING: this backup is not encrypted. Set RAKAZO_BACKUP_AGE_RECIPIENTS to encrypt it." >&2
+  echo "WARNING: this backup is not encrypted. Set UNIBOT_BACKUP_AGE_RECIPIENTS to encrypt it." >&2
 fi
 
 reserve_kb=$((MIN_FREE_GB * 1024 * 1024))
 budget_kb=$((MAX_GB * 1024 * 1024))
-if [[ "${RAKAZO_BACKUP_REQUIRE_VOLUME:-0}" == 1 ]]; then
+if [[ "${UNIBOT_BACKUP_REQUIRE_VOLUME:-0}" == 1 ]]; then
   mountpoint -q /var/backups || { echo "/var/backups must be a mounted backup volume" >&2; exit 1; }
   [[ "$(stat -c %d /var/backups)" != "$(stat -c %d /)" ]] || {
     echo "/var/backups must be on a separate filesystem" >&2; exit 1;
@@ -78,7 +78,7 @@ appdata="$(docker inspect "${api}" \
 install -d -m 700 "${BACKUP_ROOT}"
 # One backup at a time, so cleanup never removes a snapshot another run is still writing.
 exec 8>"${BACKUP_ROOT}/.lock"
-flock -n 8 || { echo "Another Unibots backup is running" >&2; exit 1; }
+flock -n 8 || { echo "Another UniBot backup is running" >&2; exit 1; }
 # Newest first; stamps sort by time. Only stamp-named directories are ever listed or removed.
 snapshots() {
   find "${BACKUP_ROOT}" -mindepth 1 -maxdepth 1 -type d -regextype posix-extended \
@@ -236,13 +236,13 @@ while read -r dir; do
   fi
 done < <(snapshots)
 
-echo "Verified Unibots backup written to ${SNAPSHOT_DIR}"
+echo "Verified UniBot backup written to ${SNAPSHOT_DIR}"
 
 # Optional off-site copy through any rclone remote (S3-compatible storage, SFTP, ...), configured
 # with rclone's own settings. A failure here keeps the verified local snapshot but fails the run.
 [[ -n "${OFFSITE}" ]] || exit 0
 offsite_failed() { echo "Off-site copy failed: $1" >&2; exit 1; }
-[[ -n "${suffix}" ]] || offsite_failed "off-site copies require RAKAZO_BACKUP_AGE_RECIPIENTS"
+[[ -n "${suffix}" ]] || offsite_failed "off-site copies require UNIBOT_BACKUP_AGE_RECIPIENTS"
 command -v rclone >/dev/null || offsite_failed "rclone is not installed"
 # Accept "remote:", "remote:path" and "remote:path/".
 remote="${OFFSITE%/}"

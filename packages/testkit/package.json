@@ -1,5 +1,5 @@
 {
-  "name": "@rakazo/testkit",
+  "name": "@unibot/testkit",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -12,18 +12,18 @@
   },
   "dependencies": {
     "@hono/node-server": "2.1.5",
-    "@rakazo/adapter-kit": "workspace:*",
-    "@rakazo/adapters": "workspace:*",
-    "@rakazo/contracts": "workspace:*",
-    "@rakazo/core": "workspace:*",
-    "@rakazo/db": "workspace:*",
+    "@unibot/adapter-kit": "workspace:*",
+    "@unibot/adapters": "workspace:*",
+    "@unibot/contracts": "workspace:*",
+    "@unibot/core": "workspace:*",
+    "@unibot/db": "workspace:*",
     "@testcontainers/postgresql": "12.2.1",
     "pngjs": "7.0.0"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",
-    "@rakazo/api": "workspace:*",
-    "@rakazo/sandbox-supervisor": "workspace:*",
+    "@unibot/api": "workspace:*",
+    "@unibot/sandbox-supervisor": "workspace:*",
     "@types/pngjs": "6.0.5",
     "typescript": "7.0.2",
     "vitest": "4.1.12"

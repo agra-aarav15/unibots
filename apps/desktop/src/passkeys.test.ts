@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { associatedPasskeyRpIds } from "./passkeys.js";
 
 describe("associatedPasskeyRpIds", () => {
-  const resourcesPath = "/Applications/Rakazo.app/Contents/Resources";
+  const resourcesPath = "/Applications/UniBot.app/Contents/Resources";
 
   it("lists no associated domain after the hosted service was removed", () => {
     for (const platform of ["darwin", "win32", "linux"] as const) {

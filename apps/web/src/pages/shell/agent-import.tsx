@@ -8,13 +8,13 @@ import type {
   AgentImportWarning,
   Bot,
   ComputerMode,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import {
   BOT_DESCRIPTION_MAX_LENGTH,
   BOT_INSTRUCTIONS_MAX_LENGTH,
   BOT_NAME_MAX_LENGTH,
-} from "@rakazo/contracts";
-import type { AgentImportReader } from "@rakazo/core";
+} from "@unibot/contracts";
+import type { AgentImportReader } from "@unibot/core";
 import {
   AGENT_IMPORT_ARCHIVE_LIMITS,
   AGENT_IMPORT_NOT_FOUND,
@@ -27,7 +27,7 @@ import {
   hasAgentImportSecrets,
   looksLikeCredential,
   openAgentImportArchive,
-} from "@rakazo/core";
+} from "@unibot/core";
 import {
   Button,
   Checkbox,
@@ -36,12 +36,12 @@ import {
   NativeSelect,
   NativeSelectOption,
   Textarea,
-} from "@rakazo/ui-web";
+} from "@unibot/ui-web";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@rakazo/ui-web/components/ui/collapsible";
+} from "@unibot/ui-web/components/ui/collapsible";
 import { ArrowLeft, ChevronDown, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect, useId, useRef, useState } from "react";
@@ -455,10 +455,10 @@ export function AgentImportForm({
   };
   const skipReason = (reason: AgentImportSkipReason) =>
     ({
-      runtime: t`Not used by Unibots`,
+      runtime: t`Not used by UniBot`,
       invalid_skill: t`Not a valid skill`,
       builtin: t`Built-in`,
-      unsupported: t`Not supported in Unibots`,
+      unsupported: t`Not supported in UniBot`,
       connected: t`Already connected`,
       invalid_file: t`Could not read these files`,
       default: defaultNote,

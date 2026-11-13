@@ -245,9 +245,9 @@ test("a framed screen that drops after connecting loads again by itself once", a
       contentType: "text/html",
       headers: { "content-security-policy": "sandbox allow-scripts allow-pointer-lock" },
       body: `<!doctype html><title>Test desktop</title><script>
-        parent.postMessage({ rakazoScreen: "loading" }, "*");
-        parent.postMessage({ rakazoScreen: "connected" }, "*");
-        ${drop ? 'setTimeout(() => parent.postMessage({ rakazoScreen: "disconnected" }, "*"), 300);' : ""}
+        parent.postMessage({ unibotScreen: "loading" }, "*");
+        parent.postMessage({ unibotScreen: "connected" }, "*");
+        ${drop ? 'setTimeout(() => parent.postMessage({ unibotScreen: "disconnected" }, "*"), 300);' : ""}
       </script><p>Desktop</p>`,
     });
   });
@@ -273,7 +273,7 @@ test("a framed screen that drops after connecting loads again by itself once", a
 
   // Another drop within the half minute is left to the user.
   const frame = page.frames().find((candidate) => candidate.url().includes("1.drop-test"));
-  await frame?.evaluate(() => parent.postMessage({ rakazoScreen: "disconnected" }, "*"));
+  await frame?.evaluate(() => parent.postMessage({ unibotScreen: "disconnected" }, "*"));
   await expect(preview.getByRole("alert")).toContainText("The screen connection closed.");
   await expect(preview.getByRole("button", { name: "Retry screen" })).toBeVisible();
   await page.waitForTimeout(1_500);

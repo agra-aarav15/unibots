@@ -1,6 +1,6 @@
-import type { VoiceChatGroup } from "@rakazo/core";
-import { speechFromBlocks, voiceChatDuration, voiceChatSummary } from "@rakazo/core";
-import { typeScale } from "@rakazo/ui-tokens";
+import type { VoiceChatGroup } from "@unibot/core";
+import { speechFromBlocks, voiceChatDuration, voiceChatSummary } from "@unibot/core";
+import { typeScale } from "@unibot/ui-tokens";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import type { MobileMessage } from "../lib/api";

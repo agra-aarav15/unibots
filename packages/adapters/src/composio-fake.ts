@@ -11,7 +11,7 @@ import type { ToolkitDirectoryEntry } from "./composio-catalog-cache.js";
 import type { ComposioClient, ComposioSession } from "./composio-connector.js";
 import type { EmulatedGithubRelease } from "./release-watch.js";
 import {
-  DEFAULT_UNIBOTS_EMULATED_RELEASES,
+  DEFAULT_UNIBOT_EMULATED_RELEASES,
   RELEASE_WATCH_GITHUB_TOOL_NAMES,
 } from "./release-watch.js";
 
@@ -159,7 +159,7 @@ const GITHUB_TOOLS: SessionTools = [
       type: "object",
       properties: {
         owner: { type: "string", description: "Repository owner, e.g. agra-aarav15" },
-        repo: { type: "string", description: "Repository name, e.g. unibots" },
+        repo: { type: "string", description: "Repository name, e.g. unibot" },
       },
       required: ["owner", "repo"],
     },
@@ -214,7 +214,7 @@ export class FakeComposioClient implements ComposioClient {
   failAccountList = false;
   private readonly sessionsById = new Map<string, ComposioSession>();
   private readonly mailboxesByUser = new Map<string, Mailbox>();
-  private githubReleases: EmulatedGithubRelease[] = [...DEFAULT_UNIBOTS_EMULATED_RELEASES];
+  private githubReleases: EmulatedGithubRelease[] = [...DEFAULT_UNIBOT_EMULATED_RELEASES];
   private nextId = 0;
 
   constructor(private readonly directory: readonly ToolkitDirectoryEntry[] = DEFAULT_DIRECTORY) {}
@@ -423,7 +423,7 @@ export class FakeComposioClient implements ComposioClient {
 
   private runGithub(tool: string, args: Record<string, unknown>): Record<string, unknown> {
     const owner = String(args.owner ?? args.owner_name ?? "agra-aarav15");
-    const repo = String(args.repo ?? args.repository ?? "unibots");
+    const repo = String(args.repo ?? args.repository ?? "unibot");
     const matched = this.githubReleases.filter(
       (release) =>
         release.owner.toLowerCase() === owner.toLowerCase() &&
@@ -626,11 +626,11 @@ function seedMailbox(): Mailbox {
       {
         messageId: "18c5f5d1a2b3c4d5",
         threadId: "18c5f5d1a2b3c4d5",
-        subject: "Welcome to Unibots",
+        subject: "Welcome to UniBot",
         sender: "hello@rakazo.test",
         to: "me@example.test",
         snippet: "Your inbox is ready for agent workflows.",
-        messageText: "Your inbox is ready for agent workflows.\n\n— Unibots",
+        messageText: "Your inbox is ready for agent workflows.\n\n— UniBot",
         labelIds: ["INBOX", "UNREAD"],
         internalDate: String(base),
       },

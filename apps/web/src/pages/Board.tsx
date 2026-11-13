@@ -1,15 +1,15 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import { ChatMarkdown } from "@rakazo/chat-ui/web";
-import type { Board, SpaceBot, Ticket, TicketPriority, TicketStatus } from "@rakazo/contracts";
+import { ChatMarkdown } from "@unibot/chat-ui/web";
+import type { Board, SpaceBot, Ticket, TicketPriority, TicketStatus } from "@unibot/contracts";
 import {
   TICKET_COMMENT_MAX_LENGTH,
   TICKET_DESCRIPTION_MAX_LENGTH,
   TICKET_PRIORITIES,
   TICKET_STATUSES,
   TICKET_TITLE_MAX_LENGTH,
-} from "@rakazo/contracts";
-import { ACTIVE_RUN_STATUSES, isRetryableError, retryDelayMs } from "@rakazo/core";
-import { fetchFresh, writeSaved } from "@rakazo/core/query";
+} from "@unibot/contracts";
+import { ACTIVE_RUN_STATUSES, isRetryableError, retryDelayMs } from "@unibot/core";
+import { fetchFresh, writeSaved } from "@unibot/core/query";
 import {
   BotAvatar,
   Button,
@@ -22,7 +22,7 @@ import {
   NativeSelect,
   NativeSelectOption,
   Textarea,
-} from "@rakazo/ui-web";
+} from "@unibot/ui-web";
 import { skipToken, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";

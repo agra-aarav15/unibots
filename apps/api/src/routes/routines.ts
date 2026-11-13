@@ -1,19 +1,19 @@
 import { ORPCError } from "@orpc/server";
-import { routineJobKey, routineWakeupJob, runContinueJob } from "@rakazo/adapter-kit";
+import { routineJobKey, routineWakeupJob, runContinueJob } from "@unibot/adapter-kit";
 import {
   parseRoutineWatch,
   routineRunModelPin,
   stableStringify,
   validateRoutineWatch,
-} from "@rakazo/adapters";
-import { canonicalPiProviderId } from "@rakazo/contracts";
+} from "@unibot/adapters";
+import { canonicalPiProviderId } from "@unibot/contracts";
 import {
   expandSkillReferencesInPrompt,
   hasMixedOneShotSchedule,
   isOneShotRoutineCrons,
-} from "@rakazo/core";
-import { IsolationError, Prisma } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/core";
+import { IsolationError, Prisma } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { assertRoutineModel } from "../model-pins.js";
 import { listRoutineRuns } from "../routine-runs.js";
 import {

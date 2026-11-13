@@ -1,5 +1,5 @@
 import { Trans } from "@lingui/react/macro";
-import { Button } from "@rakazo/ui-web";
+import { Button } from "@unibot/ui-web";
 import { useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { PageLoading } from "../components/PageLoading";
@@ -38,7 +38,7 @@ export function InviteJoin({ to }: { to: string }) {
   }, [token, to, refused]);
 
   if (!token) return <Navigate to={to} replace />;
-  if (!refused) return <PageLoading data-rakazo-app-state="invite-pending" />;
+  if (!refused) return <PageLoading data-unibot-app-state="invite-pending" />;
   return (
     <div className="grid h-full place-items-center p-6 text-center">
       <div className="space-y-3">

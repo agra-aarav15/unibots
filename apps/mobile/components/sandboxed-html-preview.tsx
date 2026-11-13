@@ -1,4 +1,4 @@
-import { withSandboxedArtifactCsp } from "@rakazo/core";
+import { withSandboxedArtifactCsp } from "@unibot/core";
 import { StyleSheet, View } from "react-native";
 import { WebView } from "react-native-webview";
 

@@ -1,4 +1,4 @@
-import type { TicketStatus } from "@rakazo/contracts";
+import type { TicketStatus } from "@unibot/contracts";
 import {
   CommentTicketInput,
   CreateTicketInput,
@@ -6,8 +6,8 @@ import {
   parseTicketRef,
   TicketStatusSchema,
   UpdateTicketInput,
-} from "@rakazo/contracts";
-import type { PrismaClient } from "@rakazo/db";
+} from "@unibot/contracts";
+import type { PrismaClient } from "@unibot/db";
 import {
   allocateTicketNumber,
   findTicket,
@@ -15,7 +15,7 @@ import {
   resolveBoard,
   toTicketCommentDto,
   toTicketDto,
-} from "@rakazo/db";
+} from "@unibot/db";
 import type { TicketChangeNotifier } from "./ticket-changes.js";
 
 type TicketToolDeps = {

@@ -1,7 +1,7 @@
-import { runContinueJob } from "@rakazo/adapter-kit";
-import { displayName } from "@rakazo/core";
-import type { PrismaClient } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+import { runContinueJob } from "@unibot/adapter-kit";
+import { displayName } from "@unibot/core";
+import type { PrismaClient } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { returnBotMessageOutcome } from "./bot-messages.js";
 import { withComputerScreenAvailability } from "./computer-screens.js";
 import type { ExecutorDeps } from "./executor-deps.js";

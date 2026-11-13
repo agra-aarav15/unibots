@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { ORPCError } from "@orpc/server";
-import { runContinueJob } from "@rakazo/adapter-kit";
+import { runContinueJob } from "@unibot/adapter-kit";
 import {
   createPluginMarketplace,
   isTransientFetchError,
@@ -13,19 +13,19 @@ import {
   recordMcpServerHealth,
   sanitizeComposioError,
   verifyMcpInstall,
-} from "@rakazo/adapters";
-import type { Actor } from "@rakazo/contracts";
-import { signupSurveyAsksTeamSize } from "@rakazo/contracts";
-import { comparePlugins, containsSecret, matchesPluginQuery } from "@rakazo/core";
-import type { Prisma } from "@rakazo/db";
+} from "@unibot/adapters";
+import type { Actor } from "@unibot/contracts";
+import { signupSurveyAsksTeamSize } from "@unibot/contracts";
+import { comparePlugins, containsSecret, matchesPluginQuery } from "@unibot/core";
+import type { Prisma } from "@unibot/db";
 import {
   AVAILABILITY_SELECT,
   availableInSpace,
   IsolationError,
   itemSecretIn,
   spaceAvailability,
-} from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import {
   assertNameFreeWhereAvailable,
   lockOwner,

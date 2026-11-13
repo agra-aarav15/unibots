@@ -8,10 +8,10 @@ import {
   E2BSandboxProvider,
   NovitaSandboxProvider,
   PiAgentRuntime,
-} from "@rakazo/adapters";
-import type { RunStatus } from "@rakazo/contracts";
-import { isTerminal } from "@rakazo/core";
-import { loadRootEnv } from "@rakazo/core/node/load-root-env";
+} from "@unibot/adapters";
+import type { RunStatus } from "@unibot/contracts";
+import { isTerminal } from "@unibot/core";
+import { loadRootEnv } from "@unibot/core/node/load-root-env";
 import { afterAll, describe, expect, it } from "vitest";
 import { sessionCookieHeader } from "./index.js";
 
@@ -42,7 +42,7 @@ describeE2b("live E2B canary", () => {
       signal: new AbortController().signal,
     };
     const computer = await sandbox.provision(
-      { botId: "canary", homePath: "/home/user/rakazo-home" },
+      { botId: "canary", homePath: "/home/user/unibot-home" },
       ctx,
     );
     try {
@@ -72,7 +72,7 @@ describeBoat("live Boat canary", () => {
       userId: "boat-canary",
       signal: new AbortController().signal,
     };
-    const request = { botId: "boat-canary", homePath: "/home/user/rakazo-home" };
+    const request = { botId: "boat-canary", homePath: "/home/user/unibot-home" };
     let computer = await sandbox.provision(request, ctx);
     try {
       await sandbox.prepare(computer, ctx);
@@ -126,7 +126,7 @@ describeBoxd("live boxd canary", () => {
       }
       return stdout;
     };
-    const request = { botId: "boxd-canary", homePath: "/home/boxd/rakazo-home" };
+    const request = { botId: "boxd-canary", homePath: "/home/boxd/unibot-home" };
     let computer = await sandbox.provision(request, ctx);
     try {
       await sandbox.prepare(computer, ctx);
@@ -175,7 +175,7 @@ describe.skipIf(!process.env.VERIFY_PROVIDERS || !process.env.NOVITA_API_KEY)(
         userId: "novita-canary",
         signal: new AbortController().signal,
       };
-      const request = { botId: "novita-canary", homePath: "/home/user/rakazo-home" };
+      const request = { botId: "novita-canary", homePath: "/home/user/unibot-home" };
       let computer = await sandbox.provision(request, ctx);
       try {
         await sandbox.prepare(computer, ctx);
@@ -224,7 +224,7 @@ describeCreateos("live CreateOS canary", () => {
       userId: "createos-canary",
       signal: new AbortController().signal,
     };
-    const request = { botId: "createos-canary", homePath: "/home/desktop/rakazo-home" };
+    const request = { botId: "createos-canary", homePath: "/home/desktop/unibot-home" };
     let computer = await sandbox.provision(request, ctx);
     try {
       await sandbox.prepare(computer, ctx);
@@ -320,8 +320,8 @@ describePiApp("live OpenRouter product journey", () => {
   });
 
   it("completes a bot turn through the API with the live model", async () => {
-    const { createApp } = await import("@rakazo/api/app");
-    dataDir = mkdtempSync(path.join(tmpdir(), "rakazo-pi-"));
+    const { createApp } = await import("@unibot/api/app");
+    dataDir = mkdtempSync(path.join(tmpdir(), "unibot-pi-"));
     const handles = await createApp({
       databaseUrl: process.env.DATABASE_URL!,
       dataDir,

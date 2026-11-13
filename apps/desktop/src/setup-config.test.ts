@@ -3,7 +3,7 @@ import {
   DEFAULT_LOCAL_WEB_URL,
   desktopStackImageTag,
   firstRunAuthPath,
-  isRakazoHealth,
+  isUniBotHealth,
   managedLocalOpenUrl,
   maySendDesktopStackToken,
   normalizeServerUrl,
@@ -67,12 +67,12 @@ describe("server address normalization", () => {
     expect(normalizeServerUrl("http://[fd00:ec2::254]")).toBeNull();
     // fd::1 is 00fd::1, not unique-local.
     expect(normalizeServerUrl("http://[fd::1]:3100")).toBeNull();
-    // HTTPS to link-local still normalizes; the health probe must match Unibots.
+    // HTTPS to link-local still normalizes; the health probe must match UniBot.
     expect(normalizeServerUrl("https://169.254.169.254")).toBe("https://169.254.169.254");
   });
 
   it.each(["", "   ", "not a url", "ftp://example.com", "file:///etc/passwd", "http://"])(
-    "rejects an address that cannot reach a Unibots server (%s)",
+    "rejects an address that cannot reach a UniBot server (%s)",
     (value) => {
       expect(normalizeServerUrl(value)).toBeNull();
     },
@@ -173,7 +173,7 @@ describe("server request headers", () => {
     ).toEqual({ mode: "existing", serverUrl: "https://rakazo.example.com" });
   });
 
-  it("refuses headers Unibots owns and headers for a new local instance", () => {
+  it("refuses headers UniBot owns and headers for a new local instance", () => {
     expect(parseSetupInput({ ...setup, headers: { Cookie: "a=b" } })).toBeNull();
     expect(parseSetupInput({ ...setup, headers: "x: y" })).toBeNull();
     expect(
@@ -207,7 +207,7 @@ describe("startup target", () => {
     });
   });
 
-  it("lets RAKAZO_WEB_URL point the shell anywhere without touching saved setup", () => {
+  it("lets UNIBOT_WEB_URL point the shell anywhere without touching saved setup", () => {
     expect(resolveStartupTarget({ envUrl: "http://127.0.0.1:4321", saved })).toEqual({
       kind: "app",
       url: "http://127.0.0.1:4321",
@@ -215,7 +215,7 @@ describe("startup target", () => {
     });
   });
 
-  it("ignores an empty RAKAZO_WEB_URL", () => {
+  it("ignores an empty UNIBOT_WEB_URL", () => {
     expect(resolveStartupTarget({ envUrl: "   ", saved }).kind).toBe("app");
     expect(resolveStartupTarget({ envUrl: "   ", saved })).toMatchObject({ source: "saved" });
   });
@@ -261,7 +261,7 @@ describe("remote-content isolation", () => {
     const first = sessionPartitionForServerUrl("https://one.example.com/path");
     expect(first).toBe(sessionPartitionForServerUrl("https://one.example.com/other"));
     expect(first).not.toBe(sessionPartitionForServerUrl("https://one.example.com:8443"));
-    expect(first).toMatch(/^persist:rakazo-[a-f0-9]{24}$/);
+    expect(first).toMatch(/^persist:unibot-[a-f0-9]{24}$/);
     expect(first).not.toContain("one.example.com");
     expect(sessionPartitionForServerUrl("data:text/html,fixture")).toBeNull();
   });
@@ -274,11 +274,11 @@ describe("remote-content isolation", () => {
   });
 });
 
-describe("Unibots health response", () => {
+describe("UniBot health response", () => {
   it("requires the public RPC health contract", () => {
-    expect(isRakazoHealth({ json: { ok: true, version: "0.1.0" } })).toBe(true);
-    expect(isRakazoHealth({ json: { ok: true } })).toBe(false);
-    expect(isRakazoHealth({ ok: true, version: "0.1.0" })).toBe(false);
+    expect(isUniBotHealth({ json: { ok: true, version: "0.1.0" } })).toBe(true);
+    expect(isUniBotHealth({ json: { ok: true } })).toBe(false);
+    expect(isUniBotHealth({ ok: true, version: "0.1.0" })).toBe(false);
   });
 });
 

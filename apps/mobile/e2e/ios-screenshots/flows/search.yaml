@@ -1,10 +1,10 @@
-appId: com.unibots.app
+appId: com.unibot.app
 name: Search
 ---
 - runFlow:
     file: ../subflows/sign-in.yaml
     env:
-      RAKAZO_ACTIVE_EMAIL: ${RAKAZO_SCREENSHOT_EMAIL}
+      UNIBOT_ACTIVE_EMAIL: ${UNIBOT_SCREENSHOT_EMAIL}
 - tapOn:
     id: "home-search-button"
     optional: true

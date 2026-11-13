@@ -1,4 +1,5 @@
-export const SITE_NAME = "Unibots";
+export const SITE_NAME = "UniBot";
+export const AUTHOR_NAME = "Aarav Agrawal";
 
 /**
  * Canonical origin for sitemap, canonical tags, and structured data.
@@ -12,7 +13,7 @@ export const SITE_URL = (import.meta.env.PUBLIC_SITE_URL ?? "http://localhost:43
 );
 
 export const SITE_DESCRIPTION =
-  "Unibots is an open source platform for persistent AI teammates that do real work. Your keys, your model, your machine.";
+  "UniBot is an open source platform for persistent AI teammates that do real work. Your keys, your model, your machine.";
 
 /** Plugin submissions are received by the project site; there is no hosted app to send them to. */
 export const PLUGIN_SUBMISSIONS_URL = `${SITE_URL}/api/v1/plugin-submissions`;

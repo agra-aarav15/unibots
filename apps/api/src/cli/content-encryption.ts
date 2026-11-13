@@ -8,10 +8,10 @@ import {
   LocalArtifactStore,
   upgradeLegacySecrets,
   withSecretPersistence,
-} from "@rakazo/adapters";
-import { resolveContentEncryption, resolveEncryptionKey } from "@rakazo/core";
-import { loadRootEnv } from "@rakazo/core/node/load-root-env";
-import type { ContentMigrationMode } from "@rakazo/db";
+} from "@unibot/adapters";
+import { resolveContentEncryption, resolveEncryptionKey } from "@unibot/core";
+import { loadRootEnv } from "@unibot/core/node/load-root-env";
+import type { ContentMigrationMode } from "@unibot/db";
 import {
   contentEncryptionStatus,
   createDb,
@@ -20,7 +20,7 @@ import {
   rewrapSpaceKeys,
   rotateSpaceDataKeys,
   runAsSystem,
-} from "@rakazo/db";
+} from "@unibot/db";
 import { moveMcpArgsIntoSecrets } from "../mcp-args-migration.js";
 import { createSecretMigrationRepository } from "../secret-migration.js";
 
@@ -85,7 +85,7 @@ if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required");
 // only read, or write plaintext back.
 const encrypting = ["migrate", "rotate", "reencrypt"].includes(command);
 const { prisma, pool, contentKeys } = createDb(process.env.DATABASE_URL, {
-  applicationName: "rakazo-content-encryption",
+  applicationName: "unibot-content-encryption",
   keyProvider: contentKeyProviderFromEnv(),
   ...(encrypting ? { encryptContent: true } : {}),
 });

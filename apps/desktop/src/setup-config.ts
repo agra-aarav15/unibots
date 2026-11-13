@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
-import type { DesktopSetup, DesktopStackProbeResponse } from "@rakazo/contracts";
-import { parseServerHeaders } from "@rakazo/contracts";
-import { isLoopbackHost, isPrivateNetworkHost } from "@rakazo/contracts/network-host";
+import type { DesktopSetup, DesktopStackProbeResponse } from "@unibot/contracts";
+import { parseServerHeaders } from "@unibot/contracts";
+import { isLoopbackHost, isPrivateNetworkHost } from "@unibot/contracts/network-host";
 
 /** Managed desktop origin; development keeps its usual web/API ports. */
 export const DEFAULT_LOCAL_WEB_URL = "http://127.0.0.1:45173";
@@ -18,7 +18,7 @@ const SCHEME = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//;
 /**
  * Accepts what a person would actually type ("localhost:5173", "rakazo.example.com")
  * and returns a canonical http(s) origin, or null when the input can never
- * securely address a Unibots server.
+ * securely address a UniBot server.
  */
 export function normalizeServerUrl(input: string): string | null {
   const trimmed = input.trim();
@@ -43,7 +43,7 @@ export function normalizeServerUrl(input: string): string | null {
   // Public login cookies and API traffic must never cross a cleartext connection.
   if (url.protocol === "http:" && !isPrivateNetworkHost(url.hostname)) return null;
 
-  // Unibots serves its renderer, RPC, and auth routes from one origin. Keeping a
+  // UniBot serves its renderer, RPC, and auth routes from one origin. Keeping a
   // user-supplied path would make the setup probe and the loaded app disagree.
   return url.origin;
 }
@@ -121,7 +121,7 @@ export function serializeSetup(setup: DesktopSetup): string {
 
 /**
  * Decides between the first-run setup window and the app window. An explicit
- * `RAKAZO_WEB_URL` still wins over saved configuration so test and performance
+ * `UNIBOT_WEB_URL` still wins over saved configuration so test and performance
  * harnesses can point the shell anywhere without touching a user's real setup.
  */
 export function resolveStartupTarget(input: {
@@ -173,13 +173,13 @@ export function servesBundledRenderer(targetUrl: string, managedLocalStack: bool
   }
 }
 
-/** Each Unibots origin gets its own persistent cookie and storage partition. */
+/** Each UniBot origin gets its own persistent cookie and storage partition. */
 export function sessionPartitionForServerUrl(targetUrl: string): string | null {
   try {
     const url = new URL(targetUrl);
     if (url.protocol !== "http:" && url.protocol !== "https:") return null;
     const digest = createHash("sha256").update(url.origin).digest("hex").slice(0, 24);
-    return `persist:rakazo-${digest}`;
+    return `persist:unibot-${digest}`;
   } catch {
     return null;
   }
@@ -196,7 +196,7 @@ export function safeExternalUrl(targetUrl: string): string | null {
   }
 }
 
-export function isRakazoHealth(value: unknown): boolean {
+export function isUniBotHealth(value: unknown): boolean {
   if (typeof value !== "object" || value === null) return false;
   const json = (value as { json?: unknown }).json;
   return (

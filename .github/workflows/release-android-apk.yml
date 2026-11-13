@@ -66,7 +66,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Verify mobile project
-        run: pnpm --filter @rakazo/mobile check
+        run: pnpm --filter @unibot/mobile check
 
       - name: Decode the release keystore
         if: steps.build-mode.outputs.signed == 'true'
@@ -94,7 +94,7 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           set -euo pipefail
-          pnpm --filter @rakazo/mobile exec expo prebuild --platform android --no-install
+          pnpm --filter @unibot/mobile exec expo prebuild --platform android --no-install
           # `expo prebuild` regenerates this file, so the settings have to be applied here rather than
           # checked in. The generated values (512 MB of metaspace, four ABIs, parallel projects) are
           # sized for a developer machine: on a four-core runner, lint analysis plus the CMake and
@@ -172,7 +172,7 @@ jobs:
           VERSION_CODE: ${{ steps.gradle-build.outputs.version_code || steps.build.outputs.version_code }}
         run: |
           set -euo pipefail
-          title="Unibots for Android $VERSION ($VERSION_CODE)"
+          title="UniBot for Android $VERSION ($VERSION_CODE)"
           if ! gh release view "$RELEASE_TAG" --json tagName > /dev/null 2> "$RUNNER_TEMP/view.err"; then
             if ! grep -q "release not found" "$RUNNER_TEMP/view.err"; then
               cat "$RUNNER_TEMP/view.err" >&2
@@ -186,7 +186,7 @@ jobs:
             exit 0
           fi
 
-          staged="unibots-$VERSION_CODE.apk"
+          staged="unibot-$VERSION_CODE.apk"
           cp "$RUNNER_TEMP/unibots.apk" "$RUNNER_TEMP/$staged"
           gh release upload "$RELEASE_TAG" "$RUNNER_TEMP/$staged" --clobber
           assets="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" --jq '.assets')"

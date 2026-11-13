@@ -1,19 +1,23 @@
 import type { Socket } from "node:net";
-import { loadRootEnv } from "@rakazo/core/node/load-root-env";
+import { loadRootEnv } from "@unibot/core/node/load-root-env";
 
 loadRootEnv();
 
 import { serve } from "@hono/node-server";
-import { SERVICE_NAMES } from "@rakazo/logging";
-import { createRootLogger } from "@rakazo/logging/axiom";
+import { SERVICE_NAMES } from "@unibot/logging";
+import { createRootLogger } from "@unibot/logging/axiom";
 import { createApp } from "./app.js";
 import { loadEnv } from "./env.js";
+import { mountWebApp, webAppRoot } from "./web-app.js";
 
 const logger = createRootLogger(SERVICE_NAMES.api);
 
 try {
   const env = loadEnv();
   const { app, stop, handleUpgrade } = await createApp({ ...env, logger });
+  // Same process, same origin: the desktop reaches the interface and its RPC at one address.
+  const webRoot = webAppRoot();
+  if (webRoot) mountWebApp(app, webRoot);
   const server = serve({ fetch: app.fetch, port: env.port, hostname: env.apiHost }, () => {
     logger.info("api listening", { "http.host": env.apiHost, "http.port": env.port });
   });

@@ -1,19 +1,19 @@
-import type { McpTransport, MessageBlock } from "@rakazo/contracts";
+import type { McpTransport, MessageBlock } from "@unibot/contracts";
 import {
   McpRemoteEndpointSchema,
   McpTransportSchema,
   mcpOAuthEnvReferences,
-} from "@rakazo/contracts";
-import { deriveMcpSlug } from "@rakazo/core";
-import type { McpServer } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/contracts";
+import { deriveMcpSlug } from "@unibot/core";
+import type { McpServer } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import type { ExecutorDeps } from "./executor-deps.js";
 import { mcpStdioRefusal } from "./mcp-transport.js";
 import { toStringRecord } from "./memory-provider-factory.js";
 import { assertNoMcpEndpointCredential, assertSafeRemoteUrl } from "./remote-mcp.js";
 import { isUniqueViolation, persistMessageInTransaction, runLeaseFor } from "./run-messages.js";
 
-export { deriveMcpSlug } from "@rakazo/core";
+export { deriveMcpSlug } from "@unibot/core";
 
 const MAX_ENV_ENTRIES = 32;
 const MAX_ARGS = 64;

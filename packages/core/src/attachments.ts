@@ -1,4 +1,4 @@
-import type { AttachmentMimeType, MessageBlock } from "@rakazo/contracts";
+import type { AttachmentMimeType, MessageBlock } from "@unibot/contracts";
 import {
   ATTACHMENT_COUNT_CEILING,
   ATTACHMENT_MAX_BYTES,
@@ -6,7 +6,7 @@ import {
   attachmentSizeLabel,
   isAllowedAttachmentMimeType,
   isAttachmentImageMimeType,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 
 export class AttachmentValidationError extends Error {
   constructor(message: string) {

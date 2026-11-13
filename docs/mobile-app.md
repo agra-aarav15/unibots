@@ -11,7 +11,7 @@ You can also choose **Get the mobile app** from the account menu in the web or d
 
 ## Sign in
 
-Sign in with the account on your Unibots server. To use a different server, tap **Use a custom
+Sign in with the account on your UniBot server. To use a different server, tap **Use a custom
 server** on the sign-in screen and enter its address. Servers on your local network work too.
 
 ## What you can do
@@ -43,5 +43,5 @@ working status while a bot runs.
 
 ## Share to a bot
 
-On Android, share text, images, audio, video, PDFs or files from another app to Unibots and pick the
+On Android, share text, images, audio, video, PDFs or files from another app to UniBot and pick the
 bot to send them to.

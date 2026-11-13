@@ -1,4 +1,4 @@
-# Unibots
+# UniBot
 
 [English](./README.md) | [简体中文](./README.zh-CN.md) | [日本語](./README.ja.md)
 
@@ -6,7 +6,7 @@
 [![Download the Android APK](https://img.shields.io/badge/Android-Download%20APK-black?labelColor=black&style=for-the-badge&logo=android&logoColor=white)](https://github.com/agra-aarav15/unibots/releases/download/android/unibots.apk)
 [![Download the desktop app](https://img.shields.io/badge/Desktop-Download%20the%20app-black?labelColor=black&style=for-the-badge&logo=electron&logoColor=white)](https://github.com/agra-aarav15/unibots/releases/latest)
 
-Unibots is an open source AI agent for persistent teammates, and a self-hosted AI assistant you
+UniBot is an open source AI agent for persistent teammates, and a self-hosted AI assistant you
 can run on your own machine. It is available on the web, as an Electron desktop app, and on
 [Android](https://github.com/agra-aarav15/unibots/releases/download/android/unibots.apk). Bring your own model
 and computer provider, or run the complete stack locally.
@@ -14,7 +14,7 @@ and computer provider, or run the complete stack locally.
 It is an open source, self-hosted alternative to Grok Bot, Meta Muse, OpenAI Dots, Instinct,
 OpenClaw, Hermes Agent, and Claude Duet.
 
-Unibots is in beta. Learn more at [the project repository](https://github.com/agra-aarav15/unibots).
+UniBot is in beta. Learn more at [the project repository](https://github.com/agra-aarav15/unibots).
 
 ## Features
 
@@ -33,12 +33,12 @@ https://github.com/user-attachments/assets/dccdeddb-2134-4a56-8eed-b2e591736b1c
 
 ## Thanks
 
-- [PromptLayer](https://promptlayer.com/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [Inbox Zero](https://getinboxzero.com/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [ConnectorMap](https://connectormap.luinbytes.dev/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [CodeRabbit](https://www.coderabbit.ai/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [Greptile](https://www.greptile.com/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
-- [Snyk](https://snyk.io/?utm_source=github&utm_medium=referral&utm_campaign=unibots_readme)
+- [PromptLayer](https://promptlayer.com/?utm_source=github&utm_medium=referral&utm_campaign=unibot_readme)
+- [Inbox Zero](https://getinboxzero.com/?utm_source=github&utm_medium=referral&utm_campaign=unibot_readme)
+- [ConnectorMap](https://connectormap.luinbytes.dev/?utm_source=github&utm_medium=referral&utm_campaign=unibot_readme)
+- [CodeRabbit](https://www.coderabbit.ai/?utm_source=github&utm_medium=referral&utm_campaign=unibot_readme)
+- [Greptile](https://www.greptile.com/?utm_source=github&utm_medium=referral&utm_campaign=unibot_readme)
+- [Snyk](https://snyk.io/?utm_source=github&utm_medium=referral&utm_campaign=unibot_readme)
 
 ## Stack
 
@@ -58,12 +58,12 @@ https://github.com/user-attachments/assets/dccdeddb-2134-4a56-8eed-b2e591736b1c
 You need Docker Engine, the Compose plugin, curl, and OpenSSL. No clone or Node install.
 
 ```bash
-mkdir -p unibots && cd unibots &&
+mkdir -p unibot && cd unibot &&
 curl -fsSLO https://raw.githubusercontent.com/agra-aarav15/unibots/main/infra/compose/install-images.sh &&
 bash install-images.sh
 ```
 
-The installer downloads the Compose files, creates `.env` with random secrets, and starts Unibots.
+The installer downloads the Compose files, creates `.env` with random secrets, and starts UniBot.
 It preserves an existing `.env` when rerun.
 
 Open [http://127.0.0.1:5173](http://127.0.0.1:5173), create an account, and connect a model.
@@ -73,8 +73,8 @@ with the matching API key.
 Default image tag is `edge` (main builds, `linux/amd64` + `linux/arm64`). Details and tags:
 [self-hosting guide](./docs/self-host.md#published-images-no-checkout).
 
-On restricted networks, override the installer download base (`RAKAZO_DOWNLOAD_BASE`), skip
-existing Compose files (`--local` / `RAKAZO_DOWNLOAD_SKIP_EXISTING`), or mirror the bootstrap
+On restricted networks, override the installer download base (`UNIBOT_DOWNLOAD_BASE`), skip
+existing Compose files (`--local` / `UNIBOT_DOWNLOAD_SKIP_EXISTING`), or mirror the bootstrap
 script URL — see
 [Restricted networks / mirror downloads](./docs/self-host.md#restricted-networks--mirror-downloads).
 
@@ -87,7 +87,7 @@ the desktop app, the mobile app, or a browser.
 
 ```bash
 bash install-images.sh --prepare-only
-# edit .env: SANDBOX_PROVIDER=boat (or e2b / daytona / createos) with its API key, RAKAZO_HOST=your.domain
+# edit .env: SANDBOX_PROVIDER=boat (or e2b / daytona / createos) with its API key, UNIBOT_HOST=your.domain
 bash install-images.sh
 ```
 
@@ -104,13 +104,13 @@ pnpm 9; and Docker. Node.js 23.x and 25.x are not supported.
 
 ```bash
 git clone https://github.com/agra-aarav15/unibots.git
-cd unibots
+cd unibot
 cp .env.example .env
 ```
 
 Set `POSTGRES_PASSWORD` and `POSTGRES_APP_PASSWORD` to two values from `openssl rand -hex 16`,
 then put them in `DATABASE_MIGRATION_URL` and `DATABASE_URL`. The app connects as its own
-`rakazo_app` login, which row-level security applies to; migrations run as the owner
+`unibot_app` login, which row-level security applies to; migrations run as the owner
 ([database roles](docs/self-host-configuration.md#database-roles)). Set `BETTER_AUTH_SECRET`, `ENCRYPTION_KEY`, and `SCREEN_PROXY_SECRET` to
 independent long random values. Docker sandboxes also need a dedicated
 `SANDBOX_SUPERVISOR_TOKEN`. You can also set `OPENROUTER_API_KEY`, or connect a supported
@@ -137,7 +137,7 @@ pnpm dev
 ```
 
 `pnpm dev` uses the Postgres in `DATABASE_URL` when it accepts a connection. Otherwise it starts a
-local `rakazo-dev-postgres` container with Docker, and every checkout reuses that one. It applies
+local `unibot-dev-postgres` container with Docker, and every checkout reuses that one. It applies
 migrations and generates the Prisma client before starting. A branch that adds migrations main
 doesn't have gets its own database on the same server, copied from the shared one when possible,
 so unmerged schema changes stay out of it. When the default ports are taken, for example by
@@ -192,7 +192,7 @@ Workspace exports reject files above 64 MiB without truncating them. Set `RAILWA
 
 ## Desktop and mobile
 
-The Electron and Expo apps are clients of the same Unibots API used by the web app.
+The Electron and Expo apps are clients of the same UniBot API used by the web app.
 
 Download the desktop app (version 0.4.0) for Windows, macOS, and Linux from
 [GitHub releases](https://github.com/agra-aarav15/unibots/releases/latest), or the Android APK
@@ -208,17 +208,17 @@ up are in [local-first](./docs/local-first.md).
 With the development stack running, launch Electron with:
 
 ```bash
-pnpm --filter @rakazo/desktop dev
+pnpm --filter @unibot/desktop dev
 ```
 
-On first run the desktop app asks whether to run Unibots on this computer or connect to an existing
+On first run the desktop app asks whether to run UniBot on this computer or connect to an existing
 server. **This computer** installs and starts the published images with Docker Compose (the same
 files as `infra/compose/install-images.sh`) under the app's data directory, so Docker Desktop,
 OrbStack, or Docker Engine must be installed; the app links to them when it is not. Installed
 builds pin the image tag to their own version; unpackaged builds pull `edge`. Developers running
 `pnpm dev` should pick **Existing instance** with `http://127.0.0.1:5173` instead. Public servers
 must use HTTPS; HTTP is accepted only for loopback and private LAN addresses (not link-local). The
-app verifies Unibots's health endpoint before saving, and later launches go straight to that
+app verifies UniBot's health endpoint before saving, and later launches go straight to that
 instance. The stack keeps running after the app quits; **Stop Local Stack** in the application
 menu turns it off.
 
@@ -229,17 +229,17 @@ that only include FUSE 3, such as Fedora Silverblue or Ubuntu 24.04, show
 FUSE:
 
 ```bash
-chmod +x Unibots-*.AppImage
-./Unibots-*.AppImage --appimage-extract-and-run
+chmod +x UniBot-*.AppImage
+./UniBot-*.AppImage --appimage-extract-and-run
 ```
 
 **This computer** looks for the `docker` CLI and does not detect Podman. To try another
-Docker-compatible CLI that supports the `compose` commands, set `RAKAZO_DOCKER_BINARY` to its path
+Docker-compatible CLI that supports the `compose` commands, set `UNIBOT_DOCKER_BINARY` to its path
 before starting the app.
 
-Use **Change Unibots Server…** in the application menu to reconnect. Closing that window without
-saving returns to the previous instance. For development automation, set `RAKAZO_WEB_URL` to point
-the shell somewhere else without changing the saved instance, or `RAKAZO_FORCE_SETUP=1` to run
+Use **Change UniBot Server…** in the application menu to reconnect. Closing that window without
+saving returns to the previous instance. For development automation, set `UNIBOT_WEB_URL` to point
+the shell somewhere else without changing the saved instance, or `UNIBOT_FORCE_SETUP=1` to run
 setup again.
 
 Mobile build and release instructions live in [docs/mobile-release.md](./docs/mobile-release.md).
@@ -301,7 +301,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the development workflow and test m
 - [Performance testing](./docs/performance.md)
 - [Manage the bots it creates](./docs/fleet-management.md)
 
-## How Unibots compares
+## How UniBot compares
 
 - [Grok Bot](https://github.com/agra-aarav15/unibots/grok-bot-alternative/)
 - [Muse](https://github.com/agra-aarav15/unibots/muse-alternative/)
@@ -317,6 +317,6 @@ Contributions are welcome. Please read [CONTRIBUTING.md](./CONTRIBUTING.md) befo
 request. For security vulnerabilities, follow [SECURITY.md](./SECURITY.md) instead of filing a public
 issue.
 
-Unibots is licensed under the [Apache License 2.0](./LICENSE).
+UniBot is licensed under the [Apache License 2.0](./LICENSE).
 
 Questions and ideas are welcome in the [GitHub issues](https://github.com/agra-aarav15/unibots/issues).

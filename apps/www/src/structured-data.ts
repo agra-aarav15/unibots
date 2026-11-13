@@ -25,7 +25,7 @@ export function homeStructuredData(input: HomeStructuredDataInput) {
         "@id": `${SITE_URL}/#organization`,
         name: SITE_NAME,
         url: `${SITE_URL}/`,
-        logo: `${SITE_URL}/brand/unibots-mark.png`,
+        logo: `${SITE_URL}/brand/unibot-mark.png`,
         contactPoint: {
           "@type": "ContactPoint",
           contactType: "customer support",

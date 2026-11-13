@@ -21,7 +21,7 @@ import {
   savedCatalogSelections,
   scriptedCatalogEntry,
   validateConnectedModelChoice,
-} from "@rakazo/adapters";
+} from "@unibot/adapters";
 import type {
   Actor,
   ModelCatalogEntry,
@@ -29,14 +29,14 @@ import type {
   ModelRoleChoice,
   ModelRoleSettings,
   ModelRoleView,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import {
   appContract,
   canonicalPiProviderId,
   modelSupportsRole,
   OPENAI_COMPATIBLE_PROVIDER_ID,
-} from "@rakazo/contracts";
-import { createGroupRepos, createRepos, recordSecurityEvent, runAsTenant } from "@rakazo/db";
+} from "@unibot/contracts";
+import { createGroupRepos, createRepos, recordSecurityEvent, runAsTenant } from "@unibot/db";
 import { createAgentImportServices } from "../agent-import-services.js";
 import { createAgentSkillsService } from "../agent-skills.js";
 import { createBotRemoval } from "../bot-removal.js";
@@ -188,7 +188,7 @@ export function createRouterContext(deps: RouterDeps) {
               auth.secretIdByModel[entry.provider]?.[entry.id] ||
               auth.secretIdByProvider[entry.provider]
                 ? entry.billing
-                : "Uses Unibots credits",
+                : "Uses UniBot credits",
           }
         : entry,
     );

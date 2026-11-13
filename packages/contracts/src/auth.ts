@@ -23,6 +23,14 @@ export const authCapabilitiesSchema = z.object({
   passkeyRpId: z.string().min(1).nullable().optional(),
   /** Native apps this domain vouches for; omitted by older servers, which means none. */
   nativePasskeys: z.object({ ios: z.boolean(), android: z.boolean() }).optional(),
+  /**
+   * Present when this server runs as one local owner on this machine with no sign-in. The client is
+   * that owner already, so it opens the app instead of asking anyone to authenticate. Omitted by
+   * every server that authenticates its users.
+   */
+  localOwner: z
+    .object({ id: z.string().min(1), name: z.string().min(1), email: z.string().min(1) })
+    .optional(),
 });
 export type AuthCapabilities = z.infer<typeof authCapabilitiesSchema>;
 

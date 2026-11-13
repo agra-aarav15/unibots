@@ -6,8 +6,8 @@ import {
   ChatSdkMessagingSurface,
   createEmulatedSendbluePlatform,
   SendBlueEmulator,
-} from "@rakazo/adapters";
-import { formatMessagingLinkCode, issueMessagingLinkCode } from "@rakazo/db";
+} from "@unibot/adapters";
+import { formatMessagingLinkCode, issueMessagingLinkCode } from "@unibot/db";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { asSystem } from "./system-db.js";
 
@@ -29,7 +29,7 @@ describeMessaging("messaging surface journeys", () => {
   let prisma: any;
   const emulator = new SendBlueEmulator();
   const platform = createEmulatedSendbluePlatform(emulator);
-  const dataDir = mkdtempSync(path.join(tmpdir(), "rakazo-messaging-"));
+  const dataDir = mkdtempSync(path.join(tmpdir(), "unibot-messaging-"));
   // Unique per run: identities, threads, and outbox rows persist in the dev
   // database. Random E.164 fixtures — a timestamp suffix repeats within
   // hours and collides with earlier runs.
@@ -48,7 +48,7 @@ describeMessaging("messaging surface journeys", () => {
     });
 
   beforeAll(async () => {
-    const { createApp } = await import("@rakazo/api/app");
+    const { createApp } = await import("@unibot/api/app");
     const handles = await createApp({
       databaseUrl: process.env.DATABASE_URL!,
       dataDir,

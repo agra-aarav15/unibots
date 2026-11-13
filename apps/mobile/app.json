@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Unibots",
-    "slug": "unibots",
-    "scheme": "rakazo",
+    "name": "UniBot",
+    "slug": "unibot",
+    "scheme": "unibot",
     "version": "1.0.13",
     "orientation": "default",
     "userInterfaceStyle": "automatic",
@@ -25,14 +25,14 @@
         "expo-audio",
         {
           "enableBackgroundPlayback": false,
-          "microphonePermission": "Unibots uses the microphone for voice calls with your bots."
+          "microphonePermission": "UniBot uses the microphone for voice calls with your bots."
         }
       ],
       [
         "expo-speech-recognition",
         {
-          "speechRecognitionPermission": "Unibots turns your speech into messages during voice calls.",
-          "microphonePermission": "Unibots uses the microphone for voice calls with your bots."
+          "speechRecognitionPermission": "UniBot turns your speech into messages during voice calls.",
+          "microphonePermission": "UniBot uses the microphone for voice calls with your bots."
         }
       ],
       "expo-localization",
@@ -47,9 +47,9 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Unibots uses your photo library so you can attach images to a bot message.",
-          "cameraPermission": "Unibots uses the camera so you can attach photos to a bot message.",
-          "microphonePermission": "Unibots uses the microphone for voice calls with your bots."
+          "photosPermission": "UniBot uses your photo library so you can attach images to a bot message.",
+          "cameraPermission": "UniBot uses the camera so you can attach photos to a bot message.",
+          "microphonePermission": "UniBot uses the microphone for voice calls with your bots."
         }
       ],
       [
@@ -83,24 +83,24 @@
       "./plugins/with-release-signing"
     ],
     "ios": {
-      "bundleIdentifier": "com.unibots.app",
+      "bundleIdentifier": "com.unibot.app",
       "buildNumber": "1",
       "supportsTablet": false,
-      "icon": "../../packages/ui-tokens/assets/Unibots.icon",
+      "icon": "../../packages/ui-tokens/assets/UniBot.icon",
       "config": {
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "NSCameraUsageDescription": "Unibots uses the camera so you can attach photos to a bot message.",
-        "NSPhotoLibraryUsageDescription": "Unibots uses your photo library so you can attach images to a bot message.",
-        "NSLocalNetworkUsageDescription": "Unibots connects to your own Unibots server on the local network.",
+        "NSCameraUsageDescription": "UniBot uses the camera so you can attach photos to a bot message.",
+        "NSPhotoLibraryUsageDescription": "UniBot uses your photo library so you can attach images to a bot message.",
+        "NSLocalNetworkUsageDescription": "UniBot connects to your own UniBot server on the local network.",
         "NSAppTransportSecurity": {
           "NSAllowsLocalNetworking": true
         }
       }
     },
     "android": {
-      "package": "com.unibots.app",
+      "package": "com.unibot.app",
       "versionCode": 12,
       "softwareKeyboardLayoutMode": "resize",
       "icon": "./assets/icon.png",

@@ -1,13 +1,14 @@
 import type { Api, Model } from "@earendil-works/pi-ai";
 import { getSupportedThinkingLevels } from "@earendil-works/pi-ai";
 import { builtinModels } from "@earendil-works/pi-ai/providers/all";
-import type { ModelOAuthSignInMode, ThinkingLevel } from "@rakazo/contracts";
+import type { ModelOAuthSignInMode, ThinkingLevel } from "@unibot/contracts";
 import {
   assertHeaderSafeApiKey,
   canonicalPiProviderId,
   MODEL_KEY_REJECTED_ERROR,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import { LOCAL_PROVIDER_ID, registerLocalProvider } from "./pi-local-provider.js";
+import { registerCliCatalog } from "./pi-cli-provider.js";
 import { applyPiModelCompatibility } from "./pi-model-compat.js";
 import { loadProviderOAuth, SUBSCRIPTION_SIGN_IN_PROVIDERS } from "./pi-oauth.js";
 import {
@@ -263,8 +264,10 @@ function buildPiCatalog(): PiCatalogEntry[] {
   catalogProbeBaseUrls.clear();
   catalogBaseUrls.clear();
   hiddenCatalogKeys.clear();
-  const models = registerOpenAiCompatibleCatalog(
-    registerLocalProvider(applyPiModelCompatibility(builtinModels())),
+  const models = registerCliCatalog(
+    registerOpenAiCompatibleCatalog(
+      registerLocalProvider(applyPiModelCompatibility(builtinModels())),
+    ),
   );
   const entries: PiCatalogEntry[] = [];
   for (const provider of models.getProviders()) {
@@ -387,18 +390,18 @@ function catalogBilling(
   const signInMeta = SUBSCRIPTION_SIGN_IN_PROVIDERS[providerId];
   if (signInMeta) return signInMeta.billing;
   if (providerId === LOCAL_PROVIDER_ID) {
-    return "Runs on infrastructure configured by the server operator. No model charges from Unibots.";
+    return "Runs on infrastructure configured by the server operator. No model charges from UniBot.";
   }
   if (providerId === OPENAI_COMPATIBLE_PROVIDER_ID) {
-    return "Runs on a URL you control. Unibots does not pay for model usage.";
+    return "Runs on a URL you control. UniBot does not pay for model usage.";
   }
   if (opts.oauth && !opts.apiKey) {
-    return `${name} subscription login is not in the Unibots UI yet. Skip if this deployment already has credentials.`;
+    return `${name} subscription login is not in the UniBot UI yet. Skip if this deployment already has credentials.`;
   }
   if (opts.apiKey) {
-    return `Uses your ${name} API key. Unibots does not pay for model usage.`;
+    return `Uses your ${name} API key. UniBot does not pay for model usage.`;
   }
-  return `Uses your ${name} key. Unibots does not pay for model usage.`;
+  return `Uses your ${name} key. UniBot does not pay for model usage.`;
 }
 
 export const scriptedCatalogEntry: PiCatalogEntry = {

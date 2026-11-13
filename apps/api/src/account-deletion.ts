@@ -1,16 +1,16 @@
-import type { AdapterContext } from "@rakazo/adapter-kit";
+import type { AdapterContext } from "@unibot/adapter-kit";
 import {
   destroyBot,
   removeAgentHome,
   removeDeletedBotsFromLegacyTeamHome,
   toComputerRef,
-} from "@rakazo/adapters";
+} from "@unibot/adapters";
 import {
   claimSpacesLeavingWithAccount,
   deleteSpaceLeavingWithAccount,
   recordComputerRunEnd,
-} from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import type { SpaceDeletionDeps } from "./space-deletion.js";
 
 /**

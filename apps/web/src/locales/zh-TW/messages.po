@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: rakazo-web\n"
+"Project-Id-Version: unibot-web\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-26 00:00+0000\n"
 "PO-Revision-Date: \n"
@@ -683,7 +683,7 @@ msgid "Allow rule"
 msgstr "允許規則"
 
 #: src/lib/dictation.ts
-msgid "Allow Unibots to use Speech Recognition and the microphone in System Settings."
+msgid "Allow UniBot to use Speech Recognition and the microphone in System Settings."
 msgstr ""
 
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
@@ -731,8 +731,8 @@ msgid "An API key is stored for this provider, not a subscription sign-in."
 msgstr "此供應商儲存的是 API 金鑰，不是訂閱登入。"
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
-msgid "An existing Honcho peer to read from. Unibots never writes to it."
-msgstr "用於讀取資料的現有 Honcho peer。Unibots 絕不會向其寫入資料。"
+msgid "An existing Honcho peer to read from. UniBot never writes to it."
+msgstr "用於讀取資料的現有 Honcho peer。UniBot 絕不會向其寫入資料。"
 
 #: src/lib/agent-import-errors.ts
 msgid "An imported API key could not be checked. Try again."
@@ -1319,8 +1319,8 @@ msgstr "選擇資料夾"
 
 #: src/components/ModelCredits.tsx
 #: src/components/SubscriptionGate.tsx
-msgid "Choose how to use Unibots"
-msgstr "選擇 Unibots 的使用方式"
+msgid "Choose how to use UniBot"
+msgstr "選擇 UniBot 的使用方式"
 
 #: src/lib/localized-provider-hint.ts
 msgid "Claude subscription"
@@ -1621,8 +1621,8 @@ msgstr "請先連結此模型的供應商。"
 
 #. js-lingui-explicit-id
 #: src/lib/run-error.ts
-msgid "Connect your own API key in Models or choose Unibots credits in Billing."
-msgstr "請在「模型」中連接你自己的 API 金鑰，或在「帳務」中選擇 Unibots 點數。"
+msgid "Connect your own API key in Models or choose UniBot credits in Billing."
+msgstr "請在「模型」中連接你自己的 API 金鑰，或在「帳務」中選擇 UniBot 點數。"
 
 #: src/components/ComputerDeviceSettings.tsx
 #: src/components/integrations/IntegrationSetup.tsx
@@ -2330,8 +2330,8 @@ msgid "Create space"
 msgstr "建立空間"
 
 #: src/pages/Auth.tsx
-msgid "Create your Unibots"
-msgstr "建立你的 Unibots"
+msgid "Create your UniBot"
+msgstr "建立你的 UniBot"
 
 #: src/components/AskCard.tsx
 msgid "Created"
@@ -3198,8 +3198,8 @@ msgid "How to check"
 msgstr "如何檢查"
 
 #: src/components/SignupSurvey.tsx
-msgid "How will you use Unibots?"
-msgstr "你會如何使用 Unibots？"
+msgid "How will you use UniBot?"
+msgstr "你會如何使用 UniBot？"
 
 #: src/pages/shell/computer-release-actions.tsx
 msgid "I’m done"
@@ -4177,8 +4177,8 @@ msgid "Not in the plugin catalog"
 msgstr "不在外掛程式目錄中"
 
 #: src/pages/shell/import-status.ts
-msgid "Not in Unibots's catalog"
-msgstr "不在 Unibots 目錄中"
+msgid "Not in UniBot's catalog"
+msgstr "不在 UniBot 目錄中"
 
 #: src/pages/shell/message-cards.tsx
 msgid "Not now"
@@ -4186,12 +4186,12 @@ msgstr "暫不"
 
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/import-status.ts
-msgid "Not supported in Unibots"
-msgstr "Unibots 不支援"
+msgid "Not supported in UniBot"
+msgstr "UniBot 不支援"
 
 #: src/pages/shell/agent-import.tsx
-msgid "Not used by Unibots"
-msgstr "Unibots 不使用"
+msgid "Not used by UniBot"
+msgstr "UniBot 不使用"
 
 #: src/components/McpServerHealthLine.tsx
 msgid "Not working"
@@ -4434,8 +4434,8 @@ msgid "Paste a replacement key"
 msgstr "貼上替換金鑰"
 
 #: src/pages/model-settings/compatible-model-fields.tsx
-msgid "Paste the OpenAI-compatible address from your server. Unibots adds /v1 if needed."
-msgstr "貼上伺服器的 OpenAI 相容地址。需要時 Unibots 會補上 /v1。"
+msgid "Paste the OpenAI-compatible address from your server. UniBot adds /v1 if needed."
+msgstr "貼上伺服器的 OpenAI 相容地址。需要時 UniBot 會補上 /v1。"
 
 #: src/pages/shell/agent-import.tsx
 msgid "Paste the reply"
@@ -4616,8 +4616,8 @@ msgid "Queued"
 msgstr "排隊中"
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
-msgid "rakazo-shared and IDs starting with bot- are reserved for Unibots."
-msgstr "rakazo-shared 與以 bot- 開頭的 ID 保留給 Unibots 使用。"
+msgid "unibot-shared and IDs starting with bot- are reserved for UniBot."
+msgstr "unibot-shared 與以 bot- 開頭的 ID 保留給 UniBot 使用。"
 
 #: src/pages/shell/message-hover-actions.tsx
 msgid "React"
@@ -5016,8 +5016,8 @@ msgstr "返回與 {0} 的通話"
 
 #: src/pages/McpOAuthCallback.tsx
 #: src/pages/SlackInstallCallback.tsx
-msgid "Return to Unibots"
-msgstr "返回 Unibots"
+msgid "Return to UniBot"
+msgstr "返回 UniBot"
 
 #: src/lib/model-connection-preflight.ts
 msgid "Review provider settings and test again."
@@ -5443,8 +5443,8 @@ msgid "Sign in at <0>{0}</0>, then paste the code here."
 msgstr "在 <0>{0}</0> 登入，然後將代碼貼到這裡。"
 
 #: src/pages/Auth.tsx
-msgid "Sign in to Unibots"
-msgstr "登入 Unibots"
+msgid "Sign in to UniBot"
+msgstr "登入 UniBot"
 
 #: src/lib/user-error.ts
 msgid "Sign in to your existing account to link SSO"
@@ -5688,8 +5688,8 @@ msgid "Subscribe for {price} / month"
 msgstr "以每月 {price} 訂閱"
 
 #: src/components/ModelCredits.tsx
-msgid "Subscribe to Unibots credits"
-msgstr "訂閱 Unibots 額度"
+msgid "Subscribe to UniBot credits"
+msgstr "訂閱 UniBot 額度"
 
 #: src/components/ModelCredits.tsx
 msgid "Subscribe with your own AI"
@@ -5995,8 +5995,8 @@ msgid "This server is already connected. Disconnect it first to authorize again.
 msgstr "此伺服器已連線。請先中斷再重新授權。"
 
 #: src/pages/model-settings/connection-controls.tsx
-msgid "This subscription sign-in is not available in Unibots yet. Use a deployment credential or choose another provider."
-msgstr "此訂閱登入在 Unibots 中尚不可用。請使用部署憑證或選擇其他供應商。"
+msgid "This subscription sign-in is not available in UniBot yet. Use a deployment credential or choose another provider."
+msgstr "此訂閱登入在 UniBot 中尚不可用。請使用部署憑證或選擇其他供應商。"
 
 #: src/pages/Artifacts.tsx
 msgid "This week"
@@ -6158,13 +6158,13 @@ msgid "Undo"
 msgstr "復原"
 
 #: src/pages/shell/avatar-studio-popover.tsx
-msgid "Unibots"
-msgstr "Unibots"
+msgid "UniBot"
+msgstr "UniBot"
 
 #: src/components/ModelCredits.tsx
 #: src/pages/Onboarding.tsx
-msgid "Unibots credits"
-msgstr "Unibots 額度"
+msgid "UniBot credits"
+msgstr "UniBot 額度"
 
 #: src/pages/PluginsOverlay.tsx
 msgid "Uninstall"
@@ -6313,8 +6313,8 @@ msgid "Use space default"
 msgstr "使用空間預設模型"
 
 #: src/components/ModelCredits.tsx
-msgid "Use Unibots credits"
-msgstr "使用 Unibots 額度"
+msgid "Use UniBot credits"
+msgstr "使用 UniBot 額度"
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
 msgid "Use up to 512 letters, digits, _ or -."
@@ -6442,8 +6442,8 @@ msgid "Weekends"
 msgstr "週末"
 
 #: src/components/SignupSurvey.tsx
-msgid "Welcome to Unibots"
-msgstr "歡迎使用 Unibots"
+msgid "Welcome to UniBot"
+msgstr "歡迎使用 UniBot"
 
 #: src/pages/shell/dialogs.tsx
 msgid "What about its memories?"
@@ -6454,8 +6454,8 @@ msgid "What can this space use?"
 msgstr ""
 
 #: src/components/SignupSurvey.tsx
-msgid "What do you most want Unibots to help with?"
-msgstr "你最希望 Unibots 幫你做什麼？"
+msgid "What do you most want UniBot to help with?"
+msgstr "你最希望 UniBot 幫你做什麼？"
 
 #: src/pages/shell/message-cards.tsx
 msgid "What do you want me on first?"

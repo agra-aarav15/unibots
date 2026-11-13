@@ -1,6 +1,6 @@
 import "./zod-config";
 import "./monitoring-bootstrap";
-import { BotAvatarActivityProvider, Toaster, TooltipProvider } from "@rakazo/ui-web";
+import { BotAvatarActivityProvider, Toaster, TooltipProvider } from "@unibot/ui-web";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode, useEffect, useLayoutEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
@@ -15,6 +15,7 @@ import { reportCaughtReactError } from "./lib/monitoring";
 import { markAfterPaint, markOnce } from "./lib/performance";
 import { installPreloadRecovery } from "./lib/preload-recovery";
 import { queryClient } from "./lib/query";
+import { hydrateQueryCache, startQueryCachePersistence } from "./lib/query-persist";
 import { captureReferral } from "./lib/referral";
 import { applyUiAppearance, watchSystemAppearance } from "./lib/ui-appearance";
 import { resolveUiLocale } from "./lib/ui-locale";
@@ -56,7 +57,12 @@ function AppearanceSync() {
   return null;
 }
 
-createRoot(document.getElementById("root")!, { onCaughtError: reportCaughtReactError }).render(
+async function start() {
+  // The last screen this browser saw is restored before the first render, so a reload paints the
+  // space and lets the network catch up behind it.
+  await hydrateQueryCache(queryClient);
+  startQueryCachePersistence(queryClient);
+  createRoot(document.getElementById("root")!, { onCaughtError: reportCaughtReactError }).render(
   <StrictMode>
     <PerformanceProbe />
     <AppearanceSync />
@@ -81,4 +87,7 @@ createRoot(document.getElementById("root")!, { onCaughtError: reportCaughtReactE
       </BrowserRouter>
     </I18nBootstrap>
   </StrictMode>,
-);
+  );
+}
+
+void start();

@@ -1,6 +1,6 @@
 import { randomInt } from "node:crypto";
-import type { GeneratedSecretRules } from "@rakazo/contracts";
-import { GENERATED_SECRET_SYMBOLS } from "@rakazo/contracts";
+import type { GeneratedSecretRules } from "@unibot/contracts";
+import { GENERATED_SECRET_SYMBOLS } from "@unibot/contracts";
 
 /** A random password or key with at least one character from every allowed kind. */
 export function generateSecretValue(rules: GeneratedSecretRules): string {

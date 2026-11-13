@@ -109,9 +109,9 @@ describe("classifyUpdaterFailure", () => {
       classifyUpdaterFailure(
         new Error("Cannot update while running on a read-only volume. The application is on a…"),
       ),
-    ).toEqual({ kind: "read-only", message: "Move Unibots to Applications to install updates." });
+    ).toEqual({ kind: "read-only", message: "Move UniBot to Applications to install updates." });
     for (const message of [
-      "ditto: /private/update/Rakazo.app/x.js.map: No space left on device\nditto: Couldn't read pkzip signature.",
+      "ditto: /private/update/UniBot.app/x.js.map: No space left on device\nditto: Couldn't read pkzip signature.",
       "未能完成该操作。设备上无剩余空间: 设备上无剩余空间",
     ]) {
       expect(classifyUpdaterFailure(new Error(message)), message).toEqual({
@@ -245,7 +245,7 @@ describe("reduceUpdateState", () => {
       apply([{ type: "check-start" }, { type: "failed", error: readOnly, userInitiated: false }]),
     ).toMatchObject({
       phase: "unsupported",
-      message: "Move Unibots to Applications to install updates.",
+      message: "Move UniBot to Applications to install updates.",
     });
   });
 
@@ -607,14 +607,14 @@ describe("DesktopUpdateController", () => {
 describe("backgroundUpdateChecks", () => {
   it("schedules nothing unless background checks are turned on", () => {
     expect(backgroundUpdateChecks({})).toBeNull();
-    expect(backgroundUpdateChecks({ RAKAZO_AUTO_UPDATE: "manual" })).toBeNull();
-    expect(backgroundUpdateChecks({ RAKAZO_AUTO_UPDATE: "" })).toBeNull();
-    expect(backgroundUpdateChecks({ RAKAZO_AUTO_UPDATE: "off" })).toBeNull();
+    expect(backgroundUpdateChecks({ UNIBOT_AUTO_UPDATE: "manual" })).toBeNull();
+    expect(backgroundUpdateChecks({ UNIBOT_AUTO_UPDATE: "" })).toBeNull();
+    expect(backgroundUpdateChecks({ UNIBOT_AUTO_UPDATE: "off" })).toBeNull();
   });
 
   it("checks on launch and hourly only when explicitly enabled", () => {
     for (const value of ["on", "auto", " ON "]) {
-      expect(backgroundUpdateChecks({ RAKAZO_AUTO_UPDATE: value }), value).toEqual({
+      expect(backgroundUpdateChecks({ UNIBOT_AUTO_UPDATE: value }), value).toEqual({
         launchDelayMs: LAUNCH_CHECK_DELAY_MS,
         intervalMs: BACKGROUND_CHECK_INTERVAL_MS,
       });

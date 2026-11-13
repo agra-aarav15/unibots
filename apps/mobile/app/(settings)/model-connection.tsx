@@ -1,5 +1,8 @@
-import type { ModelHeaderRow, ModelOAuthBegin, ThinkingLevel } from "@rakazo/contracts";
+import type { ModelHeaderRow, ModelOAuthBegin, ThinkingLevel } from "@unibot/contracts";
 import {
+  CLI_MODEL_PLACEHOLDER,
+  CLI_PROMPT_PLACEHOLDER,
+  CLI_PROVIDER_ID,
   CLOUDFLARE_AI_GATEWAY_PROVIDER_ID,
   cloudflareModelRouting,
   compatibleConnectionName,
@@ -14,10 +17,11 @@ import {
   OPENAI_COMPATIBLE_BASE_URL_HINT,
   OPENAI_COMPATIBLE_PROVIDER_ID,
   savedCompatibleEndpointMatches,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import {
   COMPATIBLE_THINKING_LEVELS,
   clampCatalogThinkingLevel,
+  cliConnectionReady,
   compatibleConnectionReady,
   compatibleModelRows,
   connectionFormFields,
@@ -28,7 +32,7 @@ import {
   modelConnectRequest,
   savedCompatibleModelIds,
   toggleEnabledModelId,
-} from "@rakazo/core";
+} from "@unibot/core";
 import * as Clipboard from "expo-clipboard";
 import { useFocusEffect, useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -100,6 +104,8 @@ export default function ModelConnection() {
   const [accountId, setAccountId] = useState("");
   const [gatewayId, setGatewayId] = useState("");
   const [baseUrl, setBaseUrl] = useState("");
+  const [command, setCommand] = useState("");
+  const [cwd, setCwd] = useState("");
   const [headerRows, setHeaderRows] = useState<ModelHeaderRow[] | null>(null);
   const [reasoning, setReasoning] = useState(false);
   const [thinkingLevel, setThinkingLevel] = useState<ThinkingLevel | null>(null);
@@ -217,6 +223,8 @@ export default function ModelConnection() {
       setHeaderRows(null);
       setEnabledModelIds(fields.enabledModelIds);
       setBaseUrl(fields.baseUrl);
+      setCommand(fields.command);
+      setCwd(fields.cwd);
       setReasoning(fields.reasoning);
       setThinkingLevel(fields.thinkingLevel);
       setMaxTokens(fields.maxTokens);
@@ -254,6 +262,7 @@ export default function ModelConnection() {
     if (selectedProviderLabel) navigation.setOptions({ title: selectedProviderLabel });
   }, [navigation, selectedProviderLabel]);
   const isOpenAiCompatible = provider === OPENAI_COMPATIBLE_PROVIDER_ID;
+  const isCli = provider === CLI_PROVIDER_ID;
   const isCloudflareGateway = provider === CLOUDFLARE_AI_GATEWAY_PROVIDER_ID;
   const isCloudflare = isCloudflareModelProvider(provider);
   const cloudflareRoutingReady =
@@ -276,6 +285,11 @@ export default function ModelConnection() {
     credential,
   });
   const limitsDirty = maxTokens !== connectionMaxTokensField(provider, credential?.maxTokens);
+  const cliDirty =
+    command.trim() !== (credential?.command ?? "") ||
+    cwd.trim() !== (credential?.cwd ?? "") ||
+    modelId.trim() !== (credential?.modelId ?? "") ||
+    limitsDirty;
   const gatewayDirty =
     accountId.trim() !== (credential?.accountId ?? "") ||
     gatewayId.trim() !== (credential?.gatewayId ?? "");
@@ -368,6 +382,8 @@ export default function ModelConnection() {
         modelId,
         enabledModelIds,
         baseUrl,
+        command,
+        cwd,
         headerRows,
         reasoning,
         thinkingLevel,
@@ -789,6 +805,87 @@ export default function ModelConnection() {
     </>
   ) : null;
 
+  // A command connection: the command is the whole integration, and the model name is
+  // only the label it answers as. Mirrors the web form.
+  const cliConfig = isCli ? (
+    <>
+      <Text style={styles.sectionTitle}>{t("Command")}</Text>
+      <TextInput
+        accessibilityLabel={t("Command to run")}
+        autoCapitalize="none"
+        autoCorrect={false}
+        editable={!busy}
+        onChangeText={(value) => {
+          setCommand(value);
+          clearFeedback();
+        }}
+        placeholder={`opencode run ${CLI_PROMPT_PLACEHOLDER}`}
+        placeholderTextColor={native.tertiaryLabel}
+        style={styles.keyInput}
+        value={command}
+      />
+      <Text style={[styles.sectionTitle, { marginTop: 12 }]}>{t("Folder")}</Text>
+      <TextInput
+        accessibilityLabel={t("Working folder")}
+        autoCapitalize="none"
+        autoCorrect={false}
+        editable={!busy}
+        onChangeText={(value) => {
+          setCwd(value);
+          clearFeedback();
+        }}
+        placeholder={t("Optional")}
+        placeholderTextColor={native.tertiaryLabel}
+        style={styles.keyInput}
+        value={cwd}
+      />
+      <Text style={[styles.sectionTitle, { marginTop: 12 }]}>{t("Model name")}</Text>
+      <TextInput
+        accessibilityLabel={t("Model name")}
+        autoCapitalize="none"
+        autoCorrect={false}
+        editable={!busy}
+        onChangeText={(value) => {
+          setModelId(value);
+          clearFeedback();
+        }}
+        placeholder="cli"
+        placeholderTextColor={native.tertiaryLabel}
+        style={styles.keyInput}
+        value={modelId}
+      />
+      {disclosureRow(t("Setup help"), showEndpointHelp, () =>
+        setShowEndpointHelp((visible) => !visible),
+      )}
+      {showEndpointHelp ? (
+        <Text style={styles.hint}>
+          {t("Use {prompt} for the message and {model} for the model name.", {
+            prompt: CLI_PROMPT_PLACEHOLDER,
+            model: CLI_MODEL_PLACEHOLDER,
+          })}
+        </Text>
+      ) : null}
+      {limitField(
+        t("Maximum output tokens"),
+        maxTokens,
+        (value) => {
+          setMaxTokens(value);
+          clearFeedback();
+        },
+        6,
+      )}
+      {feedbackAnchor === "connection" ? feedback : null}
+      <NativeActionButton
+        disabled={busy || (credential ? !cliDirty : !cliConnectionReady({ command, modelId }))}
+        label={
+          pending === "connect" ? t("Saving…") : credential ? t("Save") : t("Connect command")
+        }
+        onPress={() => void connectKey(credential ? true : false)}
+        style={{ marginTop: 12 }}
+      />
+    </>
+  ) : null;
+
   const serverCredentialsNote = (
     <Text style={styles.secondary}>
       {t("Uses this server's own {source} credentials to access {provider}.", {
@@ -1051,7 +1148,7 @@ export default function ModelConnection() {
         {selected.auth === "oauth" && !subscriptionSignIn ? (
           <Text style={styles.secondary}>
             {t(
-              "This subscription sign-in is not available in Unibots yet. Use a deployment credential or choose another provider.",
+              "This subscription sign-in is not available in UniBot yet. Use a deployment credential or choose another provider.",
             )}
           </Text>
         ) : null}
@@ -1108,6 +1205,11 @@ export default function ModelConnection() {
               {compatConfig}
               {compatKeySection}
               {feedbackAnchor === "probe" ? null : feedback}
+              {connectedStatusRow}
+            </>
+          ) : isCli ? (
+            <>
+              {cliConfig}
               {connectedStatusRow}
             </>
           ) : credential ? (

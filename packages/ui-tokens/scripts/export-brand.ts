@@ -12,10 +12,10 @@ import {
 } from "../src/mark.ts";
 
 /**
- * Rasterises the Unibots mark into every platform asset.
+ * Rasterises the UniBot mark into every platform asset.
  *
  * The geometry lives in `src/mark.ts`; this script only picks sizes and file
- * names. Run `pnpm --filter @rakazo/ui-tokens export:brand` after editing it.
+ * names. Run `pnpm --filter @unibot/ui-tokens export:brand` after editing it.
  */
 
 const root = new URL("../../../", import.meta.url);
@@ -75,7 +75,7 @@ for (const app of ["web", "www"]) {
 
 // Marketing logo, structured data, and social cards reference this file.
 await mkdir(path("apps/www/public/brand"), { recursive: true });
-await png(plate, "apps/www/public/brand/unibots-mark.png", 256);
+await png(plate, "apps/www/public/brand/unibot-mark.png", 256);
 
 // Roster art for the marketing team list: one tinted plate per role, so eight
 // teammates read as one family without any character artwork.
@@ -100,7 +100,7 @@ for (const [slug, color] of Object.entries(ROSTER)) {
 await sharp(svg(glyph))
   .resize(1024, 1024, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
   .png()
-  .toFile(path("packages/ui-tokens/assets/Unibots.icon/Assets/unibots-glyph.png"));
+  .toFile(path("packages/ui-tokens/assets/UniBot.icon/Assets/unibot-glyph.png"));
 
 // Android launcher: separate background and foreground layers, plus the monochrome tier.
 await png(plate, "apps/mobile/assets/icon.png", 1024);
@@ -139,4 +139,4 @@ if (MARK.stroke >= MARK.bowlRadius * 2) {
   throw new Error("MARK.stroke is too wide for the bowl radius");
 }
 
-console.log("Exported Unibots mark to web, www, mobile, desktop, and the icon bundle.");
+console.log("Exported UniBot mark to web, www, mobile, desktop, and the icon bundle.");

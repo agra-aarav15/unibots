@@ -68,7 +68,7 @@ const [starsLabel, desktopDownloads, recentChanges] = await Promise.all([
   fetchDesktopDownloads(),
   fetchRecentChanges(5),
 ]);
-const setupAgentPrompt = `Set up Unibots for me. Follow the setup prompt at ${SETUP_PROMPT_URL}`;
+const setupAgentPrompt = `Set up UniBot for me. Follow the setup prompt at ${SETUP_PROMPT_URL}`;
 const desktopPlatforms = availableDesktopPlatforms(desktopDownloads);
 const PLATFORM_NAMES = { mac: "macOS", windows: "Windows", linux: "Linux" } as const;
 const PROVIDER_LOGOS: Record<string, string> = {

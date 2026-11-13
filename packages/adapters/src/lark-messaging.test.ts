@@ -1,6 +1,6 @@
 import { createCipheriv, createHash } from "node:crypto";
 import type { HttpInstance } from "@larksuiteoapi/node-sdk";
-import type { AdapterContext, MessagingInboundEvent } from "@rakazo/adapter-kit";
+import type { AdapterContext, MessagingInboundEvent } from "@unibot/adapter-kit";
 import { Message } from "chat";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChatSdkMessagingSurface } from "./chat-sdk-surface.js";
@@ -645,7 +645,7 @@ describe("Lark messaging conformance", () => {
     const restored = Message.fromJSON(JSON.parse(JSON.stringify(parsed)));
     expect(restored.text).toBe("Before\n  code\n");
     expect(restored.formatted.data).toMatchObject({
-      rakazoLarkParts: [
+      unibotLarkParts: [
         { text: "Before\n", literal: false },
         { text: "  code\n", literal: true },
       ],

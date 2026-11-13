@@ -1,12 +1,12 @@
 import { Trans } from "@lingui/react/macro";
-import { Wordmark } from "@rakazo/ui-web";
+import { Wordmark } from "@unibot/ui-web";
 import { Link, useNavigate } from "react-router-dom";
 import { WindowChrome } from "./WindowChrome";
 
 export function WelcomePage() {
   const navigate = useNavigate();
   return (
-    <div className="flex min-h-full flex-col bg-background" data-rakazo-surface="welcome">
+    <div className="flex min-h-full flex-col bg-background" data-unibot-surface="welcome">
       <div className="app-drag flex gap-2 px-5 py-[18px]">
         <WindowChrome />
       </div>

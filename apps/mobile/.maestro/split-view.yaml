@@ -1,5 +1,5 @@
-appId: com.unibots.app
-name: Unibots split view on a wide window
+appId: com.unibot.app
+name: UniBot split view on a wide window
 tags:
   - screenshots
 ---
@@ -9,7 +9,7 @@ tags:
     permissions:
       notifications: deny
 - extendedWaitUntil:
-    visible: "Sign up for Unibots|Pixel Launcher isn't responding"
+    visible: "Sign up for UniBot|Pixel Launcher isn't responding"
     timeout: 30000
 - runFlow:
     when:
@@ -17,14 +17,14 @@ tags:
     commands:
       - tapOn: "Close app"
 - extendedWaitUntil:
-    visible: "Sign up for Unibots"
+    visible: "Sign up for UniBot"
     timeout: 30000
 - tapOn: "Sign in"
 - runFlow: helpers/server.yaml
 - tapOn: "Email"
-- inputText: ${RAKAZO_SCREENSHOT_EMAIL}
+- inputText: ${UNIBOT_SCREENSHOT_EMAIL}
 - tapOn: "Password"
-- inputText: ${RAKAZO_SCREENSHOT_PASSWORD}
+- inputText: ${UNIBOT_SCREENSHOT_PASSWORD}
 - hideKeyboard
 - tapOn: "Sign in"
 - tapOn:

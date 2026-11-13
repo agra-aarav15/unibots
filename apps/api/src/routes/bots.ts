@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { ORPCError } from "@orpc/server";
-import { runContinueJob, runJobKey } from "@rakazo/adapter-kit";
-import type { getBotSecretMetadata } from "@rakazo/adapters";
+import { runContinueJob, runJobKey } from "@unibot/adapter-kit";
+import type { getBotSecretMetadata } from "@unibot/adapters";
 import {
   archiveBot,
   cancelComputerRunWork,
@@ -17,17 +17,17 @@ import {
   storeBotSecret,
   toComputerRef,
   validateBotModelChange,
-} from "@rakazo/adapters";
+} from "@unibot/adapters";
 import type {
   Actor,
   Bot,
   BotSecretMetadata,
   SettingsScope,
   VaultPutInput,
-} from "@rakazo/contracts";
-import { BotSecretAuth, resolveBotAvatarSet } from "@rakazo/contracts";
-import { ACTIVE_RUN_STATUSES, displayName } from "@rakazo/core";
-import type { Prisma } from "@rakazo/db";
+} from "@unibot/contracts";
+import { BotSecretAuth, resolveBotAvatarSet } from "@unibot/contracts";
+import { ACTIVE_RUN_STATUSES, defaultBotInstructions, displayName } from "@unibot/core";
+import type { Prisma } from "@unibot/db";
 import {
   BotSectionNameConflictError,
   botProfileLabelsChanged,
@@ -41,8 +41,8 @@ import {
   restoreBotUnderComputerQuota,
   SpaceDeletionInProgressError,
   settingsTarget,
-} from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import type { AgentImportServices } from "../agent-import.js";
 import { agentImportSetupState, createImportedBot, previewAgentImport } from "../agent-import.js";
 import { deleteAgentSecret, listAgentSecrets, putAgentSecret } from "../agent-secrets.js";
@@ -257,7 +257,10 @@ export function botsRoutes(ctx: RouterContext) {
       create: authed.bots.create.handler(async ({ context, input }) => {
         let bot: Bot;
         try {
-          bot = await repos.createBot(context.actor, input);
+          bot = await repos.createBot(context.actor, {
+            ...input,
+            instructions: defaultBotInstructions(input.instructions),
+          });
         } catch (error) {
           throw mapSpaceLifecycleError(error);
         }

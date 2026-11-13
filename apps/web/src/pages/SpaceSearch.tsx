@@ -1,7 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import type { SearchHit } from "@rakazo/contracts";
-import { searchHitListKey } from "@rakazo/core";
+import type { SearchHit } from "@unibot/contracts";
+import { searchHitListKey } from "@unibot/core";
 
 export function SpaceSearchResults({
   hits,

@@ -1,15 +1,15 @@
 // `docker compose exec api node dist/cli/reset-password.js --email you@home`:
 // local password recovery without email. The new password comes from
-// RAKAZO_NEW_PASSWORD or stdin, never argv, so it stays out of shell history.
-import { contentKeyProviderFromEnv } from "@rakazo/adapters";
-import { createAuth } from "@rakazo/auth";
-import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "@rakazo/core";
+// UNIBOT_NEW_PASSWORD or stdin, never argv, so it stays out of shell history.
+import { contentKeyProviderFromEnv } from "@unibot/adapters";
+import { createAuth } from "@unibot/auth";
+import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "@unibot/core";
 import {
   createDb,
   installSecurityEventStore,
   recordSecurityEvent,
   runAsSystem,
-} from "@rakazo/db";
+} from "@unibot/db";
 import { loadEnv } from "../env.js";
 
 class ResetError extends Error {}
@@ -19,7 +19,7 @@ await main();
 async function main() {
   try {
     const email = parseEmail(process.argv.slice(2));
-    const password = process.env.RAKAZO_NEW_PASSWORD ?? (await readPassword());
+    const password = process.env.UNIBOT_NEW_PASSWORD ?? (await readPassword());
     if (password.length < MIN_PASSWORD_LENGTH || password.length > MAX_PASSWORD_LENGTH) {
       throw new ResetError(
         `Password must be ${MIN_PASSWORD_LENGTH} to ${MAX_PASSWORD_LENGTH} characters.`,

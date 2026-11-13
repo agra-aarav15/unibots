@@ -1,13 +1,13 @@
-import type { Actor, RunActivityRow } from "@rakazo/contracts";
-import { MessageBlock } from "@rakazo/contracts";
+import type { Actor, RunActivityRow } from "@unibot/contracts";
+import { MessageBlock } from "@unibot/contracts";
 import {
   ACTIVE_RUN_STATUSES,
   BACKGROUND_RUN_TRIGGERS,
   botMessageContext,
   displayName,
   truncatePlainText,
-} from "@rakazo/core";
-import type { PrismaClient } from "@rakazo/db";
+} from "@unibot/core";
+import type { PrismaClient } from "@unibot/db";
 
 const RECENT_LIMIT = 20;
 const TERMINAL_STATUSES = ["completed", "failed", "cancelled"] as const;

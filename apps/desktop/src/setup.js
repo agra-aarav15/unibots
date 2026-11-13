@@ -1,5 +1,5 @@
 (() => {
-  const bridge = window.rakazoSetup;
+  const bridge = window.unibotSetup;
   document.documentElement.dataset.platform = bridge?.platform ?? "browser";
 
   const form = document.getElementById("setup");
@@ -25,10 +25,10 @@
   const PHASE_LABELS = {
     "checking-docker": "Getting ready…",
     preparing: "Getting ready…",
-    pulling: "Downloading Unibots…",
-    starting: "Starting Unibots…",
+    pulling: "Downloading UniBot…",
+    starting: "Starting UniBot…",
     "waiting-healthy": "Almost ready…",
-    ready: "Unibots is ready.",
+    ready: "UniBot is ready.",
   };
   const TERMINAL_PHASES = new Set([
     "idle",
@@ -312,7 +312,7 @@
       if (generation !== requestGeneration) return result;
       if (result.ok) {
         serverUrl.value = result.url;
-        setStatus(`Unibots answered at ${result.url}.`, "ok");
+        setStatus(`UniBot answered at ${result.url}.`, "ok");
       } else {
         setStatus(result.error ?? "Could not reach that address.", "error");
       }
@@ -445,7 +445,7 @@
         continueButton.focus();
       }
     } catch {
-      setStatus("Setup could not start. Quit Unibots and try again.", "error");
+      setStatus("Setup could not start. Quit UniBot and try again.", "error");
       setBusy(true);
     }
   }

@@ -1,7 +1,7 @@
 import { createHash, createHmac, generateKeyPairSync, randomBytes, sign } from "node:crypto";
-import type { TransactionalEmail } from "@rakazo/adapter-kit";
-import type * as Db from "@rakazo/db";
-import { bootstrapUserSpace, recordSecurityEvent } from "@rakazo/db";
+import type { TransactionalEmail } from "@unibot/adapter-kit";
+import type * as Db from "@unibot/db";
+import { bootstrapUserSpace, recordSecurityEvent } from "@unibot/db";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CLIENT_IP_HEADER, createAuth } from "./index.js";
 
@@ -28,7 +28,7 @@ vi.mock("better-auth/adapters/prisma", async () => {
     },
   };
 });
-vi.mock("@rakazo/db", async (original) => ({
+vi.mock("@unibot/db", async (original) => ({
   ...(await original<typeof Db>()),
   bootstrapUserSpace: vi.fn(async () => ({ spaceId: "space-1" })),
   recordSecurityEvent: vi.fn(async () => undefined),
@@ -718,7 +718,7 @@ describe("identity confirmation", () => {
     expect((await f.request("/request-identity-code", {}, token)).status).toBe(200);
     expect(f.messages.at(-1)).toMatchObject({
       to: "approved@example.test",
-      subject: "Your Unibots confirmation code",
+      subject: "Your UniBot confirmation code",
     });
     const code = f.lastCode();
     expect(JSON.stringify(f.data.verification)).not.toContain(code);
@@ -778,7 +778,7 @@ describe("verification email without blocking", () => {
     expect(await f.sessionFor(token)).toMatchObject({ user: { emailVerified: false } });
     expect(bootstrapUserSpace).toHaveBeenCalledTimes(1);
     expect(f.messages).toHaveLength(1);
-    expect(f.messages[0]).toMatchObject({ subject: "Verify your Unibots email" });
+    expect(f.messages[0]).toMatchObject({ subject: "Verify your UniBot email" });
     expect((await f.signin()).status).toBe(200);
     expect(f.messages).toHaveLength(1);
     await f.verify();
@@ -802,7 +802,7 @@ describe("email code sign-in", () => {
     expect(f.messages).toHaveLength(1);
     expect(f.messages[0]).toMatchObject({
       to: "approved@example.test",
-      subject: "Your Unibots sign-in code",
+      subject: "Your UniBot sign-in code",
     });
     const code = f.lastCode();
     expect(JSON.stringify(f.data.verification)).not.toContain(code);
@@ -913,7 +913,7 @@ describe("email code sign-in", () => {
     expect((await f.signin()).status).toBe(200);
   });
 
-  it("closes the OTP routes Unibots does not use", async () => {
+  it("closes the OTP routes UniBot does not use", async () => {
     const f = fixture();
     for (const type of ["email-verification", "forget-password", "change-email"]) {
       expect((await f.sendCode("approved@example.test", type)).status, type).toBe(404);

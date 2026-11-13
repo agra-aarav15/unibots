@@ -6,7 +6,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: ko\n"
-"Project-Id-Version: rakazo-web\n"
+"Project-Id-Version: unibot-web\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
@@ -682,7 +682,7 @@ msgid "Allow rule"
 msgstr "허용 규칙"
 
 #: src/lib/dictation.ts
-msgid "Allow Unibots to use Speech Recognition and the microphone in System Settings."
+msgid "Allow UniBot to use Speech Recognition and the microphone in System Settings."
 msgstr ""
 
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
@@ -730,8 +730,8 @@ msgid "An API key is stored for this provider, not a subscription sign-in."
 msgstr "이 서비스에는 구독 로그인이 아니라 API 키가 저장되어 있습니다."
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
-msgid "An existing Honcho peer to read from. Unibots never writes to it."
-msgstr "데이터를 읽어올 기존 Honcho 피어입니다. Unibots는 이 피어에 데이터를 쓰지 않습니다."
+msgid "An existing Honcho peer to read from. UniBot never writes to it."
+msgstr "데이터를 읽어올 기존 Honcho 피어입니다. UniBot는 이 피어에 데이터를 쓰지 않습니다."
 
 #: src/lib/agent-import-errors.ts
 msgid "An imported API key could not be checked. Try again."
@@ -1318,7 +1318,7 @@ msgstr "폴더 선택"
 
 #: src/components/ModelCredits.tsx
 #: src/components/SubscriptionGate.tsx
-msgid "Choose how to use Unibots"
+msgid "Choose how to use UniBot"
 msgstr ""
 
 #: src/lib/localized-provider-hint.ts
@@ -1620,8 +1620,8 @@ msgstr "먼저 이 모델의 제공자를 연결하세요."
 
 #. js-lingui-explicit-id
 #: src/lib/run-error.ts
-msgid "Connect your own API key in Models or choose Unibots credits in Billing."
-msgstr "AI 모델에서 자체 API 키를 연결하거나 결제에서 Unibots 크레딧을 선택하세요."
+msgid "Connect your own API key in Models or choose UniBot credits in Billing."
+msgstr "AI 모델에서 자체 API 키를 연결하거나 결제에서 UniBot 크레딧을 선택하세요."
 
 #: src/components/ComputerDeviceSettings.tsx
 #: src/components/integrations/IntegrationSetup.tsx
@@ -2329,8 +2329,8 @@ msgid "Create space"
 msgstr "스페이스 만들기"
 
 #: src/pages/Auth.tsx
-msgid "Create your Unibots"
-msgstr "Unibots 계정 만들기"
+msgid "Create your UniBot"
+msgstr "UniBot 계정 만들기"
 
 #: src/components/AskCard.tsx
 msgid "Created"
@@ -3197,7 +3197,7 @@ msgid "How to check"
 msgstr "완료 확인 방법"
 
 #: src/components/SignupSurvey.tsx
-msgid "How will you use Unibots?"
+msgid "How will you use UniBot?"
 msgstr ""
 
 #: src/pages/shell/computer-release-actions.tsx
@@ -4176,8 +4176,8 @@ msgid "Not in the plugin catalog"
 msgstr "플러그인 카탈로그에 없음"
 
 #: src/pages/shell/import-status.ts
-msgid "Not in Unibots's catalog"
-msgstr "Unibots 카탈로그에 없음"
+msgid "Not in UniBot's catalog"
+msgstr "UniBot 카탈로그에 없음"
 
 #: src/pages/shell/message-cards.tsx
 msgid "Not now"
@@ -4185,12 +4185,12 @@ msgstr "나중에"
 
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/import-status.ts
-msgid "Not supported in Unibots"
-msgstr "Unibots에서 지원하지 않음"
+msgid "Not supported in UniBot"
+msgstr "UniBot에서 지원하지 않음"
 
 #: src/pages/shell/agent-import.tsx
-msgid "Not used by Unibots"
-msgstr "Unibots에서 사용하지 않음"
+msgid "Not used by UniBot"
+msgstr "UniBot에서 사용하지 않음"
 
 #: src/components/McpServerHealthLine.tsx
 msgid "Not working"
@@ -4433,8 +4433,8 @@ msgid "Paste a replacement key"
 msgstr "새 API 키를 붙여넣으세요"
 
 #: src/pages/model-settings/compatible-model-fields.tsx
-msgid "Paste the OpenAI-compatible address from your server. Unibots adds /v1 if needed."
-msgstr "서버의 OpenAI 호환 주소를 붙여넣으세요. 필요하면 Unibots가 /v1을 추가합니다."
+msgid "Paste the OpenAI-compatible address from your server. UniBot adds /v1 if needed."
+msgstr "서버의 OpenAI 호환 주소를 붙여넣으세요. 필요하면 UniBot가 /v1을 추가합니다."
 
 #: src/pages/shell/agent-import.tsx
 msgid "Paste the reply"
@@ -4615,7 +4615,7 @@ msgid "Queued"
 msgstr "대기 중"
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
-msgid "rakazo-shared and IDs starting with bot- are reserved for Unibots."
+msgid "unibot-shared and IDs starting with bot- are reserved for UniBot."
 msgstr ""
 
 #: src/pages/shell/message-hover-actions.tsx
@@ -5015,8 +5015,8 @@ msgstr ""
 
 #: src/pages/McpOAuthCallback.tsx
 #: src/pages/SlackInstallCallback.tsx
-msgid "Return to Unibots"
-msgstr "Unibots로 돌아가기"
+msgid "Return to UniBot"
+msgstr "UniBot로 돌아가기"
 
 #: src/lib/model-connection-preflight.ts
 msgid "Review provider settings and test again."
@@ -5442,8 +5442,8 @@ msgid "Sign in at <0>{0}</0>, then paste the code here."
 msgstr "<0>{0}</0>에서 로그인한 다음 코드를 여기에 붙여넣으세요."
 
 #: src/pages/Auth.tsx
-msgid "Sign in to Unibots"
-msgstr "Unibots 로그인"
+msgid "Sign in to UniBot"
+msgstr "UniBot 로그인"
 
 #: src/lib/user-error.ts
 msgid "Sign in to your existing account to link SSO"
@@ -5687,8 +5687,8 @@ msgid "Subscribe for {price} / month"
 msgstr "월 {price}에 구독"
 
 #: src/components/ModelCredits.tsx
-msgid "Subscribe to Unibots credits"
-msgstr "Unibots 크레딧 구독"
+msgid "Subscribe to UniBot credits"
+msgstr "UniBot 크레딧 구독"
 
 #: src/components/ModelCredits.tsx
 msgid "Subscribe with your own AI"
@@ -5994,8 +5994,8 @@ msgid "This server is already connected. Disconnect it first to authorize again.
 msgstr "이 서버는 이미 연결되어 있습니다. 다시 인증하려면 먼저 연결을 해제하세요."
 
 #: src/pages/model-settings/connection-controls.tsx
-msgid "This subscription sign-in is not available in Unibots yet. Use a deployment credential or choose another provider."
-msgstr "이 구독 로그인 방식은 아직 Unibots에서 지원되지 않습니다. 서버에 설정된 인증 정보를 사용하거나 다른 서비스를 선택하세요."
+msgid "This subscription sign-in is not available in UniBot yet. Use a deployment credential or choose another provider."
+msgstr "이 구독 로그인 방식은 아직 UniBot에서 지원되지 않습니다. 서버에 설정된 인증 정보를 사용하거나 다른 서비스를 선택하세요."
 
 #: src/pages/Artifacts.tsx
 msgid "This week"
@@ -6157,12 +6157,12 @@ msgid "Undo"
 msgstr "실행 취소"
 
 #: src/pages/shell/avatar-studio-popover.tsx
-msgid "Unibots"
-msgstr "Unibots"
+msgid "UniBot"
+msgstr "UniBot"
 
 #: src/components/ModelCredits.tsx
 #: src/pages/Onboarding.tsx
-msgid "Unibots credits"
+msgid "UniBot credits"
 msgstr ""
 
 #: src/pages/PluginsOverlay.tsx
@@ -6312,7 +6312,7 @@ msgid "Use space default"
 msgstr ""
 
 #: src/components/ModelCredits.tsx
-msgid "Use Unibots credits"
+msgid "Use UniBot credits"
 msgstr ""
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
@@ -6441,7 +6441,7 @@ msgid "Weekends"
 msgstr "주말"
 
 #: src/components/SignupSurvey.tsx
-msgid "Welcome to Unibots"
+msgid "Welcome to UniBot"
 msgstr ""
 
 #: src/pages/shell/dialogs.tsx
@@ -6453,7 +6453,7 @@ msgid "What can this space use?"
 msgstr ""
 
 #: src/components/SignupSurvey.tsx
-msgid "What do you most want Unibots to help with?"
+msgid "What do you most want UniBot to help with?"
 msgstr ""
 
 #: src/pages/shell/message-cards.tsx

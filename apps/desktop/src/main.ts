@@ -4,9 +4,9 @@ import { existsSync } from "node:fs";
 import { readFile, stat, writeFile } from "node:fs/promises";
 import { networkInterfaces } from "node:os";
 import path from "node:path";
-import { startUserDeviceClient } from "@rakazo/adapters/user-device-client";
-import type { DesktopReachability, DesktopSetup, RakazoDesktopDevice } from "@rakazo/contracts";
-import { parseServerHeaders } from "@rakazo/contracts";
+import { startUserDeviceClient } from "@unibot/adapters/user-device-client";
+import type { DesktopReachability, DesktopSetup, UniBotDesktopDevice } from "@unibot/contracts";
+import { parseServerHeaders } from "@unibot/contracts";
 import type { Session } from "electron";
 import {
   app,
@@ -65,7 +65,7 @@ import {
   DEFAULT_LOCAL_WEB_URL,
   desktopStackImageTag,
   firstRunAuthPath,
-  isRakazoHealth,
+  isUniBotHealth,
   managedLocalOpenUrl,
   maySendDesktopStackToken,
   normalizeServerUrl,
@@ -93,12 +93,12 @@ import {
 process.setSourceMapsEnabled(true);
 installDesktopEarlyErrorReporting();
 
-const PERFORMANCE_USER_DATA = process.env.RAKAZO_PERFORMANCE_USER_DATA;
+const PERFORMANCE_USER_DATA = process.env.UNIBOT_PERFORMANCE_USER_DATA;
 /** Test hook: where the app-managed stack answers. Mode `new` still requires loopback. */
-const LOCAL_WEB_URL = process.env.RAKAZO_LOCAL_WEB_URL?.trim() || DEFAULT_LOCAL_WEB_URL;
+const LOCAL_WEB_URL = process.env.UNIBOT_LOCAL_WEB_URL?.trim() || DEFAULT_LOCAL_WEB_URL;
 const PROBE_TIMEOUT_MS = 8_000;
-const DESKTOP_STACK_PROBE_PATH = "/.well-known/rakazo-desktop-stack";
-const DESKTOP_STACK_TOKEN_HEADER = "x-rakazo-desktop-stack-token";
+const DESKTOP_STACK_PROBE_PATH = "/.well-known/unibot-desktop-stack";
+const DESKTOP_STACK_TOKEN_HEADER = "x-unibot-desktop-stack-token";
 let mainWindow: BrowserWindow | null = null;
 
 /** The server or the network refused the page; the setup window says so and the server logs its side. */
@@ -123,12 +123,12 @@ let warmWindowTimer: NodeJS.Timeout | undefined;
 // destroying the last window fires "window-all-closed" -> app.quit(); a probe
 // that runs before the first real window exists must not count as "all closed".
 let liveProbeWindows = 0;
-const WARM_WINDOW_TTL_MS = warmWindowTtlMs(process.env.RAKAZO_WARM_WINDOW_TTL_MS);
+const WARM_WINDOW_TTL_MS = warmWindowTtlMs(process.env.UNIBOT_WARM_WINDOW_TTL_MS);
 
 const updaterEnvironment = {
   packaged: app.isPackaged,
   version: app.getVersion(),
-  disabled: process.env.RAKAZO_DISABLE_AUTO_UPDATE === "1",
+  disabled: process.env.UNIBOT_DISABLE_AUTO_UPDATE === "1",
 };
 const desktopUpdater = new DesktopUpdateController(
   updaterEnvironment,
@@ -393,7 +393,7 @@ function createWindow(url: string, partition: string | null) {
     if (
       process.platform === "darwin" &&
       !quitting &&
-      process.env.RAKAZO_DISABLE_WARM_WINDOW !== "1"
+      process.env.UNIBOT_DISABLE_WARM_WINDOW !== "1"
     ) {
       event.preventDefault();
       win.hide();
@@ -543,7 +543,7 @@ async function installBundledRenderer(
   partition: string | null,
   managedLocalStack: boolean,
 ) {
-  if (!app.isPackaged || process.env.RAKAZO_DISABLE_BUNDLED_RENDERER === "1") return;
+  if (!app.isPackaged || process.env.UNIBOT_DISABLE_BUNDLED_RENDERER === "1") return;
   if (!servesBundledRenderer(targetUrl, managedLocalStack)) return;
   const webUrl = new URL(targetUrl);
   const installationKey = `${partition ?? "default"}:${webUrl.protocol}`;
@@ -671,7 +671,7 @@ async function runMenuUpdateCheck() {
       : dialog.showMessageBox(options);
   if (state.phase === "ready") {
     const { response } = await alert({
-      message: `Unibots ${state.availableVersion} is ready to install.`,
+      message: `UniBot ${state.availableVersion} is ready to install.`,
       buttons: ["Restart", "Later"],
       defaultId: 0,
       cancelId: 1,
@@ -694,7 +694,7 @@ async function runMenuUpdateCheck() {
       detail: state.message,
     });
   } else if (state.phase === "idle") {
-    await alert({ message: "Unibots is up to date.", detail: `Version ${state.currentVersion}` });
+    await alert({ message: "UniBot is up to date.", detail: `Version ${state.currentVersion}` });
   }
 }
 
@@ -730,8 +730,8 @@ function installApplicationMenu() {
     click: () => void checkForUpdatesFromMenu(),
   };
   const changeServer: Electron.MenuItemConstructorOptions = {
-    id: "change-rakazo-server",
-    label: "Change Unibots Server…",
+    id: "change-unibot-server",
+    label: "Change UniBot Server…",
     accelerator: "CmdOrCtrl+Shift+K",
     click: () => showSetupWindow(),
   };
@@ -817,7 +817,7 @@ function installApplicationMenu() {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
-/** Setup IPC must only answer the setup window, never a connected Unibots server. */
+/** Setup IPC must only answer the setup window, never a connected UniBot server. */
 function fromSetupWindow(event: Electron.IpcMainInvokeEvent) {
   return (
     setupWindow !== null && !setupWindow.isDestroyed() && event.sender === setupWindow.webContents
@@ -848,7 +848,7 @@ async function probeServer(
         ok: false,
         status: response.status,
         url,
-        error: "That address redirects elsewhere. Enter the final Unibots server address.",
+        error: "That address redirects elsewhere. Enter the final UniBot server address.",
       };
     }
     if (!response.ok) {
@@ -860,12 +860,12 @@ async function probeServer(
       };
     }
     const health = await readProbeJson(response);
-    if (!isRakazoHealth(health)) {
+    if (!isUniBotHealth(health)) {
       return {
         ok: false,
         status: response.status,
         url,
-        error: "That address did not respond like a Unibots server.",
+        error: "That address did not respond like a UniBot server.",
       };
     }
     return {
@@ -1204,6 +1204,28 @@ if (!hasSingleInstanceLock) {
   });
 }
 
+/**
+ * Some Windows GPU drivers crash Electron's renderer on the first paint, which leaves the app
+ * running with no window at all. Let the first crash be the diagnosis: relaunch once without
+ * hardware acceleration, and remember it, so the next launch opens normally without anyone
+ * having to know a flag. A second crash is not the GPU and gets reported as before.
+ */
+function gpuCrashMarker(): string {
+  return path.join(app.getPath("userData"), "renderer-gpu-crash.flag");
+}
+const gpuDisabled = process.env.UNIBOT_DISABLE_GPU === "1" || existsSync(gpuCrashMarker());
+if (gpuDisabled) app.disableHardwareAcceleration();
+app.on("render-process-gone", (_event, _contents, details) => {
+  if (gpuDisabled || details.reason !== "crashed") return;
+  try {
+    writeFile(gpuCrashMarker(), new Date().toISOString()).catch(() => undefined);
+  } catch {
+    return;
+  }
+  app.relaunch();
+  app.exit(0);
+});
+
 app.whenReady().then(async () => {
   if (!hasSingleInstanceLock) return;
   installSessionPermissions(session.defaultSession, permissionTarget);
@@ -1249,12 +1271,12 @@ app.whenReady().then(async () => {
       appPath: app.getAppPath(),
     }),
     localWebUrl:
-      process.env.RAKAZO_LOCAL_WEB_URL?.trim() ||
+      process.env.UNIBOT_LOCAL_WEB_URL?.trim() ||
       (await readStackWebUrl(stackDir(userDataDir), LOCAL_WEB_URL)),
     imageTag: resolveImageTag({
       version: app.getVersion(),
       packaged: app.isPackaged,
-      override: process.env.RAKAZO_IMAGE_TAG,
+      override: process.env.UNIBOT_IMAGE_TAG,
     }),
     probe: (url, signal, token) => probeManagedStack(url, token, signal),
     randomHex: (bytes) => randomBytes(bytes).toString("hex"),
@@ -1266,11 +1288,11 @@ app.whenReady().then(async () => {
   });
   currentSetup = await readSetup(userDataDir);
   const target = resolveStartupTarget({
-    envUrl: process.env.RAKAZO_WEB_URL,
+    envUrl: process.env.UNIBOT_WEB_URL,
     saved: currentSetup,
-    forceSetup: process.env.RAKAZO_FORCE_SETUP === "1",
+    forceSetup: process.env.UNIBOT_FORCE_SETUP === "1",
   });
-  if (process.env.RAKAZO_PERFORMANCE_CLEAR_CACHE === "1") {
+  if (process.env.UNIBOT_PERFORMANCE_CLEAR_CACHE === "1") {
     const cacheSessions = new Set<Session>([session.defaultSession]);
     if (target.kind === "app") {
       cacheSessions.add((await resolveSessionForTarget(target.url)).value);
@@ -1407,7 +1429,7 @@ app.whenReady().then(async () => {
       ? origin
       : null;
   };
-  const deviceState = async (origin: string | null): Promise<RakazoDesktopDevice | null> => {
+  const deviceState = async (origin: string | null): Promise<UniBotDesktopDevice | null> => {
     const state = origin === null ? null : userDevices?.state(origin);
     return state ? { ...state, name: await deviceName() } : null;
   };
@@ -1425,8 +1447,8 @@ app.whenReady().then(async () => {
   if (process.platform === "darwin") {
     // Installed builds ship the helper as an extra resource; `pnpm build` compiles it for development.
     const helper = app.isPackaged
-      ? path.join(process.resourcesPath, "speech", "rakazo-speech")
-      : path.join(app.getAppPath(), "build", "speech", "rakazo-speech");
+      ? path.join(process.resourcesPath, "speech", "unibot-speech")
+      : path.join(app.getAppPath(), "build", "speech", "unibot-speech");
     const speech = createSystemSpeech(permissionTarget, (language) =>
       spawn(helper, [language], { stdio: "pipe" }),
     );
@@ -1531,7 +1553,7 @@ app.whenReady().then(async () => {
         if (managedUrl === null || !(await localStack.matchesDesiredStack())) {
           return {
             ok: false,
-            error: "The app-managed Unibots services are not ready. Retry setup.",
+            error: "The app-managed UniBot services are not ready. Retry setup.",
           };
         }
         openSetup = { mode: "new", serverUrl: managedUrl };

@@ -3,7 +3,7 @@ import { copyFile, lstat, mkdir, readFile, statfs } from "node:fs/promises";
 import { createServer } from "node:net";
 import { totalmem } from "node:os";
 import path from "node:path";
-import type { DesktopLocalStackState } from "@rakazo/contracts";
+import type { DesktopLocalStackState } from "@unibot/contracts";
 import type { DockerFailureKind, RunDocker, RunDockerResult } from "./docker-cli.js";
 import {
   classifyDockerFailure,
@@ -14,7 +14,7 @@ import {
 import { readPrivateFile, writePrivateFile } from "./setup-store.js";
 
 export const STACK_DIR_NAME = "stack";
-export const STACK_PROJECT_NAME = "rakazo-desktop";
+export const STACK_PROJECT_NAME = "unibot-desktop";
 export const STACK_COMPOSE_FILE = "docker-compose.images.yml";
 /** Overlay that publishes only the API on the private network. */
 export const STACK_LAN_COMPOSE_FILE = "docker-compose.lan.yml";
@@ -117,7 +117,7 @@ const GENERATED_SECRETS: Record<string, number> = {
   SCREEN_PROXY_SECRET: 32,
   SANDBOX_SUPERVISOR_TOKEN: 32,
 };
-const LAUNCH_SUPPLIED = ["RAKAZO_IMAGE_TAG", "RAKAZO_COMPUTER_IMAGE_TAG"];
+const LAUNCH_SUPPLIED = ["UNIBOT_IMAGE_TAG", "UNIBOT_COMPUTER_IMAGE_TAG"];
 
 /**
  * Port of install-images.sh `create_env`: fills the empty secret lines with random
@@ -338,8 +338,8 @@ export function stackFailureMessage(
       return "Docker Compose is missing. Install Docker Desktop or the docker-compose-plugin, then retry.";
     case "other":
       return phase === "pulling"
-        ? "Downloading Unibots images failed. Check the output below, then retry."
-        : "Unibots services did not start. Check the output below, then retry.";
+        ? "Downloading UniBot images failed. Check the output below, then retry."
+        : "UniBot services did not start. Check the output below, then retry.";
   }
 }
 
@@ -722,8 +722,8 @@ export class LocalStackController {
       env: dockerSpawnEnv(this.deps.platform, this.deps.env, binary, {
         SANDBOX_HOST_URL: this.deps.hostComputer?.url ?? "",
         SANDBOX_HOST_TOKEN: this.deps.hostComputer?.token ?? "",
-        RAKAZO_IMAGE_TAG: this.deps.imageTag,
-        RAKAZO_COMPUTER_IMAGE_TAG: this.deps.imageTag,
+        UNIBOT_IMAGE_TAG: this.deps.imageTag,
+        UNIBOT_COMPUTER_IMAGE_TAG: this.deps.imageTag,
         // Restricted egress needs host iptables rules. Docker Desktop keeps its
         // bridges inside its VM where the host cannot add them, and the app cannot
         // install root firewall rules on Linux either, so the stack would refuse
@@ -734,17 +734,17 @@ export class LocalStackController {
         CONTENT_ENCRYPTION: "off",
         ...(this.currentStackToken === null
           ? {}
-          : { RAKAZO_DESKTOP_STACK_TOKEN: this.currentStackToken }),
+          : { UNIBOT_DESKTOP_STACK_TOKEN: this.currentStackToken }),
         ...(this.lan === null
           ? {}
           : {
-              RAKAZO_LAN_PORT: String(this.lan.port),
+              UNIBOT_LAN_PORT: String(this.lan.port),
               // A phone on the network must not be able to create an account.
               SIGNUPS_ENABLED: "false",
             }),
-        RAKAZO_WEB_PORT: new URL(this.currentWebUrl).port || "80",
+        UNIBOT_WEB_PORT: new URL(this.currentWebUrl).port || "80",
         // Only web needs a stable host address. Docker allocates the API host port.
-        RAKAZO_API_PORT: "0",
+        UNIBOT_API_PORT: "0",
         BETTER_AUTH_URL: this.currentWebUrl,
         WEB_ORIGIN: this.currentWebUrl,
         API_URL: this.currentWebUrl,

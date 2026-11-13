@@ -1,13 +1,14 @@
-import type { SecretStore } from "@rakazo/adapter-kit";
-import { SecretStoreUnavailableError } from "@rakazo/adapter-kit";
-import type { Actor } from "@rakazo/contracts";
+import type { SecretStore } from "@unibot/adapter-kit";
+import { SecretStoreUnavailableError } from "@unibot/adapter-kit";
+import type { Actor } from "@unibot/contracts";
 import {
   canonicalPiProviderId,
+  CLI_PROVIDER_ID,
   selectCompatibleModelCredential,
   usableModelId,
-} from "@rakazo/contracts";
-import type { PrismaClient } from "@rakazo/db";
-import { chooseModelCredential, findModelCredential, findModelCredentialById } from "@rakazo/db";
+} from "@unibot/contracts";
+import type { PrismaClient } from "@unibot/db";
+import { chooseModelCredential, findModelCredential, findModelCredentialById } from "@unibot/db";
 import { resolveDeploymentModel } from "./deployment-model.js";
 import { modelCredentialDto } from "./model-connect.js";
 import type { ModelCredentialAuthKind } from "./pi-catalog-availability.js";
@@ -742,6 +743,12 @@ export async function validateConnectedModelChoice(
   );
   if (!credential) return PINNED_PROVIDER_NOT_CONNECTED;
   if (!usableModelId(modelId)) return "Unknown model for that provider";
+  // A command connection serves exactly the one model its own settings name.
+  if (provider === CLI_PROVIDER_ID) {
+    return credential.defaultModel === modelId.trim()
+      ? undefined
+      : "Unknown model for that provider";
+  }
   // Compatible catalog entries are placeholders, not evidence that this
   // connection enables that id. Only legacy connections keep that exception.
   if (provider !== OPENAI_COMPATIBLE_PROVIDER_ID) {
@@ -769,8 +776,17 @@ export async function validateConnectedModelChoice(
   });
   if (savedChoice) return undefined;
   const secret = await loadModelSecret(prisma, secretStore, actor.userId, credential.secretId);
-  if (secret?.kind === "openai_compatible" && secret.enabledModelIds === undefined)
-    return undefined;
+  if (secret?.kind === "openai_compatible") {
+    // If enabledModelIds is omitted, empty, or contains wildcard "*", permit any model choice
+    if (
+      secret.enabledModelIds === undefined ||
+      secret.enabledModelIds === null ||
+      secret.enabledModelIds.includes("*") ||
+      secret.enabledModelIds.length === 0
+    ) {
+      return undefined;
+    }
+  }
   const enabled = secret && enabledOpenAiCompatibleModelIds(secret, credential.defaultModel);
   return enabled?.includes(modelId.trim()) ? undefined : "Unknown model for that provider";
 }

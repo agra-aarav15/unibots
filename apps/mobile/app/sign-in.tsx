@@ -1,4 +1,4 @@
-import { credentialIssue, MAX_PASSWORD_LENGTH, PASSWORD_RULES } from "@rakazo/core";
+import { credentialIssue, MAX_PASSWORD_LENGTH, PASSWORD_RULES } from "@unibot/core";
 import { Redirect, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -248,9 +248,9 @@ export default function SignIn() {
                 {resetSent || codeStep
                   ? t("Check your email")
                   : mode === "in"
-                    ? t("Sign in to Unibots")
+                    ? t("Sign in to UniBot")
                     : mode === "up"
-                      ? t("Sign up for Unibots")
+                      ? t("Sign up for UniBot")
                       : t("Reset your password")}
               </Text>
               {resetSent ? (

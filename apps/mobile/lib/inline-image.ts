@@ -1,4 +1,4 @@
-import type { MessageBlock } from "@rakazo/contracts";
+import type { MessageBlock } from "@unibot/contracts";
 
 export type ImageSize = { width: number; height: number };
 

@@ -1,7 +1,7 @@
 import { Plural, Trans } from "@lingui/react/macro";
-import type { McpServerHealth } from "@rakazo/contracts";
-import { MCP_OAUTH_CLIENT_REQUIRED } from "@rakazo/contracts";
-import { Disclosure } from "@rakazo/ui-web";
+import type { McpServerHealth } from "@unibot/contracts";
+import { MCP_OAUTH_CLIENT_REQUIRED } from "@unibot/contracts";
+import { Disclosure } from "@unibot/ui-web";
 import { CircleCheck, CircleDashed, LoaderCircle, TriangleAlert } from "lucide-react";
 import { formatRelativeTime } from "../lib/relative-time";
 

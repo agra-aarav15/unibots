@@ -1,4 +1,4 @@
-import { ANDROID_APK_URL, buildIdAt, CLIENT_BUILD_HEADER, formatClientBuild } from "@rakazo/contracts";
+import { ANDROID_APK_URL, buildIdAt, CLIENT_BUILD_HEADER, formatClientBuild } from "@unibot/contracts";
 import * as Updates from "expo-updates";
 import type { AppStateStatus } from "react-native";
 import { Alert, AppState, Linking, Platform } from "react-native";

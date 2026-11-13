@@ -1,5 +1,5 @@
-import { MARK, MARK_GRADIENT, MARK_STROKE_PATH } from "@rakazo/ui-tokens/mark";
-import { cn } from "@rakazo/ui-web";
+import { MARK, MARK_GRADIENT, MARK_STROKE_PATH } from "@unibot/ui-tokens/mark";
+import { cn } from "@unibot/ui-web";
 import { useEffect, useId, useState } from "react";
 import "./ai-motion.css";
 

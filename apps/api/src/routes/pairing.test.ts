@@ -1,7 +1,7 @@
 import { createHmac } from "node:crypto";
 import { createRouterClient } from "@orpc/server";
-import { PAIRING_CODE_TTL_MS, PAIRING_MAX_ATTEMPTS } from "@rakazo/contracts";
-import type { PrismaClient } from "@rakazo/db";
+import { PAIRING_CODE_TTL_MS, PAIRING_MAX_ATTEMPTS } from "@unibot/contracts";
+import type { PrismaClient } from "@unibot/db";
 import { describe, expect, it, vi } from "vitest";
 import type { RouterDeps } from "../router.js";
 import { createRouter } from "../router.js";
@@ -130,7 +130,7 @@ function pairingDeps(options: { desktopManaged?: boolean; secret?: string } = {}
       sandboxProvider: "fake",
       agentRuntime: "scripted",
     },
-    dataDir: "/tmp/rakazo-pairing-test",
+    dataDir: "/tmp/unibot-pairing-test",
   } as unknown as RouterDeps;
   return { deps, rows, deleteMany, create, updateMany, createSession };
 }

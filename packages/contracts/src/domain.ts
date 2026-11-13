@@ -1017,7 +1017,7 @@ const McpOAuthClientFields = {
  * authorization server, so the client is bound to it on first use. */
 const McpOAuthClientInput = z.object(McpOAuthClientFields).nullable().optional();
 /** A stdio server has no URL to discover from, so its client names the
- * authorization server (its issuer, e.g. https://accounts.google.com). Unibots
+ * authorization server (its issuer, e.g. https://accounts.google.com). UniBot
  * runs the OAuth flow and passes the grant through `{{oauth.*}}` env references. */
 const McpStdioOAuthClientInput = z
   .object({ ...McpOAuthClientFields, authorizationServer: McpRemoteEndpointSchema })
@@ -1425,7 +1425,10 @@ export const ModelCredentialSchema = z.object({
   /** Openai-compatible only; always contains `modelId` when set. */
   enabledModelIds: z.array(z.string()).optional(),
   /** Stored secret kind. Absent when the secret could not be read. */
-  authKind: z.enum(["api_key", "oauth", "openai_compatible"]).optional(),
+  authKind: z.enum(["api_key", "oauth", "openai_compatible", "cli"]).optional(),
+  /** Command-line connections only: the command template being run. */
+  command: z.string().optional(),
+  cwd: z.string().optional(),
   /**
    * The subscription sign-in was rejected. The stored tokens are gone and the
    * owner has to sign in again. Model choices on this connection are kept.
@@ -1466,6 +1469,30 @@ export const ModelBackupListSchema = modelChoiceListSchema(ModelBackupChoiceSche
 
 export const OPENAI_COMPATIBLE_PROVIDER_ID = "openai-compatible";
 
+/** Models served by a command the user typed, for CLIs that expose no API. */
+export const CLI_PROVIDER_ID = "local-cli";
+
+/** Placeholders a command template may carry; the rest of it is literal. */
+export const CLI_PROMPT_PLACEHOLDER = "{{prompt}}";
+export const CLI_MODEL_PLACEHOLDER = "{{model}}";
+
+export const MAX_CLI_COMMAND_LENGTH = 2_000;
+export const MAX_CLI_TIMEOUT_MS = 24 * 60 * 60_000;
+
+/**
+ * A command template with its literal arguments and `{{prompt}}` / `{{model}}`
+ * placeholders. Without `{{prompt}}`, the prompt is written to standard input.
+ */
+export const CliModelCommandSchema = z.object({
+  command: z.string().trim().min(1).max(MAX_CLI_COMMAND_LENGTH),
+  /** Working directory; the server's own directory when omitted. */
+  cwd: z.string().trim().min(1).max(1_024).optional(),
+  timeoutMs: z.number().int().min(1).max(MAX_CLI_TIMEOUT_MS).optional(),
+  maxTokens: z.number().int().min(1).max(MAX_MODEL_MAX_TOKENS).optional(),
+  contextWindow: z.number().int().min(1).max(MAX_MODEL_CONTEXT_WINDOW).optional(),
+});
+export type CliModelCommand = z.infer<typeof CliModelCommandSchema>;
+
 export const MAX_ENABLED_MODEL_IDS = 500;
 
 /** An existing connection's id, null for a new one, or omitted for the provider's newest. */
@@ -1486,6 +1513,10 @@ export const ModelConnectInputSchema = z
     headers: ModelHeadersSchema.optional(),
     baseUrl: z.string().optional(),
     apiProtocol: ModelApiProtocolSchema.optional(),
+    /** Command-line connections: the command template to run. */
+    command: z.string().trim().max(MAX_CLI_COMMAND_LENGTH).optional(),
+    cwd: z.string().trim().max(1_024).optional(),
+    timeoutMs: z.number().int().min(1).max(MAX_CLI_TIMEOUT_MS).optional(),
     label: z.string().optional(),
     /**
      * The connection this save updates; null adds another connection for the provider.
@@ -1547,6 +1578,23 @@ export const ModelConnectInputSchema = z
         ctx.addIssue({
           code: "custom",
           message: "Model id is required for OpenAI-compatible models",
+          path: ["modelId"],
+        });
+      }
+      return;
+    }
+    if (value.provider === CLI_PROVIDER_ID) {
+      if (!value.command?.trim()) {
+        ctx.addIssue({
+          code: "custom",
+          message: "A command is required for command-line models",
+          path: ["command"],
+        });
+      }
+      if (!value.modelId?.trim()) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Model id is required for command-line models",
           path: ["modelId"],
         });
       }
@@ -1799,7 +1847,7 @@ export const MeSchema = z.object({
   spaceId: Id,
   /** Deprecated: app accounts never have server administrator privileges. Always false. */
   isDeploymentOwner: z.boolean(),
-  /** Listed in RAKAZO_ADMIN_EMAILS with a verified email: reviews plugin submissions. */
+  /** Listed in UNIBOT_ADMIN_EMAILS with a verified email: reviews plugin submissions. */
   isAdmin: z.boolean().default(false),
   needsModel: z.boolean(),
   defaultProvider: z.string().nullable(),
@@ -1860,7 +1908,7 @@ export function signupSurveyAsksTeamSize(use: SignupSurvey["use"]): boolean {
 /** Where checkout returns: the mobile app's in-app browser instead of the web app. */
 export const BillingClientSchema = z.literal("mobile").optional();
 /** The deep link the API sends a mobile checkout back to; it closes the in-app browser. */
-export const MOBILE_BILLING_CALLBACK_URL = "rakazo://billing";
+export const MOBILE_BILLING_CALLBACK_URL = "unibot://billing";
 
 export const BillingStatusSchema = z.object({
   funding: z.enum(["byok", "credits"]).nullable().optional(),

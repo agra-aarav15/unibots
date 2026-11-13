@@ -1,4 +1,4 @@
-import type { AdapterContext } from "@rakazo/adapter-kit";
+import type { AdapterContext } from "@unibot/adapter-kit";
 import { describe, expect, it, vi } from "vitest";
 import { ParallelWebProvider } from "./parallel-web.js";
 import { parallelMcpFixture } from "./parallel-web.test-support.js";
@@ -219,7 +219,7 @@ describe("optional Parallel web provider", () => {
       for (const request of peer.requests) {
         expect(request.url).toBe("https://search.parallel.ai/mcp");
         expect(request.headers.get("user-agent")).toBe(
-          "Unibots/0.1 (+https://github.com/agra-aarav15/unibots; web tools)",
+          "UniBot/0.1 (+https://github.com/agra-aarav15/unibots; web tools)",
         );
         expect(request.headers.has("authorization")).toBe(false);
       }
@@ -277,7 +277,7 @@ describe("optional Parallel web provider", () => {
     try {
       vi.stubEnv("NODE_ENV", "production");
       vi.stubEnv("VITEST", "");
-      vi.stubEnv("RAKAZO_ALLOW_DEV_SECRETS", "");
+      vi.stubEnv("UNIBOT_ALLOW_DEV_SECRETS", "");
       vi.stubEnv("BETTER_AUTH_SECRET", "");
       vi.stubEnv("ENCRYPTION_KEY", "a".repeat(64));
       await createWebProvider("parallel", peer.network).search({ query: "question" }, context);

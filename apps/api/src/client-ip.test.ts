@@ -1,5 +1,5 @@
-import { CLIENT_IP_HEADER } from "@rakazo/auth";
-import { recordSecurityEvent } from "@rakazo/db";
+import { CLIENT_IP_HEADER } from "@unibot/auth";
+import { recordSecurityEvent } from "@unibot/db";
 import {
   createLogger,
   createTestSink,
@@ -7,10 +7,11 @@ import {
   getLogger,
   installLogger,
   runWithLogContext,
-} from "@rakazo/logging";
+} from "@unibot/logging";
 import { Hono } from "hono";
 import { describe, expect, it, vi } from "vitest";
 import {
+  callerIsLocalOwner,
   clientIpMiddleware,
   createClientIpResolver,
   defaultTrustedProxies,
@@ -20,6 +21,25 @@ import {
 } from "./client-ip.js";
 
 const header = "x-forwarded-for";
+
+describe("callerIsLocalOwner", () => {
+  it("lets a connection from this machine act as the owner", () => {
+    expect(callerIsLocalOwner("127.0.0.1", false)).toBe(true);
+    expect(callerIsLocalOwner("::1", true)).toBe(true);
+  });
+
+  it("refuses a caller from the network even when the server is bound to it", () => {
+    expect(callerIsLocalOwner("192.168.1.44", false)).toBe(false);
+    // A phone pairing to a local install signs in; it is never the owner by address alone.
+    expect(callerIsLocalOwner("192.168.1.44", true)).toBe(false);
+    expect(callerIsLocalOwner("203.0.113.5", false)).toBe(false);
+  });
+
+  it("decides an in-process call by the bind, since it has no socket", () => {
+    expect(callerIsLocalOwner(undefined, true)).toBe(true);
+    expect(callerIsLocalOwner(undefined, false)).toBe(false);
+  });
+});
 
 describe("createClientIpResolver", () => {
   it("uses the socket peer and ignores the header when no proxy is trusted", async () => {
@@ -188,7 +208,7 @@ describe("clientIpMiddleware", () => {
 
   it("keeps caller details on security events only", async () => {
     const sink = createTestSink();
-    installLogger(createLogger({ service: "rakazo-api", sinks: [sink] }));
+    installLogger(createLogger({ service: "unibot-api", sinks: [sink] }));
     const body = await fromSocket(app(["192.0.2.3"]), "192.0.2.3", {
       [header]: "203.0.113.5",
       "user-agent": "curl/8.5.0",

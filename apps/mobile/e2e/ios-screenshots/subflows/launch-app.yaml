@@ -1,10 +1,10 @@
-appId: com.unibots.app
+appId: com.unibot.app
 ---
 # Restart without clearing app data, so a dev client's bundler URL stays put.
 - launchApp:
     stopApp: true
 - extendedWaitUntil:
-    visible: "Account|Sign up for Unibots|Sign in to Unibots"
+    visible: "Account|Sign up for UniBot|Sign in to UniBot"
     timeout: 40000
 - runFlow:
     when:
@@ -17,5 +17,5 @@ appId: com.unibots.app
           timeout: 15000
       - tapOn: "Sign out"
 - extendedWaitUntil:
-    visible: "Sign up for Unibots|Sign in to Unibots"
+    visible: "Sign up for UniBot|Sign in to UniBot"
     timeout: 20000

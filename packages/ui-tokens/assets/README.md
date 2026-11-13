@@ -5,8 +5,8 @@ else: a continuous "U" of constant weight on a rounded plate. Every platform
 export is rasterised from those values, so there is one place to edit and no
 traced or stock artwork anywhere in the pipeline.
 
-`Unibots.icon` is the Icon Composer bundle for macOS and iOS. Its single asset,
-`Assets/unibots-glyph.png`, is the transparent U that `export:brand` writes, so
+`UniBot.icon` is the Icon Composer bundle for macOS and iOS. Its single asset,
+`Assets/unibot-glyph.png`, is the transparent U that `export:brand` writes, so
 its silhouette always matches the app icon. Open the bundle in Apple's Icon
 Composer with Xcode 26 or newer to adjust the platform appearance; re-running
 `export:brand` overwrites only the glyph.
@@ -26,7 +26,7 @@ The platform exports are:
   sits on either splash colour.
 - `apps/mobile/assets/notification-icon.png`: 72 px white status-bar silhouette.
 
-Run `pnpm --filter @rakazo/ui-tokens export:brand` to refresh all of the above,
+Run `pnpm --filter @unibot/ui-tokens export:brand` to refresh all of the above,
 the web and marketing favicons, the installer art, and the marketing mark. Never
 bake platform corners or masks into the adaptive layers; Android supplies its own.
 

@@ -1,5 +1,5 @@
 import { ORPCError } from "@orpc/server";
-import type { CodexLiveCatalog } from "@rakazo/adapters";
+import type { CodexLiveCatalog } from "@unibot/adapters";
 import {
   buildModelConnectPlaintext,
   codexLiveListsModel,
@@ -12,15 +12,15 @@ import {
   validateModelAuthAvailability,
   verifyCatalogProviderApiKey,
   verifyOpenAiCompatibleApiKey,
-} from "@rakazo/adapters";
-import type { Actor, ModelConnectInput, SettingsScope, ThinkingLevel } from "@rakazo/contracts";
+} from "@unibot/adapters";
+import type { Actor, ModelConnectInput, SettingsScope, ThinkingLevel } from "@unibot/contracts";
 import {
   canonicalPiProviderId,
   OPENAI_COMPATIBLE_PROVIDER_ID,
   storedPiProviderIds,
   usableModelId,
-} from "@rakazo/contracts";
-import { clampCatalogThinkingLevel } from "@rakazo/core";
+} from "@unibot/contracts";
+import { clampCatalogThinkingLevel } from "@unibot/core";
 import {
   deleteUnreferencedCredentialSecret,
   findNewestUserModelCredential,
@@ -30,7 +30,7 @@ import {
   Prisma,
   saveModelPreference,
   writeModelRole,
-} from "@rakazo/db";
+} from "@unibot/db";
 import { mayUsePrivateEndpoint } from "./mcp-servers.js";
 import { assertNoDanglingModelPins } from "./model-pins.js";
 import type { RouterDeps } from "./router.js";

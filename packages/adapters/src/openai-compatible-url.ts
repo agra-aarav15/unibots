@@ -7,14 +7,26 @@ import {
   normalizeHost,
   normalizeOpenAiCompatibleBaseUrl,
   OPENAI_COMPATIBLE_PROVIDER_ID,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 
 export { normalizeOpenAiCompatibleBaseUrl, OPENAI_COMPATIBLE_PROVIDER_ID };
 
 const BUILT_IN_PUBLIC_MODEL_HOSTS = new Set(["ollama.com"]);
 
 export function openAiCompatAllowPublicHosts(): boolean {
-  return process.env.RAKAZO_OPENAI_COMPAT_ALLOW_PUBLIC !== "0";
+  return process.env.UNIBOT_OPENAI_COMPAT_ALLOW_PUBLIC !== "0";
+}
+
+/**
+ * Deployment-wide authorization for private model endpoints (a local router,
+ * Ollama, a LAN server). Off unless the operator turns it on, so a request that
+ * never asked for a private endpoint cannot reach one by default.
+ */
+export function openAiCompatAllowPrivateHosts(): boolean {
+  return (
+    process.env.UNIBOT_OPENAI_COMPAT_ALLOW_PRIVATE === "1" ||
+    process.env.UNIBOT_ALLOW_PRIVATE_ENDPOINTS === "1"
+  );
 }
 
 export function isPrivateOpenAiCompatibleHostname(hostname: string): boolean {
@@ -22,7 +34,7 @@ export function isPrivateOpenAiCompatibleHostname(hostname: string): boolean {
   if (isLoopbackHost(normalized) || normalized === "host.docker.internal") return true;
   if (isCloudMetadataHost(normalized)) return false;
   if (ipVersion(normalized) !== 0) return isNonPublicAddress(normalized);
-  return (process.env.RAKAZO_OPENAI_COMPAT_PRIVATE_HOSTS ?? "")
+  return (process.env.UNIBOT_OPENAI_COMPAT_PRIVATE_HOSTS ?? "")
     .split(",")
     .some((entry) => entry.trim() !== "" && normalizeHost(entry.trim()) === normalized);
 }
@@ -95,7 +107,10 @@ export function assertAllowedOpenAiCompatibleRequestUrl(
   }
   const allowPublic = opts?.allowPublic ?? openAiCompatAllowPublicHosts();
   if (isPrivateOpenAiCompatibleHostname(hostname)) {
-    if (opts?.allowPrivate !== true) throw new Error(PRIVATE_MODEL_ENDPOINT_MESSAGE);
+    // Private endpoints (local router, Ollama, LAN) need an explicit opt-in:
+    // either the caller's own policy or an operator turning them on.
+    const allowPrivate = opts?.allowPrivate ?? openAiCompatAllowPrivateHosts();
+    if (!allowPrivate) throw new Error(PRIVATE_MODEL_ENDPOINT_MESSAGE);
     return url;
   }
   const builtInPublicHost =

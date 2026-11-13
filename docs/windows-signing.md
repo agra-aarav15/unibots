@@ -50,7 +50,7 @@ base64 copy of either.
 ## Verify a build
 
 ```powershell
-Get-AuthenticodeSignature '.\Unibots Setup <version>.exe' | Format-List Status, SignerCertificate
+Get-AuthenticodeSignature '.\UniBot Setup <version>.exe' | Format-List Status, SignerCertificate
 ```
 
 `Status` must be `Valid` and the signer must match the publisher recorded in the

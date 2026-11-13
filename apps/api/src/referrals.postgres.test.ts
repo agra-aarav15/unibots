@@ -1,8 +1,8 @@
-import { BillingEmulator } from "@rakazo/adapters";
-import type { Actor } from "@rakazo/contracts";
-import { BYOK_MONTHLY_PRICE_CENTS } from "@rakazo/contracts";
-import type { PrismaClient } from "@rakazo/db";
-import { asSystem, billingAccountForOrganization, createDb } from "@rakazo/db";
+import { BillingEmulator } from "@unibot/adapters";
+import type { Actor } from "@unibot/contracts";
+import { BYOK_MONTHLY_PRICE_CENTS } from "@unibot/contracts";
+import type { PrismaClient } from "@unibot/db";
+import { asSystem, billingAccountForOrganization, createDb } from "@unibot/db";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createBillingService } from "./billing.js";
 

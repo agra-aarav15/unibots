@@ -41,29 +41,29 @@ describe("normalizeRepoUrl", () => {
     for (const input of [
       "",
       "   ",
-      "http://github.com/me/rakazo",
-      "git://github.com/me/rakazo",
+      "http://github.com/me/unibot",
+      "git://github.com/me/unibot",
       "file:///etc/passwd",
-      "/srv/rakazo",
+      "/srv/unibot",
       "https://github.com",
       "https://github.com/onlyone",
       "https://github.com/me/../../etc",
-      "https://user:secret@github.com/me/rakazo",
-      "https://token@github.com/me/rakazo",
-      "ssh://bad%0auser@github.com/me/rakazo",
-      "https://github.com/me/rakazo?x=1",
-      "https://github.com/me/rakazo#frag",
+      "https://user:secret@github.com/me/unibot",
+      "https://token@github.com/me/unibot",
+      "ssh://bad%0auser@github.com/me/unibot",
+      "https://github.com/me/unibot?x=1",
+      "https://github.com/me/unibot#frag",
       "https://github.com/me/rak azo",
       "--upload-pack=touch /tmp/pwned",
       "-o ProxyCommand=id",
-      `https://github.com/me/rakazo${"x".repeat(400)}`,
+      `https://github.com/me/unibot${"x".repeat(400)}`,
     ]) {
       expect(normalizeRepoUrl(input), input).toHaveProperty("error");
     }
   });
 
   it("rejects an embedded newline that could smuggle a second argument", () => {
-    expect(normalizeRepoUrl("https://github.com/me/rakazo\n--exec=id")).toHaveProperty("error");
+    expect(normalizeRepoUrl("https://github.com/me/unibot\n--exec=id")).toHaveProperty("error");
   });
 });
 
@@ -74,13 +74,13 @@ describe("repoIdentity", () => {
     expect(repoIdentity("https://github.com/agra-aarav15/unibots.git")).toBe(identity);
     expect(repoIdentity("git@github.com:agra-aarav15/unibots.git")).toBe(identity);
     // A different capitalization names the same repository.
-    expect(repoIdentity("ssh://git@github.com/Agra-Aarav15/Unibots")).toBe(identity);
+    expect(repoIdentity("ssh://git@github.com/Agra-Aarav15/UniBots")).toBe(identity);
     expect(repoIdentity("not a url")).toBeNull();
   });
 
   it("only calls the real upstream official", () => {
     expect(isOfficialRepoUrl("git@github.com:agra-aarav15/unibots.git")).toBe(true);
-    expect(isOfficialRepoUrl("https://github.com/attacker/rakazo")).toBe(false);
+    expect(isOfficialRepoUrl("https://github.com/attacker/unibot")).toBe(false);
     expect(isOfficialRepoUrl("https://githubb.com/agra-aarav15/unibots")).toBe(false);
   });
 });

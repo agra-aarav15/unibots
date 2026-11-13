@@ -1,7 +1,7 @@
 {
-  "name": "Unibots",
-  "short_name": "Unibots",
-  "description": "An open source Grok Bot alternative for persistent AI teammates that do real work.",
+  "name": "UniBot",
+  "short_name": "UniBot",
+  "description": "An open source Grok Bot alternative by Aarav Agrawal.",
   "start_url": "/",
   "display": "browser",
   "background_color": "#FDFDFD",

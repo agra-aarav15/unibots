@@ -1,12 +1,12 @@
 import { MenuView } from "@expo/ui/community/menu";
-import type { BillingStatus } from "@rakazo/contracts";
+import type { BillingStatus } from "@unibot/contracts";
 import {
   AI_PRIVACY_URL,
   DEFAULT_MONTHLY_CREDIT_AMOUNT,
   MODEL_CREDIT_AMOUNTS,
   ModelCreditAmountSchema,
-} from "@rakazo/contracts";
-import { botColors, botEyeColor, typeScale } from "@rakazo/ui-tokens";
+} from "@unibot/contracts";
+import { botColors, botEyeColor, typeScale } from "@unibot/ui-tokens";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import type { ComponentProps, ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -232,7 +232,7 @@ export default function Paywall() {
         </View>
         <View style={[styles.footer, { paddingHorizontal: 24 }]}>
           <NativeActionButton
-            label={started === "byok" ? t("Connect your AI") : t("Start using Unibots")}
+            label={started === "byok" ? t("Connect your AI") : t("Start using UniBot")}
             onPress={() => {
               router.back();
               if (started === "byok") router.push("/models");
@@ -349,7 +349,7 @@ export default function Paywall() {
             <PlanCard
               selected={plan === "credits"}
               onPress={() => setPlan("credits")}
-              title={t("Unibots credits")}
+              title={t("UniBot credits")}
               price={
                 <MenuView
                   actions={MODEL_CREDIT_AMOUNTS.map((value) => ({

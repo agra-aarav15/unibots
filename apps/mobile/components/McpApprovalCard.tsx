@@ -1,5 +1,5 @@
-import type { MessageBlock } from "@rakazo/contracts";
-import { typeScale } from "@rakazo/ui-tokens";
+import type { MessageBlock } from "@unibot/contracts";
+import { typeScale } from "@unibot/ui-tokens";
 import { useEffect, useState } from "react";
 import type { ViewProps } from "react-native";
 import { Alert, StyleSheet, Text, View } from "react-native";

@@ -1,6 +1,6 @@
-import type { AdapterContext, JobPublisher } from "@rakazo/adapter-kit";
-import { runJobKey } from "@rakazo/adapter-kit";
-import type { Actor, Group, MessageBlock } from "@rakazo/contracts";
+import type { AdapterContext, JobPublisher } from "@unibot/adapter-kit";
+import { runJobKey } from "@unibot/adapter-kit";
+import type { Actor, Group, MessageBlock } from "@unibot/contracts";
 import {
   BOT_INSTRUCTIONS_MAX_LENGTH,
   BotSectionName,
@@ -14,14 +14,14 @@ import {
   ThinkingLevelSchema,
   TimeZoneSchema,
   UpdateGroupInput,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import {
   CARD_TITLE_ESCAPED_CHARACTERS,
   ONCE_ROUTINE_CRON,
   redactSecrets,
   toolRequiresExplicitApproval,
-} from "@rakazo/core";
-import type { Prisma, PrismaClient, ThreadEvents } from "@rakazo/db";
+} from "@unibot/core";
+import type { Prisma, PrismaClient, ThreadEvents } from "@unibot/db";
 import {
   commitBotUpdate,
   createGroupRepos,
@@ -29,8 +29,8 @@ import {
   InstructionConflictError,
   IsolationError,
   SpaceDeletionInProgressError,
-} from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import type { FleetCardSummary } from "./approval-ask.js";
 import { approvalDetailLength, MAX_APPROVAL_SUMMARY_LENGTH } from "./approval-ask.js";
 import { attachedImageArtifactIds, resolveUpdateBotAvatar } from "./bot-avatar.js";

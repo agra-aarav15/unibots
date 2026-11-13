@@ -1,13 +1,13 @@
-import type { AgentRunRequest, ComputerRef, SemanticMemoryProvider } from "@rakazo/adapter-kit";
+import type { AgentRunRequest, ComputerRef, SemanticMemoryProvider } from "@unibot/adapter-kit";
 import {
   DEFAULT_CONTEXT_STRATEGY,
   isModelCredentialRejected,
   runContinueJob,
   SandboxUnavailableError,
   SandboxUnresponsiveError,
-} from "@rakazo/adapter-kit";
-import type { MessageBlock, ModelRoleChoice, RunStatus } from "@rakazo/contracts";
-import { disabledBuiltinToolSet } from "@rakazo/contracts";
+} from "@unibot/adapter-kit";
+import type { MessageBlock, ModelRoleChoice, RunStatus } from "@unibot/contracts";
+import { disabledBuiltinToolSet } from "@unibot/contracts";
 import {
   assertTransition,
   botMessageAllowsSilence,
@@ -30,7 +30,7 @@ import {
   renderBotDirectory,
   userRunError,
   userTurnMessageForRun,
-} from "@rakazo/core";
+} from "@unibot/core";
 import {
   effectiveMemoryScope,
   isPartialReplyClientNonce,
@@ -43,9 +43,9 @@ import {
   recordUsage,
   settleReleasedTakeoverCards,
   spaceHasModelAccess,
-} from "@rakazo/db";
-import { enrichLogContext, getLogger } from "@rakazo/logging";
-import { sanitizedError } from "@rakazo/logging/monitoring";
+} from "@unibot/db";
+import { enrichLogContext, getLogger } from "@unibot/logging";
+import { sanitizedError } from "@unibot/logging/monitoring";
 import { formatAgentEnvironmentInstruction } from "./agent-environment.js";
 import { createApprovedEffectReplayQueue } from "./approval-effect.js";
 import { PARTIAL_REPLY_NOTE } from "./automated-messages.js";
@@ -1722,7 +1722,7 @@ export function createRunExecutor(executorDeps: ExecutorDeps) {
           redactSecrets(text, runSecrets),
         );
         // An outage at the computer provider is retried like any setup failure, but is not a
-        // Unibots bug to report.
+        // UniBot bug to report.
         const providerOutage =
           setupError instanceof SandboxUnavailableError ||
           setupError instanceof SandboxUnresponsiveError;

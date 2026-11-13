@@ -1,7 +1,7 @@
 import type { Hono } from "hono";
 
-/** Package of the Unibots Android app (apps/mobile/app.json). */
-const ANDROID_PACKAGE = "com.unibots.app";
+/** Package of the UniBot Android app (apps/mobile/app.json). */
+const ANDROID_PACKAGE = "com.unibot.app";
 
 /**
  * Which native apps can use this server's passkeys: only those the domain vouches for

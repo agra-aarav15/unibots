@@ -1,12 +1,12 @@
-import type { LinkFavicons } from "@rakazo/chat-ui/native";
+import type { LinkFavicons } from "@unibot/chat-ui/native";
 import {
   CodeCopyButtonContext,
   LinkFaviconsContext,
   MarkdownLinkPromptProvider,
   MermaidDiagramContext,
   RemoteImagesContext,
-} from "@rakazo/chat-ui/native";
-import { analyticsScreen } from "@rakazo/core";
+} from "@unibot/chat-ui/native";
+import { analyticsScreen } from "@unibot/core";
 import {
   DarkTheme,
   Stack,
@@ -382,7 +382,7 @@ function LayoutContent() {
                       contentStyle: { backgroundColor: String(native.page) },
                     }}
                   >
-                    <Stack.Screen name="index" options={{ headerShown: false, title: "Unibots" }} />
+                    <Stack.Screen name="index" options={{ headerShown: false, title: "UniBot" }} />
                     <Stack.Screen
                       name="search"
                       options={{

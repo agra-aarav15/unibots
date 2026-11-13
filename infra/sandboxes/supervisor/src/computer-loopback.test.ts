@@ -2,7 +2,7 @@ import type * as NodeFsPromises from "node:fs/promises";
 import http from "node:http";
 import path from "node:path";
 import { Readable } from "node:stream";
-import { resolveSupervisorToken } from "@rakazo/core";
+import { resolveSupervisorToken } from "@unibot/core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   COMPUTER_IMAGE,
@@ -58,7 +58,7 @@ beforeEach(async () => {
   vi.resetAllMocks();
   mocks.verifyRestrictedEgress.mockResolvedValue(undefined);
   vi.stubEnv("HOSTNAME", "");
-  vi.stubEnv("DATA_DIR", "/tmp/rakazo-loopback-test");
+  vi.stubEnv("DATA_DIR", "/tmp/unibot-loopback-test");
   vi.stubEnv("SANDBOX_SCREEN_NETWORK", "published");
   vi.stubEnv("SANDBOX_SCREEN_HOST", "127.0.0.1");
   screen = http.createServer((_req, res) => res.end("ok"));
@@ -89,7 +89,7 @@ describe("computer loopback provision lifecycle", () => {
       method: "POST",
       headers: {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
-        "x-rakazo-bot-id": "bot",
+        "x-unibot-bot-id": "bot",
         "x-rakazo-space-id": "space",
       },
     });
@@ -114,7 +114,7 @@ describe("computer loopback provision lifecycle", () => {
       method: "POST",
       headers: {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
-        "x-rakazo-bot-id": "bot",
+        "x-unibot-bot-id": "bot",
         "x-rakazo-space-id": "space",
       },
     });
@@ -157,7 +157,7 @@ describe("computer loopback provision lifecycle", () => {
         method: "POST",
         headers: {
           authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
-          "x-rakazo-bot-id": "bot",
+          "x-unibot-bot-id": "bot",
           "x-rakazo-space-id": "space",
         },
       });
@@ -192,7 +192,7 @@ describe("computer loopback provision lifecycle", () => {
       method: "POST",
       headers: {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
-        "x-rakazo-bot-id": "bot",
+        "x-unibot-bot-id": "bot",
         "x-rakazo-space-id": "space",
       },
     });
@@ -220,7 +220,7 @@ describe("computer loopback provision lifecycle", () => {
       method: "POST",
       headers: {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
-        "x-rakazo-bot-id": "bot",
+        "x-unibot-bot-id": "bot",
         "x-rakazo-space-id": "space",
       },
     });
@@ -290,7 +290,7 @@ describe("computer loopback provision lifecycle", () => {
       headers: {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "content-type": "application/json",
-        "x-rakazo-bot-id": "bot",
+        "x-unibot-bot-id": "bot",
         "x-rakazo-space-id": "space",
       },
       body: JSON.stringify({ botId: "bot", spaceId: "space", homePath }),
@@ -313,9 +313,9 @@ describe("computer loopback provision lifecycle", () => {
       expect(options.HostConfig.PortBindings["7070/tcp"]).toEqual(
         enabled ? [{ HostIp: "127.0.0.1", HostPort: "0" }] : undefined,
       );
-      expect(options.HostConfig.Binds).toEqual([`${homePath}:/home/rakazo`]);
+      expect(options.HostConfig.Binds).toEqual([`${homePath}:/home/unibot`]);
       expect(options.Env).toContainEqual(
-        expect.stringMatching(/^RAKAZO_COMPUTER_CONTROL_TOKEN=.+/),
+        expect.stringMatching(/^UNIBOT_COMPUTER_CONTROL_TOKEN=.+/),
       );
     }
   });
@@ -343,7 +343,7 @@ describe("provisioning network rollback", () => {
       headers: {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "content-type": "application/json",
-        "x-rakazo-bot-id": "bot",
+        "x-unibot-bot-id": "bot",
         "x-rakazo-space-id": "space",
       },
       body: JSON.stringify({ botId: "bot", spaceId: "space", homePath }),
@@ -385,7 +385,7 @@ describe("provisioning network rollback", () => {
                 expect.objectContaining({
                   Type: "volume",
                   Source: "example_appdata",
-                  Target: "/home/rakazo",
+                  Target: "/home/unibot",
                   VolumeOptions: { NoCopy: true, Subpath: "homes/bot" },
                 }),
               ],
@@ -545,7 +545,7 @@ describe("restricted egress rekeying", () => {
       headers: {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "content-type": "application/json",
-        "x-rakazo-bot-id": "bot",
+        "x-unibot-bot-id": "bot",
         "x-rakazo-space-id": "space",
       },
       body: JSON.stringify({ botId: "bot", spaceId: "space", homePath }),
@@ -761,7 +761,7 @@ describe("space computer limit enforcement", () => {
       headers: {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "content-type": "application/json",
-        "x-rakazo-bot-id": botId,
+        "x-unibot-bot-id": botId,
         "x-rakazo-space-id": spaceId,
       },
       body: JSON.stringify({ botId, spaceId, homePath }),
@@ -1091,9 +1091,9 @@ describe("screen release status", () => {
   const headers = {
     authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
     "content-type": "application/json",
-    "x-rakazo-bot-id": "bot",
+    "x-unibot-bot-id": "bot",
     "x-rakazo-space-id": "space",
-    "x-rakazo-screen-id": "writer",
+    "x-unibot-screen-id": "writer",
   };
 
   function managedContainer(exec?: ReturnType<typeof vi.fn>) {
@@ -1146,7 +1146,7 @@ describe("screen release status", () => {
     mocks.docker.getContainer.mockReturnValue(container);
     const response = await supervisorApp.request("/computers/identity-screen/screen", {
       method: "DELETE",
-      headers: { ...headers, "x-rakazo-preserve-screen": "1" },
+      headers: { ...headers, "x-unibot-preserve-screen": "1" },
     });
     expect(response.status).toBe(403);
     await expect(response.json()).resolves.toEqual({ error: "invalid computer identity" });
@@ -1162,7 +1162,7 @@ describe("screen release status", () => {
       const open = (lease: string) =>
         supervisorApp.request("/computers/persistent/screen-mode", {
           method: "POST",
-          headers: { ...headers, "x-rakazo-screen-lease-id": lease },
+          headers: { ...headers, "x-unibot-screen-lease-id": lease },
           body: JSON.stringify({ interactive: false, revokeControl: false }),
         });
       const first = await open(leaseId);
@@ -1172,7 +1172,7 @@ describe("screen release status", () => {
 
       const released = await supervisorApp.request("/computers/persistent/screen", {
         method: "DELETE",
-        headers: { ...headers, "x-rakazo-screen-lease-id": leaseId },
+        headers: { ...headers, "x-unibot-screen-lease-id": leaseId },
       });
       expect(released.status).toBe(200);
       const releaseCommand = container.exec.mock.calls
@@ -1194,7 +1194,7 @@ describe("screen release status", () => {
       expect(setupCommand).toContain("browser-profile-1");
       expect(setupCommand).toContain("if ! browser_running; then");
       expect(setupCommand).not.toContain("Browser.close");
-      expect(setupCommand).not.toContain("for marker in /tmp/rakazo/browser-profile-*");
+      expect(setupCommand).not.toContain("for marker in /tmp/unibot/browser-profile-*");
     },
   );
 
@@ -1287,8 +1287,8 @@ describe("screen release status", () => {
       method: "DELETE",
       headers: {
         ...headers,
-        "x-rakazo-screen-lease-id": "run-1:1",
-        "x-rakazo-cancel-run-work": "1",
+        "x-unibot-screen-lease-id": "run-1:1",
+        "x-unibot-cancel-run-work": "1",
       },
     });
     expect(released.status).toBe(500);
@@ -1324,8 +1324,8 @@ describe("screen release status", () => {
       method: "DELETE",
       headers: {
         ...headers,
-        "x-rakazo-screen-lease-id": "run-1:1",
-        "x-rakazo-preserve-screen": "1",
+        "x-unibot-screen-lease-id": "run-1:1",
+        "x-unibot-preserve-screen": "1",
       },
     });
     expect(released.status).toBe(200);
@@ -1357,7 +1357,7 @@ describe("screen release status", () => {
     failStart = true;
     const released = await supervisorApp.request("/computers/exec-start-404/screen", {
       method: "DELETE",
-      headers: { ...headers, "x-rakazo-screen-lease-id": "run-1:1" },
+      headers: { ...headers, "x-unibot-screen-lease-id": "run-1:1" },
     });
     expect(released.status).toBe(500);
     await expect(released.json()).resolves.toEqual({ error: "no such exec" });
@@ -1368,9 +1368,9 @@ describe("computer deletion", () => {
   const headers = {
     authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
     "content-type": "application/json",
-    "x-rakazo-bot-id": "bot",
+    "x-unibot-bot-id": "bot",
     "x-rakazo-space-id": "space",
-    "x-rakazo-screen-id": "writer",
+    "x-unibot-screen-id": "writer",
   };
   const dockerError = (statusCode: number) =>
     Object.assign(new Error(`docker ${statusCode}`), { statusCode });
@@ -1399,7 +1399,7 @@ describe("computer deletion", () => {
       inspect: vi.fn().mockRejectedValue(dockerError(404)),
     });
     const resets = () =>
-      commands.filter((command) => command.includes("for marker in /tmp/rakazo/browser-profile-*"))
+      commands.filter((command) => command.includes("for marker in /tmp/unibot/browser-profile-*"))
         .length;
     return { container, resets };
   }
@@ -1500,9 +1500,9 @@ describe("screen registry across run boundaries", () => {
         headers: {
           authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
           "content-type": "application/json",
-          "x-rakazo-bot-id": "bot",
+          "x-unibot-bot-id": "bot",
           "x-rakazo-space-id": "space",
-          "x-rakazo-screen-id": "writer",
+          "x-unibot-screen-id": "writer",
         },
         body: JSON.stringify({ interactive: false, revokeControl: false }),
       });
@@ -1520,11 +1520,11 @@ describe("screen registry across run boundaries", () => {
     expect(registry.get("failed-first-setup")?.get("writer")).toMatchObject({ index: 0 });
     expect(boots.get("failed-first-setup")).toBe("boot-2");
     expect(
-      commands.filter((command) => command.includes("for marker in /tmp/rakazo/browser-profile-*")),
+      commands.filter((command) => command.includes("for marker in /tmp/unibot/browser-profile-*")),
     ).toHaveLength(2);
     expect((await view()).status).toBe(200);
     expect(
-      commands.filter((command) => command.includes("for marker in /tmp/rakazo/browser-profile-*")),
+      commands.filter((command) => command.includes("for marker in /tmp/unibot/browser-profile-*")),
     ).toHaveLength(2);
   });
 
@@ -1560,13 +1560,13 @@ describe("screen registry across run boundaries", () => {
           if (claiming) {
             const [, boots] = currentScreens.mock.calls.at(-1)!;
             expect(boots.has("mid-claim")).toBe(
-              !command.includes("for marker in /tmp/rakazo/browser-profile-*"),
+              !command.includes("for marker in /tmp/unibot/browser-profile-*"),
             );
           }
           commands.push(command);
           const restartsDuringCommand =
             phase === "reset"
-              ? command.includes("for marker in /tmp/rakazo/browser-profile-*")
+              ? command.includes("for marker in /tmp/unibot/browser-profile-*")
               : command.includes("computer browser CDP not ready");
           if (restartsDuringCommand && restart) {
             boot += 1;
@@ -1582,9 +1582,9 @@ describe("screen registry across run boundaries", () => {
           headers: {
             authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
             "content-type": "application/json",
-            "x-rakazo-bot-id": "bot",
+            "x-unibot-bot-id": "bot",
             "x-rakazo-space-id": "space",
-            "x-rakazo-screen-id": "writer",
+            "x-unibot-screen-id": "writer",
           },
           body: JSON.stringify({ interactive: false, revokeControl: false }),
         });
@@ -1593,7 +1593,7 @@ describe("screen registry across run boundaries", () => {
       expect(response.status).toBe(continuous ? 400 : 200);
       expect(
         commands.filter((command) =>
-          command.includes("for marker in /tmp/rakazo/browser-profile-*"),
+          command.includes("for marker in /tmp/unibot/browser-profile-*"),
         ).length,
       ).toBe(continuous ? 3 : 2);
       if (continuous) {
@@ -1604,12 +1604,12 @@ describe("screen registry across run boundaries", () => {
       expect(next.status).toBe(200);
       if (!continuous) expect(await next.json()).toEqual(await response.json());
       const resets = commands.filter((command) =>
-        command.includes("for marker in /tmp/rakazo/browser-profile-*"),
+        command.includes("for marker in /tmp/unibot/browser-profile-*"),
       ).length;
       expect((await view()).status).toBe(200);
       expect(
         commands.filter((command) =>
-          command.includes("for marker in /tmp/rakazo/browser-profile-*"),
+          command.includes("for marker in /tmp/unibot/browser-profile-*"),
         ).length,
       ).toBe(resets);
     },
@@ -1663,7 +1663,7 @@ describe("screen registry across run boundaries", () => {
     const headers = {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
-      "x-rakazo-bot-id": "bot",
+      "x-unibot-bot-id": "bot",
       "x-rakazo-space-id": "space",
     };
     const view = () =>
@@ -1698,11 +1698,11 @@ describe("screen registry across run boundaries", () => {
     expect(boots.has(existing.id)).toBe(false);
     // Let the mock answer for the old ID to observe whether its registry was forgotten.
     const resets = commands.filter((command) =>
-      command.includes("for marker in /tmp/rakazo/browser-profile-*"),
+      command.includes("for marker in /tmp/unibot/browser-profile-*"),
     ).length;
     expect((await view()).status).toBe(200);
     expect(
-      commands.filter((command) => command.includes("for marker in /tmp/rakazo/browser-profile-*"))
+      commands.filter((command) => command.includes("for marker in /tmp/unibot/browser-profile-*"))
         .length,
     ).toBe(resets + 1);
   });
@@ -1759,19 +1759,19 @@ describe("screen registry across run boundaries", () => {
       const headers = {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "content-type": "application/json",
-        "x-rakazo-bot-id": "bot",
+        "x-unibot-bot-id": "bot",
         "x-rakazo-space-id": "space",
-        "x-rakazo-screen-id": "writer",
+        "x-unibot-screen-id": "writer",
       };
       const view = (leaseId = "run-2:2") =>
         supervisorApp.request("/computers/restarted/screen-mode", {
           method: "POST",
-          headers: { ...headers, "x-rakazo-screen-lease-id": leaseId },
+          headers: { ...headers, "x-unibot-screen-lease-id": leaseId },
           body: JSON.stringify({ interactive: false, revokeControl: false }),
         });
       const resets = () =>
         commands.filter((command) =>
-          command.includes("for marker in /tmp/rakazo/browser-profile-*"),
+          command.includes("for marker in /tmp/unibot/browser-profile-*"),
         ).length;
       expect((await view()).status).toBe(200);
       blockCommand = true;
@@ -1783,7 +1783,7 @@ describe("screen registry across run boundaries", () => {
           ? view()
           : supervisorApp.request("/computers/restarted/screen", {
               method: "DELETE",
-              headers: { ...headers, "x-rakazo-screen-lease-id": "run-1:1" },
+              headers: { ...headers, "x-unibot-screen-lease-id": "run-1:1" },
             });
       await queuedInspection;
       startedAt = "boot-2";
@@ -1836,9 +1836,9 @@ describe("screen registry across run boundaries", () => {
     const headers = {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
-      "x-rakazo-bot-id": "bot",
+      "x-unibot-bot-id": "bot",
       "x-rakazo-space-id": "space",
-      "x-rakazo-screen-id": "writer",
+      "x-unibot-screen-id": "writer",
     };
     const view = () =>
       supervisorApp.request("/computers/registry/screen-mode", {
@@ -1847,14 +1847,14 @@ describe("screen registry across run boundaries", () => {
         body: JSON.stringify({ interactive: false, revokeControl: false }),
       });
     const resets = () =>
-      commands.filter((command) => command.includes("for marker in /tmp/rakazo/browser-profile-*"))
+      commands.filter((command) => command.includes("for marker in /tmp/unibot/browser-profile-*"))
         .length;
 
     expect((await view()).status).toBe(200);
     expect(resets()).toBe(1);
     const released = await supervisorApp.request("/computers/registry/screen", {
       method: "DELETE",
-      headers: { ...headers, "x-rakazo-screen-lease-id": "run-1:1" },
+      headers: { ...headers, "x-unibot-screen-lease-id": "run-1:1" },
     });
     expect(released.status).toBe(200);
     expect((await view()).status).toBe(200);
@@ -1890,10 +1890,10 @@ describe("screen registry across run boundaries", () => {
     const headersFor = (screenId: string, leaseId: string) => ({
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
-      "x-rakazo-bot-id": "bot",
+      "x-unibot-bot-id": "bot",
       "x-rakazo-space-id": "space",
-      "x-rakazo-screen-id": screenId,
-      "x-rakazo-screen-lease-id": leaseId,
+      "x-unibot-screen-id": screenId,
+      "x-unibot-screen-lease-id": leaseId,
     });
     const view = (screenId: string, leaseId: string) =>
       supervisorApp.request("/computers/registry/screen-mode", {
@@ -1914,7 +1914,7 @@ describe("screen registry across run boundaries", () => {
       method: "DELETE",
       headers: {
         ...headersFor("writer", "run-1:1"),
-        "x-rakazo-preserve-screen": "1",
+        "x-unibot-preserve-screen": "1",
       },
     });
     expect(released.status).toBe(200);
@@ -1932,7 +1932,7 @@ describe("screen registry across run boundaries", () => {
       method: "DELETE",
       headers: {
         ...headersFor("writer", "run-1:1"),
-        "x-rakazo-preserve-screen": "1",
+        "x-unibot-preserve-screen": "1",
       },
     });
     expect(staleRelease.status).toBe(200);
@@ -1942,8 +1942,8 @@ describe("screen registry across run boundaries", () => {
       method: "DELETE",
       headers: {
         ...headersFor("writer", "run-2:2"),
-        "x-rakazo-preserve-screen": "1",
-        "x-rakazo-cancel-run-work": "1",
+        "x-unibot-preserve-screen": "1",
+        "x-unibot-cancel-run-work": "1",
       },
     });
     expect(cancelled.status).toBe(200);
@@ -1987,10 +1987,10 @@ describe("screen registry across run boundaries", () => {
     const headersFor = (screenId: string, leaseId: string) => ({
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
-      "x-rakazo-bot-id": "bot",
+      "x-unibot-bot-id": "bot",
       "x-rakazo-space-id": "space",
-      "x-rakazo-screen-id": screenId,
-      "x-rakazo-screen-lease-id": leaseId,
+      "x-unibot-screen-id": screenId,
+      "x-unibot-screen-lease-id": leaseId,
     });
     const view = (screenId: string, leaseId: string) =>
       supervisorApp.request("/computers/registry/screen-mode", {
@@ -2007,7 +2007,7 @@ describe("screen registry across run boundaries", () => {
       method: "DELETE",
       headers: {
         ...headersFor("writer", "run-1:1"),
-        "x-rakazo-preserve-screen": "1",
+        "x-unibot-preserve-screen": "1",
       },
     });
     expect(release.status).toBe(200);
@@ -2029,7 +2029,7 @@ describe("computer network reclaim", () => {
   const homePath = () => path.join(process.env.DATA_DIR!, "homes", "bot");
   const headers = {
     authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
-    "x-rakazo-bot-id": "bot",
+    "x-unibot-bot-id": "bot",
     "x-rakazo-space-id": "space",
   };
 
@@ -2210,7 +2210,7 @@ describe("computer network reclaim", () => {
       const network = botNetwork();
       network.remove.mockRejectedValue(error);
       mocks.docker.getNetwork.mockReturnValue(network);
-      const { getLogger } = await import("@rakazo/logging");
+      const { getLogger } = await import("@unibot/logging");
       const logError = vi.spyOn(getLogger(), "error").mockImplementation(() => undefined);
 
       expect((await stop()).status).toBe(200);
@@ -2501,7 +2501,7 @@ describe("computer network reclaim", () => {
     });
 
     it.each([
-      ["a leftover endpoint", new Error("endpoint with name rakazo-bot-bot already exists")],
+      ["a leftover endpoint", new Error("endpoint with name unibot-bot-bot already exists")],
       ["a missing container", Object.assign(new Error("no such container"), { statusCode: 404 })],
     ])(
       "replaces it, never starting it unattached, when Docker refuses to attach it: %s",

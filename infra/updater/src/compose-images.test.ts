@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { PUBLISHED_IMAGE_REPO } from "@rakazo/core";
+import { PUBLISHED_IMAGE_REPO } from "@unibot/core";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 
@@ -68,10 +68,10 @@ describe("the images compose file", () => {
     ]);
     for (const service of appServices) {
       expect(compose.services[service]?.image).toContain("ghcr.io/agra-aarav15/unibots/app");
-      expect(compose.services[service]?.image).toContain("RAKAZO_IMAGE_TAG");
+      expect(compose.services[service]?.image).toContain("UNIBOT_IMAGE_TAG");
     }
     expect(compose.services.computer?.image).toContain("ghcr.io/agra-aarav15/unibots/computer");
-    expect(compose.services.computer?.image).toContain("RAKAZO_COMPUTER_IMAGE_TAG");
+    expect(compose.services.computer?.image).toContain("UNIBOT_COMPUTER_IMAGE_TAG");
     expect(compose.services.postgres?.image).toMatch(
       /^\$\{POSTGRES_IMAGE:-postgres:16@sha256:[0-9a-f]{64}\}$/,
     );
@@ -177,8 +177,8 @@ describe("the images compose file", () => {
   });
 
   it("publishes the web UI on loopback only", () => {
-    expect(compose.services.web?.ports).toEqual(["127.0.0.1:${RAKAZO_WEB_PORT:-5173}:5173"]);
-    expect(compose.services.api?.ports).toEqual(["127.0.0.1:${RAKAZO_API_PORT:-3100}:3100"]);
+    expect(compose.services.web?.ports).toEqual(["127.0.0.1:${UNIBOT_WEB_PORT:-5173}:5173"]);
+    expect(compose.services.api?.ports).toEqual(["127.0.0.1:${UNIBOT_API_PORT:-3100}:3100"]);
     for (const key of ["BETTER_AUTH_URL", "WEB_ORIGIN", "API_URL"]) {
       expect(compose.services.api?.environment?.[key]).toBe(`\${${key}:-http://127.0.0.1:5173}`);
     }

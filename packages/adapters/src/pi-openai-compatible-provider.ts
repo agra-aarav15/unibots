@@ -1,10 +1,7 @@
 import { lookup } from "node:dns/promises";
 import type { LookupFunction } from "node:net";
-import type { Model, MutableModels, Provider, ProviderStreams } from "@earendil-works/pi-ai";
-import { createProvider } from "@earendil-works/pi-ai";
-import { openAICompletionsApi } from "@earendil-works/pi-ai/api/openai-completions.lazy";
-import { openAIResponsesApi } from "@earendil-works/pi-ai/api/openai-responses.lazy";
-import type { ModelApiProtocol } from "@rakazo/contracts";
+import type { Model, MutableModels, Provider } from "@earendil-works/pi-ai";
+import type { ModelApiProtocol } from "@unibot/contracts";
 import {
   DEFAULT_MODEL_CONTEXT_WINDOW,
   DEFAULT_MODEL_MAX_TOKENS,
@@ -14,7 +11,7 @@ import {
   isNonPublicAddress,
   MODEL_KEY_REJECTED_ERROR,
   parseModelHeaders,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import { Agent } from "undici";
 import { declaredVisionModelIds, inputModalities } from "./model-modalities.js";
 import type { ResolveHostname } from "./network-address.js";
@@ -30,6 +27,7 @@ import {
   PRIVATE_MODEL_ENDPOINT_MESSAGE,
 } from "./openai-compatible-url.js";
 import { MODEL_CONNECT_TIMEOUT_MS } from "./pi-runtime-limits.js";
+import { customTransportProvider } from "./pi-custom-transport-provider.js";
 import { guardToolCallNames } from "./pi-tool-call-guard.js";
 import { dispatcherFetch, fetchPairedWithDispatcher } from "./undici-fetch.js";
 
@@ -39,7 +37,7 @@ export { OPENAI_COMPATIBLE_PROVIDER_ID };
 export const OPENAI_COMPATIBLE_CATALOG_MODEL_ID = "custom";
 
 /** Model ids this endpoint serves with vision, declared by the operator. */
-export const OPENAI_COMPATIBLE_VISION_MODELS_ENV = "RAKAZO_OPENAI_COMPATIBLE_VISION_MODELS";
+export const OPENAI_COMPATIBLE_VISION_MODELS_ENV = "UNIBOT_OPENAI_COMPATIBLE_VISION_MODELS";
 
 export function openAiCompatibleVisionModelIds(): ReadonlySet<string> {
   return declaredVisionModelIds(OPENAI_COMPATIBLE_VISION_MODELS_ENV);
@@ -98,37 +96,19 @@ function openAiCompatibleProvider(
   models: Model<"openai-completions" | "openai-responses">[],
   policy: { allowPrivate?: boolean; headers?: Record<string, string> } = {},
 ): Provider {
-  const api = (protocol: string) =>
-    protocol === "openai-responses" ? openAIResponsesApi() : openAICompletionsApi();
   // Guard the fetch the caller supplied (the runtime's seam for tests) or the
   // dispatcher-matched default; never the bare global.
-  const safeApi: ProviderStreams = {
-    stream: (model, context, options) =>
-      api(model.api).stream(model, context, {
-        ...options,
-        fetch: createOpenAiCompatibleFetch(options?.fetch, undefined, policy),
-      }),
-    streamSimple: (model, context, options) =>
-      api(model.api).streamSimple(model, context, {
-        ...options,
-        fetch: createOpenAiCompatibleFetch(options?.fetch, undefined, policy),
-      }),
-  };
-  return createProvider({
+  const transportFor = (callerFetch?: typeof globalThis.fetch) =>
+    createOpenAiCompatibleFetch(callerFetch, undefined, {
+      allowPrivate: policy.allowPrivate,
+      headers: policy.headers,
+    });
+  return customTransportProvider({
     id: OPENAI_COMPATIBLE_PROVIDER_ID,
     name: "OpenAI-compatible",
     baseUrl: models[0]?.baseUrl ?? OPENAI_COMPAT_BASE,
-    auth: {
-      apiKey: {
-        name: "OpenAI-compatible server",
-        resolve: async () => ({
-          auth: { apiKey: "local" },
-          source: "OpenAI-compatible endpoint",
-        }),
-      },
-    },
     models,
-    api: safeApi,
+    transportFor,
   });
 }
 
@@ -510,7 +490,7 @@ export async function probeOpenAiCompatibleModels(
   );
   await verifyOpenAiCompatibleApiKey(input, fetchImpl, signal);
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5_000);
+  const timeout = setTimeout(() => controller.abort(), 20_000);
   const merged = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
   try {
     const headers: Record<string, string> = { Accept: "application/json" };

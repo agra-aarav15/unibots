@@ -10,13 +10,13 @@ import type {
   StreamedPortableFile,
   WorkspaceDirectoryRequest,
   WorkspaceExportLimits,
-} from "@rakazo/adapter-kit";
-import { WorkspaceTooLargeError } from "@rakazo/adapter-kit";
-import type { ComputerMode } from "@rakazo/contracts";
-import { parseScreenLeaseId } from "@rakazo/core";
-import { browserProfilePathForScreen } from "@rakazo/core/node/desktop-runtime";
-import type { PrismaClient } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/adapter-kit";
+import { WorkspaceTooLargeError } from "@unibot/adapter-kit";
+import type { ComputerMode } from "@unibot/contracts";
+import { parseScreenLeaseId } from "@unibot/core";
+import { browserProfilePathForScreen } from "@unibot/core/node/desktop-runtime";
+import type { PrismaClient } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { normalizeWorkspacePath, teamBotWorkspaceDirectory } from "./computer-support.js";
 import { createStagingDirectory, LocalAgentHomeStore } from "./home.js";
 import { isSandboxDamagedError } from "./sandbox-errors.js";

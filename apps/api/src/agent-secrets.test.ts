@@ -1,6 +1,6 @@
 import { ORPCError } from "@orpc/server";
-import { EncryptedSecretStore } from "@rakazo/adapters";
-import type { PrismaClient } from "@rakazo/db";
+import { EncryptedSecretStore } from "@unibot/adapters";
+import type { PrismaClient } from "@unibot/db";
 import { describe, expect, it, vi } from "vitest";
 import { deleteAgentSecret, listAgentSecrets, putAgentSecret } from "./agent-secrets.js";
 

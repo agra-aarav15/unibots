@@ -1,6 +1,6 @@
-import type { ToolBatch } from "@rakazo/adapter-kit";
-import type { MessageBlock } from "@rakazo/contracts";
-import { BOT_INSTRUCTIONS_MAX_LENGTH } from "@rakazo/contracts";
+import type { ToolBatch } from "@unibot/adapter-kit";
+import type { MessageBlock } from "@unibot/contracts";
+import { BOT_INSTRUCTIONS_MAX_LENGTH } from "@unibot/contracts";
 import {
   batchActions,
   CARD_TITLE_ESCAPED_CHARACTERS,
@@ -9,8 +9,8 @@ import {
   redactSecrets,
   sanitizeMessagingLabel,
   toolRequiresExplicitApproval,
-} from "@rakazo/core";
-import { urlSite } from "@rakazo/core/egress";
+} from "@unibot/core";
+import { urlSite } from "@unibot/core/egress";
 
 export const MAX_APPROVAL_SUMMARY_LENGTH = 500;
 export const MAX_APPROVAL_DETAIL_LENGTH = 4_000;

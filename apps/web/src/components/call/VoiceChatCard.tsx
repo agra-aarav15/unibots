@@ -1,12 +1,12 @@
 import { useLingui } from "@lingui/react/macro";
-import type { VoiceChatGroup } from "@rakazo/core";
+import type { VoiceChatGroup } from "@unibot/core";
 import {
   callRequestBlock,
   speechFromBlocks,
   voiceChatDuration,
   voiceChatSummary,
-} from "@rakazo/core";
-import { Button, buttonVariants, Collapsible, CollapsibleContent, cn } from "@rakazo/ui-web";
+} from "@unibot/core";
+import { Button, buttonVariants, Collapsible, CollapsibleContent, cn } from "@unibot/ui-web";
 import { ChevronDown, Phone, PhoneIncoming, PhoneMissed } from "lucide-react";
 import { useState } from "react";
 import { CardShell } from "../ai/primitives";

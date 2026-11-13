@@ -1,4 +1,4 @@
-import { displayName } from "@rakazo/core";
+import { displayName } from "@unibot/core";
 import { Stack, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import { Alert, Platform, ScrollView, StyleSheet, Text, View } from "react-native";

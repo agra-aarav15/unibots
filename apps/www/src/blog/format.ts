@@ -1,4 +1,4 @@
-export const BLOG_AUTHOR = "Unibots contributors";
+export const BLOG_AUTHOR = "UniBot contributors";
 
 export function formatPostDate(value: Date): string {
   return new Intl.DateTimeFormat("en-US", {

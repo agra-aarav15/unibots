@@ -31,7 +31,7 @@ vi.mock("@lingui/react/macro", () => {
     parts.reduce((text, part, index) => text + part + String(values[index] ?? ""), "");
   return { useLingui: () => ({ t }), Trans: ({ children }: { children: ReactNode }) => children };
 });
-vi.mock("@rakazo/ui-web", () => {
+vi.mock("@unibot/ui-web", () => {
   const Box = ({ children }: { children?: ReactNode }) => <div>{children}</div>;
   return {
     Button: (props: ComponentProps<"button">) => <button type="button" {...props} />,

@@ -5,8 +5,8 @@
       "layers": [
         {
           "glass": false,
-          "image-name": "unibots-glyph.png",
-          "name": "unibots-glyph"
+          "image-name": "unibot-glyph.png",
+          "name": "unibot-glyph"
         }
       ],
       "position": {

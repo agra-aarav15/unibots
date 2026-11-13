@@ -1,5 +1,5 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import { Button, Input } from "@rakazo/ui-web";
+import { Button, Input } from "@unibot/ui-web";
 import { useEffect, useId, useState } from "react";
 import { SettingsGroup, SettingsRow } from "../components/SettingsRows";
 import { SpaceMembersPanel } from "./SpaceMembersPanel";

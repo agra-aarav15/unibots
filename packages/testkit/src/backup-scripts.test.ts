@@ -32,7 +32,7 @@ function write(file: string, content: string) {
 }
 
 function fixture() {
-  const root = mkdtempSync(path.join(os.tmpdir(), "rakazo-backup-"));
+  const root = mkdtempSync(path.join(os.tmpdir(), "unibot-backup-"));
   temporaryDirectories.push(root);
   const checkout = path.join(root, "checkout with spaces");
   const snapshots = path.join(root, "snapshots");
@@ -46,8 +46,8 @@ function fixture() {
     let source = readFileSync(path.join(repoRoot, script), "utf8");
     if (script.endsWith("backup-prod.sh")) {
       // Relocate only the fixed output directory: never write to real host backups.
-      expect(source).toContain('BACKUP_ROOT="/var/backups/rakazo"');
-      source = source.replace('BACKUP_ROOT="/var/backups/rakazo"', `BACKUP_ROOT="${snapshots}"`);
+      expect(source).toContain('BACKUP_ROOT="/var/backups/unibot"');
+      source = source.replace('BACKUP_ROOT="/var/backups/unibot"', `BACKUP_ROOT="${snapshots}"`);
     }
     write(path.join(checkout, script), source);
   }
@@ -441,7 +441,7 @@ describe("development backup failures", () => {
     const f = fixture();
     if (scenario === "skipped") write(path.join(f.checkout, "data/home.txt"), "example home");
     const result = f.run("scripts/backup.sh", ["example"], {
-      RAKAZO_BACKUP_SKIP_HOMES: scenario === "skipped" ? "1" : "0",
+      UNIBOT_BACKUP_SKIP_HOMES: scenario === "skipped" ? "1" : "0",
     });
     expect(result.status, result.stderr).toBe(0);
     expect(contents(path.join(f.checkout, "backups/example/homes.tgz"))).toBe("");
@@ -520,7 +520,7 @@ describe("development restore failures", () => {
       });
       expect(result.status).toBe(fail ? 3 : 0);
       const psql = f.commands().filter((args) => args.includes("psql"));
-      expect(psql[0]?.at(-1)).toContain("CREATE ROLE rakazo_app NOLOGIN");
+      expect(psql[0]?.at(-1)).toContain("CREATE ROLE unibot_app NOLOGIN");
       const command = psql.find((args) => args.includes("--single-transaction"));
       expect(command).toEqual(
         expect.arrayContaining([
@@ -669,7 +669,7 @@ PATH=/usr/bin:/bin exec mv "$@"
       rmSync(path.join(snapshot, "homes.tgz"));
     } else if (kind === "skipped") {
       expect(
-        f.run("scripts/backup.sh", ["example"], { RAKAZO_BACKUP_SKIP_HOMES: "1" }).status,
+        f.run("scripts/backup.sh", ["example"], { UNIBOT_BACKUP_SKIP_HOMES: "1" }).status,
       ).toBe(0);
     } else {
       const source = path.join(f.root, "empty-snapshot");
@@ -747,14 +747,14 @@ PATH=/usr/bin:/bin exec mv "$@"
 describe("production backup deployment and archive behavior", () => {
   it.each([false, true])("uses the configured deployment directory: %s", (custom) => {
     const f = fixture();
-    const deployment = custom ? f.checkout : "/srv/rakazo";
+    const deployment = custom ? f.checkout : "/srv/unibot";
     const result = f.run(
       "infra/compose/backup-prod.sh",
       [],
-      custom ? { RAKAZO_DEPLOY_DIR: deployment } : {},
+      custom ? { UNIBOT_DEPLOY_DIR: deployment } : {},
     );
     expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toContain("Verified Unibots backup");
+    expect(result.stdout).toContain("Verified UniBot backup");
     for (const command of f.commands().filter((args) => args[0] === "compose")) {
       expect(command.slice(0, 5)).toEqual([
         "compose",
@@ -768,7 +768,7 @@ describe("production backup deployment and archive behavior", () => {
 
   it("rejects relative deployment paths before any backup commands", () => {
     const f = fixture();
-    const result = f.run("infra/compose/backup-prod.sh", [], { RAKAZO_DEPLOY_DIR: "relative" });
+    const result = f.run("infra/compose/backup-prod.sh", [], { UNIBOT_DEPLOY_DIR: "relative" });
     expect(result.status).not.toBe(0);
     expect(result.stderr).toContain("absolute path");
     expect(f.commands()).toEqual([]);
@@ -780,7 +780,7 @@ describe("production backup deployment and archive behavior", () => {
     const result = f.run("infra/compose/backup-prod.sh", [], { CHANGED_TAR: "1" });
     expect(result.status, result.stderr).toBe(0);
     expect(result.stderr).toContain("file changed as we read it");
-    expect(result.stdout).toContain("Verified Unibots backup");
+    expect(result.stdout).toContain("Verified UniBot backup");
     const snapshot = result.stdout.trim().split("written to ")[1]!;
     expect(contents(path.join(snapshot, "appdata.tgz"))).toContain("home.txt");
     expect(existsSync(path.join(snapshot, "SHA256SUMS"))).toBe(true);
@@ -794,7 +794,7 @@ describe("production backup deployment and archive behavior", () => {
       const f = fixture();
       const result = f.run("infra/compose/backup-prod.sh", [], failure);
       expect(result.status).not.toBe(0);
-      expect(result.stdout).not.toContain("Verified Unibots backup");
+      expect(result.stdout).not.toContain("Verified UniBot backup");
       expect(snapshotNames(f.snapshots)).toEqual([]);
     },
   );
@@ -805,7 +805,7 @@ describe("production backup deployment and archive behavior", () => {
     for (const stamp of stamps) write(path.join(f.snapshots, stamp, "SHA256SUMS"), "sums");
     write(path.join(f.snapshots, "20261018T000000Z/appdata.tgz"), "partial");
     write(path.join(f.snapshots, "notes/keep.txt"), "not a snapshot");
-    const result = f.run("infra/compose/backup-prod.sh", [], { RAKAZO_BACKUP_KEEP: "2" });
+    const result = f.run("infra/compose/backup-prod.sh", [], { UNIBOT_BACKUP_KEEP: "2" });
     expect(result.status, result.stderr).toBe(0);
     const current = path.basename(result.stdout.trim().split("written to ")[1]!);
     expect(snapshotNames(f.snapshots).sort()).toEqual(
@@ -837,7 +837,7 @@ describe("production backup deployment and archive behavior", () => {
     const f = fixture();
     write(path.join(f.snapshots, "20261016T000000Z/SHA256SUMS"), "older");
     write(path.join(f.snapshots, "20261017T000000Z/SHA256SUMS"), "newest");
-    const result = f.run("infra/compose/backup-prod.sh", [], { RAKAZO_BACKUP_MAX_GB: "1" });
+    const result = f.run("infra/compose/backup-prod.sh", [], { UNIBOT_BACKUP_MAX_GB: "1" });
     expect(result.status).toBe(1);
     expect(result.stderr).toContain("Keeping the latest verified snapshot");
     expect(snapshotNames(f.snapshots)).toEqual(["20261017T000000Z"]);
@@ -849,7 +849,7 @@ describe("production backup deployment and archive behavior", () => {
     const mountpoint = path.join(f.root, "bin/mountpoint");
     write(mountpoint, "#!/bin/bash\nexit 1\n");
     chmodSync(mountpoint, 0o755);
-    const result = f.run("infra/compose/backup-prod.sh", [], { RAKAZO_BACKUP_REQUIRE_VOLUME: "1" });
+    const result = f.run("infra/compose/backup-prod.sh", [], { UNIBOT_BACKUP_REQUIRE_VOLUME: "1" });
     expect(result.status).toBe(1);
     expect(result.stderr).toContain("backup volume");
     expect(f.commands()).toEqual([]);
@@ -879,8 +879,8 @@ fi
     chmodSync(du, 0o755);
     const result = f.run("infra/compose/backup-prod.sh", [], {
       FAKE_RAW_KB: grown ? "20971520" : "10485760",
-      RAKAZO_BACKUP_MAX_GB: "3",
-      RAKAZO_BACKUP_MIN_FREE_GB: "1",
+      UNIBOT_BACKUP_MAX_GB: "3",
+      UNIBOT_BACKUP_MIN_FREE_GB: "1",
     });
     expect(result.status, result.stderr).toBe(grown ? 1 : 0);
     expect(existsSync(path.join(last, "SHA256SUMS"))).toBe(true);
@@ -908,11 +908,11 @@ echo "/dev/fake 104857600 0 $free 0% /"
       );
       chmodSync(df, 0o755);
       const result = f.run("infra/compose/backup-prod.sh", [], {
-        RAKAZO_BACKUP_MIN_FREE_GB: "1",
+        UNIBOT_BACKUP_MIN_FREE_GB: "1",
         ...(output === "dump" ? { OVERSIZE_DUMP: "1" } : { OVERSIZE_ARCHIVE: "1" }),
       });
       expect(result.status).not.toBe(0);
-      expect(result.stdout).not.toContain("Verified Unibots backup");
+      expect(result.stdout).not.toContain("Verified UniBot backup");
       expect(snapshotNames(f.snapshots)).toEqual(["20261017T000000Z"]);
       expect(readFileSync(path.join(last, "SHA256SUMS"), "utf8")).toBe("verified");
     },
@@ -959,7 +959,7 @@ exec /usr/bin/sync "$@"
       chmodSync(sync, 0o755);
       const result = f.run("infra/compose/backup-prod.sh");
       expect(result.status).not.toBe(0);
-      expect(result.stdout).not.toContain("Verified Unibots backup");
+      expect(result.stdout).not.toContain("Verified UniBot backup");
       expect(snapshotNames(f.snapshots)).toEqual(["20261017T000000Z"]);
     },
   );
@@ -1002,14 +1002,14 @@ exec /usr/bin/sync "$@"
       },
     );
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("Another Unibots backup is running");
+    expect(result.stderr).toContain("Another UniBot backup is running");
   });
 
   it("rejects a non-positive retention", () => {
     const f = fixture();
-    const result = f.run("infra/compose/backup-prod.sh", [], { RAKAZO_BACKUP_KEEP: "0" });
+    const result = f.run("infra/compose/backup-prod.sh", [], { UNIBOT_BACKUP_KEEP: "0" });
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("RAKAZO_BACKUP_KEEP");
+    expect(result.stderr).toContain("UNIBOT_BACKUP_KEEP");
   });
 
   it("warns that a backup without recipients is plaintext", () => {
@@ -1045,8 +1045,8 @@ describe("encrypted production backups", { timeout: 20_000 }, () => {
         "infra/compose/backup-prod.sh",
         [],
         fromFile
-          ? { RAKAZO_BACKUP_AGE_RECIPIENTS_FILE: file }
-          : { RAKAZO_BACKUP_AGE_RECIPIENTS: recipients },
+          ? { UNIBOT_BACKUP_AGE_RECIPIENTS_FILE: file }
+          : { UNIBOT_BACKUP_AGE_RECIPIENTS: recipients },
       );
       expect(result.status, result.stderr).toBe(0);
       expect(result.stderr).not.toContain("not encrypted");
@@ -1082,7 +1082,7 @@ describe("encrypted production backups", { timeout: 20_000 }, () => {
   it("fails the drill when a sealed file was altered", () => {
     const f = fixture();
     const result = f.run("infra/compose/backup-prod.sh", [], {
-      RAKAZO_BACKUP_AGE_RECIPIENTS: recipients,
+      UNIBOT_BACKUP_AGE_RECIPIENTS: recipients,
     });
     const snapshot = snapshotOf(result);
     write(path.join(snapshot, "appdata.tgz.age"), "age-encryption.org/v1\ntampered");
@@ -1092,8 +1092,8 @@ describe("encrypted production backups", { timeout: 20_000 }, () => {
   });
 
   it.each([
-    [{ RAKAZO_BACKUP_AGE_RECIPIENTS: "not-a-recipient" }, "age rejected"],
-    [{ RAKAZO_BACKUP_AGE_RECIPIENTS_FILE: "/nonexistent/recipients" }, "not a readable"],
+    [{ UNIBOT_BACKUP_AGE_RECIPIENTS: "not-a-recipient" }, "age rejected"],
+    [{ UNIBOT_BACKUP_AGE_RECIPIENTS_FILE: "/nonexistent/recipients" }, "not a readable"],
   ])("refuses broken recipient settings before any backup commands: %j", (settings, message) => {
     const f = fixture();
     const result = f.run("infra/compose/backup-prod.sh", [], settings);
@@ -1106,7 +1106,7 @@ describe("encrypted production backups", { timeout: 20_000 }, () => {
   it("refuses plaintext after encryption was configured unless explicitly allowed", () => {
     const f = fixture();
     const first = f.run("infra/compose/backup-prod.sh", [], {
-      RAKAZO_BACKUP_AGE_RECIPIENTS: recipients,
+      UNIBOT_BACKUP_AGE_RECIPIENTS: recipients,
     });
     expect(first.status, first.stderr).toBe(0);
     const before = snapshotNames(f.snapshots).sort();
@@ -1122,7 +1122,7 @@ describe("encrypted production backups", { timeout: 20_000 }, () => {
     write(path.join(f.root, "bin/date"), "#!/bin/bash\necho 20991231T000000Z\n");
     chmodSync(path.join(f.root, "bin/date"), 0o755);
     const allowed = f.run("infra/compose/backup-prod.sh", [], {
-      RAKAZO_BACKUP_ALLOW_PLAINTEXT: "1",
+      UNIBOT_BACKUP_ALLOW_PLAINTEXT: "1",
     });
     expect(allowed.status, allowed.stderr).toBe(0);
     expect(allowed.stderr).toContain("not encrypted");
@@ -1137,10 +1137,10 @@ describe("encrypted production backups", { timeout: 20_000 }, () => {
       `#!/bin/bash\n[[ "$*" != *" -o "* ]] || { cat >/dev/null; exit 1; }\n`,
     );
     const result = f.run("infra/compose/backup-prod.sh", [], {
-      RAKAZO_BACKUP_AGE_RECIPIENTS: recipients,
+      UNIBOT_BACKUP_AGE_RECIPIENTS: recipients,
     });
     expect(result.status).not.toBe(0);
-    expect(result.stdout).not.toContain("Verified Unibots backup");
+    expect(result.stdout).not.toContain("Verified UniBot backup");
     expect(snapshotNames(f.snapshots)).toEqual([]);
     expect(existsSync(path.join(f.snapshots, ".encrypted"))).toBe(false);
   });
@@ -1150,7 +1150,7 @@ describe("encrypted production backups", { timeout: 20_000 }, () => {
     (failure) => {
       const f = fixture();
       const result = f.run("infra/compose/backup-prod.sh", [], {
-        RAKAZO_BACKUP_AGE_RECIPIENTS: recipients,
+        UNIBOT_BACKUP_AGE_RECIPIENTS: recipients,
         ...failure,
       });
       expect(result.status).not.toBe(0);
@@ -1160,8 +1160,8 @@ describe("encrypted production backups", { timeout: 20_000 }, () => {
 });
 
 describe("off-site copies", { timeout: 20_000 }, () => {
-  const remote = "offsite:rakazo/";
-  const remoteDir = (f: ReturnType<typeof fixture>) => path.join(f.env.FAKE_REMOTE, "rakazo");
+  const remote = "offsite:unibot/";
+  const remoteDir = (f: ReturnType<typeof fixture>) => path.join(f.env.FAKE_REMOTE, "unibot");
   const rcloneCalls = (f: ReturnType<typeof fixture>) =>
     existsSync(f.env.RCLONE_LOG) ? readFileSync(f.env.RCLONE_LOG, "utf8").trim().split("\n") : [];
 
@@ -1172,13 +1172,13 @@ describe("off-site copies", { timeout: 20_000 }, () => {
     write(path.join(remoteDir(f), "20261017T000000Z/rakazo.dump.age"), "partial");
     write(path.join(remoteDir(f), "notes/keep.txt"), "not a snapshot");
     const result = f.run("infra/compose/backup-prod.sh", [], {
-      RAKAZO_BACKUP_AGE_RECIPIENTS: recipients,
-      RAKAZO_BACKUP_OFFSITE_REMOTE: remote,
-      RAKAZO_BACKUP_OFFSITE_KEEP: "2",
+      UNIBOT_BACKUP_AGE_RECIPIENTS: recipients,
+      UNIBOT_BACKUP_OFFSITE_REMOTE: remote,
+      UNIBOT_BACKUP_OFFSITE_KEEP: "2",
     });
     expect(result.status, result.stderr).toBe(0);
     const stamp = path.basename(snapshotOf(result));
-    expect(result.stdout).toContain(`Copied to offsite:rakazo/${stamp}`);
+    expect(result.stdout).toContain(`Copied to offsite:unibot/${stamp}`);
     expect(readdirSync(path.join(remoteDir(f), stamp)).sort()).toEqual(
       readdirSync(snapshotOf(result)).sort(),
     );
@@ -1192,9 +1192,9 @@ describe("off-site copies", { timeout: 20_000 }, () => {
     const f = fixture();
     write(path.join(remoteDir(f), "20261014T000000Z/SHA256SUMS"), "sums");
     const result = f.run("infra/compose/backup-prod.sh", [], {
-      RAKAZO_BACKUP_AGE_RECIPIENTS: recipients,
-      RAKAZO_BACKUP_OFFSITE_REMOTE: remote,
-      RAKAZO_BACKUP_OFFSITE_KEEP: "0",
+      UNIBOT_BACKUP_AGE_RECIPIENTS: recipients,
+      UNIBOT_BACKUP_OFFSITE_REMOTE: remote,
+      UNIBOT_BACKUP_OFFSITE_KEEP: "0",
     });
     expect(result.status, result.stderr).toBe(0);
     expect(existsSync(path.join(remoteDir(f), "20261014T000000Z"))).toBe(true);
@@ -1204,16 +1204,16 @@ describe("off-site copies", { timeout: 20_000 }, () => {
   it.each([
     [{ FAIL_RCLONE: "copy" }, "upload"],
     [{ FAIL_RCLONE: "check" }, "verification"],
-    [{ RAKAZO_BACKUP_AGE_RECIPIENTS: "" }, "off-site copies require RAKAZO_BACKUP_AGE_RECIPIENTS"],
+    [{ UNIBOT_BACKUP_AGE_RECIPIENTS: "" }, "off-site copies require UNIBOT_BACKUP_AGE_RECIPIENTS"],
   ])("keeps the verified local snapshot but fails the run: %j", (settings, message) => {
     const f = fixture();
     const result = f.run("infra/compose/backup-prod.sh", [], {
-      RAKAZO_BACKUP_AGE_RECIPIENTS: recipients,
-      RAKAZO_BACKUP_OFFSITE_REMOTE: remote,
+      UNIBOT_BACKUP_AGE_RECIPIENTS: recipients,
+      UNIBOT_BACKUP_OFFSITE_REMOTE: remote,
       ...settings,
     });
     expect(result.status).toBe(1);
-    expect(result.stdout).toContain("Verified Unibots backup");
+    expect(result.stdout).toContain("Verified UniBot backup");
     expect(result.stderr).toContain(`Off-site copy failed: ${message}`);
     expect(existsSync(path.join(snapshotOf(result), "SHA256SUMS"))).toBe(true);
     if (message.includes("require")) expect(rcloneCalls(f)).toEqual([]);
@@ -1224,9 +1224,9 @@ describe("off-site copies", { timeout: 20_000 }, () => {
 
   it.each(["-1", "08"])("rejects an invalid off-site retention: %s", (keep) => {
     const f = fixture();
-    const result = f.run("infra/compose/backup-prod.sh", [], { RAKAZO_BACKUP_OFFSITE_KEEP: keep });
+    const result = f.run("infra/compose/backup-prod.sh", [], { UNIBOT_BACKUP_OFFSITE_KEEP: keep });
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("RAKAZO_BACKUP_OFFSITE_KEEP");
+    expect(result.stderr).toContain("UNIBOT_BACKUP_OFFSITE_KEEP");
   });
 });
 
@@ -1253,7 +1253,7 @@ describe.skipIf(!realAge)("encrypted production backups with real age", { timeou
     const PATH = `${tools}${path.delimiter}${f.env.PATH}`;
     const result = f.run("infra/compose/backup-prod.sh", [], {
       PATH,
-      RAKAZO_BACKUP_AGE_RECIPIENTS: recipient,
+      UNIBOT_BACKUP_AGE_RECIPIENTS: recipient,
     });
     expect(result.status, result.stderr).toBe(0);
     const snapshot = snapshotOf(result);

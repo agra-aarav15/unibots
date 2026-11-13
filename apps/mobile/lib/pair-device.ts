@@ -1,4 +1,4 @@
-import { isLoopbackHost, isPrivateNetworkHost } from "@rakazo/contracts";
+import { isLoopbackHost, isPrivateNetworkHost } from "@unibot/contracts";
 import { clearSpace, normalizeApiBase, saveApiBase } from "./api";
 import { saveSessionToken } from "./session";
 import { errorText } from "./user-error";
@@ -49,7 +49,7 @@ export async function pairWithComputer(input: {
   try {
     response = await fetch(`${normalized.url}/rpc/device/pair`, {
       method: "POST",
-      headers: { "content-type": "application/json", origin: "rakazo://" },
+      headers: { "content-type": "application/json", origin: "unibot://" },
       body: JSON.stringify({
         json: {
           code: input.code.trim(),

@@ -1,7 +1,7 @@
 import { unlink, writeFile } from "node:fs/promises";
-import { getLogger, logSinkHealth } from "@rakazo/logging";
+import { getLogger, logSinkHealth } from "@unibot/logging";
 
-export const WORKER_HEALTH_FILE = "/tmp/rakazo-worker-health.json";
+export const WORKER_HEALTH_FILE = "/tmp/unibot-worker-health.json";
 
 /** A separate Docker process can detect a dead or blocked worker even when it cannot log. */
 export function startWorkerHealth(lastReconciled: () => number) {

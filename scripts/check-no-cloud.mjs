@@ -12,6 +12,13 @@ import { fileURLToPath } from "node:url";
  * class of mistake as the hosted service returning.
  */
 export const FORBIDDEN = [
+  "UniBot Cloud",
+  "UNIBOT_CLOUD_URL",
+  "app.unibot.example",
+  /*
+   * The names this build replaced, kept here so a merge or a copy-paste cannot bring the hosted
+   * service — or the old product identity — back with it.
+   */
   "Unibots Cloud",
   "UNIBOTS_CLOUD_URL",
   "app.unibots.example",

@@ -5,8 +5,9 @@ import type {
   ModelHeaderRow,
   SettingsScope,
   ThinkingLevel,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import {
+  CLI_PROVIDER_ID,
   DEFAULT_MODEL_CONTEXT_WINDOW,
   isCloudflareModelProvider,
   ModelHeaderRowsSchema,
@@ -17,7 +18,7 @@ import {
   parseModelMaxImagesPerPrompt,
   parseModelMaxTokens,
   savedCompatibleEndpointMatches,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import {
   COMPATIBLE_THINKING_LEVELS,
   clampCatalogThinkingLevel,
@@ -32,6 +33,9 @@ type DefaultModel = { defaultProvider: string | null; defaultModel: string | nul
 export type ConnectionFormFields = {
   enabledModelIds: string[];
   baseUrl: string;
+  /** Command-line connections: the command template that answers prompts. */
+  command: string;
+  cwd: string;
   reasoning: boolean;
   thinkingLevel: ThinkingLevel | null;
   maxTokens: string;
@@ -42,10 +46,16 @@ export type ConnectionFormFields = {
   gatewayId: string;
 };
 
+/** Connections whose own form supplies the endpoint, rather than a catalog. */
+function describedByForm(provider: string): boolean {
+  return provider === OPENAI_COMPATIBLE_PROVIDER_ID || provider === CLI_PROVIDER_ID;
+}
+
 /**
- * The model a connection form opens on. An OpenAI-compatible connection keeps its own model, so
- * a new one starts empty rather than borrowing another server's. A catalog provider keeps the
- * model on screen while the catalog still lists it, else the connection's, else the default's.
+ * The model a connection form opens on. A connection that supplies its own endpoint keeps its own
+ * model, so a new one starts empty rather than borrowing another server's. A catalog provider
+ * keeps the model on screen while the catalog still lists it, else the connection's, else the
+ * default's.
  */
 export function connectionFormModelId(input: {
   catalog: readonly CatalogModel[];
@@ -55,7 +65,9 @@ export function connectionFormModelId(input: {
   current?: string;
 }): string {
   const { catalog, provider, credential, defaults, current } = input;
-  if (provider === OPENAI_COMPATIBLE_PROVIDER_ID) return credential?.modelId ?? "";
+  // A command connection's name is free-form; "cli" saves typing and is only a label.
+  if (provider === CLI_PROVIDER_ID) return credential?.modelId ?? "cli";
+  if (describedByForm(provider)) return credential?.modelId ?? "";
   return (
     catalog.find((entry) => entry.provider === provider && entry.id === current)?.id ??
     pickCatalogModelId(
@@ -80,6 +92,8 @@ export function connectionFormFields(input: {
     | "modelId"
     | "enabledModelIds"
     | "baseUrl"
+    | "command"
+    | "cwd"
     | "reasoning"
     | "thinkingLevel"
     | "maxTokens"
@@ -94,6 +108,7 @@ export function connectionFormFields(input: {
 }): ConnectionFormFields {
   const { catalog, provider, modelId, credential, presetBaseUrl } = input;
   const compatible = provider === OPENAI_COMPATIBLE_PROVIDER_ID;
+  const cli = provider === CLI_PROVIDER_ID;
   const supportedThinking = compatible
     ? credential?.reasoning
       ? COMPATIBLE_THINKING_LEVELS
@@ -102,6 +117,8 @@ export function connectionFormFields(input: {
   return {
     enabledModelIds: credential?.enabledModelIds ?? [],
     baseUrl: compatible ? (credential?.baseUrl ?? presetBaseUrl ?? "") : "",
+    command: cli ? (credential?.command ?? "") : "",
+    cwd: cli ? (credential?.cwd ?? "") : "",
     reasoning: credential?.reasoning ?? false,
     thinkingLevel: clampCatalogThinkingLevel(
       credential?.modelId === modelId ? credential.thinkingLevel : null,
@@ -145,6 +162,11 @@ export type ConnectionFormDraft = Omit<ConnectionFormFields, "enabledModelIds"> 
   headerRows: ModelHeaderRow[] | null;
 };
 
+/** A command connection needs a command to run and the model id it answers as. */
+export function cliConnectionReady(input: { command: string; modelId: string }): boolean {
+  return input.command.trim().length > 0 && input.modelId.trim().length > 0;
+}
+
 /** A field whose number is out of range; each app words the message. */
 export type ConnectionFormInvalidField = "maxTokens" | "maxImagesPerPrompt" | "contextWindow";
 
@@ -174,11 +196,37 @@ export function modelConnectRequest(input: {
 }): ModelConnectRequest {
   const { form, selected, credential, credentialId, settingsOnly = false, makeDefault } = input;
   const compatible = selected.provider === OPENAI_COMPATIBLE_PROVIDER_ID;
+  const cli = selected.provider === CLI_PROVIDER_ID;
   const baseUrl = form.baseUrl.trim();
   const modelId = form.modelId.trim();
   const newKey = settingsOnly ? "" : form.apiKey.trim();
-  const savingLimitOnly = !compatible && !newKey;
-  const activeModelId = compatible ? modelId : selected.id;
+  const savingLimitOnly = !compatible && !cli && !newKey;
+  const activeModelId = compatible || cli ? modelId : selected.id;
+  if (cli) {
+    if (!form.command.trim() || !modelId) return { status: "incomplete" };
+    const cliMaxTokens = form.maxTokens.trim() ? parseModelMaxTokens(form.maxTokens) : undefined;
+    if (form.maxTokens.trim() && cliMaxTokens === undefined) {
+      return { status: "invalid", field: "maxTokens" };
+    }
+    const cliContextWindow = parseModelContextWindow(form.contextWindow);
+    if (cliContextWindow === undefined) return { status: "invalid", field: "contextWindow" };
+    return {
+      status: "ready",
+      savingLimitOnly: false,
+      activeModelId,
+      input: {
+        provider: selected.provider,
+        command: form.command.trim(),
+        ...(form.cwd.trim() ? { cwd: form.cwd.trim() } : {}),
+        modelId,
+        ...(cliMaxTokens !== undefined ? { maxTokens: cliMaxTokens } : {}),
+        contextWindow: cliContextWindow,
+        ...makeDefault,
+        label: selected.providerName ?? selected.provider,
+        credentialId,
+      },
+    };
+  }
   if (compatible) {
     if (!baseUrl || !modelId) return { status: "incomplete" };
   } else if (savingLimitOnly) {

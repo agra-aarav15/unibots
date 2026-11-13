@@ -1,13 +1,13 @@
 ---
 title: "How to self-host an AI agent in 10 minutes"
-description: "Install Unibots with the published Docker images, create an account, connect a model, and keep the database on your machine. Image pulls vary, and a public server takes longer."
+description: "Install UniBot with the published Docker images, create an account, connect a model, and keep the database on your machine. Image pulls vary, and a public server takes longer."
 published: "2026-10-07"
 updated: "2026-10-07"
-author: "Unibots contributors"
+author: "UniBot contributors"
 category: "guides"
 tldr: "The published-image installer is a short script: Docker, Compose, curl, and OpenSSL, then an account and a model. Pull time depends on your connection. A public hostname, TLS, and a secrets review are a longer job than the first local chat."
 sources:
-  - label: "Unibots self-hosting guide"
+  - label: "UniBot self-hosting guide"
     href: "https://github.com/agra-aarav15/unibots/blob/main/docs/self-host.md"
   - label: "Self-hosted AI agent"
     href: "https://github.com/agra-aarav15/unibots"
@@ -19,12 +19,12 @@ related:
     description: "The same install, with the server and source paths."
   - href: "/openclaw-alternative/"
     title: "Open source OpenClaw alternative"
-    description: "How Unibots's chat compares with OpenClaw's gateway."
+    description: "How UniBot's chat compares with OpenClaw's gateway."
   - href: "/hermes-alternative/"
     title: "Open source Hermes alternative"
-    description: "Desktop and CLI setup next to Unibots's installer."
-  - href: "/blog/openclaw-vs-hermes-vs-unibots/"
-    title: "OpenClaw vs Hermes Agent vs Unibots"
+    description: "Desktop and CLI setup next to UniBot's installer."
+  - href: "/blog/openclaw-vs-hermes-vs-unibot/"
+    title: "OpenClaw vs Hermes Agent vs UniBot"
     description: "Which shape is simplest depends on the product you want."
   - href: "/alternatives/"
     title: "Open source alternatives"
@@ -57,23 +57,23 @@ comparison:
         - "Publishing port 3100. The web server proxies /api."
     - topic: "Source checkout"
       cells:
-        - "Clone, env, Postgres, and the dev commands when you are changing Unibots."
+        - "Clone, env, Postgres, and the dev commands when you are changing UniBot."
         - "Required for running the published images."
 ---
 
-The title is the shape of the local install, not a stopwatch result. Unibots's published images start from one script. Docker then downloads the images, and that download is the part that varies. When the app is up, you create an account, connect a model, and the first chat is the product. A hostname on the public internet, TLS, and a review of secrets are a separate piece of work.
+The title is the shape of the local install, not a stopwatch result. UniBot's published images start from one script. Docker then downloads the images, and that download is the part that varies. When the app is up, you create an account, connect a model, and the first chat is the product. A hostname on the public internet, TLS, and a review of secrets are a separate piece of work.
 
 This page follows the [self-hosting guide](https://github.com/agra-aarav15/unibots/blob/main/docs/self-host.md) and the [self-hosted AI agent page](/self-hosted-ai-agent/). Those stay the reference if a command changes.
 
 ## What you are running
 
-A signed-in Unibots deployment is not a static site. The guide describes a long-running API, a Graphile Worker, Postgres, and a computer provider. The computer defaults to Docker. E2B, Daytona, CreateOS, and Boat are optional remote computers, each with its own API key. The web app, the Electron desktop app, and the Expo mobile app are clients of that API.
+A signed-in UniBot deployment is not a static site. The guide describes a long-running API, a Graphile Worker, Postgres, and a computer provider. The computer defaults to Docker. E2B, Daytona, CreateOS, and Boat are optional remote computers, each with its own API key. The web app, the Electron desktop app, and the Expo mobile app are clients of that API.
 
 Postgres, bot files, browser profiles, and the audit log stay on the machine you operate. Content you send to a model provider is processed by that provider under its terms. You choose the provider and the keys. There is no seat fee for the open source software. You pay the model provider and any remote computer you turn on.
 
 <figure class="post-figure">
-  <img src="/graphics/architecture.svg" width="1200" height="720" alt="Diagram of a Unibots deployment. Web, desktop, and mobile clients talk to an API. A worker and Postgres sit beside it. The computer defaults to Docker, with E2B, Daytona, CreateOS, or Boat optional. Model prompts go to the provider you configure." />
-  <figcaption>A Unibots deployment. Postgres, bot files, and the audit log stay on the machine you run. Prompts still go to the model provider you choose.</figcaption>
+  <img src="/graphics/architecture.svg" width="1200" height="720" alt="Diagram of a UniBot deployment. Web, desktop, and mobile clients talk to an API. A worker and Postgres sit beside it. The computer defaults to Docker, with E2B, Daytona, CreateOS, or Boat optional. Model prompts go to the provider you configure." />
+  <figcaption>A UniBot deployment. Postgres, bot files, and the audit log stay on the machine you run. Prompts still go to the model provider you choose.</figcaption>
 </figure>
 
 The software is Apache-2.0.
@@ -82,19 +82,19 @@ The software is Apache-2.0.
 
 For published images, the guide asks for Docker Engine 26 or newer, because bot home volumes use API 1.45 subpaths. You also need the Compose plugin, curl, and OpenSSL. You do not install Node.js for this path.
 
-A source checkout is different. It wants Node.js 22.22.2 or newer on the 22.x line, Node.js 24.x, or Node.js 26 or newer, plus pnpm 9 and Docker. Node.js 23.x and 25.x are not supported. Use that path when you are developing Unibots. It is not required to run the published images.
+A source checkout is different. It wants Node.js 22.22.2 or newer on the 22.x line, Node.js 24.x, or Node.js 26 or newer, plus pnpm 9 and Docker. Node.js 23.x and 25.x are not supported. Use that path when you are developing UniBot. It is not required to run the published images.
 
 ## Install the published images
 
-From an empty directory on the machine that should run Unibots:
+From an empty directory on the machine that should run UniBot:
 
 ```bash
-mkdir -p unibots && cd unibots &&
+mkdir -p unibot && cd unibot &&
 curl -fsSLO https://raw.githubusercontent.com/agra-aarav15/unibots/main/infra/compose/install-images.sh &&
 bash install-images.sh
 ```
 
-The installer downloads the Compose file and `.env.images.example`, creates `.env` with random secrets, and starts Unibots. Run it again and it keeps an existing `.env`. The default image tag is `edge`, which tracks builds from the main branch for `linux/amd64` and `linux/arm64`. Do not assume a `latest` tag until a stable release exists.
+The installer downloads the Compose file and `.env.images.example`, creates `.env` with random secrets, and starts UniBot. Run it again and it keeps an existing `.env`. The default image tag is `edge`, which tracks builds from the main branch for `linux/amd64` and `linux/arm64`. Do not assume a `latest` tag until a stable release exists.
 
 If you want to set the public URL, the image tag, or an optional provider before the first start, run `bash install-images.sh --prepare-only`, edit `.env`, then run `bash install-images.sh` again. The flags `--prepare-only` and `--local` can be combined.
 
@@ -109,7 +109,7 @@ The image pull is the variable part. A fast link and a warm cache finish sooner 
 After the account exists, the product is chat. A new bot asks for a name, a title, and a description, and you pick whether it shares the team computer or gets a private one. The form below is the real create-bot screen, filled with demo data. Nothing in the shot is a customer account.
 
 <figure class="post-figure">
-  <img src="/graphics/chat/create-bot.png" width="1200" height="800" alt="The new bot form in Unibots, filled with a demo bot named Inbox." />
+  <img src="/graphics/chat/create-bot.png" width="1200" height="800" alt="The new bot form in UniBot, filled with a demo bot named Inbox." />
   <figcaption>Creating a bot. The name, title, and description are demo data.</figcaption>
 </figure>
 
@@ -148,13 +148,13 @@ An approval is a card in the thread. The bot states the action, shows the detail
   <figcaption>The bot stops on the card. The audit log records the action.</figcaption>
 </figure>
 
-Optional connectors can attach Slack, WhatsApp, Telegram, iMessage via Sendblue, and Feishu/Lark. They are extras. Chat in the Unibots apps does not require them.
+Optional connectors can attach Slack, WhatsApp, Telegram, iMessage via Sendblue, and Feishu/Lark. They are extras. Chat in the UniBot apps does not require them.
 
 ## When the machine is a server
 
 Use the same installer on a VPS when bots should keep running after you close a laptop. Images Compose binds the web app to loopback `127.0.0.1:5173`. Terminate TLS on the host and proxy there. Do not publish port 3100. The web server proxies `/api`.
 
-Set `RAKAZO_HOST` to the hostname. Set `BETTER_AUTH_URL`, `WEB_ORIGIN`, and `API_URL` to that same `https://` origin. For a remote computer instead of local Docker, set `SANDBOX_PROVIDER` to `e2b`, `daytona`, `createos`, or `boat` and add that provider's key.
+Set `UNIBOT_HOST` to the hostname. Set `BETTER_AUTH_URL`, `WEB_ORIGIN`, and `API_URL` to that same `https://` origin. For a remote computer instead of local Docker, set `SANDBOX_PROVIDER` to `e2b`, `daytona`, `createos`, or `boat` and add that provider's key.
 
 A minimal Caddy site is a reverse proxy to `127.0.0.1:5173`. Replace the example host with yours. Desktop clients should use **Existing instance** with the `https://` address. HTTP is accepted only for loopback and private LAN addresses. **This computer** in the desktop app installs the published images with Docker Compose on that machine, on port 45173 by default so it can sit next to a dev server.
 
@@ -168,7 +168,7 @@ Clone the repository, copy `.env.example` to `.env`, and set `POSTGRES_PASSWORD`
 
 For host-side development with Docker Desktop, set `SANDBOX_CONTROL_VIA_LOOPBACK=true` so the supervisor publishes its control service on a loopback port. Leave that unset when the supervisor runs inside Compose. `docker compose down -v` deletes Postgres data.
 
-The published images are enough to run Unibots. The source path is for changing it.
+The published images are enough to run UniBot. The source path is for changing it.
 
 ## What to skip on the first afternoon
 
@@ -180,6 +180,6 @@ The desktop app's **This computer** option is the same published images, started
 
 ## How this sits next to other agents
 
-OpenClaw and Hermes Agent are also open source and can run on hardware you control. Their install docs describe a gateway or a desktop app and a CLI, plus config files under a home directory. Unibots's published-image path is the script above, then chat. The [comparison of those three](/blog/openclaw-vs-hermes-vs-unibots/) is about that difference in shape, not a race.
+OpenClaw and Hermes Agent are also open source and can run on hardware you control. Their install docs describe a gateway or a desktop app and a CLI, plus config files under a home directory. UniBot's published-image path is the script above, then chat. The [comparison of those three](/blog/openclaw-vs-hermes-vs-unibot/) is about that difference in shape, not a race.
 
 If the first chat on loopback is the goal, stay on the published images, create the owner account, and connect one model. If the goal is a public URL, budget time for TLS and the secrets checklist after the installer finishes.

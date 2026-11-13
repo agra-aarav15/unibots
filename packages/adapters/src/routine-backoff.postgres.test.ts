@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
-import type { PrismaClient } from "@rakazo/db";
-import { asSystem, createDb, provisionMessagingIdentity, runAsSystem } from "@rakazo/db";
+import type { PrismaClient } from "@unibot/db";
+import { asSystem, createDb, provisionMessagingIdentity, runAsSystem } from "@unibot/db";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import {
   backOffRoutineAfterAccountError,

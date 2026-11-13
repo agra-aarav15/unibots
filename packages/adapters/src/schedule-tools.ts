@@ -1,7 +1,7 @@
-import type { ConnectorProvider, JobPublisher } from "@rakazo/adapter-kit";
-import { routineJobKey, routineWakeupJob } from "@rakazo/adapter-kit";
-import type { RoutineWatch } from "@rakazo/contracts";
-import { RoutineWatchSchema, TimeZoneSchema } from "@rakazo/contracts";
+import type { ConnectorProvider, JobPublisher } from "@unibot/adapter-kit";
+import { routineJobKey, routineWakeupJob } from "@unibot/adapter-kit";
+import type { RoutineWatch } from "@unibot/contracts";
+import { RoutineWatchSchema, TimeZoneSchema } from "@unibot/contracts";
 import {
   cronFromPreset,
   formatCron,
@@ -13,8 +13,8 @@ import {
   unevenInterval,
   wallClock,
   zonedDateTime,
-} from "@rakazo/core";
-import type { Prisma, PrismaClient, ThreadEvents } from "@rakazo/db";
+} from "@unibot/core";
+import type { Prisma, PrismaClient, ThreadEvents } from "@unibot/db";
 
 import { localDateTime } from "./current-time.js";
 import { validateRoutineWatch } from "./routine-watch.js";

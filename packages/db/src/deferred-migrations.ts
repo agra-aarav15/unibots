@@ -65,7 +65,7 @@ export async function deployMigrations(input: {
   const held = await heldBackMigrations(input.migrationUrl, migrationsDir);
   let migrationsPath = migrationsDir;
   if (held.length) {
-    migrationsPath = mkdtempSync(path.join(tmpdir(), "rakazo-migrations-"));
+    migrationsPath = mkdtempSync(path.join(tmpdir(), "unibot-migrations-"));
     cpSync(migrationsDir, migrationsPath, {
       recursive: true,
       filter: (source) => !held.includes(path.relative(migrationsDir, source).split(path.sep)[0]!),
@@ -80,7 +80,7 @@ export async function deployMigrations(input: {
       env: {
         ...process.env,
         DATABASE_MIGRATION_URL: input.migrationUrl,
-        RAKAZO_MIGRATIONS_PATH: migrationsPath,
+        UNIBOT_MIGRATIONS_PATH: migrationsPath,
       },
     });
   } finally {

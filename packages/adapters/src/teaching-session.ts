@@ -4,21 +4,21 @@ import type {
   ControlLeaseRef,
   JobPublisher,
   SandboxProvider,
-} from "@rakazo/adapter-kit";
-import { computerControlExpireJobKey, skillTeachingExpireJobKey } from "@rakazo/adapter-kit";
-import type { Actor, MessageBlock, TaughtSkill } from "@rakazo/contracts";
-import type { SkillPlaybook, TeachRecordingEvent, TeachSnapshot } from "@rakazo/core";
+} from "@unibot/adapter-kit";
+import { computerControlExpireJobKey, skillTeachingExpireJobKey } from "@unibot/adapter-kit";
+import type { Actor, MessageBlock, TaughtSkill } from "@unibot/contracts";
+import type { SkillPlaybook, TeachRecordingEvent, TeachSnapshot } from "@unibot/core";
 import {
   buildPlaybookFromRecording,
   computerInputForDomKey,
   sanitizeTeachRecordingEvent,
-} from "@rakazo/core";
-import type { Prisma, PrismaClient, ThreadEvents } from "@rakazo/db";
+} from "@unibot/core";
+import type { Prisma, PrismaClient, ThreadEvents } from "@unibot/db";
 import {
   appendEventInTransaction,
   createThreadMessageInTransaction,
   IsolationError,
-} from "@rakazo/db";
+} from "@unibot/db";
 import { revokeScreenControl } from "./computer-control.js";
 import { scheduleComputerSleep } from "./computer-idle.js";
 import { toComputerRef } from "./computer-support.js";

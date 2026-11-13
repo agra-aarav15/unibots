@@ -1,8 +1,8 @@
 /** @jsxRuntime automatic */
-import type { TransactionalEmail } from "@rakazo/adapter-kit";
-import { ANDROID_APK_URL } from "@rakazo/contracts";
-import { displayName } from "@rakazo/core";
-import { lightTokens } from "@rakazo/ui-tokens";
+import type { TransactionalEmail } from "@unibot/adapter-kit";
+import { ANDROID_APK_URL } from "@unibot/contracts";
+import { displayName } from "@unibot/core";
+import { lightTokens } from "@unibot/ui-tokens";
 import { Hr, Link, Text } from "react-email";
 import { linkStyle, message } from "./email.js";
 
@@ -20,12 +20,12 @@ export function welcomeEmail(
 ): Promise<TransactionalEmail> {
   return message(
     user.email,
-    "Welcome to Unibots",
+    "Welcome to UniBot",
     <>
       <Text>Hi {displayName(user.name, "there")},</Text>
-      <Text>Thanks for signing up for Unibots.</Text>
+      <Text>Thanks for signing up for UniBot.</Text>
       <Text>
-        Unibots also has apps for{" "}
+        UniBot also has apps for{" "}
         {APPS.map(([name, href], index) => (
           <span key={name}>
             {index === APPS.length - 1 ? "and " : ""}
@@ -44,7 +44,7 @@ export function welcomeEmail(
         .
       </Text>
       <Text>
-        Unibots is open source. If you like it,{" "}
+        UniBot is open source. If you like it,{" "}
         <Link href="https://github.com/agra-aarav15/unibots" style={linkStyle}>
           a star on GitHub
         </Link>{" "}
@@ -56,12 +56,12 @@ export function welcomeEmail(
           href="https://github.com/agra-aarav15/unibots/blob/main/docs/self-host.md"
           style={linkStyle}
         >
-          Self-host Unibots
+          Self-host UniBot
         </Link>
         .
       </Text>
       <Text>Have any questions? Reply to this email.</Text>
-      <Text>The Unibots project</Text>
+      <Text>The UniBot project</Text>
       <Hr style={{ borderColor: lightTokens.border, marginTop: "32px" }} />
       <Text style={{ color: lightTokens.mutedForeground, fontSize: "12px" }}>
         <Link href={unsubscribeUrl} style={{ color: lightTokens.mutedForeground }}>

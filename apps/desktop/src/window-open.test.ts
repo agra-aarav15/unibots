@@ -15,11 +15,11 @@ describe("desktop child windows", () => {
   });
 
   it.each([
-    "rakazo-model-oauth",
-    "rakazo-mcp-oauth",
-    "rakazo-sso-oauth",
-    "rakazo-app-connect",
-    "rakazo-plugin-connect",
+    "unibot-model-oauth",
+    "unibot-mcp-oauth",
+    "unibot-sso-oauth",
+    "unibot-app-connect",
+    "unibot-plugin-connect",
   ])("keeps the intentional %s flow in an Electron popup", (frameName) => {
     expect(
       shouldOpenInAppPopup(appOrigin, "https://provider.example.com/authorize", frameName),
@@ -27,9 +27,9 @@ describe("desktop child windows", () => {
   });
 
   it("rejects malformed URLs and non-HTTPS third-party targets", () => {
-    expect(shouldOpenInAppPopup(appOrigin, "not a url", "rakazo-model-oauth")).toBe(false);
+    expect(shouldOpenInAppPopup(appOrigin, "not a url", "unibot-model-oauth")).toBe(false);
     expect(
-      shouldOpenInAppPopup(appOrigin, "http://provider.example.com", "rakazo-model-oauth"),
+      shouldOpenInAppPopup(appOrigin, "http://provider.example.com", "unibot-model-oauth"),
     ).toBe(false);
   });
 });
@@ -43,14 +43,14 @@ it("keeps SSO popups sandboxed in the parent session without a privileged preloa
     sandbox: true,
   });
   expect(oauthPopupSessionPreferences(null)).not.toHaveProperty("partition");
-  expect(shouldOpenInAppPopup(appOrigin, "http://provider.example.com", "rakazo-sso-oauth")).toBe(
+  expect(shouldOpenInAppPopup(appOrigin, "http://provider.example.com", "unibot-sso-oauth")).toBe(
     false,
   );
 });
 
 it("allows only the named SSO blank popup before provider navigation", () => {
-  expect(shouldOpenInAppPopup(appOrigin, "about:blank", "rakazo-sso-oauth")).toBe(true);
-  for (const name of ["_blank", "rakazo-mcp-oauth", ""])
+  expect(shouldOpenInAppPopup(appOrigin, "about:blank", "unibot-sso-oauth")).toBe(true);
+  for (const name of ["_blank", "unibot-mcp-oauth", ""])
     expect(shouldOpenInAppPopup(appOrigin, "about:blank", name)).toBe(false);
-  expect(shouldOpenInAppPopup(appOrigin, "about:blank#unsafe", "rakazo-sso-oauth")).toBe(false);
+  expect(shouldOpenInAppPopup(appOrigin, "about:blank#unsafe", "unibot-sso-oauth")).toBe(false);
 });

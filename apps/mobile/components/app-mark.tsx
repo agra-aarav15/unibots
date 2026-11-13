@@ -29,13 +29,13 @@ function createAppMarkStyles() {
       borderRadius: MARK / 2,
       overflow: "hidden",
       alignSelf: "center",
+      alignItems: "center",
+      justifyContent: "center",
     },
     image: {
-      position: "absolute",
-      width: 1024 * SCALE,
-      height: 1024 * SCALE,
-      left: -CROP.x * SCALE,
-      top: -CROP.y * SCALE,
+      width: MARK * 0.8,
+      height: MARK * 0.8,
+      resizeMode: "contain",
       tintColor: native.label,
     },
   });

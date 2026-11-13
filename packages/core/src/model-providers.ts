@@ -1,12 +1,13 @@
-import type { ModelCatalogEntry } from "@rakazo/contracts";
+import type { ModelCatalogEntry } from "@unibot/contracts";
 import {
   canonicalPiProviderId,
+  CLI_PROVIDER_ID,
   DEFAULT_MODEL_MAX_TOKENS,
   normalizeOpenAiCompatibleBaseUrl,
   OPENAI_COMPATIBLE_PROVIDER_ID,
   selectCompatibleModelCredential,
   withConnectionName,
-} from "@rakazo/contracts";
+} from "@unibot/contracts";
 import { matchesSearchQuery } from "./search.js";
 
 /** Effort choices an OpenAI-compatible endpoint stores when reasoning is enabled. */
@@ -26,7 +27,7 @@ const THINKING_LEVELS = ["off", ...COMPATIBLE_THINKING_LEVELS] as const;
  * an unsaved one shows the default it would get; catalog providers leave it blank to use theirs.
  */
 export function connectionMaxTokensField(providerId: string, stored: number | undefined): string {
-  if (providerId === OPENAI_COMPATIBLE_PROVIDER_ID) {
+  if (providerId === OPENAI_COMPATIBLE_PROVIDER_ID || providerId === CLI_PROVIDER_ID) {
     return String(stored ?? DEFAULT_MODEL_MAX_TOKENS);
   }
   return stored !== undefined ? String(stored) : "";

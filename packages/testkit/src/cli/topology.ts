@@ -1,14 +1,14 @@
 import { spawnSync } from "node:child_process";
 import { createServer } from "node:net";
 import path from "node:path";
-import type { RunsListOutput, ThreadSnapshot } from "@rakazo/contracts";
-import { isTerminal } from "@rakazo/core";
-import { computerNetworkNameFor } from "@rakazo/sandbox-supervisor/computer-spec";
+import type { RunsListOutput, ThreadSnapshot } from "@unibot/contracts";
+import { isTerminal } from "@unibot/core";
+import { computerNetworkNameFor } from "@unibot/sandbox-supervisor/computer-spec";
 
 const composeFile = path.resolve("infra/compose/docker-compose.topology.yml");
 const keep = process.argv.includes("--keep");
 const skipBuild = process.argv.includes("--skip-build");
-const project = `rakazo-topology-${process.pid}-${Date.now().toString(36)}`;
+const project = `unibot-topology-${process.pid}-${Date.now().toString(36)}`;
 
 async function main() {
   docker(["info", "--format", "{{.ServerVersion}}"]);
@@ -17,8 +17,8 @@ async function main() {
   const env = {
     ...process.env,
     TOPOLOGY_API_PORT: String(port),
-    TOPOLOGY_APP_IMAGE: process.env.TOPOLOGY_APP_IMAGE ?? "rakazo/app:topology",
-    TOPOLOGY_COMPUTER_IMAGE: process.env.TOPOLOGY_COMPUTER_IMAGE ?? "rakazo/computer:topology",
+    TOPOLOGY_APP_IMAGE: process.env.TOPOLOGY_APP_IMAGE ?? "unibot/app:topology",
+    TOPOLOGY_COMPUTER_IMAGE: process.env.TOPOLOGY_COMPUTER_IMAGE ?? "unibot/computer:topology",
   };
   const compose = (args: string[], capture = false) =>
     command(
@@ -332,9 +332,9 @@ function removeManagedComputers(
           "postgres",
           "psql",
           "-U",
-          "rakazo",
+          "unibot",
           "-d",
-          "rakazo",
+          "unibot",
           "-Atc",
           'SELECT "homeKey" FROM computers',
         ],

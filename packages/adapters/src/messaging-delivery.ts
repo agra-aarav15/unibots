@@ -5,19 +5,19 @@ import type {
   MessagingOutboundAttachment,
   MessagingOutboundStatus,
   MessagingSurface,
-} from "@rakazo/adapter-kit";
-import { messagingDeliverJob, runContinueJob } from "@rakazo/adapter-kit";
-import type { MessageBlock } from "@rakazo/contracts";
-import { botMessageHopExhausted, nextBotMessageHop } from "@rakazo/core";
-import type { PrismaClient, ThreadEvents } from "@rakazo/db";
+} from "@unibot/adapter-kit";
+import { messagingDeliverJob, runContinueJob } from "@unibot/adapter-kit";
+import type { MessageBlock } from "@unibot/contracts";
+import { botMessageHopExhausted, nextBotMessageHop } from "@unibot/core";
+import type { PrismaClient, ThreadEvents } from "@unibot/db";
 import {
   appendEventInTransaction,
   CrossSpaceCommunicationBlockedError,
   createThreadMessageInTransaction,
   crossSpaceCommunicationAllowed,
   runAsSystem,
-} from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { MessagingSendError } from "./chat-sdk-surface.js";
 import { splitOutboundBody } from "./messaging-platforms.js";
 

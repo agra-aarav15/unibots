@@ -24,7 +24,7 @@ const cipher: DeviceTokenCipher = {
 
 let userData: string;
 beforeEach(async () => {
-  userData = await mkdtemp(path.join(tmpdir(), "rakazo-device-"));
+  userData = await mkdtemp(path.join(tmpdir(), "unibot-device-"));
 });
 afterEach(async () => {
   await rm(userData, { recursive: true, force: true });

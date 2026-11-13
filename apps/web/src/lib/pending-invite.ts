@@ -3,7 +3,7 @@
  * token has to survive whatever stands between opening it and being signed in: a sign-up, a
  * sign-in, or an email verification round trip that replaces the query string.
  */
-const PENDING_INVITE_KEY = "rakazo:invite";
+const PENDING_INVITE_KEY = "unibot:invite";
 
 export function rememberInvite(token: string): void {
   try {

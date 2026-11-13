@@ -1,6 +1,6 @@
 # Desktop app
 
-The desktop app for Mac, Windows and Linux runs the same Unibots as the web, and can also run
+The desktop app for Mac, Windows and Linux runs the same UniBot as the web, and can also run
 everything on your own computer.
 
 ## Install
@@ -13,13 +13,13 @@ on first launch until a certificate is added ([how to sign it later](./windows-s
 
 The first time it opens, the app asks which server to use:
 
-- **This computer**: run your own Unibots locally in Docker. If Docker isn't installed, the app links
+- **This computer**: run your own UniBot locally in Docker. If Docker isn't installed, the app links
   to Docker Desktop, OrbStack and Docker Engine. Everything, including your bots' computers, then
   runs on your machine.
-- **Existing instance**: connect to a Unibots server you or your team already run. Enter its
+- **Existing instance**: connect to a UniBot server you or your team already run. Enter its
   **Server address** and choose **Check connection**.
 
-To switch later, use **Change Unibots Server…** in the app menu (Cmd+Shift+K, or Ctrl+Shift+K on
+To switch later, use **Change UniBot Server…** in the app menu (Cmd+Shift+K, or Ctrl+Shift+K on
 Windows and Linux).
 
 > [!NOTE]
@@ -60,7 +60,7 @@ network, so use it on a trusted home or office network and use the
 ## Updates
 
 The app does not check for updates in the background. **Check for Updates...** in the app
-menu checks now; set `RAKAZO_AUTO_UPDATE=on` on the app's environment to restore the launch
+menu checks now; set `UNIBOT_AUTO_UPDATE=on` on the app's environment to restore the launch
 and hourly checks. When an update is ready, an **Install update** button appears at the
 bottom of the sidebar, or choose **Restart** when asked.
 

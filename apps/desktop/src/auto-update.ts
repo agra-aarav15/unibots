@@ -1,4 +1,4 @@
-import type { DesktopUpdateState } from "@rakazo/contracts";
+import type { DesktopUpdateState } from "@unibot/contracts";
 import { reportDesktopError } from "./monitoring.js";
 
 /** Long enough that a cold launch is never competing with the update feed for bandwidth. */
@@ -9,14 +9,14 @@ export const BACKGROUND_CHECK_INTERVAL_MS = 60 * 60 * 1_000;
 
 /**
  * Background update checks are opt-in, so a local-first install makes no periodic
- * network request. `RAKAZO_AUTO_UPDATE=on` restores the launch and hourly checks;
+ * network request. `UNIBOT_AUTO_UPDATE=on` restores the launch and hourly checks;
  * "Check for Updates..." in the menu works either way.
  */
-export function backgroundUpdateChecks(env: { RAKAZO_AUTO_UPDATE?: string }): {
+export function backgroundUpdateChecks(env: { UNIBOT_AUTO_UPDATE?: string }): {
   launchDelayMs: number;
   intervalMs: number;
 } | null {
-  const setting = env.RAKAZO_AUTO_UPDATE?.trim().toLowerCase();
+  const setting = env.UNIBOT_AUTO_UPDATE?.trim().toLowerCase();
   if (setting !== "on" && setting !== "auto") return null;
   return { launchDelayMs: LAUNCH_CHECK_DELAY_MS, intervalMs: BACKGROUND_CHECK_INTERVAL_MS };
 }
@@ -95,7 +95,7 @@ export function classifyUpdaterFailure(error: unknown): UpdaterFailure {
     return { kind: "offline", message: null };
   }
   if (READ_ONLY.some((needle) => text.includes(needle))) {
-    return { kind: "read-only", message: "Move Unibots to Applications to install updates." };
+    return { kind: "read-only", message: "Move UniBot to Applications to install updates." };
   }
   // Ahead of signatures: a full disk also leaves ditto unable to read the archive's signature.
   if (DISK_FULL.some((needle) => text.includes(needle))) {
@@ -104,7 +104,7 @@ export function classifyUpdaterFailure(error: unknown): UpdaterFailure {
   if (SIGNATURE.some((needle) => text.includes(needle))) {
     return {
       kind: "signature",
-      message: "This update could not be verified. Reinstall Unibots from a trusted download.",
+      message: "This update could not be verified. Reinstall UniBot from a trusted download.",
     };
   }
   return {

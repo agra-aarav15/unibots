@@ -1,7 +1,7 @@
 import { existsSync, mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { runJobKey } from "@rakazo/adapter-kit";
+import { runJobKey } from "@unibot/adapter-kit";
 import {
   ComposioConnector,
   createScheduleFromTool,
@@ -13,17 +13,17 @@ import {
   listPiCatalog,
   organizeBot,
   toComputerRef,
-} from "@rakazo/adapters";
-import type { createApp } from "@rakazo/api/app";
-import type { MessageBlock } from "@rakazo/contracts";
-import { ACTIVE_RUN_STATUSES, ONCE_ROUTINE_CRON } from "@rakazo/core";
+} from "@unibot/adapters";
+import type { createApp } from "@unibot/api/app";
+import type { MessageBlock } from "@unibot/contracts";
+import { ACTIVE_RUN_STATUSES, ONCE_ROUTINE_CRON } from "@unibot/core";
 import {
   appendEvent,
   createThreadEvents,
   createThreadMessage,
   RunHistoryWriteError,
   runAsSystem,
-} from "@rakazo/db";
+} from "@unibot/db";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import type { BotIntroHarness } from "./discard-bot-intro.js";
 import { discardBotIntroFromCreate } from "./discard-bot-intro.js";
@@ -50,7 +50,7 @@ describeJourneys("required product journeys", () => {
   let jobs: Awaited<ReturnType<typeof createApp>>["jobs"];
   let sandbox: Awaited<ReturnType<typeof createApp>>["sandbox"];
   const stamp = Date.now();
-  const dataDir = mkdtempSync(path.join(tmpdir(), "rakazo-journey-"));
+  const dataDir = mkdtempSync(path.join(tmpdir(), "unibot-journey-"));
 
   /** Runs every action without a card, for journeys about something other than approvals. */
   async function runWithoutAsking(cookie: string) {
@@ -126,7 +126,7 @@ describeJourneys("required product journeys", () => {
   }
 
   beforeAll(async () => {
-    const { createApp } = await import("@rakazo/api/app");
+    const { createApp } = await import("@unibot/api/app");
     const handles = await createApp({
       modelConnectionFetch: createModelConnectionFixtureFetch(listPiCatalog()),
       databaseUrl: process.env.DATABASE_URL!,

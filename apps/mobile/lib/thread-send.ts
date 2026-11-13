@@ -1,6 +1,6 @@
-import type { LoginFieldInput, MessageReaction } from "@rakazo/contracts";
-import type { SlashActionId } from "@rakazo/core";
-import { attachmentsForThread, newClientId, resolveComposerSendPlan } from "@rakazo/core";
+import type { LoginFieldInput, MessageReaction } from "@unibot/contracts";
+import type { SlashActionId } from "@unibot/core";
+import { attachmentsForThread, newClientId, resolveComposerSendPlan } from "@unibot/core";
 import { useNavigation, useRouter } from "expo-router";
 import type { RefObject } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";

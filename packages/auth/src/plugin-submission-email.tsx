@@ -1,5 +1,5 @@
 /** @jsxRuntime automatic */
-import type { TransactionalEmail } from "@rakazo/adapter-kit";
+import type { TransactionalEmail } from "@unibot/adapter-kit";
 import { Link, Text } from "react-email";
 import { linkStyle, message } from "./email.js";
 
@@ -7,9 +7,9 @@ import { linkStyle, message } from "./email.js";
 export function pluginSubmissionReceivedEmail(email: string): Promise<TransactionalEmail> {
   return message(
     email,
-    "We received your Unibots plugin",
+    "We received your UniBot plugin",
     <>
-      <Text>Thanks for submitting a plugin to the Unibots marketplace.</Text>
+      <Text>Thanks for submitting a plugin to the UniBot marketplace.</Text>
       <Text>We review every submission and will email you when it's done.</Text>
       <Text>If you did not submit a plugin, ignore this email.</Text>
     </>,
@@ -48,13 +48,13 @@ export function pluginSubmissionReviewedEmail(submission: {
   return message(
     submission.email,
     approved
-      ? `${submission.name} is in the Unibots marketplace`
-      : `Your Unibots plugin submission: ${submission.name}`,
+      ? `${submission.name} is in the UniBot marketplace`
+      : `Your UniBot plugin submission: ${submission.name}`,
     <>
       <Text>
         {approved
-          ? `${submission.name} is now listed in the Unibots plugin marketplace.`
-          : `We couldn't list ${submission.name} in the Unibots plugin marketplace.`}
+          ? `${submission.name} is now listed in the UniBot plugin marketplace.`
+          : `We couldn't list ${submission.name} in the UniBot plugin marketplace.`}
       </Text>
       {submission.reason ? <Text>{submission.reason}</Text> : null}
       <Text>Have any questions? Reply to this email.</Text>

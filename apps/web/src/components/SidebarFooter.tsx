@@ -1,6 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { NavLink } from "@rakazo/contracts";
-import { ANDROID_APK_URL } from "@rakazo/contracts";
+import type { NavLink } from "@unibot/contracts";
+import { ANDROID_APK_URL } from "@unibot/contracts";
 import {
   AppMarkStack,
   Button,
@@ -8,9 +8,10 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@rakazo/ui-web";
+} from "@unibot/ui-web";
 import {
   BookOpen,
+  Briefcase,
   Download,
   FolderOpen,
   Gauge,
@@ -240,6 +241,9 @@ export function SidebarFooter({
               <BookOpen className="text-muted-foreground" strokeWidth={1.75} />
               <Trans>Docs</Trans>
             </a>
+            <div className="px-2.5 py-1.5 text-[11px] text-muted-foreground border-t border-border mt-1">
+              <span>UniBot · Built by Aarav Agrawal</span>
+            </div>
             <div className="my-1 border-t border-border" />
             <Button
               variant="ghost"

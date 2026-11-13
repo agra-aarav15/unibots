@@ -1,7 +1,7 @@
 /** @jsxRuntime automatic */
-import type { TransactionalEmail } from "@rakazo/adapter-kit";
-import { displayName } from "@rakazo/core";
-import { lightTokens } from "@rakazo/ui-tokens";
+import type { TransactionalEmail } from "@unibot/adapter-kit";
+import { displayName } from "@unibot/core";
+import { lightTokens } from "@unibot/ui-tokens";
 import type { ReactNode } from "react";
 import { Body, Container, Head, Html, Link, render, Text, toPlainText } from "react-email";
 
@@ -33,14 +33,14 @@ export const linkStyle = { color: lightTokens.primary, textDecoration: "underlin
 export function verificationEmail(email: string, url: string): Promise<TransactionalEmail> {
   return message(
     email,
-    "Verify your Unibots email",
+    "Verify your UniBot email",
     <>
       <Text>
         <Link href={url} style={linkStyle}>
           Verify email
         </Link>
       </Text>
-      <Text>Then return to Unibots to sign in.</Text>
+      <Text>Then return to UniBot to sign in.</Text>
       <Text>This link expires in one hour. If you did not register, ignore this email.</Text>
     </>,
   );
@@ -49,9 +49,9 @@ export function verificationEmail(email: string, url: string): Promise<Transacti
 export function signInCodeEmail(email: string, code: string): Promise<TransactionalEmail> {
   return message(
     email,
-    "Your Unibots sign-in code",
+    "Your UniBot sign-in code",
     <>
-      <Text>Enter this code to sign in to Unibots:</Text>
+      <Text>Enter this code to sign in to UniBot:</Text>
       <Text>
         <strong>{code}</strong>
       </Text>
@@ -66,10 +66,10 @@ export function passwordResetEmail(
 ): Promise<TransactionalEmail> {
   return message(
     user.email,
-    "Reset your Unibots password",
+    "Reset your UniBot password",
     <>
       <Text>Hi {displayName(user.name, "there")},</Text>
-      <Text>Reset your Unibots password:</Text>
+      <Text>Reset your UniBot password:</Text>
       <Text>
         <Link href={resetUrl} style={linkStyle}>
           Reset password
@@ -85,9 +85,9 @@ export function passwordResetEmail(
 export function accountDeletionEmail(email: string, code: string): Promise<TransactionalEmail> {
   return message(
     email,
-    "Confirm Unibots account deletion",
+    "Confirm UniBot account deletion",
     <>
-      <Text>Enter this code in Unibots to delete your account:</Text>
+      <Text>Enter this code in UniBot to delete your account:</Text>
       <Text>{code}</Text>
       <Text>
         This code expires in ten minutes. If you did not request deletion, ignore this email.
@@ -99,9 +99,9 @@ export function accountDeletionEmail(email: string, code: string): Promise<Trans
 export function identityCodeEmail(email: string, code: string): Promise<TransactionalEmail> {
   return message(
     email,
-    "Your Unibots confirmation code",
+    "Your UniBot confirmation code",
     <>
-      <Text>Enter this code in Unibots to confirm it's you:</Text>
+      <Text>Enter this code in UniBot to confirm it's you:</Text>
       <Text>
         <strong>{code}</strong>
       </Text>

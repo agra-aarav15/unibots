@@ -39,9 +39,35 @@ function useReleaseSigning(contents) {
   );
 }
 
+/**
+ * Expo's own template reads the keystore secrets unconditionally, and Gradle converts every
+ * signing config while evaluating the project — so a machine without the release secrets fails
+ * even a debug build with "Cannot convert 'null' to File". Guard the block so the path is only
+ * read when it is set.
+ */
+const EXPO_UNGUARDED = `storeFile file(System.getenv("ANDROID_KEYSTORE_PATH"))
+            storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+            keyAlias System.getenv("ANDROID_KEY_ALIAS")
+            keyPassword System.getenv("ANDROID_KEY_PASSWORD")`;
+
+const GUARDED = `def keystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
+            if (keystorePath) {
+                storeFile file(keystorePath)
+                storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+            }`;
+
+function guardReleaseKeystore(contents) {
+  return contents.includes(EXPO_UNGUARDED)
+    ? contents.replace(EXPO_UNGUARDED, GUARDED)
+    : contents;
+}
+
 module.exports = function withReleaseSigning(config) {
   return withAppBuildGradle(config, (cfg) => {
     if (cfg.modResults.language !== "groovy") return cfg;
+    cfg.modResults.contents = guardReleaseKeystore(cfg.modResults.contents);
     const storePath = process.env.ANDROID_KEYSTORE_PATH;
     if (!storePath || !fs.existsSync(storePath)) return cfg;
     if (!cfg.modResults.contents.includes("signingConfigs {")) return cfg;
@@ -56,3 +82,4 @@ module.exports = function withReleaseSigning(config) {
 };
 
 module.exports.useReleaseSigning = useReleaseSigning;
+module.exports.guardReleaseKeystore = guardReleaseKeystore;

@@ -1,8 +1,8 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { LinkFavicons } from "@rakazo/chat-ui/web";
-import { LinkFaviconsContext, RemoteImagesContext } from "@rakazo/chat-ui/web";
-import { analyticsScreen } from "@rakazo/core";
-import { Button } from "@rakazo/ui-web";
+import type { LinkFavicons } from "@unibot/chat-ui/web";
+import { LinkFaviconsContext, RemoteImagesContext } from "@unibot/chat-ui/web";
+import { analyticsScreen } from "@unibot/core";
+import { Button } from "@unibot/ui-web";
 import {
   Suspense,
   useEffect,
@@ -21,6 +21,7 @@ import { authClient } from "./lib/auth";
 import { getTicketBoardEnabled, subscribeTicketBoardEnabled } from "./lib/bootstrap";
 import { syncCallIdentity } from "./lib/call-session";
 import { desktopBridge } from "./lib/desktop";
+import { localOwnerUser, useLocalOwner } from "./lib/local-owner";
 import { syncWebLogoAvatarIdentity } from "./lib/logo-avatar-activity";
 import { identifyMonitoringUser } from "./lib/monitoring";
 import { markAfterPaint, markOnce } from "./lib/performance";
@@ -120,9 +121,12 @@ function SessionApp() {
     () => false,
   );
   const session = authClient.useSession();
+  // A local server names its owner in the public capabilities, so this machine opens straight
+  // into the app: no sign-in screen, no account, no session round trip.
+  const owner = useLocalOwner();
   const { pathname, search } = useLocation();
   const screen = analyticsScreen(pathname);
-  const analyticsUserId = session.data?.user.id;
+  const analyticsUserId = session.data?.user.id ?? owner?.id;
   const lastScreen = useRef<string | undefined>(undefined);
   useEffect(() => {
     // A pending session is not a sign-out; startup already tagged the signed-in user.
@@ -142,7 +146,7 @@ function SessionApp() {
       .then(() => rpc.analytics.screen({ screen, surface: desktopBridge() ? "desktop" : "web" }))
       .catch(() => undefined);
   }, [analyticsUserId, screen]);
-  const gate = sessionGate(session);
+  const gate = owner ? "authenticated" : sessionGate(session);
   useLayoutEffect(() => {
     if (gate !== "authenticated" && gate !== "anonymous") return;
     syncWebLogoAvatarIdentity(analyticsUserId ?? null);
@@ -169,14 +173,14 @@ function SessionApp() {
     return <SessionUnavailable refetch={session.refetch} />;
   }
   if (gate === "loading" && !nextHoldingAnonymous) {
-    return <PageLoading data-rakazo-app-state="session-pending" />;
+    return <PageLoading data-unibot-app-state="session-pending" />;
   }
 
-  const user = session.data?.user;
+  const user = session.data?.user ?? (owner ? localOwnerUser(owner) : undefined);
   return (
     <QueryUserProvider value={user?.id ?? null}>
       <MarkdownLinkPrompt>
-        <div className="h-full" data-rakazo-app-state="ready">
+        <div className="h-full" data-unibot-app-state="ready">
           <Suspense fallback={<PageLoading />}>
             <Routes>
               <Route path="/" element={user ? <InviteJoin to="/app" /> : <WelcomePage />} />
@@ -328,7 +332,7 @@ function AppFailed() {
   return (
     <div
       className="grid h-full place-items-center bg-background px-6 text-center"
-      data-rakazo-app-state="failed"
+      data-unibot-app-state="failed"
     >
       <div className="flex flex-col items-center">
         <p className="text-[13.5px] text-muted-foreground/80">

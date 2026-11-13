@@ -1,6 +1,6 @@
 import { ORPCError } from "@orpc/server";
-import type { AdapterContext, SecretStore } from "@rakazo/adapter-kit";
-import { VoiceAccountError } from "@rakazo/adapter-kit";
+import type { AdapterContext, SecretStore } from "@unibot/adapter-kit";
+import { VoiceAccountError } from "@unibot/adapter-kit";
 import {
   createVoiceProvider,
   isFishSpeechModelId,
@@ -13,17 +13,17 @@ import {
   openAiCompatibleVoiceServer,
   serializeOpenAiCompatibleVoiceSecret,
   voiceCatalogEntry,
-} from "@rakazo/adapters";
+} from "@unibot/adapters";
 import type {
   Actor,
   SettingsScope,
   VoiceAccountErrorCode,
   VoiceCredential,
   VoiceStatus,
-} from "@rakazo/contracts";
-import { SettingsScopeSchema } from "@rakazo/contracts";
-import { speakable, toUtterances } from "@rakazo/core";
-import type { PrismaClient } from "@rakazo/db";
+} from "@unibot/contracts";
+import { SettingsScopeSchema } from "@unibot/contracts";
+import { speakable, toUtterances } from "@unibot/core";
+import type { PrismaClient } from "@unibot/db";
 import {
   deleteUnreferencedCredentialSecret,
   findDefaultVoiceCredential,
@@ -38,8 +38,8 @@ import {
   saveVoicePreference,
   selectVoicePreference,
   voicePreferenceTarget,
-} from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import type { Context, Hono } from "hono";
 import { readBoundedBody } from "./http-body.js";
 import { withSerializableRetry } from "./serializable-retry.js";

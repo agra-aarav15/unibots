@@ -5,14 +5,14 @@ import type {
   McpServer,
   PluginPart,
   PluginPreview,
-} from "@rakazo/contracts";
-import { PluginPreviewSchema } from "@rakazo/contracts";
+} from "@unibot/contracts";
+import { PluginPreviewSchema } from "@unibot/contracts";
 import {
   catalogItemKey,
   connectCatalogItem,
   installedPluginParts,
   isCatalogItemConnected,
-} from "@rakazo/core";
+} from "@unibot/core";
 import type { NativeStackNavigationOptions } from "expo-router";
 import { useFocusEffect, useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";

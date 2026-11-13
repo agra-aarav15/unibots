@@ -3,17 +3,17 @@ import type {
   AgentRunRequest,
   AgentRuntime,
   MemoryStore,
-} from "@rakazo/adapter-kit";
+} from "@unibot/adapter-kit";
 import {
   MEMORY_CURATE_DELAY_MS,
   MEMORY_REVISION_CONFLICT_ERROR,
   memoryCurateJob,
-} from "@rakazo/adapter-kit";
-import type { MessageBlock } from "@rakazo/contracts";
-import { blocksToAgentHistoryText, escapePromptData } from "@rakazo/core";
-import type { PrismaClient } from "@rakazo/db";
-import { recordUsage } from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/adapter-kit";
+import type { MessageBlock } from "@unibot/contracts";
+import { blocksToAgentHistoryText, escapePromptData } from "@unibot/core";
+import type { PrismaClient } from "@unibot/db";
+import { recordUsage } from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import { formatCurrentTimeInstruction } from "./current-time.js";
 import { resolveDeploymentModel } from "./deployment-model.js";
 

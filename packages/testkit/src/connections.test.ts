@@ -8,9 +8,9 @@ import {
   InstalledConnectorProvider,
   PipedreamConnector,
   ThirdPartyConnectorEmulator,
-} from "@rakazo/adapters";
-import type { createApp } from "@rakazo/api/app";
-import { appliedModelRole, runAsSystem, runAsTenant, updateModelRole } from "@rakazo/db";
+} from "@unibot/adapters";
+import type { createApp } from "@unibot/api/app";
+import { appliedModelRole, runAsSystem, runAsTenant, updateModelRole } from "@unibot/db";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { sessionCookieHeader } from "./index.js";
 import { asSystem } from "./system-db.js";
@@ -35,10 +35,10 @@ describeWithDatabase("Composio catalog reconciliation", () => {
   let thirdParties: ThirdPartyConnectorEmulator;
   let connectionOrdinal = 0;
   const stamp = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-  const dataDir = mkdtempSync(path.join(tmpdir(), "rakazo-connections-"));
+  const dataDir = mkdtempSync(path.join(tmpdir(), "unibot-connections-"));
 
   beforeAll(async () => {
-    const { createApp } = await import("@rakazo/api/app");
+    const { createApp } = await import("@unibot/api/app");
     fake = new FakeComposioClient();
     composio = new ComposioConnector({ client: fake });
     thirdParties = new ThirdPartyConnectorEmulator();

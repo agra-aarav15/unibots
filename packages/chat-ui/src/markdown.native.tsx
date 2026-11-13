@@ -1,5 +1,5 @@
-import type { ColorTokens, ResolvedAppearance } from "@rakazo/ui-tokens";
-import { darkTokens, fontWeight, MAX_FONT_SCALE, typeScale } from "@rakazo/ui-tokens";
+import type { ColorTokens, ResolvedAppearance } from "@unibot/ui-tokens";
+import { darkTokens, fontWeight, MAX_FONT_SCALE, typeScale } from "@unibot/ui-tokens";
 import type {
   ASTNode,
   MarkdownStyleMap,

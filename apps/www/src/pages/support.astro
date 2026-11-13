@@ -8,20 +8,20 @@ import { GITHUB_URL, SELF_HOST_GUIDE_PATH } from "../site";
 const starsLabel = await githubStarsLabel();
 ---
 
-<BaseLayout title="Support · Unibots" description="Get help with the Unibots app and self-hosted Unibots.">
+<BaseLayout title="Support · UniBot" description="Get help with the UniBot app and self-hosted UniBot.">
   <div class="container">
     <Header starsLabel={starsLabel} />
     <main id="main" class="privacy-copy">
-      <h1>Unibots support</h1>
+      <h1>UniBot support</h1>
       <p>
         Open an issue on the <a href="https://github.com/agra-aarav15/unibots/issues">public issue tracker</a>. Say what you expected to
         happen and what happened instead. Never paste passwords, API keys, access tokens, or other
         secrets into an issue.
       </p>
-      <h2>Self-hosted Unibots</h2>
+      <h2>Self-hosted UniBot</h2>
       <p>
         Start with the <a href={SELF_HOST_GUIDE_PATH}>self-hosting guide</a>. For reproducible bugs or feature requests,
-        open an issue in the <a href={`${GITHUB_URL}/issues`}>Unibots GitHub repository</a>.
+        open an issue in the <a href={`${GITHUB_URL}/issues`}>UniBot GitHub repository</a>.
       </p>
       <h2 id="account-deletion">Account deletion</h2>
       <p>

@@ -5,29 +5,29 @@ import type {
   ComputerRef,
   JobPublisher,
   SandboxProvider,
-} from "@rakazo/adapter-kit";
+} from "@unibot/adapter-kit";
 import {
   computerControlExpireJobKey,
   SandboxRateLimitError,
   SandboxUnavailableError,
   SandboxUnresponsiveError,
-} from "@rakazo/adapter-kit";
-import type { ComputerUpdate } from "@rakazo/contracts";
+} from "@unibot/adapter-kit";
+import type { ComputerUpdate } from "@unibot/contracts";
 import {
   ACTIVE_RUN_STATUSES,
   abortableDelay,
   isRetryableError,
   parseScreenLeaseId,
   screenLeaseId,
-} from "@rakazo/core";
-import type { Prisma, PrismaClient, ThreadEvents } from "@rakazo/db";
+} from "@unibot/core";
+import type { Prisma, PrismaClient, ThreadEvents } from "@unibot/db";
 import {
   expireComputerExecutionLeases,
   parseComputerMode,
   recordComputerRunEnd,
   recordComputerRunStart,
-} from "@rakazo/db";
-import { getLogger } from "@rakazo/logging";
+} from "@unibot/db";
+import { getLogger } from "@unibot/logging";
 import {
   clearInactiveUserComputerControl,
   expireComputerControl,

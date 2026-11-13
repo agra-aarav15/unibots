@@ -6,7 +6,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: hi\n"
-"Project-Id-Version: rakazo-web\n"
+"Project-Id-Version: unibot-web\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
@@ -682,7 +682,7 @@ msgid "Allow rule"
 msgstr "अनुमति नियम"
 
 #: src/lib/dictation.ts
-msgid "Allow Unibots to use Speech Recognition and the microphone in System Settings."
+msgid "Allow UniBot to use Speech Recognition and the microphone in System Settings."
 msgstr ""
 
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
@@ -730,8 +730,8 @@ msgid "An API key is stored for this provider, not a subscription sign-in."
 msgstr "इस प्रोवाइडर के लिए API कुंजी संग्रहीत है, सब्सक्रिप्शन साइन-इन नहीं।"
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
-msgid "An existing Honcho peer to read from. Unibots never writes to it."
-msgstr "पढ़ने के लिए एक मौजूदा Honcho पीयर। Unibots इसमें कभी नहीं लिखता।"
+msgid "An existing Honcho peer to read from. UniBot never writes to it."
+msgstr "पढ़ने के लिए एक मौजूदा Honcho पीयर। UniBot इसमें कभी नहीं लिखता।"
 
 #: src/lib/agent-import-errors.ts
 msgid "An imported API key could not be checked. Try again."
@@ -1318,7 +1318,7 @@ msgstr "फ़ोल्डर चुनें"
 
 #: src/components/ModelCredits.tsx
 #: src/components/SubscriptionGate.tsx
-msgid "Choose how to use Unibots"
+msgid "Choose how to use UniBot"
 msgstr ""
 
 #: src/lib/localized-provider-hint.ts
@@ -1620,8 +1620,8 @@ msgstr "पहले इस मॉडल का प्रदाता कने�
 
 #. js-lingui-explicit-id
 #: src/lib/run-error.ts
-msgid "Connect your own API key in Models or choose Unibots credits in Billing."
-msgstr "मॉडल्स में अपनी API कुंजी कनेक्ट करें या बिलिंग में Unibots क्रेडिट चुनें।"
+msgid "Connect your own API key in Models or choose UniBot credits in Billing."
+msgstr "मॉडल्स में अपनी API कुंजी कनेक्ट करें या बिलिंग में UniBot क्रेडिट चुनें।"
 
 #: src/components/ComputerDeviceSettings.tsx
 #: src/components/integrations/IntegrationSetup.tsx
@@ -2329,8 +2329,8 @@ msgid "Create space"
 msgstr ""
 
 #: src/pages/Auth.tsx
-msgid "Create your Unibots"
-msgstr "अपना Unibots बनाएं"
+msgid "Create your UniBot"
+msgstr "अपना UniBot बनाएं"
 
 #: src/components/AskCard.tsx
 msgid "Created"
@@ -3197,7 +3197,7 @@ msgid "How to check"
 msgstr "जांच कैसे करें"
 
 #: src/components/SignupSurvey.tsx
-msgid "How will you use Unibots?"
+msgid "How will you use UniBot?"
 msgstr ""
 
 #: src/pages/shell/computer-release-actions.tsx
@@ -4176,8 +4176,8 @@ msgid "Not in the plugin catalog"
 msgstr ""
 
 #: src/pages/shell/import-status.ts
-msgid "Not in Unibots's catalog"
-msgstr "Unibots के कैटलॉग में नहीं"
+msgid "Not in UniBot's catalog"
+msgstr "UniBot के कैटलॉग में नहीं"
 
 #: src/pages/shell/message-cards.tsx
 msgid "Not now"
@@ -4185,12 +4185,12 @@ msgstr "अभी नहीं"
 
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/import-status.ts
-msgid "Not supported in Unibots"
-msgstr "Unibots में समर्थित नहीं"
+msgid "Not supported in UniBot"
+msgstr "UniBot में समर्थित नहीं"
 
 #: src/pages/shell/agent-import.tsx
-msgid "Not used by Unibots"
-msgstr "Unibots इसका उपयोग नहीं करता"
+msgid "Not used by UniBot"
+msgstr "UniBot इसका उपयोग नहीं करता"
 
 #: src/components/McpServerHealthLine.tsx
 msgid "Not working"
@@ -4433,8 +4433,8 @@ msgid "Paste a replacement key"
 msgstr "बदलने के लिए नई कुंजी पेस्ट करें"
 
 #: src/pages/model-settings/compatible-model-fields.tsx
-msgid "Paste the OpenAI-compatible address from your server. Unibots adds /v1 if needed."
-msgstr "अपने सर्वर से OpenAI-संगत पता पेस्ट करें। ज़रूरत होने पर Unibots /v1 जोड़ देता है।"
+msgid "Paste the OpenAI-compatible address from your server. UniBot adds /v1 if needed."
+msgstr "अपने सर्वर से OpenAI-संगत पता पेस्ट करें। ज़रूरत होने पर UniBot /v1 जोड़ देता है।"
 
 #: src/pages/shell/agent-import.tsx
 msgid "Paste the reply"
@@ -4615,7 +4615,7 @@ msgid "Queued"
 msgstr "कतार में"
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
-msgid "rakazo-shared and IDs starting with bot- are reserved for Unibots."
+msgid "unibot-shared and IDs starting with bot- are reserved for UniBot."
 msgstr ""
 
 #: src/pages/shell/message-hover-actions.tsx
@@ -5015,8 +5015,8 @@ msgstr "{0} के साथ कॉल पर लौटें"
 
 #: src/pages/McpOAuthCallback.tsx
 #: src/pages/SlackInstallCallback.tsx
-msgid "Return to Unibots"
-msgstr "Unibots पर लौटें"
+msgid "Return to UniBot"
+msgstr "UniBot पर लौटें"
 
 #: src/lib/model-connection-preflight.ts
 msgid "Review provider settings and test again."
@@ -5442,8 +5442,8 @@ msgid "Sign in at <0>{0}</0>, then paste the code here."
 msgstr "<0>{0}</0> पर साइन इन करें, फिर कोड यहाँ पेस्ट करें।"
 
 #: src/pages/Auth.tsx
-msgid "Sign in to Unibots"
-msgstr "Unibots में साइन इन करें"
+msgid "Sign in to UniBot"
+msgstr "UniBot में साइन इन करें"
 
 #: src/lib/user-error.ts
 msgid "Sign in to your existing account to link SSO"
@@ -5687,8 +5687,8 @@ msgid "Subscribe for {price} / month"
 msgstr "{price} / माह पर सदस्यता लें"
 
 #: src/components/ModelCredits.tsx
-msgid "Subscribe to Unibots credits"
-msgstr "Unibots क्रेडिट की सदस्यता लें"
+msgid "Subscribe to UniBot credits"
+msgstr "UniBot क्रेडिट की सदस्यता लें"
 
 #: src/components/ModelCredits.tsx
 msgid "Subscribe with your own AI"
@@ -5994,8 +5994,8 @@ msgid "This server is already connected. Disconnect it first to authorize again.
 msgstr "यह सर्वर पहले से कनेक्टेड है। पुनः ऑथराइज़ करने के लिए पहले इसे डिस्कनेक्ट करें।"
 
 #: src/pages/model-settings/connection-controls.tsx
-msgid "This subscription sign-in is not available in Unibots yet. Use a deployment credential or choose another provider."
-msgstr "यह सब्सक्रिप्शन साइन-इन अभी Unibots में उपलब्ध नहीं है। किसी डिप्लॉयमेंट क्रेडेंशियल का उपयोग करें या दूसरा प्रोवाइडर चुनें।"
+msgid "This subscription sign-in is not available in UniBot yet. Use a deployment credential or choose another provider."
+msgstr "यह सब्सक्रिप्शन साइन-इन अभी UniBot में उपलब्ध नहीं है। किसी डिप्लॉयमेंट क्रेडेंशियल का उपयोग करें या दूसरा प्रोवाइडर चुनें।"
 
 #: src/pages/Artifacts.tsx
 msgid "This week"
@@ -6157,12 +6157,12 @@ msgid "Undo"
 msgstr "पूर्ववत करें"
 
 #: src/pages/shell/avatar-studio-popover.tsx
-msgid "Unibots"
-msgstr "Unibots"
+msgid "UniBot"
+msgstr "UniBot"
 
 #: src/components/ModelCredits.tsx
 #: src/pages/Onboarding.tsx
-msgid "Unibots credits"
+msgid "UniBot credits"
 msgstr ""
 
 #: src/pages/PluginsOverlay.tsx
@@ -6312,7 +6312,7 @@ msgid "Use space default"
 msgstr ""
 
 #: src/components/ModelCredits.tsx
-msgid "Use Unibots credits"
+msgid "Use UniBot credits"
 msgstr ""
 
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
@@ -6441,7 +6441,7 @@ msgid "Weekends"
 msgstr "सप्ताहांत"
 
 #: src/components/SignupSurvey.tsx
-msgid "Welcome to Unibots"
+msgid "Welcome to UniBot"
 msgstr ""
 
 #: src/pages/shell/dialogs.tsx
@@ -6453,7 +6453,7 @@ msgid "What can this space use?"
 msgstr ""
 
 #: src/components/SignupSurvey.tsx
-msgid "What do you most want Unibots to help with?"
+msgid "What do you most want UniBot to help with?"
 msgstr ""
 
 #: src/pages/shell/message-cards.tsx

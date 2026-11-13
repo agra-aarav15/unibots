@@ -1,18 +1,18 @@
-appId: com.unibots.app
+appId: com.unibot.app
 ---
 - runFlow: launch-app.yaml
 - runFlow:
     when:
-      visible: "Sign up for Unibots"
+      visible: "Sign up for UniBot"
     commands:
       - tapOn: "Sign in"
 - extendedWaitUntil:
-    visible: "Sign in to Unibots"
+    visible: "Sign in to UniBot"
     timeout: 15000
 - tapOn: "Email"
-- inputText: ${RAKAZO_ACTIVE_EMAIL}
+- inputText: ${UNIBOT_ACTIVE_EMAIL}
 - tapOn: "Password"
-- inputText: ${RAKAZO_SCREENSHOT_PASSWORD}
+- inputText: ${UNIBOT_SCREENSHOT_PASSWORD}
 - hideKeyboard
 - tapOn: "Sign in"
 - tapOn:
