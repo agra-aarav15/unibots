@@ -2,7 +2,7 @@ import { hostname } from "node:os";
 import { setTimeout as sleep } from "node:timers/promises";
 import type { JobPublisher, JobWorkerHost } from "@unibot/adapter-kit";
 import { ComposioConnector, IntegrationProviderSettings } from "@unibot/adapters";
-import { phoneCallSettings } from "@unibot/core";
+import { isLocalAuthMode, phoneCallSettings } from "@unibot/core";
 import { loadRootEnv } from "@unibot/core/node/load-root-env";
 import { startWorkerHealth } from "./health.js";
 import { createWorkerSecretStore } from "./secret-store.js";
@@ -290,7 +290,7 @@ async function main() {
     ].filter(Boolean),
     secretStore: secrets,
     mcpAllowPrivateEndpoint:
-      process.env.AUTH_MODE === "local" || process.env.MCP_ALLOW_PRIVATE_ENDPOINT === "true",
+      isLocalAuthMode(process.env.AUTH_MODE) || process.env.MCP_ALLOW_PRIVATE_ENDPOINT === "true",
     mcpStdio,
     deploymentModelKey,
     deploymentModelConfigured,

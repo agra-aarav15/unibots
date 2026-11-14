@@ -44,18 +44,16 @@ async function provision(prisma: PrismaClient): Promise<LocalOwner> {
     select: { id: true, name: true, email: true },
   });
   if (existing) return existing;
-  const owner =
-    existing ??
-    (await prisma.user.create({
-      data: {
-        id: randomBytes(16).toString("hex"),
-        name: "Owner",
-        email: LOCAL_OWNER_EMAIL,
-        // Nobody can receive a verification message on a machine with no mail provider.
-        emailVerified: true,
-      },
-      select: { id: true, name: true, email: true },
-    }));
+  const owner = await prisma.user.create({
+    data: {
+      id: randomBytes(16).toString("hex"),
+      name: "Owner",
+      email: LOCAL_OWNER_EMAIL,
+      // Nobody can receive a verification message on a machine with no mail provider.
+      emailVerified: true,
+    },
+    select: { id: true, name: true, email: true },
+  });
   // Signs up nothing and grants no administration; it provisions the personal space and the
   // defaults a first sign-up would have, and is idempotent for an owner that already has them.
   const membership = await prisma.spaceMember.findFirst({ where: { userId: owner.id } });

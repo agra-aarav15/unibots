@@ -12,7 +12,7 @@ import {
   cloudflareModelConfigMessage,
   OPENAI_COMPATIBLE_PROVIDER_ID,
 } from "@unibot/contracts";
-import { MISSING_MODEL_RUN_ERROR } from "@unibot/core";
+import { isLocalAuthMode, MISSING_MODEL_RUN_ERROR } from "@unibot/core";
 import { cloudflareProviderEnv } from "./cloudflare-ai-gateway.js";
 import { resolveDeploymentModel } from "./deployment-model.js";
 import type { ExecutorDeps } from "./executor-deps.js";
@@ -302,7 +302,7 @@ async function resolveModelKeyMaterial(
       const allowPrivateEndpoint = baseUrl
         ? deps.mcpAllowPrivateEndpoint === true ||
           process.env.MCP_ALLOW_PRIVATE_ENDPOINT === "true" ||
-          process.env.AUTH_MODE === "local"
+          isLocalAuthMode(process.env.AUTH_MODE)
         : undefined;
       if (baseUrl) {
         try {

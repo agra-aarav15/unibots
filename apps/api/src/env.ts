@@ -14,6 +14,7 @@ import type { MinimumClientBuilds, NavLink } from "@unibot/contracts";
 import { parseMinimumClientBuilds, parseNavLinks } from "@unibot/contracts";
 import {
   attachmentCountFromEnv,
+  isLocalAuthMode,
   phoneCallSettings,
   resolveAuthSecret,
   resolveContentEncryption,
@@ -198,7 +199,7 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
       throw new Error(`${key} must be true or false`);
   }
   const passwordAuth = source.AUTH_PASSWORD_ENABLED !== "false";
-  const localMode = source.AUTH_MODE?.trim().toLowerCase() === "local";
+  const localMode = isLocalAuthMode(source.AUTH_MODE);
   if (!passwordAuth && !issuer)
     throw new Error("AUTH_PASSWORD_ENABLED=false requires OIDC configuration");
   const oidc =
