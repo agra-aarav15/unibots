@@ -11,7 +11,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { Navigate, Outlet, Route, Routes, useLocation, useSearchParams } from "react-router-dom";
+import { Link, Navigate, Outlet, Route, Routes, useLocation, useSearchParams } from "react-router-dom";
 import { LoadingState } from "./components/ai/primitives";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { MarkdownLinkPrompt } from "./components/markdown-link-prompt";
@@ -267,6 +267,9 @@ function SessionApp() {
                 <Route path="/app/x/:linkId" element={<NavLinkPage />} />
                 <Route path="/app/:botId" element={<ShellPage />} />
               </Route>
+              {/* Last, so only a URL no route claims reaches it. A new page under `/app` has to be
+                  declared above `/app/:botId`, which would otherwise read it as a bot id. */}
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>
         </div>
@@ -343,6 +346,29 @@ function AppFailed() {
             <Trans>Refresh</Trans>
           </Button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * A URL no route claims. React Router renders nothing for one in a production build and warns only
+ * in development, so without this a mistyped or renamed address looked like the app failing to load
+ * rather than a wrong address.
+ */
+function NotFoundPage() {
+  return (
+    <div
+      className="grid h-full place-items-center bg-background px-6 text-center"
+      data-unibot-app-state="not-found"
+    >
+      <div className="flex flex-col items-center">
+        <p className="text-[13.5px] text-muted-foreground/80">
+          <Trans>This page does not exist.</Trans>
+        </p>
+        <Link to="/" className="mt-4 text-[13.5px] text-foreground underline underline-offset-4">
+          <Trans>Go home</Trans>
+        </Link>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import type { SpaceMemoryConfig, UsageSummary } from "@unibot/contracts";
 import { Button, Dialog, DialogClose, DialogContent, DialogTitle } from "@unibot/ui-web";
 import { ChevronLeft, ChevronRight, XIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import { ApprovalRulesSettings } from "../components/ApprovalRulesSettings";
 import { computersAreUnavailable } from "../components/ComputersUnavailableHint";
 import { SETTINGS_CONTENT_WIDTH, SettingsGroup, SettingsRow } from "../components/SettingsRows";
@@ -214,6 +215,93 @@ export function SettingsOverlay({
     leaveSettings(onClose);
   }
 
+  // What each section shows. Keyed by the section union, so a section added to SETTINGS_SECTIONS
+  // without a panel here fails the typecheck instead of opening with an empty body.
+  const panels: Record<SettingsSection, ReactNode> = {
+    general: (
+      <div className="space-y-8">
+        <GeneralSettingsPanels
+          email={email}
+          name={name}
+          onNameSaved={onNameSaved}
+          timezone={timezone}
+          onTimezoneChange={onTimezoneChange}
+          onAccountImported={onAccountImported}
+          onImportAgent={onImportAgent}
+        />
+        {/* One space is just the app, so there is nothing to tell apart or manage. */}
+        {spaces.length > 1 && onOpenSpace ? (
+          <SettingsGroup title={t`Spaces`} data-testid="settings-spaces">
+            {spaces.map((option) => (
+              <SettingsRow
+                key={option.id}
+                label={<p className="break-words">{option.name}</p>}
+                control={
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="rounded-full"
+                    aria-label={t`Manage ${option.name}`}
+                    onClick={() => onOpenSpace(option.id)}
+                  >
+                    {t`Manage`}
+                  </Button>
+                }
+              />
+            ))}
+          </SettingsGroup>
+        ) : null}
+      </div>
+    ),
+    space: space ? (
+      <SpaceSettingsPanel
+        key={space.id}
+        space={space}
+        onRename={(name) => onRenameSpace?.(space.id, name) ?? Promise.resolve()}
+        onDelete={() => onDeleteSpace?.(space.id) ?? Promise.resolve()}
+        onClose={requestClose}
+        onBusyChange={setVoiceBusy}
+      />
+    ) : null,
+    confirmations: <ApprovalRulesSettings scope="account" />,
+    vault: <VaultSettings scope="account" />,
+    messaging: messagingEnabled ? <MessagingSettingsPanel /> : null,
+    wallet: paymentWalletProvider ? (
+      <PaymentWalletSettingsPanel provider={paymentWalletProvider} />
+    ) : null,
+    usage: <UsageSettingsPanel usage={usage} panelRef={usageRef} />,
+    computer: showComputer ? (
+      <ComputerSettingsPanel
+        sandboxProvider={sandboxProvider}
+        onSandboxProviderChange={(next) => {
+          onSandboxProviderChange?.(next);
+          holdComputerRecovery();
+        }}
+        onRecoveryDismissed={releaseComputerRecovery}
+      />
+    ) : null,
+    billing: billingEnabled ? <BillingSettingsPanel /> : null,
+    updates: showUpdates ? <UpdatesSettingsPanel /> : null,
+    models: <ModelSettingsOverlay embedded scope="account" onClose={requestClose} />,
+    memory: (
+      <MemorySettingsOverlay
+        embedded
+        onClose={requestClose}
+        config={memoryConfig}
+        onConfigChange={onMemoryConfigChange}
+        onBusyChange={setMemoryBusy}
+      />
+    ),
+    voice: (
+      <VoiceSettingsOverlay
+        embedded
+        scope="account"
+        onClose={requestClose}
+        onBusyChange={setVoiceBusy}
+      />
+    ),
+  };
+
   return (
     <Dialog
       open
@@ -340,92 +428,7 @@ export function SettingsOverlay({
                       : SETTINGS_CONTENT_WIDTH
                   }
                 >
-                  {section === "general" ? (
-                    <div className="space-y-8">
-                      <GeneralSettingsPanels
-                        email={email}
-                        name={name}
-                        onNameSaved={onNameSaved}
-                        timezone={timezone}
-                        onTimezoneChange={onTimezoneChange}
-                        onAccountImported={onAccountImported}
-                        onImportAgent={onImportAgent}
-                      />
-                      {/* One space is just the app, so there is nothing to tell apart or manage. */}
-                      {spaces.length > 1 && onOpenSpace ? (
-                        <SettingsGroup title={t`Spaces`} data-testid="settings-spaces">
-                          {spaces.map((option) => (
-                            <SettingsRow
-                              key={option.id}
-                              label={<p className="break-words">{option.name}</p>}
-                              control={
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="rounded-full"
-                                  aria-label={t`Manage ${option.name}`}
-                                  onClick={() => onOpenSpace(option.id)}
-                                >
-                                  {t`Manage`}
-                                </Button>
-                              }
-                            />
-                          ))}
-                        </SettingsGroup>
-                      ) : null}
-                    </div>
-                  ) : null}
-                  {section === "space" && space ? (
-                    <SpaceSettingsPanel
-                      key={space.id}
-                      space={space}
-                      onRename={(name) => onRenameSpace?.(space.id, name) ?? Promise.resolve()}
-                      onDelete={() => onDeleteSpace?.(space.id) ?? Promise.resolve()}
-                      onClose={requestClose}
-                      onBusyChange={setVoiceBusy}
-                    />
-                  ) : null}
-                  {section === "confirmations" ? <ApprovalRulesSettings scope="account" /> : null}
-                  {section === "vault" ? <VaultSettings scope="account" /> : null}
-                  {section === "messaging" && messagingEnabled ? <MessagingSettingsPanel /> : null}
-                  {section === "wallet" && paymentWalletProvider ? (
-                    <PaymentWalletSettingsPanel provider={paymentWalletProvider} />
-                  ) : null}
-                  {section === "usage" ? (
-                    <UsageSettingsPanel usage={usage} panelRef={usageRef} />
-                  ) : null}
-                  {section === "computer" && showComputer ? (
-                    <ComputerSettingsPanel
-                      sandboxProvider={sandboxProvider}
-                      onSandboxProviderChange={(next) => {
-                        onSandboxProviderChange?.(next);
-                        holdComputerRecovery();
-                      }}
-                      onRecoveryDismissed={releaseComputerRecovery}
-                    />
-                  ) : null}
-                  {section === "billing" && billingEnabled ? <BillingSettingsPanel /> : null}
-                  {section === "updates" && showUpdates ? <UpdatesSettingsPanel /> : null}
-                  {section === "models" ? (
-                    <ModelSettingsOverlay embedded scope="account" onClose={requestClose} />
-                  ) : null}
-                  {section === "memory" ? (
-                    <MemorySettingsOverlay
-                      embedded
-                      onClose={requestClose}
-                      config={memoryConfig}
-                      onConfigChange={onMemoryConfigChange}
-                      onBusyChange={setMemoryBusy}
-                    />
-                  ) : null}
-                  {section === "voice" ? (
-                    <VoiceSettingsOverlay
-                      embedded
-                      scope="account"
-                      onClose={requestClose}
-                      onBusyChange={setVoiceBusy}
-                    />
-                  ) : null}
+                  {panels[section]}
                 </div>
               </div>
             </SpaceRpcProvider>
