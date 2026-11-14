@@ -5,12 +5,18 @@ import { isLoopbackHost, isPrivateNetworkHost } from "@unibot/contracts/network-
 
 /** Managed desktop origin; development keeps its usual web/API ports. */
 export const DEFAULT_LOCAL_WEB_URL = "http://127.0.0.1:45173";
+/**
+ * The local API serves the interface and its calls from one origin, so a machine running it needs no
+ * second server and nothing to choose. This is the address `pnpm app` prints; the managed Docker
+ * stack keeps its own port so it can run beside a development server.
+ */
+export const DEFAULT_LOCAL_API_URL = "http://127.0.0.1:3100";
 export const PROBE_RESPONSE_LIMIT_BYTES = 64 * 1024;
 
 export const SETUP_FILE_NAME = "setup.json";
 
 export type StartupTarget =
-  | { kind: "app"; url: string; source: "env" | "saved" }
+  | { kind: "app"; url: string; source: "env" | "saved" | "local" }
   | { kind: "setup" };
 
 const SCHEME = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//;
@@ -128,6 +134,11 @@ export function resolveStartupTarget(input: {
   envUrl?: string;
   saved?: DesktopSetup | null;
   forceSetup?: boolean;
+  /**
+   * A local server that already answered. Used only when nothing else says where to open, so a
+   * machine already running its own server goes straight into the app instead of the setup window.
+   */
+  reachableLocalUrl?: string | null;
 }): StartupTarget {
   if (input.forceSetup === true) return { kind: "setup" };
 
@@ -138,7 +149,23 @@ export function resolveStartupTarget(input: {
     const saved = parseSetupInput(input.saved);
     if (saved !== null) return { kind: "app", url: saved.serverUrl, source: "saved" };
   }
+
+  const local = input.reachableLocalUrl?.trim();
+  if (local !== undefined && local !== "") return { kind: "app", url: local, source: "local" };
   return { kind: "setup" };
+}
+
+/**
+ * Whether a capabilities answer comes from a server running for the person whose machine this is.
+ * Only then does the app open without asking where the server is: on any other server the answer
+ * carries no owner, and the setup window still has a real question to ask.
+ */
+export function isLocalOwnerCapabilities(value: unknown): boolean {
+  if (typeof value !== "object" || value === null) return false;
+  const owner = (value as { localOwner?: unknown }).localOwner;
+  if (typeof owner !== "object" || owner === null) return false;
+  const id = (owner as { id?: unknown }).id;
+  return typeof id === "string" && id !== "";
 }
 
 /** Turns a network failure into something a person can act on. */

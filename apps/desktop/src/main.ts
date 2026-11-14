@@ -62,9 +62,11 @@ import { revealSecondInstanceWindow, secondInstanceWindow } from "./second-insta
 import { installServerHeaders } from "./server-request-headers.js";
 import { installSessionPermissions } from "./session-permissions.js";
 import {
+  DEFAULT_LOCAL_API_URL,
   DEFAULT_LOCAL_WEB_URL,
   desktopStackImageTag,
   firstRunAuthPath,
+  isLocalOwnerCapabilities,
   isUniBotHealth,
   managedLocalOpenUrl,
   maySendDesktopStackToken,
@@ -919,6 +921,30 @@ async function probeManagedStack(
   }
 }
 
+/**
+ * A local server that names the owner of this machine. When it answers, the app opens it directly:
+ * that server serves the interface and its calls from one origin, so there is nothing to choose and
+ * no second process to start.
+ */
+async function probeLocalApi(rawUrl: string): Promise<string | null> {
+  const origin = normalizeServerUrl(rawUrl);
+  if (origin === null) return null;
+  try {
+    const response = await net.fetch(`${origin}/api/auth/capabilities`, {
+      method: "GET",
+      headers: { accept: "application/json" },
+      cache: "no-store",
+      credentials: "omit",
+      redirect: "manual",
+      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+    });
+    if (!response.ok) return null;
+    return isLocalOwnerCapabilities(await readProbeJson(response)) ? origin : null;
+  } catch {
+    return null;
+  }
+}
+
 function openFailureDetail(error: unknown): string {
   if (error instanceof Error) {
     const { message } = error;
@@ -1287,10 +1313,18 @@ app.whenReady().then(async () => {
     },
   });
   currentSetup = await readSetup(userDataDir);
+  // Asked only when nothing else decides, so a saved setup never waits on a probe.
+  const decidesItself =
+    (process.env.UNIBOT_WEB_URL?.trim() ?? "") !== "" ||
+    process.env.UNIBOT_FORCE_SETUP === "1" ||
+    currentSetup != null;
   const target = resolveStartupTarget({
     envUrl: process.env.UNIBOT_WEB_URL,
     saved: currentSetup,
     forceSetup: process.env.UNIBOT_FORCE_SETUP === "1",
+    reachableLocalUrl: decidesItself
+      ? null
+      : await probeLocalApi(process.env.UNIBOT_LOCAL_API_URL?.trim() || DEFAULT_LOCAL_API_URL),
   });
   if (process.env.UNIBOT_PERFORMANCE_CLEAR_CACHE === "1") {
     const cacheSessions = new Set<Session>([session.defaultSession]);

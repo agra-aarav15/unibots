@@ -1,8 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  DEFAULT_LOCAL_API_URL,
   DEFAULT_LOCAL_WEB_URL,
   desktopStackImageTag,
   firstRunAuthPath,
+  isLocalOwnerCapabilities,
   isUniBotHealth,
   managedLocalOpenUrl,
   maySendDesktopStackToken,
@@ -233,6 +235,36 @@ describe("startup target", () => {
         saved: { mode: "new", serverUrl: "http://192.168.1.20:3100" },
       }),
     ).toEqual({ kind: "setup" });
+  });
+
+  it("opens a local server that already answered, without asking where it is", () => {
+    expect(resolveStartupTarget({ reachableLocalUrl: DEFAULT_LOCAL_API_URL })).toEqual({
+      kind: "app",
+      url: DEFAULT_LOCAL_API_URL,
+      source: "local",
+    });
+    expect(resolveStartupTarget({ reachableLocalUrl: "   " })).toEqual({ kind: "setup" });
+    expect(resolveStartupTarget({ reachableLocalUrl: null })).toEqual({ kind: "setup" });
+  });
+
+  it("keeps a saved setup ahead of what is running, and lets an address override both", () => {
+    const local = { reachableLocalUrl: DEFAULT_LOCAL_API_URL };
+    expect(resolveStartupTarget({ ...local, saved })).toMatchObject({ source: "saved" });
+    expect(resolveStartupTarget({ ...local, saved, envUrl: "http://127.0.0.1:4321" })).toMatchObject(
+      { source: "env", url: "http://127.0.0.1:4321" },
+    );
+    expect(resolveStartupTarget({ ...local, saved, forceSetup: true })).toEqual({ kind: "setup" });
+  });
+});
+
+describe("local owner capabilities", () => {
+  it("recognizes a server running for the person whose machine it is", () => {
+    expect(isLocalOwnerCapabilities({ localOwner: { id: "owner-1", name: "Owner" } })).toBe(true);
+    expect(isLocalOwnerCapabilities({ localOwner: { id: "" } })).toBe(false);
+    expect(isLocalOwnerCapabilities({ localOwner: null })).toBe(false);
+    expect(isLocalOwnerCapabilities({ passwordAuth: true })).toBe(false);
+    expect(isLocalOwnerCapabilities(null)).toBe(false);
+    expect(isLocalOwnerCapabilities("not json")).toBe(false);
   });
 });
 
