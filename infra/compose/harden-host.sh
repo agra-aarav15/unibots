@@ -154,7 +154,7 @@ for watch in "${audit_watches[@]}"; do
   else
     echo "Skipping audit watch on ${path}: its directory does not exist" >&2
   fi
-done >/etc/audit/rules.d/50-rakazo.rules
+done >/etc/audit/rules.d/50-unibot.rules
 augenrules --load >/dev/null
 
 # Keep existing private-network rules. Roll back unless a fresh SSH session confirms.

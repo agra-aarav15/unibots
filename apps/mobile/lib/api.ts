@@ -89,8 +89,8 @@ import {
 import { clearUnsentSends } from "./thread-feedback";
 import { authResponseErrorText, errorText, sessionSaveErrorText } from "./user-error";
 
-const SPACE_KEY = "rakazo.space_id";
-const SPACE_ROLLBACK_KEY = "rakazo.space_rollback";
+const SPACE_KEY = "unibot.space_id";
+const SPACE_ROLLBACK_KEY = "unibot.space_rollback";
 const RPC_TIMEOUT_MS = 8_000;
 export const MAX_MOBILE_AUTH_RESPONSE_BYTES = 256 * 1024;
 export const MAX_MOBILE_RPC_RESPONSE_BYTES = 16 * 1024 * 1024;
@@ -513,7 +513,7 @@ export async function authHeaders(
   return {
     ...clientBuild.headers(),
     ...(token ? { authorization: `Bearer ${token}` } : {}),
-    ...(spaceId ? { "x-rakazo-space-id": spaceId } : {}),
+    ...(spaceId ? { "x-unibot-space-id": spaceId } : {}),
   };
 }
 
@@ -525,7 +525,7 @@ export type ApiRequestContext = {
 
 /** Keeps consent prompts separate across servers and the selected Space. */
 export function aiConsentCoalesceKey(requestContext: ApiRequestContext): string {
-  return [requestContext.apiBase, requestContext.headers["x-rakazo-space-id"] ?? ""].join("\u0000");
+  return [requestContext.apiBase, requestContext.headers["x-unibot-space-id"] ?? ""].join("\u0000");
 }
 
 /** Pins a request to the current server and session, and to a Space (the selected one by default). */
@@ -893,7 +893,7 @@ async function request(
   // a 401 arriving after the user switched Spaces — including A → B → A —
   // belongs to a stale request and must not touch the current selection.
   const requestHeaders = consentContext?.headers ?? (await authHeaders());
-  const requestSpaceId = requestHeaders["x-rakazo-space-id"];
+  const requestSpaceId = requestHeaders["x-unibot-space-id"];
   try {
     if (
       consentContext?.sessionGeneration !== undefined &&

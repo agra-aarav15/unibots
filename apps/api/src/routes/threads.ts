@@ -42,6 +42,7 @@ import { mapBotSecretInputError } from "./bots.js";
 import { releaseComputerControl } from "./computer.js";
 import type { RouterContext } from "./context.js";
 import {
+  botHasModel,
   computerContext,
   HEARTBEAT_MS,
   isUniqueViolation,
@@ -149,11 +150,16 @@ export function threadsRoutes(ctx: RouterContext) {
         }
       }),
       send: authed.threads.send.handler(async ({ context, input }) => {
+        const target = await resolveThreadTarget(deps.prisma, context.actor, input);
         const setup = await modelSetup(deps, context.actor);
-        if (setup.needsModel) {
+        // A bot that carries its own connected model runs on it, so the space's main model is not
+        // required for this send.
+        if (
+          setup.needsModel &&
+          !(target.kind === "bot" && (await botHasModel(deps, context.actor, target.bot)))
+        ) {
           throw new ORPCError("BAD_REQUEST", { message: MODEL_REQUIRED_SEND_ERROR });
         }
-        const target = await resolveThreadTarget(deps.prisma, context.actor, input);
         if (target.kind === "bot") {
           await assertTeachingSendAllowed(deps.prisma, context.actor.spaceId, target.botId);
         }
@@ -192,9 +198,13 @@ export function threadsRoutes(ctx: RouterContext) {
       }),
       react: authed.threads.react.handler(async ({ context, input }) => {
         const target = await resolveThreadTarget(deps.prisma, context.actor, input);
+        const setup = await modelSetup(deps, context.actor);
+        const modelReady =
+          !setup.needsModel ||
+          (target.kind === "bot" && (await botHasModel(deps, context.actor, target.bot)));
         // Without a model or while teaching, the reaction is still saved; it just starts no turn.
         const mayStartTurn =
-          !(await modelSetup(deps, context.actor)).needsModel &&
+          modelReady &&
           (target.kind !== "bot" ||
             (await assertTeachingSendAllowed(deps.prisma, context.actor.spaceId, target.botId).then(
               () => true,

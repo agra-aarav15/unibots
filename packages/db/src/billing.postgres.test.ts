@@ -47,7 +47,7 @@ describePostgres("billing accounts (PostgreSQL)", () => {
     const createdAt = new Date();
     for (const id of [ownerId, memberId]) {
       await prisma.user.create({
-        data: { id, name: id, email: `${id}@rakazo.test`, emailVerified: false },
+        data: { id, name: id, email: `${id}@unibot.test`, emailVerified: false },
       });
     }
     await prisma.organization.create({

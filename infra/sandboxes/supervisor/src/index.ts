@@ -224,7 +224,7 @@ app.post("/computers", async (c) => {
     })
     .parse(await c.req.json());
   try {
-    assertRequestIdentity(c.req.header("x-unibot-bot-id"), c.req.header("x-rakazo-space-id"), {
+    assertRequestIdentity(c.req.header("x-unibot-bot-id"), c.req.header("x-unibot-space-id"), {
       botId: body.botId,
       spaceId: body.spaceId,
     });
@@ -404,7 +404,7 @@ app.get("/computers/:id", async (c) => {
     const { info } = await managedContainer(
       id,
       c.req.header("x-unibot-bot-id"),
-      c.req.header("x-rakazo-space-id"),
+      c.req.header("x-unibot-space-id"),
     );
     return c.json({
       id,
@@ -434,7 +434,7 @@ app.post("/computers/:id/exec", async (c) => {
     const managed = await managedContainer(
       id,
       c.req.header("x-unibot-bot-id"),
-      c.req.header("x-rakazo-space-id"),
+      c.req.header("x-unibot-space-id"),
     );
     // Docker would fail the exec inside the stream; answer up front so the caller can boot it.
     if (!managed.info.State.Running) return c.json({ error: "computer is not running" }, 409);
@@ -586,7 +586,7 @@ app.post("/computers/:id/browser", async (c) => {
     managedScreen(
       c.req.param("id"),
       c.req.header("x-unibot-bot-id"),
-      c.req.header("x-rakazo-space-id"),
+      c.req.header("x-unibot-space-id"),
       c.req.header("x-unibot-screen-id"),
       c.req.header("x-unibot-screen-lease-id"),
       true,
@@ -659,7 +659,7 @@ app.post("/computers/:id/observe", async (c) => {
     const { container, info, layout, browserProfile } = await managedScreen(
       c.req.param("id"),
       c.req.header("x-unibot-bot-id"),
-      c.req.header("x-rakazo-space-id"),
+      c.req.header("x-unibot-space-id"),
       c.req.header("x-unibot-screen-id"),
       c.req.header("x-unibot-screen-lease-id"),
     );
@@ -700,7 +700,7 @@ app.post("/computers/:id/actions", async (c) => {
     const { container, info, layout, browserProfile } = await managedScreen(
       c.req.param("id"),
       c.req.header("x-unibot-bot-id"),
-      c.req.header("x-rakazo-space-id"),
+      c.req.header("x-unibot-space-id"),
       c.req.header("x-unibot-screen-id"),
       c.req.header("x-unibot-screen-lease-id"),
     );
@@ -746,7 +746,7 @@ app.get("/computers/:id/files", async (c) => {
     const { container } = await managedContainer(
       c.req.param("id"),
       c.req.header("x-unibot-bot-id"),
-      c.req.header("x-rakazo-space-id"),
+      c.req.header("x-unibot-space-id"),
     );
     const relative = normalizeWorkspaceRelative(c.req.query("path") ?? "");
     const target = workspaceTarget(relative);
@@ -809,7 +809,7 @@ app.post("/computers/:id/files", async (c) => {
     const { container } = await managedContainer(
       c.req.param("id"),
       c.req.header("x-unibot-bot-id"),
-      c.req.header("x-rakazo-space-id"),
+      c.req.header("x-unibot-space-id"),
     );
     const target = workspaceTarget(normalizeWorkspaceRelative(body.path));
     await writeContainerFile(
@@ -831,7 +831,7 @@ app.get("/computers/:id/screen", async (c) => {
     const { container, info, layout, viewToken } = await managedScreen(
       id,
       c.req.header("x-unibot-bot-id"),
-      c.req.header("x-rakazo-space-id"),
+      c.req.header("x-unibot-space-id"),
       c.req.header("x-unibot-screen-id"),
       c.req.header("x-unibot-screen-lease-id"),
       false,
@@ -860,7 +860,7 @@ app.post("/computers/:id/screen-mode", async (c) => {
   try {
     const id = c.req.param("id");
     const botId = c.req.header("x-unibot-bot-id");
-    const spaceId = c.req.header("x-rakazo-space-id");
+    const spaceId = c.req.header("x-unibot-space-id");
     const screenId = c.req.header("x-unibot-screen-id");
     const screenLeaseId = c.req.header("x-unibot-screen-lease-id");
     const { container, info } = await managedContainer(id, botId, spaceId);
@@ -920,7 +920,7 @@ app.post("/computers/:id/terminal", async (c) => {
     const { container, info } = await managedContainer(
       id,
       botId,
-      c.req.header("x-rakazo-space-id"),
+      c.req.header("x-unibot-space-id"),
     );
     const cwd = workspaceTarget(normalizeWorkspaceRelative(body.cwd));
     const terminalToken = randomUUID();
@@ -981,7 +981,7 @@ app.post("/computers/:id/input", async (c) => {
     const { container, layout } = await managedScreen(
       id,
       c.req.header("x-unibot-bot-id"),
-      c.req.header("x-rakazo-space-id"),
+      c.req.header("x-unibot-space-id"),
       c.req.header("x-unibot-screen-id"),
       c.req.header("x-unibot-screen-lease-id"),
     );
@@ -1008,7 +1008,7 @@ app.delete("/computers/:id/screen", async (c) => {
     const { container } = await managedContainer(
       id,
       c.req.header("x-unibot-bot-id"),
-      c.req.header("x-rakazo-space-id"),
+      c.req.header("x-unibot-space-id"),
     );
     containerFound = true;
     const screenId = c.req.header("x-unibot-screen-id") || c.req.header("x-unibot-bot-id") || id;
@@ -1095,7 +1095,7 @@ app.post("/computers/:id/stop", async (c) => {
   const id = c.req.param("id");
   const botId = c.req.header("x-unibot-bot-id");
   try {
-    const { container } = await managedContainer(id, botId, c.req.header("x-rakazo-space-id"));
+    const { container } = await managedContainer(id, botId, c.req.header("x-unibot-space-id"));
     await withComputerScreenLock(id, async () => {
       const info = await container.inspect();
       if (info.State.Running) {
@@ -1137,7 +1137,7 @@ app.delete("/computers/:id", async (c) => {
   try {
     if (!botId) throw new Error("missing computer identity");
     return await withBotLifecycleLock(botId, async () => {
-      const { container } = await managedContainer(id, botId, c.req.header("x-rakazo-space-id"));
+      const { container } = await managedContainer(id, botId, c.req.header("x-unibot-space-id"));
       await withComputerScreenLock(id, async () => {
         await container.remove({ force: true }).catch((error) => {
           // Already gone is deleted; any other failure may leave the computer running.
@@ -1259,7 +1259,7 @@ async function findBotContainer(botId: string, spaceId: string) {
     filters: {
       // Space IDs were preserved when workspaces became Spaces. Search by the
       // stable bot label, then validate either generation of the Space label.
-      label: [`rakazo.botId=${botId}`],
+      label: [`unibot.botId=${botId}`],
     },
   });
   for (const item of listed) {
@@ -1272,8 +1272,8 @@ async function findBotContainer(botId: string, spaceId: string) {
 
 /** Count managed computers for a space, including legacy workspaceId / unlabeled-managed. */
 export async function countSpaceContainers(spaceId: string): Promise<number> {
-  // Do not filter by rakazo.managed=true: legacy computers are still managed via
-  // COMPUTER_IMAGE + rakazo.workspaceId (same rule as isUniBotContainer).
+  // Do not filter by unibot.managed=true: legacy computers are still managed via
+  // COMPUTER_IMAGE + unibot.workspaceId (same rule as isUniBotContainer).
   const listed = await docker.listContainers({ all: true });
   let count = 0;
   for (const item of listed) {
@@ -1288,10 +1288,10 @@ async function isManagedSpaceContainer(
 ): Promise<boolean> {
   const labels = item.Labels;
   if (labels) {
-    const listedSpaceId = labels["rakazo.spaceId"] ?? labels["rakazo.workspaceId"];
+    const listedSpaceId = labels["unibot.spaceId"] ?? labels["unibot.workspaceId"];
     // Labeled for another space (or no space identity) cannot count toward this cap.
     if (listedSpaceId !== spaceId) return false;
-    if (labels["rakazo.managed"] === "true" || item.Image === COMPUTER_IMAGE) return true;
+    if (labels["unibot.managed"] === "true" || item.Image === COMPUTER_IMAGE) return true;
     // Space matches but Image may be an ID after the tag moved — confirm via inspect.
   }
   // Missing list Labels: inspect with the same managed rule as isUniBotContainer.
@@ -1299,8 +1299,8 @@ async function isManagedSpaceContainer(
     const info = await docker.getContainer(item.Id).inspect();
     const infoLabels = info.Config?.Labels ?? {};
     const managed =
-      infoLabels["rakazo.managed"] === "true" || info.Config?.Image === COMPUTER_IMAGE;
-    const infoSpaceId = infoLabels["rakazo.spaceId"] ?? infoLabels["rakazo.workspaceId"];
+      infoLabels["unibot.managed"] === "true" || info.Config?.Image === COMPUTER_IMAGE;
+    const infoSpaceId = infoLabels["unibot.spaceId"] ?? infoLabels["unibot.workspaceId"];
     return managed && infoSpaceId === spaceId;
   } catch {
     // Container might have been removed concurrently
@@ -1503,7 +1503,7 @@ async function ensureManagedScreenAttempt(
 
 function isUniBotContainer(info: Docker.ContainerInspectInfo, botId: string, spaceId: string) {
   const labels = info.Config.Labels ?? {};
-  const managed = labels["rakazo.managed"] === "true" || info.Config.Image === COMPUTER_IMAGE;
+  const managed = labels["unibot.managed"] === "true" || info.Config.Image === COMPUTER_IMAGE;
   return managed && hasComputerIdentity(labels, botId, spaceId);
 }
 
@@ -1787,10 +1787,10 @@ export async function reclaimIdleComputerNetworks() {
   const runtime = await inspectSupervisorContainer();
   const owner = computerNetworkOwnerFor(dataDir, runtime);
   const networks = await docker.listNetworks({
-    filters: { label: [`rakazo.computerOwner=${owner}`] },
+    filters: { label: [`unibot.computerOwner=${owner}`] },
   });
   for (const { Name, Labels } of networks) {
-    const botId = Labels?.["rakazo.botId"];
+    const botId = Labels?.["unibot.botId"];
     if (!botId || Name !== computerNetworkNameFor(botId)) continue;
     await withBotLifecycleLock(botId, () => removeUnusedComputerNetwork(Name)).catch((error) => {
       getLogger().error("computer network reclaim failed", error);
@@ -1910,7 +1910,7 @@ async function stopBotContainers(containerIds: string[], botId: string) {
       const inspected = await container.inspect().catch(() => undefined);
       // A failed inspect is not proof this endpoint belongs to someone else.
       // Only a successful inspect of a different bot may skip the stop.
-      if (inspected && inspected.Config.Labels?.["rakazo.botId"] !== botId) return;
+      if (inspected && inspected.Config.Labels?.["unibot.botId"] !== botId) return;
       if (!inspected) return;
       await stopContainer(container);
       stoppedIds.add(containerId);
@@ -1947,7 +1947,7 @@ async function removeBotNetwork(botId: string) {
             .inspect()
             .catch(() => undefined)
         )?.Config.Labels ?? {};
-      const owner = labels["rakazo.botId"];
+      const owner = labels["unibot.botId"];
       owners.push(owner);
       if (owner === botId) {
         await network.disconnect({ Container: containerId, Force: true }).catch(() => undefined);

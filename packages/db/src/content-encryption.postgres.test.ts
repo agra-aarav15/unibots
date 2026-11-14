@@ -84,7 +84,7 @@ describePostgres("content encryption (PostgreSQL)", () => {
         data: {
           id: userId,
           name: "Encryption",
-          email: `${userId}@rakazo.test`,
+          email: `${userId}@unibot.test`,
           emailVerified: false,
         },
       });

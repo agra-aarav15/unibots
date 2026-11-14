@@ -26,7 +26,7 @@ fi
 latest_time="${latest%% *}"
 if [[ -z "${latest}" ]] || (($(date +%s) - ${latest_time%.*} > 36 * 3600)); then
   report "No verified backup completed in the last 36 hours"
-elif [[ -e "${latest#* }/rakazo.dump" && "${UNIBOT_BACKUP_ALLOW_PLAINTEXT:-0}" != 1 ]]; then
+elif [[ -e "${latest#* }/unibot.dump" && "${UNIBOT_BACKUP_ALLOW_PLAINTEXT:-0}" != 1 ]]; then
   report "The latest backup is not encrypted; set UNIBOT_BACKUP_AGE_RECIPIENTS"
 fi
 if systemctl is-failed --quiet unibot-backup.service; then

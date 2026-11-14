@@ -64,7 +64,9 @@ export const SIGN_OUT_HANG_UP_MS = 3_000;
  * The last signed-in user a tab confirmed. Signing in elsewhere sends no Better Auth message,
  * so other tabs learn of a new account from this key's storage event.
  */
-export const SIGNED_IN_USER_KEY = "rakazo.signedInUser";
+export const SIGNED_IN_USER_KEY = "unibot.signedInUser";
+/** Where this shipped before the rename. Cleared once the new name is written. */
+const LEGACY_SIGNED_IN_USER_KEY = "rakazo.signedInUser";
 let state: CallState | null = null;
 /** The signed-in user this page belongs to; undefined until the session first resolves. */
 let identity: string | null | undefined;
@@ -370,6 +372,7 @@ function publishSignedInUser(userId: string | null): void {
   try {
     if (userId === null) localStorage.removeItem(SIGNED_IN_USER_KEY);
     else localStorage.setItem(SIGNED_IN_USER_KEY, userId);
+    localStorage.removeItem(LEGACY_SIGNED_IN_USER_KEY);
   } catch {
     // No storage (private mode, tests): other tabs still see sign-outs from Better Auth.
   }

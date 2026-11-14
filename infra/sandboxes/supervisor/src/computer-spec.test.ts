@@ -394,7 +394,7 @@ describe("graphical computer spec", () => {
       Name: computerNetworkNameFor("bot_1"),
       Driver: "bridge",
       CheckDuplicate: true,
-      Labels: { "rakazo.computerOwner": "owner", "rakazo.botId": "bot_1" },
+      Labels: { "unibot.computerOwner": "owner", "unibot.botId": "bot_1" },
     });
     expect(open).not.toHaveProperty("Options");
 
@@ -457,7 +457,7 @@ describe("graphical computer spec", () => {
     expect(isRegistryQualifiedImage("localhost/unibot/computer:local")).toBe(true);
     expect(isRegistryQualifiedImage("docker.io/unibot/computer:edge")).toBe(true);
     expect(isRegistryQualifiedImage("Registry/unibot/computer:edge")).toBe(true);
-    expect(isRegistryQualifiedImage("rakazO/computer:edge")).toBe(true);
+    expect(isRegistryQualifiedImage("unibOt/computer:edge")).toBe(true);
     expect(isRegistryQualifiedImage("unibot/computer:local")).toBe(false);
     expect(isRegistryQualifiedImage("unibot/computer@sha256:0123")).toBe(false);
     expect(isRegistryQualifiedImage("computer:local")).toBe(false);

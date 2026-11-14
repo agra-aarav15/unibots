@@ -22,7 +22,7 @@ test.describe.configure({ mode: "serial" });
 
 test("takeover, routine, plugins, and export are reachable", async ({ page }, testInfo) => {
   const stamp = Date.now();
-  await signup(page, `flow-${stamp}@rakazo.test`, "password12", "Flow");
+  await signup(page, `flow-${stamp}@unibot.test`, "password12", "Flow");
   await completeOnboarding(page);
 
   const composer = page.getByPlaceholder(/Message/);
@@ -347,7 +347,7 @@ test("sign-in, spawn, and stop work in the shell", async ({ page }, testInfo) =>
     );
   });
   const stamp = Date.now();
-  const email = `shell-${stamp}@rakazo.test`;
+  const email = `shell-${stamp}@unibot.test`;
   await signup(page, email, "password12", "Shell");
   await completeOnboarding(page);
   await page.evaluate(() => {

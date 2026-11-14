@@ -231,7 +231,7 @@ describe("Telegram bots side by side", () => {
   }
 
   const webhook = (secret: string, text: string) =>
-    new Request("https://rakazo.test/api/v1/messaging/webhook/x", {
+    new Request("https://unibot.test/api/v1/messaging/webhook/x", {
       method: "POST",
       headers: {
         "content-type": "application/json",

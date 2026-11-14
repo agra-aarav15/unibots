@@ -1,8 +1,12 @@
 import type { ComposerMentionBinding } from "@unibot/core";
 import { validateComposerMentionBindings } from "@unibot/core";
+import { migrateLegacyKeyPrefix } from "./legacy-storage.js";
 
-export const COMPOSER_DRAFT_STORAGE_PREFIX = "rakazo.composerDraft.";
-const COMPOSER_BINDINGS_STORAGE_PREFIX = "rakazo.composerBindings.";
+export const COMPOSER_DRAFT_STORAGE_PREFIX = "unibot.composerDraft.";
+const COMPOSER_BINDINGS_STORAGE_PREFIX = "unibot.composerBindings.";
+/** Where these shipped before the rename. Moved forward once, so a saved draft survives it. */
+const LEGACY_COMPOSER_DRAFT_STORAGE_PREFIX = "rakazo.composerDraft.";
+const LEGACY_COMPOSER_BINDINGS_STORAGE_PREFIX = "rakazo.composerBindings.";
 
 type ComposerDraftSubmission = { text: string; bindingRecord: string | null };
 const pendingSubmissions = new Map<string, ComposerDraftSubmission>();
@@ -55,6 +59,7 @@ export function hasUnsentComposerDraft(storage: Storage | null = null): boolean 
   if (composerHoldsUnsavedWork()) return true;
   try {
     const drafts = storage ?? localStorage;
+    migrateLegacyDrafts(drafts);
     for (let index = 0; index < drafts.length; index++) {
       const key = drafts.key(index);
       if (key?.startsWith(COMPOSER_DRAFT_STORAGE_PREFIX) && drafts.getItem(key)) return true;
@@ -83,6 +88,24 @@ export function subscribeComposerDraftAccepted(
 }
 
 type DraftStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
+
+let legacyDraftsMigrated = false;
+
+/** Moves drafts saved under the pre-rename prefixes to the current ones, once per page. */
+function migrateLegacyDrafts(storage: DraftStorage | null): void {
+  if (legacyDraftsMigrated || !storage) return;
+  legacyDraftsMigrated = true;
+  migrateLegacyKeyPrefix(
+    storage,
+    COMPOSER_DRAFT_STORAGE_PREFIX,
+    LEGACY_COMPOSER_DRAFT_STORAGE_PREFIX,
+  );
+  migrateLegacyKeyPrefix(
+    storage,
+    COMPOSER_BINDINGS_STORAGE_PREFIX,
+    LEGACY_COMPOSER_BINDINGS_STORAGE_PREFIX,
+  );
+}
 
 function getLocalStorage(): DraftStorage | null {
   try {
@@ -140,6 +163,7 @@ export function readComposerDraft(
   storage: DraftStorage | null = getLocalStorage(),
 ): string {
   if (!storage || !threadKey) return "";
+  migrateLegacyDrafts(storage);
   try {
     return storage.getItem(composerDraftStorageKey(threadKey)) ?? "";
   } catch {
@@ -155,6 +179,7 @@ export function writeComposerDraft(
 ): void {
   pendingSubmissions.delete(threadKey);
   if (!storage || !threadKey) return;
+  migrateLegacyDrafts(storage);
   try {
     // Plain-text callers preserve bindings only when they are resubmitting the
     // unchanged draft. New text without bindings cannot inherit old identities.

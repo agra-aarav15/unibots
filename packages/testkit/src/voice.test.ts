@@ -45,8 +45,8 @@ describeVoice("voice credentials and speech HTTP", () => {
   });
 
   it("connects a scripted key, speaks, and transcribes without leaking the secret", async () => {
-    const cookie = await signup(app, `voice-${stamp}@rakazo.test`, "Voice User");
-    const other = await signup(app, `voice-other-${stamp}@rakazo.test`, "Other Voice");
+    const cookie = await signup(app, `voice-${stamp}@unibot.test`, "Voice User");
+    const other = await signup(app, `voice-other-${stamp}@unibot.test`, "Other Voice");
 
     const before = await rpc<{ ready: boolean; utterances: string[] }>(
       app,
@@ -139,10 +139,10 @@ describeVoice("voice credentials and speech HTTP", () => {
   });
 
   it("disconnects the actor credential and leaves another user's key in place", async () => {
-    const cookie = await signup(app, `voice-disconnect-${stamp}@rakazo.test`, "Voice Disconnect");
+    const cookie = await signup(app, `voice-disconnect-${stamp}@unibot.test`, "Voice Disconnect");
     const other = await signup(
       app,
-      `voice-disconnect-other-${stamp}@rakazo.test`,
+      `voice-disconnect-other-${stamp}@unibot.test`,
       "Other Voice Disconnect",
     );
     const me = await rpc<{ userId: string }>(app, cookie, "me");

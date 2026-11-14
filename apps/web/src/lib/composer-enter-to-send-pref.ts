@@ -1,4 +1,8 @@
-export const COMPOSER_ENTER_TO_SEND_STORAGE_KEY = "rakazo.composerEnterToSend";
+import { clearLegacyKey, readMigratedKey } from "./legacy-storage.js";
+
+export const COMPOSER_ENTER_TO_SEND_STORAGE_KEY = "unibot.composerEnterToSend";
+/** Where this shipped before the rename. Read once and moved forward, so nobody starts cold. */
+const LEGACY_COMPOSER_ENTER_TO_SEND_STORAGE_KEY = "rakazo.composerEnterToSend";
 
 type EnterToSendStorage = Pick<Storage, "getItem" | "setItem">;
 
@@ -48,7 +52,11 @@ function readStoredComposerEnterToSend(
   if (!storage) return defaultComposerEnterToSend(coarsePointer);
   let raw: string | null = null;
   try {
-    raw = storage.getItem(COMPOSER_ENTER_TO_SEND_STORAGE_KEY);
+    raw = readMigratedKey(
+      storage,
+      COMPOSER_ENTER_TO_SEND_STORAGE_KEY,
+      LEGACY_COMPOSER_ENTER_TO_SEND_STORAGE_KEY,
+    );
   } catch {
     raw = null;
   }
@@ -68,6 +76,7 @@ function persistComposerEnterToSend(preference: boolean, storage: EnterToSendSto
   if (!storage) return;
   try {
     storage.setItem(COMPOSER_ENTER_TO_SEND_STORAGE_KEY, preference ? "1" : "0");
+    clearLegacyKey(storage, LEGACY_COMPOSER_ENTER_TO_SEND_STORAGE_KEY);
   } catch {
     // Private browsing etc: keep the in-memory value.
   }

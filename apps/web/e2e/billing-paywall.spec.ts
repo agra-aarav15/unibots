@@ -33,7 +33,7 @@ test("choose your own key or monthly credits, then add a one-time top-up", async
   page,
 }, testInfo) => {
   const stamp = Date.now();
-  await signup(page, `credit-choice-${stamp}@rakazo.test`, "password12", "Demo Customer");
+  await signup(page, `credit-choice-${stamp}@unibot.test`, "password12", "Demo Customer");
   await completeOnboarding(page);
   await page.route("**/api/auth/capabilities", async (route) => {
     const response = await route.fetch();

@@ -148,7 +148,7 @@ function normalizeIp(value: string): string {
   return (mapped?.[1] ?? value).toLowerCase();
 }
 
-const CLIENT_IP_KEY = "rakazo.clientIp";
+const CLIENT_IP_KEY = "unibot.clientIp";
 
 /** Resolve the caller once per request and make it available to security events. */
 export function clientIpMiddleware(resolver: ClientIpResolver, header: string): MiddlewareHandler {

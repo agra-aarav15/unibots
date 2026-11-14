@@ -1,9 +1,10 @@
 import { expect, test } from "@playwright/test";
+import { RESPONSE_STREAMING_STORAGE_KEY } from "@unibot/core";
 import { captureScreenshot, completeOnboarding, openUserSettings, signup } from "./helpers";
 
 test("changing language updates settings overflow without resizing", async ({ page }, testInfo) => {
   const stamp = Date.now();
-  await signup(page, `settings-language-${stamp}@rakazo.test`, "password12", "Settings");
+  await signup(page, `settings-language-${stamp}@unibot.test`, "password12", "Settings");
   await completeOnboarding(page);
   const settings = await openUserSettings(page);
   // Below the desktop breakpoint, where the section list scrolls sideways.
@@ -33,7 +34,7 @@ test("narrow settings reveals the active section and offers scroll controls", as
   page,
 }, testInfo) => {
   const stamp = Date.now();
-  await signup(page, `settings-narrow-${stamp}@rakazo.test`, "password12", "Settings");
+  await signup(page, `settings-narrow-${stamp}@unibot.test`, "password12", "Settings");
   await completeOnboarding(page);
   const settings = await openUserSettings(page, "usage");
   const nav = settings.getByTestId("settings-nav");
@@ -95,7 +96,7 @@ test("settings shell is two-pane and deep-links Models Memory Voice Usage", asyn
 }, testInfo) => {
   const stamp = Date.now();
   const userName = `Settings shell ${stamp}`;
-  await signup(page, `settings-shell-${stamp}@rakazo.test`, "password12", userName);
+  await signup(page, `settings-shell-${stamp}@unibot.test`, "password12", userName);
   await completeOnboarding(page);
 
   await page.getByTestId("user-menu-trigger").click();
@@ -142,7 +143,7 @@ test("settings shell is two-pane and deep-links Models Memory Voice Usage", asyn
   await streamReplies.click();
   await expect(streamReplies).toBeChecked();
   await expect
-    .poll(() => page.evaluate(() => window.localStorage.getItem("rakazo.responseStreaming")))
+    .poll(() => page.evaluate((key) => window.localStorage.getItem(key), RESPONSE_STREAMING_STORAGE_KEY))
     .toBe("on");
   const deleteAccount = settings.getByRole("button", { name: "Delete account", exact: true });
   await deleteAccount.scrollIntoViewIfNeeded();
@@ -185,7 +186,7 @@ test("settings shell is two-pane and deep-links Models Memory Voice Usage", asyn
 test("Honcho memory settings empty and filled", async ({ page }, testInfo) => {
   // These screenshots never submit credentials or contact Honcho.
   const stamp = Date.now();
-  await signup(page, `memory-honcho-${stamp}@rakazo.test`, "password12", "Memory settings");
+  await signup(page, `memory-honcho-${stamp}@unibot.test`, "password12", "Memory settings");
   await completeOnboarding(page);
   const settings = await openUserSettings(page, "memory");
   const memory = settings.getByTestId("memory-settings");

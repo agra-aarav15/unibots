@@ -90,7 +90,7 @@ describe("computer loopback provision lifecycle", () => {
       headers: {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "x-unibot-bot-id": "bot",
-        "x-rakazo-space-id": "space",
+        "x-unibot-space-id": "space",
       },
     });
     expect(response.status).toBe(status);
@@ -103,7 +103,7 @@ describe("computer loopback provision lifecycle", () => {
     const container = {
       inspect: vi.fn().mockResolvedValue({
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "other", "rakazo.spaceId": "other" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "other", "unibot.spaceId": "other" },
         },
       }),
       stop: vi.fn(),
@@ -115,7 +115,7 @@ describe("computer loopback provision lifecycle", () => {
       headers: {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "x-unibot-bot-id": "bot",
-        "x-rakazo-space-id": "space",
+        "x-unibot-space-id": "space",
       },
     });
     expect(response.status).toBe(403);
@@ -137,7 +137,7 @@ describe("computer loopback provision lifecycle", () => {
     const container = {
       inspect: vi.fn(async () => ({
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
         },
         State: { Running: running },
       })),
@@ -158,7 +158,7 @@ describe("computer loopback provision lifecycle", () => {
         headers: {
           authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
           "x-unibot-bot-id": "bot",
-          "x-rakazo-space-id": "space",
+          "x-unibot-space-id": "space",
         },
       });
     const first = stop();
@@ -177,7 +177,7 @@ describe("computer loopback provision lifecycle", () => {
     const container = {
       inspect: vi.fn(async () => ({
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
         },
         State: { Running: true },
       })),
@@ -193,7 +193,7 @@ describe("computer loopback provision lifecycle", () => {
       headers: {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "x-unibot-bot-id": "bot",
-        "x-rakazo-space-id": "space",
+        "x-unibot-space-id": "space",
       },
     });
     expect(response.status).toBe(500);
@@ -205,7 +205,7 @@ describe("computer loopback provision lifecycle", () => {
     const container = {
       inspect: vi.fn(async () => ({
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
         },
         State: { Running: true },
       })),
@@ -221,7 +221,7 @@ describe("computer loopback provision lifecycle", () => {
       headers: {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "x-unibot-bot-id": "bot",
-        "x-rakazo-space-id": "space",
+        "x-unibot-space-id": "space",
       },
     });
     expect(response.status).toBe(200);
@@ -251,7 +251,7 @@ describe("computer loopback provision lifecycle", () => {
       Image: "test-image-id",
       Config: {
         User: hostComputerUser(),
-        Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+        Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
       },
       HostConfig: {
         NetworkMode: computerNetworkNameFor("bot"),
@@ -291,7 +291,7 @@ describe("computer loopback provision lifecycle", () => {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "content-type": "application/json",
         "x-unibot-bot-id": "bot",
-        "x-rakazo-space-id": "space",
+        "x-unibot-space-id": "space",
       },
       body: JSON.stringify({ botId: "bot", spaceId: "space", homePath }),
     });
@@ -344,7 +344,7 @@ describe("provisioning network rollback", () => {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "content-type": "application/json",
         "x-unibot-bot-id": "bot",
-        "x-rakazo-space-id": "space",
+        "x-unibot-space-id": "space",
       },
       body: JSON.stringify({ botId: "bot", spaceId: "space", homePath }),
     });
@@ -445,7 +445,7 @@ describe("provisioning network rollback", () => {
       inspect: vi.fn().mockResolvedValue({
         Image: "old-image",
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
         },
         HostConfig: { PortBindings: {} },
         State: { Running: true },
@@ -507,7 +507,7 @@ describe("restricted egress rekeying", () => {
       Image: "test-image-id",
       Config: {
         User: hostComputerUser(),
-        Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+        Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
       },
       HostConfig: { NetworkMode: botNet, PortBindings: {} },
       State: { Running: false },
@@ -546,7 +546,7 @@ describe("restricted egress rekeying", () => {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "content-type": "application/json",
         "x-unibot-bot-id": "bot",
-        "x-rakazo-space-id": "space",
+        "x-unibot-space-id": "space",
       },
       body: JSON.stringify({ botId: "bot", spaceId: "space", homePath }),
     });
@@ -657,7 +657,7 @@ describe("restricted egress rekeying", () => {
     const kill = vi.fn().mockResolvedValue(undefined);
     Object.assign(existing, { stop, kill });
     const peer = {
-      inspect: vi.fn().mockResolvedValue({ Config: { Labels: { "rakazo.botId": "other" } } }),
+      inspect: vi.fn().mockResolvedValue({ Config: { Labels: { "unibot.botId": "other" } } }),
       stop: vi.fn().mockResolvedValue(undefined),
       kill: vi.fn().mockResolvedValue(undefined),
     };
@@ -705,7 +705,7 @@ describe("restricted egress rekeying", () => {
     const kill = vi.fn().mockResolvedValue(undefined);
     Object.assign(existing, { stop, kill });
     const peer = {
-      inspect: vi.fn().mockResolvedValue({ Config: { Labels: { "rakazo.botId": "other" } } }),
+      inspect: vi.fn().mockResolvedValue({ Config: { Labels: { "unibot.botId": "other" } } }),
       stop: vi.fn().mockResolvedValue(undefined),
       kill: vi.fn().mockResolvedValue(undefined),
     };
@@ -762,7 +762,7 @@ describe("space computer limit enforcement", () => {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "content-type": "application/json",
         "x-unibot-bot-id": botId,
-        "x-rakazo-space-id": spaceId,
+        "x-unibot-space-id": spaceId,
       },
       body: JSON.stringify({ botId, spaceId, homePath }),
     });
@@ -776,13 +776,13 @@ describe("space computer limit enforcement", () => {
       async (opts?: { filters?: { label?: string[] } }) => {
         const labels = opts?.filters?.label ?? [];
         // For findBotContainer check
-        if (labels.some((l: string) => l.startsWith("rakazo.botId="))) {
+        if (labels.some((l: string) => l.startsWith("unibot.botId="))) {
           return [];
         }
         // For countSpaceContainers
         return [
-          { Id: "c1", Labels: { "rakazo.managed": "true", "rakazo.spaceId": "space-1" } },
-          { Id: "c2", Labels: { "rakazo.managed": "true", "rakazo.spaceId": "space-1" } },
+          { Id: "c1", Labels: { "unibot.managed": "true", "unibot.spaceId": "space-1" } },
+          { Id: "c2", Labels: { "unibot.managed": "true", "unibot.spaceId": "space-1" } },
         ];
       },
     );
@@ -802,10 +802,10 @@ describe("space computer limit enforcement", () => {
     mocks.docker.listContainers.mockImplementation(
       async (opts?: { filters?: { label?: string[] } }) => {
         const labels = opts?.filters?.label ?? [];
-        if (labels.some((l: string) => l.startsWith("rakazo.botId="))) {
+        if (labels.some((l: string) => l.startsWith("unibot.botId="))) {
           return [];
         }
-        return [{ Id: "c1", Labels: { "rakazo.managed": "true", "rakazo.spaceId": "space-1" } }];
+        return [{ Id: "c1", Labels: { "unibot.managed": "true", "unibot.spaceId": "space-1" } }];
       },
     );
 
@@ -828,9 +828,9 @@ describe("space computer limit enforcement", () => {
         Config: {
           User: hostComputerUser(process.getuid?.(), process.getgid?.()),
           Labels: {
-            "rakazo.managed": "true",
-            "rakazo.botId": "bot-existing",
-            "rakazo.spaceId": "space-1",
+            "unibot.managed": "true",
+            "unibot.botId": "bot-existing",
+            "unibot.spaceId": "space-1",
           },
         },
         State: { Running: true },
@@ -848,20 +848,20 @@ describe("space computer limit enforcement", () => {
     mocks.docker.listContainers.mockImplementation(
       async (opts?: { filters?: { label?: string[] } }) => {
         const labels = opts?.filters?.label ?? [];
-        if (labels.some((l: string) => l === "rakazo.botId=bot-existing")) {
+        if (labels.some((l: string) => l === "unibot.botId=bot-existing")) {
           return [
             {
               Id: existing.id,
               Labels: {
-                "rakazo.managed": "true",
-                "rakazo.botId": "bot-existing",
-                "rakazo.spaceId": "space-1",
+                "unibot.managed": "true",
+                "unibot.botId": "bot-existing",
+                "unibot.spaceId": "space-1",
               },
             },
           ];
         }
         return [
-          { Id: existing.id, Labels: { "rakazo.managed": "true", "rakazo.spaceId": "space-1" } },
+          { Id: existing.id, Labels: { "unibot.managed": "true", "unibot.spaceId": "space-1" } },
         ];
       },
     );
@@ -889,9 +889,9 @@ describe("space computer limit enforcement", () => {
         Config: {
           User: hostComputerUser(process.getuid?.(), process.getgid?.()),
           Labels: {
-            "rakazo.managed": "true",
-            "rakazo.botId": "bot-detached",
-            "rakazo.spaceId": "space-1",
+            "unibot.managed": "true",
+            "unibot.botId": "bot-detached",
+            "unibot.spaceId": "space-1",
           },
         },
         State: { Running: true },
@@ -910,14 +910,14 @@ describe("space computer limit enforcement", () => {
     mocks.docker.listContainers.mockImplementation(
       async (opts?: { filters?: { label?: string[] } }) => {
         const labels = opts?.filters?.label ?? [];
-        if (labels.some((l: string) => l === "rakazo.botId=bot-detached")) {
+        if (labels.some((l: string) => l === "unibot.botId=bot-detached")) {
           return [
             {
               Id: existing.id,
               Labels: {
-                "rakazo.managed": "true",
-                "rakazo.botId": "bot-detached",
-                "rakazo.spaceId": "space-1",
+                "unibot.managed": "true",
+                "unibot.botId": "bot-detached",
+                "unibot.spaceId": "space-1",
               },
             },
           ];
@@ -943,15 +943,15 @@ describe("space computer limit enforcement", () => {
     mocks.docker.listContainers.mockImplementation(
       async (opts?: { filters?: { label?: string[] } }) => {
         const labels = opts?.filters?.label ?? [];
-        if (labels.some((l: string) => l.startsWith("rakazo.botId="))) {
+        if (labels.some((l: string) => l.startsWith("unibot.botId="))) {
           return [];
         }
-        // Legacy managed computer: COMPUTER_IMAGE + workspaceId, no rakazo.managed.
+        // Legacy managed computer: COMPUTER_IMAGE + workspaceId, no unibot.managed.
         return [
           {
             Id: "legacy",
             Image: COMPUTER_IMAGE,
-            Labels: { "rakazo.workspaceId": "space-1", "rakazo.botId": "legacy-bot" },
+            Labels: { "unibot.workspaceId": "space-1", "unibot.botId": "legacy-bot" },
           },
         ];
       },
@@ -973,12 +973,12 @@ describe("space computer limit enforcement", () => {
     mocks.docker.listContainers.mockImplementation(
       async (opts?: { filters?: { label?: string[] } }) => {
         const labels = opts?.filters?.label ?? [];
-        if (labels.some((l: string) => l.startsWith("rakazo.botId="))) {
+        if (labels.some((l: string) => l.startsWith("unibot.botId="))) {
           return [];
         }
         return Array.from({ length: created }, (_, index) => ({
           Id: `c${index}`,
-          Labels: { "rakazo.managed": "true", "rakazo.spaceId": "space-1" },
+          Labels: { "unibot.managed": "true", "unibot.spaceId": "space-1" },
         }));
       },
     );
@@ -1016,9 +1016,9 @@ describe("space computer limit enforcement", () => {
         Config: {
           User: hostComputerUser(process.getuid?.(), process.getgid?.()),
           Labels: {
-            "rakazo.managed": "true",
-            "rakazo.botId": "bot-existing",
-            "rakazo.spaceId": "space-1",
+            "unibot.managed": "true",
+            "unibot.botId": "bot-existing",
+            "unibot.spaceId": "space-1",
           },
         },
         State: { Running: true },
@@ -1041,26 +1041,26 @@ describe("space computer limit enforcement", () => {
     mocks.docker.listContainers.mockImplementation(
       async (opts?: { filters?: { label?: string[] } }) => {
         const labels = opts?.filters?.label ?? [];
-        if (labels.some((l: string) => l === "rakazo.botId=bot-existing")) {
+        if (labels.some((l: string) => l === "unibot.botId=bot-existing")) {
           return present.has(existing.id)
             ? [
                 {
                   Id: existing.id,
                   Labels: {
-                    "rakazo.managed": "true",
-                    "rakazo.botId": "bot-existing",
-                    "rakazo.spaceId": "space-1",
+                    "unibot.managed": "true",
+                    "unibot.botId": "bot-existing",
+                    "unibot.spaceId": "space-1",
                   },
                 },
               ]
             : [];
         }
-        if (labels.some((l: string) => l.startsWith("rakazo.botId="))) {
+        if (labels.some((l: string) => l.startsWith("unibot.botId="))) {
           return [];
         }
         return [...present].map((Id) => ({
           Id,
-          Labels: { "rakazo.managed": "true", "rakazo.spaceId": "space-1" },
+          Labels: { "unibot.managed": "true", "unibot.spaceId": "space-1" },
         }));
       },
     );
@@ -1092,7 +1092,7 @@ describe("screen release status", () => {
     authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
     "content-type": "application/json",
     "x-unibot-bot-id": "bot",
-    "x-rakazo-space-id": "space",
+    "x-unibot-space-id": "space",
     "x-unibot-screen-id": "writer",
   };
 
@@ -1100,7 +1100,7 @@ describe("screen release status", () => {
     return {
       inspect: vi.fn(async () => ({
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
         },
         HostConfig: { NetworkMode: computerNetworkNameFor("bot") },
         State: { Running: true },
@@ -1138,7 +1138,7 @@ describe("screen release status", () => {
     const container = {
       inspect: vi.fn().mockResolvedValue({
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "other", "rakazo.spaceId": "other" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "other", "unibot.spaceId": "other" },
         },
       }),
       exec: vi.fn(),
@@ -1369,7 +1369,7 @@ describe("computer deletion", () => {
     authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
     "content-type": "application/json",
     "x-unibot-bot-id": "bot",
-    "x-rakazo-space-id": "space",
+    "x-unibot-space-id": "space",
     "x-unibot-screen-id": "writer",
   };
   const dockerError = (statusCode: number) =>
@@ -1380,7 +1380,7 @@ describe("computer deletion", () => {
     const container = {
       inspect: vi.fn(async () => ({
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": botId, "rakazo.spaceId": "space" },
+          Labels: { "unibot.managed": "true", "unibot.botId": botId, "unibot.spaceId": "space" },
         },
         HostConfig: { NetworkMode: computerNetworkNameFor("bot") },
         State: { Running: true },
@@ -1472,7 +1472,7 @@ describe("screen registry across run boundaries", () => {
     const container = {
       inspect: vi.fn(async () => ({
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
         },
         State: { Running: running, StartedAt: boot },
         HostConfig: { NetworkMode: computerNetworkNameFor("bot") },
@@ -1501,7 +1501,7 @@ describe("screen registry across run boundaries", () => {
           authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
           "content-type": "application/json",
           "x-unibot-bot-id": "bot",
-          "x-rakazo-space-id": "space",
+          "x-unibot-space-id": "space",
           "x-unibot-screen-id": "writer",
         },
         body: JSON.stringify({ interactive: false, revokeControl: false }),
@@ -1546,7 +1546,7 @@ describe("screen registry across run boundaries", () => {
       const container = {
         inspect: vi.fn(async () => ({
           Config: {
-            Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+            Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
           },
           HostConfig: { NetworkMode: computerNetworkNameFor("bot") },
           State: { Running: true, StartedAt: `boot-${boot}` },
@@ -1583,7 +1583,7 @@ describe("screen registry across run boundaries", () => {
             authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
             "content-type": "application/json",
             "x-unibot-bot-id": "bot",
-            "x-rakazo-space-id": "space",
+            "x-unibot-space-id": "space",
             "x-unibot-screen-id": "writer",
           },
           body: JSON.stringify({ interactive: false, revokeControl: false }),
@@ -1633,7 +1633,7 @@ describe("screen registry across run boundaries", () => {
       Image: "old-image",
       Config: {
         User: hostComputerUser(),
-        Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+        Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
       },
       HostConfig: { NetworkMode: computerNetworkNameFor("bot") },
       State: { Running: true, StartedAt: "boot-1" },
@@ -1664,7 +1664,7 @@ describe("screen registry across run boundaries", () => {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
       "x-unibot-bot-id": "bot",
-      "x-rakazo-space-id": "space",
+      "x-unibot-space-id": "space",
     };
     const view = () =>
       supervisorApp.request("/computers/existing-screen/screen-mode", {
@@ -1733,9 +1733,9 @@ describe("screen registry across run boundaries", () => {
           return {
             Config: {
               Labels: {
-                "rakazo.managed": "true",
-                "rakazo.botId": "bot",
-                "rakazo.spaceId": "space",
+                "unibot.managed": "true",
+                "unibot.botId": "bot",
+                "unibot.spaceId": "space",
               },
             },
             HostConfig: { NetworkMode: computerNetworkNameFor("bot") },
@@ -1760,7 +1760,7 @@ describe("screen registry across run boundaries", () => {
         authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
         "content-type": "application/json",
         "x-unibot-bot-id": "bot",
-        "x-rakazo-space-id": "space",
+        "x-unibot-space-id": "space",
         "x-unibot-screen-id": "writer",
       };
       const view = (leaseId = "run-2:2") =>
@@ -1819,7 +1819,7 @@ describe("screen registry across run boundaries", () => {
     const container = {
       inspect: vi.fn().mockResolvedValue({
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
         },
         HostConfig: { NetworkMode: computerNetworkNameFor("bot") },
         State: { Running: true },
@@ -1837,7 +1837,7 @@ describe("screen registry across run boundaries", () => {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
       "x-unibot-bot-id": "bot",
-      "x-rakazo-space-id": "space",
+      "x-unibot-space-id": "space",
       "x-unibot-screen-id": "writer",
     };
     const view = () =>
@@ -1868,7 +1868,7 @@ describe("screen registry across run boundaries", () => {
     const container = {
       inspect: vi.fn().mockResolvedValue({
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
         },
         HostConfig: { NetworkMode: computerNetworkNameFor("bot") },
         State: { Running: true },
@@ -1891,7 +1891,7 @@ describe("screen registry across run boundaries", () => {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
       "x-unibot-bot-id": "bot",
-      "x-rakazo-space-id": "space",
+      "x-unibot-space-id": "space",
       "x-unibot-screen-id": screenId,
       "x-unibot-screen-lease-id": leaseId,
     });
@@ -1965,7 +1965,7 @@ describe("screen registry across run boundaries", () => {
     const container = {
       inspect: vi.fn().mockResolvedValue({
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
         },
         HostConfig: { NetworkMode: computerNetworkNameFor("bot") },
         State: { Running: true },
@@ -1988,7 +1988,7 @@ describe("screen registry across run boundaries", () => {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
       "x-unibot-bot-id": "bot",
-      "x-rakazo-space-id": "space",
+      "x-unibot-space-id": "space",
       "x-unibot-screen-id": screenId,
       "x-unibot-screen-lease-id": leaseId,
     });
@@ -2030,7 +2030,7 @@ describe("computer network reclaim", () => {
   const headers = {
     authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
     "x-unibot-bot-id": "bot",
-    "x-rakazo-space-id": "space",
+    "x-unibot-space-id": "space",
   };
 
   function botNetwork(attached: string[] = []) {
@@ -2052,7 +2052,7 @@ describe("computer network reclaim", () => {
       inspect: vi.fn(async () => ({
         Id: "computer-full-id",
         Config: {
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
         },
         State: { Running: running },
         // Docker keeps a stopped container's endpoint on its network.
@@ -2327,10 +2327,10 @@ describe("computer network reclaim", () => {
         [computerNetworkNameFor("renamed")]: botNetwork(),
       };
       mocks.docker.listNetworks.mockResolvedValue([
-        { Name: computerNetworkNameFor("orphan"), Labels: { "rakazo.botId": "orphan" } },
-        { Name: computerNetworkNameFor("stopped"), Labels: { "rakazo.botId": "stopped" } },
+        { Name: computerNetworkNameFor("orphan"), Labels: { "unibot.botId": "orphan" } },
+        { Name: computerNetworkNameFor("stopped"), Labels: { "unibot.botId": "stopped" } },
         // The bot label must name the network, since it picks the lock.
-        { Name: computerNetworkNameFor("renamed"), Labels: { "rakazo.botId": "other" } },
+        { Name: computerNetworkNameFor("renamed"), Labels: { "unibot.botId": "other" } },
       ]);
       mocks.docker.getNetwork.mockImplementation((name: string) => networks[name]);
       mocks.docker.listContainers.mockImplementation(
@@ -2341,7 +2341,7 @@ describe("computer network reclaim", () => {
 
       await reclaim();
       expect(mocks.docker.listNetworks).toHaveBeenCalledWith({
-        filters: { label: [`rakazo.computerOwner=${ownerLabel()}`] },
+        filters: { label: [`unibot.computerOwner=${ownerLabel()}`] },
       });
       expect(mocks.docker.listContainers).toHaveBeenCalledWith({
         all: true,
@@ -2366,7 +2366,7 @@ describe("computer network reclaim", () => {
       const network = botNetwork();
       mocks.docker.getNetwork.mockReturnValue(network);
       mocks.docker.listNetworks.mockResolvedValue([
-        { Name: botNet, Labels: { "rakazo.botId": "bot" } },
+        { Name: botNet, Labels: { "unibot.botId": "bot" } },
       ]);
       mocks.docker.listContainers.mockImplementation(
         async ({ filters }: { filters: { network?: string[] } }) =>
@@ -2395,7 +2395,7 @@ describe("computer network reclaim", () => {
         Image: "image",
         Config: {
           User: hostComputerUser(),
-          Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+          Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
         },
         HostConfig: { NetworkMode: botNet, PortBindings: {} },
         State: { Running: false },
@@ -2457,8 +2457,8 @@ describe("computer network reclaim", () => {
           expect.objectContaining({
             Name: botNet,
             Labels: {
-              "rakazo.computerOwner": computerNetworkOwnerFor(process.env.DATA_DIR!, undefined),
-              "rakazo.botId": "bot",
+              "unibot.computerOwner": computerNetworkOwnerFor(process.env.DATA_DIR!, undefined),
+              "unibot.botId": "bot",
             },
             ...(egress === "restricted"
               ? { Options: { "com.docker.network.bridge.name": computerBridgeNameFor("bot") } }

@@ -63,7 +63,7 @@ restored. See [backup and restore](./self-host-backups.md). For the desktop stac
 
 ```bash
 docker compose --env-file .env -f docker-compose.images.yml exec -T postgres \
-  pg_dump -U unibot unibot > rakazo.sql
+  pg_dump -U unibot unibot > unibot.sql
 docker run --rm -v unibot-desktop_appdata:/data -v "$PWD":/backup busybox \
   tar czf /backup/appdata.tgz -C /data .
 ```

@@ -296,7 +296,7 @@ describe("sandbox supervisor HTTP boundary", () => {
         authorization: `Bearer ${token}`,
         "content-type": "application/json",
         "x-unibot-bot-id": "other-bot",
-        "x-rakazo-space-id": "workspace",
+        "x-unibot-space-id": "workspace",
       },
       body: JSON.stringify({
         botId: "bot",
@@ -333,11 +333,11 @@ describe("sandbox supervisor input containment", () => {
 
   it("accepts the legacy workspace label without weakening container identity", () => {
     expect(
-      hasComputerIdentity({ "rakazo.botId": "bot", "rakazo.workspaceId": "space" }, "bot", "space"),
+      hasComputerIdentity({ "unibot.botId": "bot", "unibot.workspaceId": "space" }, "bot", "space"),
     ).toBe(true);
     expect(
       hasComputerIdentity(
-        { "rakazo.botId": "bot", "rakazo.workspaceId": "other-space" },
+        { "unibot.botId": "bot", "unibot.workspaceId": "other-space" },
         "bot",
         "space",
       ),
@@ -345,9 +345,9 @@ describe("sandbox supervisor input containment", () => {
     expect(
       hasComputerIdentity(
         {
-          "rakazo.botId": "bot",
-          "rakazo.spaceId": "space",
-          "rakazo.workspaceId": "other-space",
+          "unibot.botId": "bot",
+          "unibot.spaceId": "space",
+          "unibot.workspaceId": "other-space",
         },
         "bot",
         "space",
@@ -370,8 +370,8 @@ describe("sandbox supervisor input containment", () => {
     ];
     const aimed = [{ kind: "scroll" as const, direction: "down" as const, x: 600, y: 420 }];
     const sideways = [{ kind: "scroll" as const, direction: "left" as const }];
-    const current = { [AIMED_SCROLL_CONTROL_LABEL]: "1", "rakazo.botId": "bot" };
-    const older = { "rakazo.botId": "bot" };
+    const current = { [AIMED_SCROLL_CONTROL_LABEL]: "1", "unibot.botId": "bot" };
+    const older = { "unibot.botId": "bot" };
     expect(controlHandlesActions(older, plain)).toBe(true);
     expect(controlHandlesActions(older, aimed)).toBe(false);
     expect(controlHandlesActions(older, sideways)).toBe(false);

@@ -50,7 +50,7 @@ describe("unavailable space", () => {
     const fetch = vi.fn(async (_request: Request, init?: RequestInit) => {
       if (!spaces)
         return Response.json({ json: { code: "UNAUTHORIZED", status: 401 } }, { status: 401 });
-      expect(new Headers(init?.headers).has("x-rakazo-space-id")).toBe(false);
+      expect(new Headers(init?.headers).has("x-unibot-space-id")).toBe(false);
       return Response.json({
         json: {
           current: {
@@ -81,7 +81,7 @@ describe("unavailable space", () => {
     const fetch = vi.mocked(globalThis.fetch);
     const list = fetch.getMockImplementation()!;
     fetch.mockImplementation(async (request, init) =>
-      new Headers(init?.headers).get("x-rakazo-space-id") === "space-gone"
+      new Headers(init?.headers).get("x-unibot-space-id") === "space-gone"
         ? Response.json({ json: { code: "UNAUTHORIZED", status: 401 } }, { status: 401 })
         : list(request, init),
     );
@@ -190,7 +190,7 @@ describe("shell RPC space isolation", () => {
       await rpc.me();
       const headers = fetch.mock.calls.map((call) => {
         const init = call[1];
-        return new Headers(init.headers).get("x-rakazo-space-id");
+        return new Headers(init.headers).get("x-unibot-space-id");
       });
       expect(headers).toEqual([originalSpace, originalSpace, "space-b"]);
     },
@@ -212,7 +212,7 @@ describe("shell RPC space isolation", () => {
       await shellRpc.me(undefined, { context: { spaceId: null } });
       await shellRpc.me();
       const headers = fetch.mock.calls.map((call) =>
-        new Headers(call[1].headers).get("x-rakazo-space-id"),
+        new Headers(call[1].headers).get("x-unibot-space-id"),
       );
       expect(headers).toEqual(["space-b", null, "space-a"]);
     },
@@ -235,7 +235,7 @@ describe("space-bound clients", () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (request: Request, init?: RequestInit) => {
-        sent.push(new Headers(init?.headers ?? request.headers).get("x-rakazo-space-id"));
+        sent.push(new Headers(init?.headers ?? request.headers).get("x-unibot-space-id"));
         return Response.json({ json: null });
       }),
     );

@@ -15,7 +15,7 @@ dbTests("own-key plan", () => {
   const actor: Actor = {
     userId,
     spaceId,
-    email: `byok-${stamp}@rakazo.test`,
+    email: `byok-${stamp}@unibot.test`,
     isDeploymentOwner: false,
   };
   const provider = new BillingEmulator({ modelCredits: true, namespace: `byok-${stamp}` });

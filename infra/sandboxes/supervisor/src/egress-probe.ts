@@ -94,7 +94,7 @@ export async function verifyRestrictedEgress(docker: Docker, image: string, dns?
       Name: EGRESS_PROBE_NETWORK,
       Driver: "bridge",
       CheckDuplicate: true,
-      Labels: { "rakazo.egressProbe": "true" },
+      Labels: { "unibot.egressProbe": "true" },
       Options: { "com.docker.network.bridge.name": EGRESS_PROBE_BRIDGE },
     })
     .catch((error) => {
@@ -113,7 +113,7 @@ export async function verifyRestrictedEgress(docker: Docker, image: string, dns?
       Image: image,
       Entrypoint: ["bash", "-c", egressProbeScript(gateway, dns)],
       Cmd: [],
-      Labels: { "rakazo.egressProbe": "true" },
+      Labels: { "unibot.egressProbe": "true" },
       HostConfig: {
         NetworkMode: EGRESS_PROBE_NETWORK,
         CapDrop: ["ALL"],

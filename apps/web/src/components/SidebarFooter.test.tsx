@@ -35,7 +35,7 @@ async function render(
   onBoard?: () => void,
   logos?: Array<{ name: string; logo?: string }>,
 ) {
-  const email = "account@rakazo.test";
+  const email = "account@unibot.test";
   await act(async () =>
     root.render(
       <DesktopUpdatesProvider>

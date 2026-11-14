@@ -24,6 +24,7 @@ import {
   resolveSupervisorToken,
 } from "@unibot/core";
 import { outgoingCorrelationHeaders } from "@unibot/logging";
+import { ComputerScreenUnavailableError } from "./computer-screens.js";
 import {
   boundedComputerActions,
   clampRounded,
@@ -131,7 +132,7 @@ export class DockerSandboxProvider implements SandboxProvider {
   private headers(context: AdapterContext, botId?: string) {
     return {
       authorization: `Bearer ${this.supervisorToken}`,
-      "x-rakazo-space-id": context.spaceId,
+      "x-unibot-space-id": context.spaceId,
       ...outgoingCorrelationHeaders(),
       ...(botId ? { "x-unibot-bot-id": botId } : {}),
       ...(context.botId ? { "x-unibot-screen-id": context.botId } : {}),
@@ -268,6 +269,10 @@ export class DockerSandboxProvider implements SandboxProvider {
         revokeControl: false,
       }),
       signal: context.signal,
+    }).catch((error: unknown) => {
+      // The supervisor could not be reached. A viewer shows a retryable "screen unavailable",
+      // never a blank failure.
+      throw new ComputerScreenUnavailableError(undefined, { cause: error });
     });
     if (!res.ok) {
       const detail = await safeBody(res, context.signal);

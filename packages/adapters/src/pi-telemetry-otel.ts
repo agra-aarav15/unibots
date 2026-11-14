@@ -8,9 +8,9 @@ import { getLogContext } from "@unibot/logging";
 
 // Allowlist metadata: unknown attributes (including future Pi payload fields) stay private.
 const safeAttributes = new Set([
-  "rakazo.bot.id",
-  "rakazo.run.id",
-  "rakazo.routine.id",
+  "unibot.bot.id",
+  "unibot.run.id",
+  "unibot.routine.id",
   "pi.ai.operation",
   "pi.ai.provider",
   "pi.ai.model",
@@ -58,7 +58,7 @@ export function otelPiContext(
       const correlation = {
         ...ids,
         ...Object.fromEntries(
-          Object.entries(options.attributes ?? {}).filter(([key]) => key.startsWith("rakazo.")),
+          Object.entries(options.attributes ?? {}).filter(([key]) => key.startsWith("unibot.")),
         ),
       };
       const parentContext = parent ?? correlatedLogContext();
@@ -112,7 +112,7 @@ export function createPiTelemetryExporter() {
   });
   return {
     context: otelPiContext(
-      provider.getTracer("rakazo.pi", "0.87.1"),
+      provider.getTracer("unibot.pi", "0.87.1"),
       process.env.OTEL_CAPTURE_CONTENT === "true",
     ),
     shutdown: () => provider.shutdown(),

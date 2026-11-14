@@ -2,6 +2,7 @@ import type { PrismaClient } from "@unibot/db";
 import { describe, expect, it, vi } from "vitest";
 import type { DeploymentModelDefaults, MemberMainModel } from "./model-roles.js";
 import {
+  botModelRunnable,
   deploymentModelRole,
   effectiveModelRole,
   resolveMemberMainModel,
@@ -344,5 +345,40 @@ describe("model roles", () => {
 
     expect(resolved).toMatchObject({ provider: "openai-compatible", modelId: "model-b" });
     expect(resolved?.credential?.id).toBe("b");
+  });
+});
+
+describe("bot model override runnable", () => {
+  const override = { modelProvider: "bot-provider", modelId: "bot-model", thinkingLevel: null };
+
+  it("is runnable when its own connection is present", () => {
+    expect(botModelRunnable({ override, overrideCredential, hostedProvider: undefined })).toBe(
+      true,
+    );
+  });
+
+  it("is not runnable without a connection or a funded provider", () => {
+    expect(botModelRunnable({ override, overrideCredential: null })).toBe(false);
+  });
+
+  it("runs on the deployment's funded provider without a stored connection", () => {
+    expect(
+      botModelRunnable({ override, overrideCredential: null, hostedProvider: "bot-provider" }),
+    ).toBe(true);
+  });
+
+  it("is not runnable on a provider that is not the funded one", () => {
+    expect(
+      botModelRunnable({ override, overrideCredential: null, hostedProvider: "other-provider" }),
+    ).toBe(false);
+  });
+
+  it("is not runnable without a model", () => {
+    expect(
+      botModelRunnable({
+        override: { modelProvider: null, modelId: null, thinkingLevel: null },
+        overrideCredential,
+      }),
+    ).toBe(false);
   });
 });

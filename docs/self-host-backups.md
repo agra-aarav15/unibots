@@ -41,7 +41,7 @@ A failure after the SQL commit cannot roll back the database automatically. Leav
 application stopped, preserve both trees, and recover a matching database before moving the
 rollback tree back to `data/`. Keep a separate database backup from before recovery if you
 need that rollback. This script does not consume the production snapshot's custom-format
-`rakazo.dump` or `appdata.tgz`.
+`unibot.dump` or `appdata.tgz`.
 
 ```bash
 ./scripts/restore.sh backups/<stamp>
@@ -95,7 +95,7 @@ UNIBOT_BACKUP_AGE_RECIPIENTS=age1exampleprimaryrecipient age1examplerecoveryreci
 # or: UNIBOT_BACKUP_AGE_RECIPIENTS_FILE=/etc/unibot/backup-recipients.txt
 ```
 
-With recipients set, each snapshot holds `rakazo.dump.age`, `appdata.tgz.age`, `SOURCE_SIZE_KB`,
+With recipients set, each snapshot holds `unibot.dump.age`, `appdata.tgz.age`, `SOURCE_SIZE_KB`,
 and `SHA256SUMS`. `pg_dump` and `tar` stream straight into age, so plaintext never touches disk.
 Verification needs no private key: `pg_restore --list` and `tar -t` read the same plaintext stream
 while it is encrypted, each file must carry an age header, and the checksums cover the encrypted
@@ -172,7 +172,7 @@ printf 'Record this rollback pair:\nDatabase dump: %s\nData tree on deploy@app.e
 age -d -i unibot-backup.key <stamp>/appdata.tgz.age | ssh deploy@app.example.com \
   "sudo tar -xzf - --numeric-owner -C '$RESTORE/staged'"
 
-age -d -i unibot-backup.key <stamp>/rakazo.dump.age | ssh deploy@app.example.com \
+age -d -i unibot-backup.key <stamp>/unibot.dump.age | ssh deploy@app.example.com \
   "cd /srv/unibot && $COMPOSE exec -T postgres sh -c 'pg_restore --clean --if-exists --no-owner --exit-on-error --single-transaction -U \"\$POSTGRES_USER\" -d \"\$POSTGRES_DB\"'"
 
 ssh deploy@app.example.com \
@@ -203,7 +203,7 @@ recorded `$RESTORE/previous` tree back to `$APPDATA` and recreate the applicatio
 If the first directory move failed, the old tree is still at `$APPDATA`. Inspect both paths
 before moving anything. Switching the tree alone does not roll back the database.
 
-Plaintext snapshots use `cat` in place of `age -d` and the filenames `rakazo.dump` and
+Plaintext snapshots use `cat` in place of `age -d` and the filenames `unibot.dump` and
 `appdata.tgz`. Use the same clean-directory procedure.
 
 To restore into a new stack, create the `unibot_app` role before the procedure above. The dump

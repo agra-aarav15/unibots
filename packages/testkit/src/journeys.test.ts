@@ -151,8 +151,8 @@ describeJourneys("required product journeys", () => {
   });
 
   it("computer updates preserve the workspace and reserve the shared computer until completion", async () => {
-    const cookie = await signup(app, `maintenance-${stamp}@rakazo.test`, "Maintenance");
-    const outsider = await signup(app, `maintenance-other-${stamp}@rakazo.test`, "Other workspace");
+    const cookie = await signup(app, `maintenance-${stamp}@unibot.test`, "Maintenance");
+    const outsider = await signup(app, `maintenance-other-${stamp}@unibot.test`, "Other workspace");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Writer",
       title: "Writer",
@@ -248,7 +248,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("updating a computer the user has taken over hands control back first", async () => {
-    const cookie = await signup(app, `maintenance-control-${stamp}@rakazo.test`, "Maintenance");
+    const cookie = await signup(app, `maintenance-control-${stamp}@unibot.test`, "Maintenance");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Shell user",
       title: "Shell user",
@@ -278,7 +278,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("recovering a computer the user has taken over hands control back first", async () => {
-    const cookie = await signup(app, `maintenance-recover-${stamp}@rakazo.test`, "Maintenance");
+    const cookie = await signup(app, `maintenance-recover-${stamp}@unibot.test`, "Maintenance");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Shell user",
       title: "Shell user",
@@ -307,7 +307,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("resetting a computer the user has taken over hands control back first", async () => {
-    const cookie = await signup(app, `maintenance-reset-${stamp}@rakazo.test`, "Maintenance");
+    const cookie = await signup(app, `maintenance-reset-${stamp}@unibot.test`, "Maintenance");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Shell user",
       title: "Shell user",
@@ -331,7 +331,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("maintenance leaves a run waiting on control", async () => {
-    const cookie = await signup(app, `maintenance-waiting-${stamp}@rakazo.test`, "Maintenance");
+    const cookie = await signup(app, `maintenance-waiting-${stamp}@unibot.test`, "Maintenance");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -381,8 +381,8 @@ describeJourneys("required product journeys", () => {
   });
 
   it("1+2: users are isolated and workspace bots share the Team Computer", async () => {
-    const ada = await signup(app, `ada-j-${stamp}@rakazo.test`, "Ada Journey");
-    const bob = await signup(app, `bob-j-${stamp}@rakazo.test`, "Bob Journey");
+    const ada = await signup(app, `ada-j-${stamp}@unibot.test`, "Ada Journey");
+    const bob = await signup(app, `bob-j-${stamp}@unibot.test`, "Bob Journey");
 
     const adaMe = await rpc<Me>(app, ada, "me");
     const bobMe = await rpc<Me>(app, bob, "me");
@@ -562,7 +562,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("guards memory edits by revision while preserving legacy clients", async () => {
-    const cookie = await signup(app, `memory-revision-${stamp}@rakazo.test`, "Memory revisions");
+    const cookie = await signup(app, `memory-revision-${stamp}@unibot.test`, "Memory revisions");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Keeper",
       title: "Memory",
@@ -603,7 +603,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("clears a conversation without removing the bot, computer, memory, or routines", async () => {
-    const cookie = await signup(app, `clear-j-${stamp}@rakazo.test`, "Clear Journey");
+    const cookie = await signup(app, `clear-j-${stamp}@unibot.test`, "Clear Journey");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Keeper",
       title: "Keeps its setup",
@@ -741,7 +741,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("2b: two Team bots send at once on distinct screens", async () => {
-    const cookie = await signup(app, `parallel-j-${stamp}@rakazo.test`, "Parallel");
+    const cookie = await signup(app, `parallel-j-${stamp}@unibot.test`, "Parallel");
     const writer = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Writer",
       title: "",
@@ -788,7 +788,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("3: disconnect and reconnect from a cursor reconstructs the thread", async () => {
-    const cookie = await signup(app, `cursor-j-${stamp}@rakazo.test`, "Cursor");
+    const cookie = await signup(app, `cursor-j-${stamp}@unibot.test`, "Cursor");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -812,7 +812,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("4: takeover login then resume without exposing credentials", async () => {
-    const cookie = await signup(app, `takeover-j-${stamp}@rakazo.test`, "Takeover");
+    const cookie = await signup(app, `takeover-j-${stamp}@unibot.test`, "Takeover");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -855,7 +855,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("4d: skipping takeover resumes without treating login as done", async () => {
-    const cookie = await signup(app, `takeover-skip-j-${stamp}@rakazo.test`, "Skip Takeover");
+    const cookie = await signup(app, `takeover-skip-j-${stamp}@unibot.test`, "Skip Takeover");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -899,7 +899,7 @@ describeJourneys("required product journeys", () => {
     const previousTakeoverTtl = process.env.COMPUTER_TAKEOVER_TTL_MS;
     process.env.COMPUTER_TAKEOVER_TTL_MS = "1000";
     try {
-      const cookie = await signup(app, `takeover-expiry-j-${stamp}@rakazo.test`, "Expiry");
+      const cookie = await signup(app, `takeover-expiry-j-${stamp}@unibot.test`, "Expiry");
       const bot = await rpc<Bot>(app, cookie, "bots/create", {
         name: "Chief",
         title: "",
@@ -983,7 +983,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("4c: a takeover authorizes input only on the controlled bot screen", async () => {
-    const cookie = await signup(app, `takeover-scope-j-${stamp}@rakazo.test`, "Takeover Scope");
+    const cookie = await signup(app, `takeover-scope-j-${stamp}@unibot.test`, "Takeover Scope");
     const writer = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Writer",
       title: "",
@@ -1016,7 +1016,7 @@ describeJourneys("required product journeys", () => {
   it("4d: a stale Team release cannot clear a newer bot takeover", async () => {
     const cookie = await signup(
       app,
-      `takeover-release-fence-j-${stamp}@rakazo.test`,
+      `takeover-release-fence-j-${stamp}@unibot.test`,
       "Release Fence",
     );
     const writer = await rpc<Bot>(app, cookie, "bots/create", {
@@ -1167,7 +1167,7 @@ describeJourneys("required product journeys", () => {
   it("4e: concurrent Team takeovers never return another bot's lease", async () => {
     const cookie = await signup(
       app,
-      `takeover-owner-race-j-${stamp}@rakazo.test`,
+      `takeover-owner-race-j-${stamp}@unibot.test`,
       "Takeover Owner Race",
     );
     const writer = await rpc<Bot>(app, cookie, "bots/create", {
@@ -1240,7 +1240,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("5: a routine wakes the bot and posts into the existing thread", async () => {
-    const cookie = await signup(app, `routine-j-${stamp}@rakazo.test`, "Routine");
+    const cookie = await signup(app, `routine-j-${stamp}@unibot.test`, "Routine");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -1323,7 +1323,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("5b: tool-created schedules wake in the creating group or 1:1 thread", async () => {
-    const cookie = await signup(app, `schedule-dest-j-${stamp}@rakazo.test`, "Schedule Dest");
+    const cookie = await signup(app, `schedule-dest-j-${stamp}@unibot.test`, "Schedule Dest");
     const me = await rpc<Me>(app, cookie, "me");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Scheduler",
@@ -1452,7 +1452,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("allocates event and message cursors atomically under concurrent writes", async () => {
-    const cookie = await signup(app, `sequence-j-${stamp}@rakazo.test`, "Sequence");
+    const cookie = await signup(app, `sequence-j-${stamp}@unibot.test`, "Sequence");
     const actor = await rpc<Me>(app, cookie, "me");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Sequencer",
@@ -1520,7 +1520,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("7: destination write is independently inspectable and credentials stay out of the thread", async () => {
-    const cookie = await signup(app, `dest-j-${stamp}@rakazo.test`, "Dest");
+    const cookie = await signup(app, `dest-j-${stamp}@unibot.test`, "Dest");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -1544,7 +1544,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("8: retrying a completed effect does not duplicate the destination write", async () => {
-    const cookie = await signup(app, `crash-j-${stamp}@rakazo.test`, "Crash");
+    const cookie = await signup(app, `crash-j-${stamp}@unibot.test`, "Crash");
     await runWithoutAsking(cookie);
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
@@ -1577,7 +1577,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("9: export includes memory and the bot's own files but not secrets or browser sessions", async () => {
-    const cookie = await signup(app, `export-j-${stamp}@rakazo.test`, "Export");
+    const cookie = await signup(app, `export-j-${stamp}@unibot.test`, "Export");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -1624,8 +1624,8 @@ describeJourneys("required product journeys", () => {
   });
 
   it("10: bots can be archived safely and deleted with or without their memories", async () => {
-    const ada = await signup(app, `delete-j-${stamp}@rakazo.test`, "Delete Ada");
-    const bob = await signup(app, `delete-bob-j-${stamp}@rakazo.test`, "Delete Bob");
+    const ada = await signup(app, `delete-j-${stamp}@unibot.test`, "Delete Ada");
+    const bob = await signup(app, `delete-bob-j-${stamp}@unibot.test`, "Delete Bob");
     const keep = await rpc<Bot>(app, ada, "bots/create", {
       name: "Keep",
       title: "",
@@ -1736,7 +1736,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("11: deleting an account removes the user and personal workspace data", async () => {
-    const email = `account-delete-j-${stamp}@rakazo.test`;
+    const email = `account-delete-j-${stamp}@unibot.test`;
     const cookie = await signup(app, email, "Delete Account");
     const me = await rpc<Me>(app, cookie, "me");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
@@ -1765,7 +1765,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("12: a bot can spawn a regular bot and must confirm the name to delete it", async () => {
-    const cookie = await signup(app, `spawn-j-${stamp}@rakazo.test`, "Spawn");
+    const cookie = await signup(app, `spawn-j-${stamp}@unibot.test`, "Spawn");
     await runWithoutAsking(cookie);
     const parent = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
@@ -1820,7 +1820,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("duplicating a bot uses the new-bot management default", async () => {
-    const cookie = await signup(app, `bot-management-dup-j-${stamp}@rakazo.test`, "Bot Manager");
+    const cookie = await signup(app, `bot-management-dup-j-${stamp}@unibot.test`, "Bot Manager");
     const source = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -1839,7 +1839,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("untrusted bot_message run cannot rewrite a child's instructions", async () => {
-    const cookie = await signup(app, `bot-management-trust-j-${stamp}@rakazo.test`, "Bot Manager");
+    const cookie = await signup(app, `bot-management-trust-j-${stamp}@unibot.test`, "Bot Manager");
     const parent = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -1896,7 +1896,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("12b: a bot can silence and resume its own finish notifications", async () => {
-    const cookie = await signup(app, `notify-finish-j-${stamp}@rakazo.test`, "Notify");
+    const cookie = await signup(app, `notify-finish-j-${stamp}@unibot.test`, "Notify");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -1919,7 +1919,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("13: a subagent shows up in the parent thread without creating a bot", async () => {
-    const cookie = await signup(app, `subagent-j-${stamp}@rakazo.test`, "Subagent");
+    const cookie = await signup(app, `subagent-j-${stamp}@unibot.test`, "Subagent");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -1934,7 +1934,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("14: this-mac is refused unless the sandbox is docker", async () => {
-    const cookie = await signup(app, `host-j-${stamp}@rakazo.test`, "Host");
+    const cookie = await signup(app, `host-j-${stamp}@unibot.test`, "Host");
     const me = await rpc<Me>(app, cookie, "me");
     expect(me.canChooseHostComputer).toBe(false);
     await prisma.deploymentSettings.update({
@@ -1949,7 +1949,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("15: ask, answer, stop, follow-up, and clientNonce stay consistent", async () => {
-    const cookie = await signup(app, `ask-j-${stamp}@rakazo.test`, "Ask");
+    const cookie = await signup(app, `ask-j-${stamp}@unibot.test`, "Ask");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -2053,7 +2053,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("15b: a free-text chat message answers a waiting ask", async () => {
-    const cookie = await signup(app, `ask-freetext-j-${stamp}@rakazo.test`, "Ask Free");
+    const cookie = await signup(app, `ask-freetext-j-${stamp}@unibot.test`, "Ask Free");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -2105,8 +2105,8 @@ describeJourneys("required product journeys", () => {
   });
 
   it("16: routine test-run and plugin connect/revoke", async () => {
-    const ada = await signup(app, `plug-j-${stamp}@rakazo.test`, "Plug Ada");
-    const bob = await signup(app, `plug-bob-j-${stamp}@rakazo.test`, "Plug Bob");
+    const ada = await signup(app, `plug-j-${stamp}@unibot.test`, "Plug Ada");
+    const bob = await signup(app, `plug-bob-j-${stamp}@unibot.test`, "Plug Bob");
     const bot = await rpc<Bot>(app, ada, "bots/create", {
       name: "Chief",
       title: "",
@@ -2165,7 +2165,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("54: group chats share one transcript with mentions and handoffs", async () => {
-    const ada = await signup(app, `ada-g-${stamp}@rakazo.test`, "Ada Groups");
+    const ada = await signup(app, `ada-g-${stamp}@unibot.test`, "Ada Groups");
     const adaMe = await rpc<Me>(app, ada, "me");
     const botA = await rpc<Bot>(app, ada, "bots/create", {
       name: "BotA",
@@ -2591,7 +2591,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("17: teach a task end to end", async () => {
-    const cookie = await signup(app, `teach-j-${stamp}@rakazo.test`, "Teach Ada");
+    const cookie = await signup(app, `teach-j-${stamp}@unibot.test`, "Teach Ada");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Teacher",
       title: "",
@@ -2682,7 +2682,7 @@ describeJourneys("required product journeys", () => {
     const previousTtl = process.env.TEACH_RECORDING_TTL_MS;
     process.env.TEACH_RECORDING_TTL_MS = "1000";
     try {
-      const cookie = await signup(app, `teach-exp-j-${stamp}@rakazo.test`, "Teach Exp Ada");
+      const cookie = await signup(app, `teach-exp-j-${stamp}@unibot.test`, "Teach Exp Ada");
       const bot = await rpc<Bot>(app, cookie, "bots/create", {
         name: "Timer",
         title: "",
@@ -2708,7 +2708,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("19: in Ask mode, destination writes pause for approval before side effects", async () => {
-    const cookie = await signup(app, `approval-j-${stamp}@rakazo.test`, "Approval");
+    const cookie = await signup(app, `approval-j-${stamp}@unibot.test`, "Approval");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -2771,7 +2771,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("19b: stopping a run with an open approval card settles its effect", async () => {
-    const cookie = await signup(app, `approval-stop-j-${stamp}@rakazo.test`, "ApprovalStop");
+    const cookie = await signup(app, `approval-stop-j-${stamp}@unibot.test`, "ApprovalStop");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -2801,7 +2801,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("20: always allow runs a tool without a card, and a block refuses it in every mode", async () => {
-    const cookie = await signup(app, `always-j-${stamp}@rakazo.test`, "Always");
+    const cookie = await signup(app, `always-j-${stamp}@unibot.test`, "Always");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -2852,7 +2852,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("20b: allowing a tool replaces its block, and the other way around", async () => {
-    const cookie = await signup(app, `always-replaces-j-${stamp}@rakazo.test`, "Always Replaces");
+    const cookie = await signup(app, `always-replaces-j-${stamp}@unibot.test`, "Always Replaces");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -2883,7 +2883,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("20c: allow and block saved at once leave one rule per match", async () => {
-    const cookie = await signup(app, `rule-race-j-${stamp}@rakazo.test`, "Rule Race");
+    const cookie = await signup(app, `rule-race-j-${stamp}@unibot.test`, "Rule Race");
     const values = Array.from({ length: 8 }, (_, index) => `race.tool.${index}`);
     await Promise.all(
       values.flatMap((matchValue) =>
@@ -2897,7 +2897,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("20d: replacing a rule leaves tools with similar names alone", async () => {
-    const cookie = await signup(app, `rule-literal-j-${stamp}@rakazo.test`, "Rule Literal");
+    const cookie = await signup(app, `rule-literal-j-${stamp}@unibot.test`, "Rule Literal");
     await rpc(app, cookie, "approvalRules/set", {
       effect: "always_allow",
       matchKind: "tool",
@@ -2920,7 +2920,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("21: in Ask mode, routine destination writes pause on the same approval card", async () => {
-    const cookie = await signup(app, `routine-approval-j-${stamp}@rakazo.test`, "Routine Approval");
+    const cookie = await signup(app, `routine-approval-j-${stamp}@unibot.test`, "Routine Approval");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -2959,7 +2959,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("22: a routine schedule with any malformed or mixed one-shot cron is rejected", async () => {
-    const cookie = await signup(app, `routine-crons-j-${stamp}@rakazo.test`, "Routine Crons");
+    const cookie = await signup(app, `routine-crons-j-${stamp}@unibot.test`, "Routine Crons");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Scheduler",
       title: "",
@@ -2990,7 +2990,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("routine timezone writes reject invalid zones without changing persisted schedules", async () => {
-    const cookie = await signup(app, `routine-zones-j-${stamp}@rakazo.test`, "Routine Zones");
+    const cookie = await signup(app, `routine-zones-j-${stamp}@unibot.test`, "Routine Zones");
     const bot = await rpc<Bot>(app, cookie, "bots/create", { name: "Scheduler" });
     const input = {
       botId: bot.id,
@@ -3046,7 +3046,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("23: never-run one-shot templates can be armed with a future runAt", async () => {
-    const cookie = await signup(app, `once-arm-j-${stamp}@rakazo.test`, "Once Arm");
+    const cookie = await signup(app, `once-arm-j-${stamp}@unibot.test`, "Once Arm");
     const me = await rpc<Me>(app, cookie, "me");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Once Bot",
@@ -3132,7 +3132,7 @@ describeJourneys("required product journeys", () => {
   });
 
   it("24: chat creates a space only after explicit approval", async () => {
-    const cookie = await signup(app, `space-chat-j-${stamp}@rakazo.test`, "Space Chat");
+    const cookie = await signup(app, `space-chat-j-${stamp}@unibot.test`, "Space Chat");
     const me = await rpc<Me>(app, cookie, "me");
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
@@ -3200,7 +3200,7 @@ describeJourneys("required product journeys", () => {
     async function fleetOwner(label: string) {
       const cookie = await signup(
         app,
-        `bot-management-${label}-${stamp}@rakazo.test`,
+        `bot-management-${label}-${stamp}@unibot.test`,
         "Bot Manager",
       );
       const me = await rpc<Me>(app, cookie, "me");
@@ -3499,7 +3499,7 @@ describeJourneys("required product journeys", () => {
       const { cookie, me, chief } = await fleetOwner("organize");
       const outsider = await signup(
         app,
-        `bot-management-organize-other-${stamp}@rakazo.test`,
+        `bot-management-organize-other-${stamp}@unibot.test`,
         "Other",
       );
       const outsiderMe = await rpc<Me>(app, outsider, "me");

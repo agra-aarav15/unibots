@@ -19,6 +19,7 @@ import {
   SandboxDamagedError,
   SandboxRateLimitError,
   SandboxUnavailableError,
+  SandboxUnconfiguredError,
   SandboxUnresponsiveError,
   VoiceAccountError,
 } from "@unibot/adapter-kit";
@@ -923,7 +924,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
     const userId = owner?.id ?? session?.user.id;
     if (!userId) return null;
     const actor = await actorFromMembership(
-      requireMembership(prisma, userId, request.headers.get("x-rakazo-space-id")),
+      requireMembership(prisma, userId, request.headers.get("x-unibot-space-id")),
     );
     return actor && { actor, sessionId: session?.session.id };
   };
@@ -1542,6 +1543,12 @@ export function handleRpcError(
       message: error.message,
       cause: error,
     });
+  }
+  // No computer host is configured: a setup state, not an outage. Its message says how to enable
+  // one, and a retry cannot change it.
+  if (error instanceof SandboxUnconfiguredError) {
+    getLogger().warn(`rpc ${path.join("/")} computer host not configured`);
+    throw new ORPCError("SERVICE_UNAVAILABLE", { message: error.message, cause: error });
   }
   // The computer provider did not start the computer in time, or could not be reached: an outage
   // on its side the user can retry, not a server failure.

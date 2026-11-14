@@ -5,8 +5,8 @@ export const COMPUTER_SCREEN_UNAVAILABLE =
   "The computer screen is temporarily busy. Retry in a moment. File and shell tools still work.";
 
 export class ComputerScreenUnavailableError extends Error {
-  constructor(message = COMPUTER_SCREEN_UNAVAILABLE) {
-    super(message);
+  constructor(message = COMPUTER_SCREEN_UNAVAILABLE, options?: { cause?: unknown }) {
+    super(message, options);
     this.name = "ComputerScreenUnavailableError";
   }
 }

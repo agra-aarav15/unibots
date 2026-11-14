@@ -85,6 +85,7 @@ import {
   markMobileStartupMounted,
   trackMobileStartup,
 } from "../lib/startup";
+import { migrateLegacyStorage } from "../lib/storage-migration";
 import { capTextScaling } from "../lib/text-scale";
 import {
   loadTrustedLinkSites,
@@ -326,29 +327,34 @@ function LayoutContent() {
 
   useEffect(() => {
     markMobileStartupMounted();
-    void Promise.all([
-      Promise.all([
-        trackMobileStartup("server", loadApiBase()),
-        trackMobileStartup("appearance", loadAppearancePreference()).finally(() =>
-          setAppearanceReady(true),
-        ),
-        trackMobileStartup("streaming", loadResponseStreamingPreference()),
-        trackMobileStartup("images", loadRemoteImagesPreference()),
-        trackMobileStartup("inbox", loadInboxWidth()),
-      ]).catch(() => undefined),
-      trackMobileStartup("language", bootstrapI18n()).catch(() => undefined),
-    ])
-      .then(() => {
-        // The native poller stores the locale its notification copy uses, so the
-        // restart waits for the language to load rather than saving the default.
-        // Notification restoration must not keep the native splash visible.
-        void loadSessionToken()
-          .then((token) =>
-            resumeLiveNotifications(currentApiBase(), token, selectedSpaceId() ?? ""),
-          )
-          .catch(() => undefined);
-      })
-      .finally(() => setReady(true));
+    // Move any preference saved under the old product name forward before it is read.
+    void migrateLegacyStorage()
+      .catch(() => undefined)
+      .then(() =>
+        Promise.all([
+          Promise.all([
+            trackMobileStartup("server", loadApiBase()),
+            trackMobileStartup("appearance", loadAppearancePreference()).finally(() =>
+              setAppearanceReady(true),
+            ),
+            trackMobileStartup("streaming", loadResponseStreamingPreference()),
+            trackMobileStartup("images", loadRemoteImagesPreference()),
+            trackMobileStartup("inbox", loadInboxWidth()),
+          ]).catch(() => undefined),
+          trackMobileStartup("language", bootstrapI18n()).catch(() => undefined),
+        ])
+          .then(() => {
+            // The native poller stores the locale its notification copy uses, so the
+            // restart waits for the language to load rather than saving the default.
+            // Notification restoration must not keep the native splash visible.
+            void loadSessionToken()
+              .then((token) =>
+                resumeLiveNotifications(currentApiBase(), token, selectedSpaceId() ?? ""),
+              )
+              .catch(() => undefined);
+          })
+          .finally(() => setReady(true)),
+      );
   }, []);
 
   return (

@@ -96,9 +96,9 @@ to the base endpoint and honors standard `OTEL_EXPORTER_OTLP_HEADERS` (comma-sep
 read these settings from `.env`. With an empty or unset endpoint, no tracing SDK loads
 or initializes. No collector or hosted service is required to run UniBot.
 
-Traces contain a `rakazo.agent.run` span with `pi.ai.request` model-call spans and
+Traces contain a `unibot.agent.run` span with `pi.ai.request` model-call spans and
 `pi.agent.tool` steps, including duration, token usage, cost when known, and success/error
-status. Each span carries `rakazo.bot.id`, `rakazo.run.id`, and `rakazo.routine.id`
+status. Each span carries `unibot.bot.id`, `unibot.run.id`, and `unibot.routine.id`
 when the run belongs to a routine. Helper model calls inherit the same correlation.
 Pi 0.87.1 exposes built-in telemetry through its newer harness; UniBot’s legacy Agent
 adapter maps its model and tool lifecycle through the same Pi telemetry contract.

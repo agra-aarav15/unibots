@@ -88,7 +88,7 @@ RUN set -eux; \
           '  "BraveVPNDisabled": true,' \
           '  "BraveNewsDisabled": true,' \
           '  "BraveTalkDisabled": true' \
-          '}' > /etc/brave/policies/managed/rakazo.json ;; \
+          '}' > /etc/brave/policies/managed/unibot.json ;; \
       *) echo "unsupported BROWSER: $BROWSER (use chromium or brave)" >&2; exit 1 ;; \
     esac
 RUN ln -s "$(dpkg -L libnss-wrapper | grep '/libnss_wrapper.so$')" /usr/local/lib/libnss_wrapper.so
@@ -139,7 +139,7 @@ COPY --chmod=644 user-env.sh /usr/local/lib/unibot-user-env.sh
 COPY --chmod=755 control.py /usr/local/bin/unibot-computer-control
 # Tells the supervisor this control service accepts scrolls aimed at a point and sideways
 # scrolls; it sends those to older images through its fallback instead.
-LABEL rakazo.control.aimedScroll="1"
+LABEL unibot.control.aimedScroll="1"
 COPY --from=capture-builder /build/libunibot-xcapture.so /usr/local/lib/libunibot-xcapture.so
 COPY --chmod=755 unibot-browser /usr/local/bin/unibot-browser
 COPY --chmod=755 unibot-focus-or-launch /usr/local/bin/unibot-focus-or-launch

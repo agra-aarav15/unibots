@@ -56,7 +56,7 @@ function fixture() {
     inspect: vi.fn().mockResolvedValue({
       Id: "computer",
       Config: {
-        Labels: { "rakazo.managed": "true", "rakazo.botId": "bot", "rakazo.spaceId": "space" },
+        Labels: { "unibot.managed": "true", "unibot.botId": "bot", "unibot.spaceId": "space" },
       },
       HostConfig: { NetworkMode: "bot-network" },
       State: { Running: true },
@@ -93,7 +93,7 @@ async function observe() {
     headers: {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "x-unibot-bot-id": "bot",
-      "x-rakazo-space-id": "space",
+      "x-unibot-space-id": "space",
       "x-unibot-screen-id": "writer",
     },
   });
@@ -107,7 +107,7 @@ async function openScreen() {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
       "x-unibot-bot-id": "bot",
-      "x-rakazo-space-id": "space",
+      "x-unibot-space-id": "space",
       "x-unibot-screen-id": "writer",
     },
     body: JSON.stringify({ interactive: false }),

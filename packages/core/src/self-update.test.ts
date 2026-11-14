@@ -20,20 +20,20 @@ describe("normalizeRepoUrl", () => {
     expect(normalizeRepoUrl(OFFICIAL_REPO_URL)).toEqual({
       url: "https://github.com/agra-aarav15/unibots",
     });
-    expect(normalizeRepoUrl("  https://github.com/me/rakazo.git/  ")).toEqual({
-      url: "https://github.com/me/rakazo.git",
+    expect(normalizeRepoUrl("  https://github.com/me/unibot.git/  ")).toEqual({
+      url: "https://github.com/me/unibot.git",
     });
-    expect(normalizeRepoUrl("https://git.example.com:8443/team/rakazo.git")).toEqual({
-      url: "https://git.example.com:8443/team/rakazo.git",
+    expect(normalizeRepoUrl("https://git.example.com:8443/team/unibot.git")).toEqual({
+      url: "https://git.example.com:8443/team/unibot.git",
     });
   });
 
   it("accepts ssh remotes in both spellings", () => {
-    expect(normalizeRepoUrl("git@github.com:me/rakazo.git")).toEqual({
-      url: "git@github.com:me/rakazo.git",
+    expect(normalizeRepoUrl("git@github.com:me/unibot.git")).toEqual({
+      url: "git@github.com:me/unibot.git",
     });
-    expect(normalizeRepoUrl("ssh://git@github.com/me/rakazo.git")).toEqual({
-      url: "ssh://git@github.com/me/rakazo.git",
+    expect(normalizeRepoUrl("ssh://git@github.com/me/unibot.git")).toEqual({
+      url: "ssh://git@github.com/me/unibot.git",
     });
   });
 
@@ -147,7 +147,7 @@ describe("updateSteps", () => {
 
   it("passes every value as its own argument so nothing reaches a shell", () => {
     const steps = updateSteps({
-      remoteUrl: "git@github.com:me/rakazo.git",
+      remoteUrl: "git@github.com:me/unibot.git",
       branch: "release/1.2",
       targetCommit: "2".repeat(40),
       repointRemote: true,
@@ -156,7 +156,7 @@ describe("updateSteps", () => {
       id: "remote",
       label: "Point the checkout at the chosen repository",
       command: "git",
-      args: ["remote", "set-url", "origin", "git@github.com:me/rakazo.git"],
+      args: ["remote", "set-url", "origin", "git@github.com:me/unibot.git"],
     });
     expect(steps.find((step) => step.id === "merge")?.args).toEqual([
       "merge",

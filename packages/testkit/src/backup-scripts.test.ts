@@ -303,7 +303,7 @@ describe("development backup failures", () => {
     write(path.join(f.checkout, "data/home.txt"), "example home");
     expect(f.run("scripts/backup.sh", ["example"]).status).toBe(0);
     const output = path.join(f.checkout, "backups/example");
-    expect(readFileSync(path.join(output, "rakazo.sql"), "utf8")).toContain("CREATE TABLE");
+    expect(readFileSync(path.join(output, "unibot.sql"), "utf8")).toContain("CREATE TABLE");
     expect(contents(path.join(output, "homes.tgz"))).toContain("data/home.txt");
     expect(f.commands()[0]!.includes("--env-file")).toBe(hasEnv);
     if (hasEnv) expect(f.commands()[0]).toContain(path.join(f.checkout, ".env"));
@@ -317,7 +317,7 @@ describe("development backup failures", () => {
     const result = f.run("scripts/backup.sh", [stamp]);
 
     expect(result.status, result.stderr).toBe(0);
-    expect(readFileSync(path.join(f.checkout, "backups", stamp, "rakazo.sql"), "utf8")).toContain(
+    expect(readFileSync(path.join(f.checkout, "backups", stamp, "unibot.sql"), "utf8")).toContain(
       "CREATE TABLE",
     );
     expect(contents(path.join(f.checkout, "backups", stamp, "homes.tgz"))).toContain(
@@ -339,10 +339,10 @@ describe("development backup failures", () => {
         path.join(outside, "snapshot"),
       ];
       for (const directory of directories) {
-        write(path.join(directory, "rakazo.sql"), "existing database backup");
+        write(path.join(directory, "unibot.sql"), "existing database backup");
         write(path.join(directory, "homes.tgz"), "existing homes backup");
         chmodSync(directory, 0o755);
-        chmodSync(path.join(directory, "rakazo.sql"), 0o644);
+        chmodSync(path.join(directory, "unibot.sql"), 0o644);
         chmodSync(path.join(directory, "homes.tgz"), 0o640);
       }
       symlinkSync(outside, path.join(backups, "link"));
@@ -355,13 +355,13 @@ describe("development backup failures", () => {
       for (const [index, directory] of directories.entries()) {
         expect(readdirSync(directory).sort()).toEqual(entries[index]);
         expect(statSync(directory).mode & 0o777).toBe(0o755);
-        expect(readFileSync(path.join(directory, "rakazo.sql"), "utf8")).toBe(
+        expect(readFileSync(path.join(directory, "unibot.sql"), "utf8")).toBe(
           "existing database backup",
         );
         expect(readFileSync(path.join(directory, "homes.tgz"), "utf8")).toBe(
           "existing homes backup",
         );
-        expect(statSync(path.join(directory, "rakazo.sql")).mode & 0o777).toBe(0o644);
+        expect(statSync(path.join(directory, "unibot.sql")).mode & 0o777).toBe(0o644);
         expect(statSync(path.join(directory, "homes.tgz")).mode & 0o777).toBe(0o640);
       }
     },
@@ -372,11 +372,11 @@ describe("development backup failures", () => {
     write(path.join(f.checkout, "data/home.txt"), "example home");
     const output = path.join(f.checkout, "backups/private");
     if (reuse) {
-      write(path.join(output, "rakazo.sql"), "old dump");
+      write(path.join(output, "unibot.sql"), "old dump");
       write(path.join(output, "homes.tgz"), "old archive");
       chmodSync(path.dirname(output), 0o777);
       chmodSync(output, 0o777);
-      chmodSync(path.join(output, "rakazo.sql"), 0o666);
+      chmodSync(path.join(output, "unibot.sql"), 0o666);
       chmodSync(path.join(output, "homes.tgz"), 0o666);
     }
     const result = spawnSync(
@@ -392,14 +392,14 @@ describe("development backup failures", () => {
     expect(result.status, result.stderr).toBe(0);
     expect(statSync(path.dirname(output)).mode & 0o777).toBe(0o700);
     expect(statSync(output).mode & 0o777).toBe(0o700);
-    expect(statSync(path.join(output, "rakazo.sql")).mode & 0o777).toBe(0o600);
+    expect(statSync(path.join(output, "unibot.sql")).mode & 0o777).toBe(0o600);
     expect(statSync(path.join(output, "homes.tgz")).mode & 0o777).toBe(0o600);
   });
 
   it("makes reused backup artifacts private even when the database dump fails", () => {
     const f = fixture();
     const output = path.join(f.checkout, "backups/example");
-    for (const name of ["rakazo.sql", "homes.tgz"]) {
+    for (const name of ["unibot.sql", "homes.tgz"]) {
       write(path.join(output, name), "old backup");
       chmodSync(path.join(output, name), 0o666);
     }
@@ -409,7 +409,7 @@ describe("development backup failures", () => {
 
     expect(result.status).toBe(2);
     expect(statSync(output).mode & 0o777).toBe(0o700);
-    for (const name of ["rakazo.sql", "homes.tgz"]) {
+    for (const name of ["unibot.sql", "homes.tgz"]) {
       expect(statSync(path.join(output, name)).mode & 0o777).toBe(0o600);
     }
   });
@@ -419,20 +419,20 @@ describe("development backup failures", () => {
     const target = path.join(f.root, "outside");
     const output = path.join(f.checkout, "backups/example");
     if (kind === "directory") {
-      write(path.join(target, "rakazo.sql"), "keep this");
+      write(path.join(target, "unibot.sql"), "keep this");
       mkdirSync(path.dirname(output), { recursive: true });
       symlinkSync(target, output);
     } else {
       write(target, "keep this");
       mkdirSync(output, { recursive: true });
-      symlinkSync(target, path.join(output, "rakazo.sql"));
+      symlinkSync(target, path.join(output, "unibot.sql"));
     }
 
     const result = f.run("scripts/backup.sh", ["example"]);
 
     expect(result.status).not.toBe(0);
     expect(
-      readFileSync(kind === "directory" ? path.join(target, "rakazo.sql") : target, "utf8"),
+      readFileSync(kind === "directory" ? path.join(target, "unibot.sql") : target, "utf8"),
     ).toBe("keep this");
     expect(f.commands()).toEqual([]);
   });
@@ -862,7 +862,7 @@ describe("production backup deployment and archive behavior", () => {
     write(path.join(last, "SHA256SUMS"), "verified");
     write(path.join(last, "SOURCE_SIZE_KB"), "10485760\n");
     write(path.join(last, "appdata.tgz"), "archive");
-    write(path.join(last, "rakazo.dump"), "dump");
+    write(path.join(last, "unibot.dump"), "dump");
     const du = path.join(f.root, "bin/du");
     write(
       du,
@@ -899,7 +899,7 @@ fi
 free=52428800
 for snapshot in "${f.snapshots}"/*; do
   if [[ -f "$snapshot/SOURCE_SIZE_KB" && ! -f "$snapshot/SHA256SUMS" ]]; then
-    if [[ "${output}" == dump || -f "$snapshot/rakazo.dump" ]]; then free=1048584; fi
+    if [[ "${output}" == dump || -f "$snapshot/unibot.dump" ]]; then free=1048584; fi
   fi
 done
 echo "Filesystem Blocks Used Available Capacity Mounted"
@@ -921,7 +921,7 @@ echo "/dev/fake 104857600 0 $free 0% /"
   it("does not multiply a large database dump by appdata growth", () => {
     const f = fixture();
     const last = path.join(f.snapshots, "20261017T000000Z");
-    for (const file of ["SHA256SUMS", "rakazo.dump", "appdata.tgz"])
+    for (const file of ["SHA256SUMS", "unibot.dump", "appdata.tgz"])
       write(path.join(last, file), "verified");
     write(path.join(last, "SOURCE_SIZE_KB"), "102400");
     const du = path.join(f.root, "bin/du");
@@ -930,7 +930,7 @@ echo "/dev/fake 104857600 0 $free 0% /"
       `#!/bin/bash
 case "$2" in
   "$FAKE_APPDATA") size=1048576 ;;
-  "${last}/rakazo.dump") size=10485760 ;;
+  "${last}/unibot.dump") size=10485760 ;;
   "${last}/appdata.tgz") size=102400 ;;
   "${last}") size=10588160 ;;
   *) exec /usr/bin/du "$@" ;;
@@ -1022,7 +1022,7 @@ exec /usr/bin/sync "$@"
       "SHA256SUMS",
       "SOURCE_SIZE_KB",
       "appdata.tgz",
-      "rakazo.dump",
+      "unibot.dump",
     ]);
   });
 });
@@ -1055,17 +1055,17 @@ describe("encrypted production backups", { timeout: 20_000 }, () => {
         "SHA256SUMS",
         "SOURCE_SIZE_KB",
         "appdata.tgz.age",
-        "rakazo.dump.age",
+        "unibot.dump.age",
       ]);
-      for (const name of ["rakazo.dump.age", "appdata.tgz.age"]) {
+      for (const name of ["unibot.dump.age", "appdata.tgz.age"]) {
         const sealed = readFileSync(path.join(snapshot, name), "utf8");
         expect(sealed.startsWith("age-encryption.org/v1\n-> fake age1fakeprimary\n")).toBe(true);
         expect(sealed).toContain("-> fake age1fakerecovery");
       }
-      expect(readFileSync(path.join(snapshot, "rakazo.dump.age"), "utf8")).not.toContain(
+      expect(readFileSync(path.join(snapshot, "unibot.dump.age"), "utf8")).not.toContain(
         "custom-format dump",
       );
-      expect(readFileSync(path.join(snapshot, "SHA256SUMS"), "utf8")).toContain("rakazo.dump.age");
+      expect(readFileSync(path.join(snapshot, "SHA256SUMS"), "utf8")).toContain("unibot.dump.age");
       expect(existsSync(path.join(f.snapshots, ".encrypted"))).toBe(true);
 
       // The drill runs where the private key lives and rejects any other identity.
@@ -1126,7 +1126,7 @@ describe("encrypted production backups", { timeout: 20_000 }, () => {
     });
     expect(allowed.status, allowed.stderr).toBe(0);
     expect(allowed.stderr).toContain("not encrypted");
-    expect(existsSync(path.join(snapshotOf(allowed), "rakazo.dump"))).toBe(true);
+    expect(existsSync(path.join(snapshotOf(allowed), "unibot.dump"))).toBe(true);
   });
 
   it("does not publish a snapshot when sealing fails", () => {
@@ -1169,7 +1169,7 @@ describe("off-site copies", { timeout: 20_000 }, () => {
     const f = fixture();
     for (const stamp of ["20261014T000000Z", "20261015T000000Z", "20261016T000000Z"])
       write(path.join(remoteDir(f), stamp, "SHA256SUMS"), "sums");
-    write(path.join(remoteDir(f), "20261017T000000Z/rakazo.dump.age"), "partial");
+    write(path.join(remoteDir(f), "20261017T000000Z/unibot.dump.age"), "partial");
     write(path.join(remoteDir(f), "notes/keep.txt"), "not a snapshot");
     const result = f.run("infra/compose/backup-prod.sh", [], {
       UNIBOT_BACKUP_AGE_RECIPIENTS: recipients,
@@ -1259,7 +1259,7 @@ describe.skipIf(!realAge)("encrypted production backups with real age", { timeou
     const snapshot = snapshotOf(result);
     const dump = execFileSync(
       path.join(tools, "age"),
-      ["--decrypt", "-i", key, path.join(snapshot, "rakazo.dump.age")],
+      ["--decrypt", "-i", key, path.join(snapshot, "unibot.dump.age")],
       { encoding: "utf8" },
     );
     expect(dump).toContain("fake custom-format dump");

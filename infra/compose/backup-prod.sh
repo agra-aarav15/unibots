@@ -112,7 +112,7 @@ if [[ -n "${last}" ]]; then
   last_source=""
   [[ ! -f "${last}/SOURCE_SIZE_KB" ]] || last_source="$(cat "${last}/SOURCE_SIZE_KB")"
   last_archive="${last}/appdata.tgz"
-  last_dump="${last}/rakazo.dump"
+  last_dump="${last}/unibot.dump"
   [[ -f "${last_archive}" ]] || last_archive+=".age"
   [[ -f "${last_dump}" ]] || last_dump+=".age"
   if [[ "${last_source}" =~ ^[1-9][0-9]*$ && -f "${last_archive}" && -f "${last_dump}" ]]; then
@@ -202,7 +202,7 @@ capture() {
 }
 
 rc=0
-capture rakazo.dump dump_database verify_database || rc=$?
+capture unibot.dump dump_database verify_database || rc=$?
 ((rc == 0)) || { echo "database dump failed with exit ${rc}" >&2; exit "${rc}"; }
 
 # Bots write while this runs. GNU tar exits 1 for "file changed as we read it",
@@ -215,7 +215,7 @@ if [[ "${rc}" -gt 1 ]]; then
   exit "${rc}"
 fi
 
-(cd "${SNAPSHOT_DIR}" && sha256sum "rakazo.dump${suffix}" "appdata.tgz${suffix}" SOURCE_SIZE_KB > SHA256SUMS.pending)
+(cd "${SNAPSHOT_DIR}" && sha256sum "unibot.dump${suffix}" "appdata.tgz${suffix}" SOURCE_SIZE_KB > SHA256SUMS.pending)
 chmod 600 "${SNAPSHOT_DIR}"/*
 sync -- "${SNAPSHOT_DIR}"/*
 # Publish the completion marker only after every checksum is written.

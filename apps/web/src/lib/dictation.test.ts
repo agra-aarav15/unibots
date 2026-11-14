@@ -201,7 +201,7 @@ describe("Dictation recorder fallback", () => {
       expect.objectContaining({ credentials: "include" }),
     );
     const headers = new Headers(fetchMock.mock.calls[0]?.[1]?.headers);
-    expect(headers.get("x-rakazo-space-id")).toBe("space-support");
+    expect(headers.get("x-unibot-space-id")).toBe("space-support");
     expect(headers.get("content-type")).toBe("application/json");
   });
 
@@ -886,7 +886,7 @@ describe("Dictation web speech", () => {
 
   it("listens in the language the app is set to", async () => {
     vi.stubGlobal("localStorage", {
-      getItem: (key: string) => (key === "rakazo.uiLocale" ? "nl" : null),
+      getItem: (key: string) => (key === "unibot.uiLocale" ? "nl" : null),
       setItem: () => undefined,
       removeItem: () => undefined,
       clear: () => undefined,
@@ -910,7 +910,7 @@ describe("Dictation web speech", () => {
   it("keeps the app's language when the browser speaks another one", async () => {
     vi.stubGlobal("navigator", { language: "de-DE" });
     vi.stubGlobal("localStorage", {
-      getItem: (key: string) => (key === "rakazo.uiLocale" ? "es" : null),
+      getItem: (key: string) => (key === "unibot.uiLocale" ? "es" : null),
       setItem: () => undefined,
       removeItem: () => undefined,
       clear: () => undefined,
@@ -931,7 +931,7 @@ describe("Dictation web speech", () => {
   ])("follows browser %s as %s when the UI is English", async (browser, expected) => {
     vi.stubGlobal("navigator", { language: browser });
     vi.stubGlobal("localStorage", {
-      getItem: (key: string) => (key === "rakazo.uiLocale" ? "en" : null),
+      getItem: (key: string) => (key === "unibot.uiLocale" ? "en" : null),
       setItem: () => undefined,
       removeItem: () => undefined,
       clear: () => undefined,

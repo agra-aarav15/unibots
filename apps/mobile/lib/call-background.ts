@@ -8,7 +8,7 @@ type UniBotCallNative = {
 
 const nativeCall =
   Platform.OS === "android"
-    ? requireOptionalNativeModule<UniBotCallNative>("RakazoNotifications")
+    ? requireOptionalNativeModule<UniBotCallNative>("UniBotNotifications")
     : null;
 
 /** The native start answers from the service itself, which can take a moment. */

@@ -39,7 +39,7 @@ function computer(overrides: Partial<ComputerStatus> = {}): ComputerStatus {
 describe("embeddableScreenUrl", () => {
   it("leaves a public stream URL alone", () => {
     const url = "https://sandbox.e2b.app/stream?authKey=abc&view_only=true";
-    expect(embeddableScreenUrl(url, "https://api.rakazo.test")).toBe(url);
+    expect(embeddableScreenUrl(url, "https://api.unibot.test")).toBe(url);
   });
 
   it.each(["screen.example", "8.8.8.8", "172.32.0.1", "100.63.255.255", "100.128.0.1"])(

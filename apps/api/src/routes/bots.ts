@@ -51,7 +51,7 @@ import { requireIdentityConfirmation } from "../identity-confirmation.js";
 import type { RouterDeps } from "../router.js";
 import { loadMessagePage } from "../thread-message-pages.js";
 import type { RouterContext } from "./context.js";
-import { computerContext, modelSetup, THREAD_MESSAGE_PAGE_SIZE } from "./shared.js";
+import { botHasModel, computerContext, modelSetup, THREAD_MESSAGE_PAGE_SIZE } from "./shared.js";
 
 /** Surface a Space deletion race as a retryable conflict instead of a generic failure. */
 function mapSpaceLifecycleError(error: unknown): unknown {
@@ -197,7 +197,7 @@ export async function enqueueBotIntroRun(deps: RouterDeps, actor: Actor, bot: Bo
   // In the scripted test/eval runtime an automatic run would compete with the harness's next
   // queued response.
   if (deps.env.agentRuntime === "scripted") return;
-  if ((await modelSetup(deps, actor)).needsModel) return;
+  if ((await modelSetup(deps, actor)).needsModel && !(await botHasModel(deps, actor, bot))) return;
   const [user, space] = await Promise.all([
     deps.prisma.user.findUnique({ where: { id: actor.userId }, select: { name: true } }),
     deps.prisma.space.findUnique({

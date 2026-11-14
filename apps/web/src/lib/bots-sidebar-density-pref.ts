@@ -1,6 +1,10 @@
+import { clearLegacyKey, readMigratedKey } from "./legacy-storage.js";
+
 export type BotsSidebarDensity = "comfortable" | "compact";
 
-export const BOTS_SIDEBAR_DENSITY_STORAGE_KEY = "rakazo.botsSidebarDensity";
+export const BOTS_SIDEBAR_DENSITY_STORAGE_KEY = "unibot.botsSidebarDensity";
+/** Where this shipped before the rename. Read once and moved forward, so nobody starts cold. */
+const LEGACY_BOTS_SIDEBAR_DENSITY_STORAGE_KEY = "rakazo.botsSidebarDensity";
 
 type DensityStorage = Pick<Storage, "getItem" | "setItem">;
 
@@ -24,7 +28,13 @@ export function readBotsSidebarDensity(
 ): BotsSidebarDensity {
   if (!storage) return "comfortable";
   try {
-    return normalizeBotsSidebarDensity(storage.getItem(BOTS_SIDEBAR_DENSITY_STORAGE_KEY));
+    return normalizeBotsSidebarDensity(
+      readMigratedKey(
+        storage,
+        BOTS_SIDEBAR_DENSITY_STORAGE_KEY,
+        LEGACY_BOTS_SIDEBAR_DENSITY_STORAGE_KEY,
+      ),
+    );
   } catch {
     return "comfortable";
   }
@@ -37,6 +47,7 @@ export function persistBotsSidebarDensity(
   if (!storage) return;
   try {
     storage.setItem(BOTS_SIDEBAR_DENSITY_STORAGE_KEY, normalizeBotsSidebarDensity(density));
+    clearLegacyKey(storage, LEGACY_BOTS_SIDEBAR_DENSITY_STORAGE_KEY);
   } catch {
     // Keep the in-memory preference when local storage is unavailable or blocked.
   }

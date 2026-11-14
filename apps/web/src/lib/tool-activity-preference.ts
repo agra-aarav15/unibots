@@ -1,6 +1,10 @@
+import { clearLegacyKey, readMigratedKey } from "./legacy-storage.js";
+
 export type ToolActivityPreference = "on" | "off";
 
-export const TOOL_ACTIVITY_STORAGE_KEY = "rakazo.showToolActivity";
+export const TOOL_ACTIVITY_STORAGE_KEY = "unibot.showToolActivity";
+/** Where this shipped before the rename. Read once and moved forward, so nobody starts cold. */
+const LEGACY_TOOL_ACTIVITY_STORAGE_KEY = "rakazo.showToolActivity";
 
 export type ResolveToolActivityOptions = {
   stored?: string | null;
@@ -21,7 +25,7 @@ function getLocalStorage(): Pick<Storage, "getItem" | "setItem"> | null {
 function readStored(storage: Pick<Storage, "getItem"> | null | undefined): string | null {
   if (!storage) return null;
   try {
-    return storage.getItem(TOOL_ACTIVITY_STORAGE_KEY);
+    return readMigratedKey(storage, TOOL_ACTIVITY_STORAGE_KEY, LEGACY_TOOL_ACTIVITY_STORAGE_KEY);
   } catch {
     return null;
   }
@@ -59,6 +63,7 @@ export function persistToolActivityPreference(
   if (!storage) return;
   try {
     storage.setItem(TOOL_ACTIVITY_STORAGE_KEY, preference);
+    clearLegacyKey(storage, LEGACY_TOOL_ACTIVITY_STORAGE_KEY);
   } catch {
     // Ignore quota / private-mode failures; the in-memory preference still applies.
   }

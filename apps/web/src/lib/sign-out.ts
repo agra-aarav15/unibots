@@ -5,7 +5,9 @@ import { endCallBeforeSignOut, forgetSignedInUser, sessionChangedUnderPage } fro
 import { clearSpaceSelection } from "./rpc";
 
 /** Kept across the reload after a failed sign-out, so the fresh page can say it failed. */
-export const LOG_OUT_FAILED_KEY = "rakazo.logOutFailed";
+export const LOG_OUT_FAILED_KEY = "unibot.logOutFailed";
+/** Where this shipped before the rename. Read once and moved forward, so the message still shows. */
+const LEGACY_LOG_OUT_FAILED_KEY = "rakazo.logOutFailed";
 /** The reload after a failed sign-out found the user still signed in. */
 let logOutFailed = false;
 
@@ -29,6 +31,7 @@ export async function signOut(destination: string): Promise<void> {
   } else {
     try {
       sessionStorage.setItem(LOG_OUT_FAILED_KEY, "1");
+      sessionStorage.removeItem(LEGACY_LOG_OUT_FAILED_KEY);
     } catch {
       // No storage: the page still reloads, without the failure message.
     }
@@ -42,8 +45,11 @@ export async function signOut(destination: string): Promise<void> {
  */
 export function syncLogOutFailure(signedIn: boolean): void {
   try {
-    if (sessionStorage.getItem(LOG_OUT_FAILED_KEY) === null) return;
+    const marked = sessionStorage.getItem(LOG_OUT_FAILED_KEY);
+    const legacyMarked = marked === null ? sessionStorage.getItem(LEGACY_LOG_OUT_FAILED_KEY) : null;
+    if (marked === null && legacyMarked === null) return;
     sessionStorage.removeItem(LOG_OUT_FAILED_KEY);
+    sessionStorage.removeItem(LEGACY_LOG_OUT_FAILED_KEY);
   } catch {
     return;
   }

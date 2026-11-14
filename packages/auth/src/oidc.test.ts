@@ -15,7 +15,7 @@ vi.mock("@unibot/db", async (original) => ({
 }));
 
 const issuer = "https://identity.example.test";
-const origin = "https://rakazo.example.test";
+const origin = "https://unibot.example.test";
 const secret = "offline-test-secret-with-at-least-32-characters";
 const { privateKey, publicKey } = generateKeyPairSync("rsa", { modulusLength: 2048 });
 const jwk = { ...publicKey.export({ format: "jwk" }), kid: "test-key", alg: "RS256", use: "sig" };

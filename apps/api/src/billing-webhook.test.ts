@@ -13,7 +13,7 @@ import {
 const actor: Actor = {
   userId: "user-1",
   spaceId: "space-1",
-  email: "user@rakazo.test",
+  email: "user@unibot.test",
   isDeploymentOwner: false,
 };
 

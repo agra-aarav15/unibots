@@ -32,6 +32,18 @@ export class SandboxUnavailableError extends Error {
   }
 }
 
+/**
+ * No computer host is configured on this deployment, so no computer can be provided. The message
+ * names the state and how to enable one; unlike an unavailable provider, retrying does not help.
+ */
+export class SandboxUnconfiguredError extends Error {
+  readonly code = "SANDBOX_UNCONFIGURED";
+  constructor(message: string, options?: { cause?: unknown }) {
+    super(message, options);
+    this.name = "SandboxUnconfiguredError";
+  }
+}
+
 /** A computer's workspace is over the size or file count a save allows, so it is not saved. */
 export class WorkspaceTooLargeError extends Error {
   readonly code = "WORKSPACE_TOO_LARGE";

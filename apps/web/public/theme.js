@@ -1,9 +1,19 @@
 // Runs before first paint, as a file because the app's CSP blocks inline scripts.
 (() => {
-  const key = "rakazo.uiAppearance";
+  const key = "unibot.uiAppearance";
+  // Where this shipped before the rename: read once and move it forward so nobody starts cold.
+  const legacyKey = "rakazo.uiAppearance";
   let preference = "system";
   try {
-    const stored = localStorage.getItem(key);
+    let stored = localStorage.getItem(key);
+    if (stored === null) {
+      const previous = localStorage.getItem(legacyKey);
+      if (previous !== null) {
+        localStorage.setItem(key, previous);
+        localStorage.removeItem(legacyKey);
+        stored = previous;
+      }
+    }
     if (stored === "system" || stored === "light" || stored === "dark") preference = stored;
   } catch {}
   const systemLight =

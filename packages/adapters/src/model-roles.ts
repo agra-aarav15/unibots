@@ -88,6 +88,30 @@ export async function resolveMemberMainModel(
   return { ...primary, credential };
 }
 
+/** A model runs on its own connection, or on the deployment's for its funded provider. */
+function runnableModel(
+  provider: string | null | undefined,
+  credential: ModelCredential,
+  hostedProvider?: string,
+): boolean {
+  return Boolean(credential || (provider && provider === hostedProvider));
+}
+
+/**
+ * Whether a bot's own model can run: it is connected, or the deployment funds its provider. This is
+ * the exact rule `selectConfiguredModel` applies to an override, exposed so the send gate can reach
+ * the same answer before a run exists.
+ */
+export function botModelRunnable(input: {
+  override: ModelChoice | null | undefined;
+  overrideCredential: ModelCredential;
+  hostedProvider?: string;
+}): boolean {
+  const { override, overrideCredential, hostedProvider } = input;
+  const hasOverride = Boolean(override?.modelProvider && usableModelId(override.modelId));
+  return hasOverride && runnableModel(override?.modelProvider, overrideCredential, hostedProvider);
+}
+
 /** Select configuration without loading secrets or applying a runtime-specific fallback. */
 export function selectConfiguredModel(input: {
   /** The bot's or the run's own model; null follows the main model. */
@@ -98,13 +122,18 @@ export function selectConfiguredModel(input: {
   defaults: DeploymentModelDefaults;
 }) {
   const { override: bot, overrideCredential, main } = input;
+  // A declared model the bot could not run must not carry its thinking level onto the main model.
   const hasOverride = Boolean(bot?.modelProvider && usableModelId(bot.modelId));
-  // A model runs on its own connection, or on the deployment's for its funded provider.
-  const runnable = (provider: string | null | undefined, credential: ModelCredential) =>
-    Boolean(credential || (provider && provider === input.hostedProvider));
   // The override provider, model and credential must win together.
-  const useOverride = hasOverride && runnable(bot?.modelProvider, overrideCredential);
-  const useMain = !useOverride && main !== null && runnable(main.provider, main.credential);
+  const useOverride = botModelRunnable({
+    override: bot,
+    overrideCredential,
+    hostedProvider: input.hostedProvider,
+  });
+  const useMain =
+    !useOverride &&
+    main !== null &&
+    runnableModel(main.provider, main.credential, input.hostedProvider);
   const fallback = deploymentModelRole("main", input.defaults).primary;
   const selected = useOverride
     ? {

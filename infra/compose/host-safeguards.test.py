@@ -676,7 +676,7 @@ class HostCheckTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             # A plaintext latest snapshot alerts until it is encrypted or explicitly allowed.
-            plaintext = backups / "unibot" / "20261020T000000Z" / "rakazo.dump"
+            plaintext = backups / "unibot" / "20261020T000000Z" / "unibot.dump"
             plaintext.write_text("dump")
             result = subprocess.run(
                 ["bash", str(script)], env=env, capture_output=True, text=True

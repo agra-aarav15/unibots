@@ -57,16 +57,16 @@ describe("passkeysSupported", () => {
     await expect(passkeysSupported("agents.example.com", mac([]))).resolves.toBe(false);
     await expect(passkeysSupported("agents.example.com", mac())).resolves.toBe(false);
     await expect(passkeysSupported("agents.example.com", mac(new Error("ipc")))).resolves.toBe(false);
-    const selfHosted = { ...mac(["agents.example.com"]), host: "rakazo.example.com" };
-    await expect(passkeysSupported("rakazo.example.com", selfHosted)).resolves.toBe(false);
+    const selfHosted = { ...mac(["agents.example.com"]), host: "unibot.example.com" };
+    await expect(passkeysSupported("unibot.example.com", selfHosted)).resolves.toBe(false);
     expect(
       selfHosted.credential.isUserVerifyingPlatformAuthenticatorAvailable,
     ).not.toHaveBeenCalled();
   });
 
   it("leaves other desktop platforms to their own platform authenticator", async () => {
-    const windows = { ...browser("rakazo.example.com"), desktop: { platform: "win32" } };
-    await expect(passkeysSupported("rakazo.example.com", windows)).resolves.toBe(true);
+    const windows = { ...browser("unibot.example.com"), desktop: { platform: "win32" } };
+    await expect(passkeysSupported("unibot.example.com", windows)).resolves.toBe(true);
   });
 
   it("does not ask the authenticator when the host cannot use the relying party", async () => {

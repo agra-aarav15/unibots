@@ -126,7 +126,7 @@ describe("running Docker computer reuse", () => {
               method: "GET",
               headers: expect.objectContaining({
                 "x-unibot-bot-id": "bot",
-                "x-rakazo-space-id": "space",
+                "x-unibot-space-id": "space",
               }),
             }),
           );

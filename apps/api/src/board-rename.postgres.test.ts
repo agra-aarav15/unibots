@@ -37,7 +37,7 @@ describe.skipIf(!enabled).sequential("board prefix rename (PostgreSQL)", () => {
         data: {
           id: userId,
           name: "Board rename",
-          email: `${userId}@rakazo.test`,
+          email: `${userId}@unibot.test`,
           emailVerified: false,
         },
       });
@@ -61,7 +61,7 @@ describe.skipIf(!enabled).sequential("board prefix rename (PostgreSQL)", () => {
       const board = await ensureBoard(prisma, spaceId);
       expect(board.nextNumber).toBe(1);
       boardId = board.id;
-      actor = { spaceId, userId, email: `${userId}@rakazo.test`, isDeploymentOwner: false };
+      actor = { spaceId, userId, email: `${userId}@unibot.test`, isDeploymentOwner: false };
     }),
   );
 

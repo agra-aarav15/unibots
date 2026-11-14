@@ -107,8 +107,8 @@ export function hasComputerIdentity(
   botId: string,
   spaceId: string,
 ) {
-  const labeledSpaceId = labels?.["rakazo.spaceId"] ?? labels?.["rakazo.workspaceId"];
-  return labels?.["rakazo.botId"] === botId && labeledSpaceId === spaceId;
+  const labeledSpaceId = labels?.["unibot.spaceId"] ?? labels?.["unibot.workspaceId"];
+  return labels?.["unibot.botId"] === botId && labeledSpaceId === spaceId;
 }
 
 export function hasValidBearerToken(authorization: string | undefined, expectedToken: string) {
@@ -550,7 +550,7 @@ export function containerActionStep(
 }
 
 /** Image label of computers whose control service takes aimed and sideways scrolls. */
-export const AIMED_SCROLL_CONTROL_LABEL = "rakazo.control.aimedScroll";
+export const AIMED_SCROLL_CONTROL_LABEL = "unibot.control.aimedScroll";
 
 /**
  * Whether a computer's control service can run these actions. One built before aimed and

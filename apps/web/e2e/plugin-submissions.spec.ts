@@ -35,7 +35,7 @@ test("an admin reviews plugin submissions from the emailed admin link", async ({
   page,
 }, testInfo) => {
   const stamp = Date.now();
-  await signup(page, `plugin-admin-${stamp}@rakazo.test`, "password12", `Plugin Admin ${stamp}`);
+  await signup(page, `plugin-admin-${stamp}@unibot.test`, "password12", `Plugin Admin ${stamp}`);
   await completeOnboarding(page);
 
   let submissions = [

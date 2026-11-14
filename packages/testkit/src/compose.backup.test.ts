@@ -34,7 +34,7 @@ describeBackup("compose backup and restore", () => {
       timeout: 60_000,
       env: { ...process.env, UNIBOT_BACKUP_SKIP_HOMES: "1" },
     });
-    const dump = path.resolve("backups", stamp, "rakazo.sql");
+    const dump = path.resolve("backups", stamp, "unibot.sql");
     expect(existsSync(dump)).toBe(true);
     const sql = readFileSync(dump, "utf8");
     expect(sql).toMatch(/CREATE TABLE|CREATE TABLE IF NOT EXISTS/i);

@@ -1,5 +1,7 @@
 import {
+  botModelRunnable,
   deploymentModelRole,
+  findConnectedModelCredential,
   hasHostedModelCredits,
   hostCredentialSource,
   mcpStdioAvailable,
@@ -113,6 +115,35 @@ export async function modelSetup(deps: RouterDeps, actor: Actor) {
     hasDeployment,
     needsModel: deps.env.agentRuntime !== "scripted" && !main && !hasDeployment,
   };
+}
+
+/** The model a bot carries itself, if any; a subset of the stored bot row. */
+type BotModelFields = { modelProvider: string | null; modelId: string | null };
+
+/**
+ * Whether a turn for this bot has a model even when the member set no main model. The run picks the
+ * bot's own connected model before the member's (`selectConfiguredModel`), so the send gate has to
+ * ask the same question — otherwise a bot that plainly shows a model is refused with "Connect a
+ * model to start a run."
+ */
+export async function botHasModel(
+  deps: RouterDeps,
+  actor: Actor,
+  bot: BotModelFields | null | undefined,
+): Promise<boolean> {
+  if (!bot?.modelProvider || !bot.modelId) return false;
+  const overrideCredential = await findConnectedModelCredential(
+    deps.prisma,
+    deps.secrets,
+    actor,
+    bot.modelProvider,
+    bot.modelId,
+  );
+  return botModelRunnable({
+    override: { modelProvider: bot.modelProvider, modelId: bot.modelId, thinkingLevel: null },
+    overrideCredential,
+    hostedProvider: deps.billing?.modelCreditsEnabled ? deps.env.defaultProvider : undefined,
+  });
 }
 
 export const THREAD_MESSAGE_PAGE_SIZE = 100;

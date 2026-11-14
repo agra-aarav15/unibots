@@ -1,3 +1,4 @@
+import { SandboxUnconfiguredError } from "@unibot/adapter-kit";
 import type {
   AdapterContext,
   CommandRequest,
@@ -35,7 +36,7 @@ export class NoneSandboxProvider implements SandboxProvider {
   }
 
   private fail(): never {
-    throw new Error(this.message);
+    throw new SandboxUnconfiguredError(this.message);
   }
 
   async provision(

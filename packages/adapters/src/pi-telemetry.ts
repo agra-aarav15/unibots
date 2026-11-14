@@ -23,11 +23,11 @@ export async function withPiTelemetry<T>(
   }
   return telemetry.startSpan(
     {
-      name: "rakazo.agent.run",
+      name: "unibot.agent.run",
       attributes: {
-        "rakazo.bot.id": request.botId,
-        "rakazo.run.id": request.runId,
-        "rakazo.routine.id": request.routineId ?? undefined,
+        "unibot.bot.id": request.botId,
+        "unibot.run.id": request.runId,
+        "unibot.routine.id": request.routineId ?? undefined,
       },
     },
     (span) => current.run(span, () => work(span)),

@@ -15,7 +15,7 @@ test(
   async ({ page }, testInfo) => {
     const stamp = Date.now();
     const userName = `Korean Routine ${stamp}`;
-    await signup(page, `routine-ko-${stamp}@rakazo.test`, "password12", userName);
+    await signup(page, `routine-ko-${stamp}@unibot.test`, "password12", userName);
     await completeOnboarding(page);
 
     await page.getByRole("button", { name: new RegExp(userName) }).click();
@@ -48,7 +48,7 @@ test(
 
 test("routine test-run completes and survives reload", async ({ page }, testInfo) => {
   const stamp = Date.now();
-  await signup(page, `routine-${stamp}@rakazo.test`, "password12", "Routine");
+  await signup(page, `routine-${stamp}@unibot.test`, "password12", "Routine");
   await completeOnboarding(page);
   const botId = activeBotId(page);
 
@@ -121,7 +121,7 @@ test("a routine run that failed to start shows the error in Details", async ({
   page,
 }, testInfo) => {
   const stamp = Date.now();
-  await signup(page, `routine-failed-${stamp}@rakazo.test`, "password12", "Routine");
+  await signup(page, `routine-failed-${stamp}@unibot.test`, "password12", "Routine");
   await completeOnboarding(page);
   const botId = activeBotId(page);
   await rpc<Routine>(page, "routines/create", {

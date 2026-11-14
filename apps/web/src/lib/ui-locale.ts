@@ -1,4 +1,5 @@
 import { matchUiLocale } from "@unibot/core";
+import { clearLegacyKey, readMigratedKey } from "./legacy-storage.js";
 
 export const UI_LOCALES = [
   "en",
@@ -19,7 +20,9 @@ export const UI_LOCALES = [
 
 export type UiLocale = (typeof UI_LOCALES)[number];
 
-export const UI_LOCALE_STORAGE_KEY = "rakazo.uiLocale";
+export const UI_LOCALE_STORAGE_KEY = "unibot.uiLocale";
+/** Where this shipped before the rename. Read once and moved forward, so nobody starts cold. */
+const LEGACY_UI_LOCALE_STORAGE_KEY = "rakazo.uiLocale";
 
 export const UI_LOCALE_LABELS: Record<UiLocale, string> = {
   en: "English",
@@ -46,7 +49,7 @@ export function normalizeUiLocale(raw: string | null | undefined): UiLocale {
 function readStoredLocale(storage: Pick<Storage, "getItem"> | null | undefined): string | null {
   if (!storage) return null;
   try {
-    return storage.getItem(UI_LOCALE_STORAGE_KEY);
+    return readMigratedKey(storage, UI_LOCALE_STORAGE_KEY, LEGACY_UI_LOCALE_STORAGE_KEY);
   } catch {
     return null;
   }
@@ -121,6 +124,7 @@ export function persistUiLocale(
   if (!storage) return;
   try {
     storage.setItem(UI_LOCALE_STORAGE_KEY, locale);
+    clearLegacyKey(storage, LEGACY_UI_LOCALE_STORAGE_KEY);
   } catch {
     // Ignore quota / private-mode failures; in-memory locale still applies.
   }

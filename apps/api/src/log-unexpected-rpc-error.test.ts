@@ -4,6 +4,7 @@ import {
   SandboxDamagedError,
   SandboxRateLimitError,
   SandboxUnavailableError,
+  SandboxUnconfiguredError,
   SandboxUnresponsiveError,
   VoiceAccountError,
 } from "@unibot/adapter-kit";
@@ -181,6 +182,25 @@ describe("logUnexpectedRpcError", () => {
     expect(thrown).toMatchObject({ code: "CONFLICT", status: 409, message: error.message });
     expect(sink.events.map((event) => [event.level, event.message])).toEqual([
       ["warn", "rpc computer/boot computer damaged"],
+    ]);
+  });
+
+  it("returns a deployment with no computer host as a 503 that names the setup state", () => {
+    const sink = createTestSink();
+    installLogger(createLogger({ service: "unibot-api", sinks: [sink] }));
+    const error = new SandboxUnconfiguredError("Computers are not available on this server.");
+
+    let thrown: unknown;
+    try {
+      handleRpcError(error, ["computer", "screenUrl"]);
+    } catch (failure) {
+      thrown = failure;
+    }
+
+    expect(thrown).toBeInstanceOf(ORPCError);
+    expect(thrown).toMatchObject({ code: "SERVICE_UNAVAILABLE", message: error.message });
+    expect(sink.events.map((event) => [event.level, event.message])).toEqual([
+      ["warn", "rpc computer/screenUrl computer host not configured"],
     ]);
   });
 

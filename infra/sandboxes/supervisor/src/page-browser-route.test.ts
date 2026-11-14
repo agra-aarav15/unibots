@@ -20,7 +20,7 @@ beforeEach(() => {
   mock.stdin.length = 0;
   mock.inspect.mockResolvedValue({
     Config: {
-      Labels: { "rakazo.managed": "true", "rakazo.botId": "home", "rakazo.spaceId": "space" },
+      Labels: { "unibot.managed": "true", "unibot.botId": "home", "unibot.spaceId": "space" },
     },
   });
   mock.exec.mockImplementation(async (options: { Cmd: string[] }) => ({
@@ -58,7 +58,7 @@ async function snapshot(id: string, screen: string, lease: string, home = "home"
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
       "x-unibot-bot-id": home,
-      "x-rakazo-space-id": "space",
+      "x-unibot-space-id": "space",
       "x-unibot-screen-id": screen,
       "x-unibot-screen-lease-id": lease,
     },
@@ -212,7 +212,7 @@ it("closes helper stdin when the request is cancelled", async () => {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
       "x-unibot-bot-id": "home",
-      "x-rakazo-space-id": "space",
+      "x-unibot-space-id": "space",
     },
     body: JSON.stringify({ command: "act", actions: [{ kind: "click", ref: "test-ref" }] }),
   });
@@ -256,7 +256,7 @@ it.each([
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
       "x-unibot-bot-id": "home",
-      "x-rakazo-space-id": "space",
+      "x-unibot-space-id": "space",
       "x-unibot-screen-id": "first",
       "x-unibot-screen-lease-id": "run:9",
     },
@@ -298,7 +298,7 @@ it.each([
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
       "x-unibot-bot-id": "home",
-      "x-rakazo-space-id": "space",
+      "x-unibot-space-id": "space",
       "x-unibot-screen-id": "first",
       "x-unibot-screen-lease-id": "run:1",
     },
@@ -346,7 +346,7 @@ it("passes a settled step error through with the page, without a desktop fallbac
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
       "x-unibot-bot-id": "home",
-      "x-rakazo-space-id": "space",
+      "x-unibot-space-id": "space",
       "x-unibot-screen-id": "first",
       "x-unibot-screen-lease-id": "run:1",
     },
@@ -364,7 +364,7 @@ async function uploadRequest(roots?: unknown) {
       authorization: `Bearer ${resolveSupervisorToken(process.env)}`,
       "content-type": "application/json",
       "x-unibot-bot-id": "home",
-      "x-rakazo-space-id": "space",
+      "x-unibot-space-id": "space",
     },
     body: JSON.stringify({
       command: "act",
@@ -423,7 +423,7 @@ describe("screen setup reuse", () => {
   beforeEach(() => {
     mock.inspect.mockResolvedValue({
       Config: {
-        Labels: { "rakazo.managed": "true", "rakazo.botId": "home", "rakazo.spaceId": "space" },
+        Labels: { "unibot.managed": "true", "unibot.botId": "home", "unibot.spaceId": "space" },
       },
       State: { StartedAt: bootedAt },
     });

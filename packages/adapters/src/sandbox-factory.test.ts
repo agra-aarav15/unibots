@@ -1,3 +1,4 @@
+import { SandboxUnconfiguredError } from "@unibot/adapter-kit";
 import { describe, expect, it, vi } from "vitest";
 import { NO_SANDBOX_MESSAGE } from "./none-sandbox.js";
 import { createSandboxProvider } from "./sandbox-factory.js";
@@ -22,6 +23,13 @@ describe("createSandboxProvider", () => {
     await expect(
       (await createSandboxProvider("none", {})).provision({ botId: "b", homePath: "/tmp" }, ctx),
     ).rejects.toThrow(NO_SANDBOX_MESSAGE);
+  });
+
+  it("fails a computer call with the unconfigured error so the API answers 503, not 500", async () => {
+    const sandbox = await createSandboxProvider("none", {});
+    await expect(
+      sandbox.provision({ botId: "b", homePath: "/tmp" }, ctx),
+    ).rejects.toBeInstanceOf(SandboxUnconfiguredError);
   });
 
   it("boots without a remote key and keeps computers unavailable", async () => {

@@ -1,5 +1,6 @@
 import type { ProcessEvent } from "@unibot/adapter-kit";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { ComputerScreenUnavailableError } from "./computer-screens.js";
 import {
   DockerSandboxProvider,
   MAX_SANDBOX_ERROR_RESPONSE_BYTES,
@@ -64,6 +65,23 @@ describe("Docker sandbox", () => {
         context,
       ),
     ).rejects.toThrow();
+  });
+
+  it("reports an unreachable supervisor as a retryable screen, not a blank failure", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new TypeError("fetch failed");
+      }),
+    );
+    const provider = new DockerSandboxProvider("http://supervisor.test", "test-token");
+    await expect(
+      provider.connectScreen(
+        { id: "computer", botId: "bot", kind: "docker", providerRef: "computer" },
+        { view: "stream", interactive: false },
+        context,
+      ),
+    ).rejects.toBeInstanceOf(ComputerScreenUnavailableError);
   });
 
   it("sends the bounded timeout to the supervisor and preserves its honest result", async () => {
@@ -336,7 +354,7 @@ describe("Docker sandbox", () => {
           "x-unibot-bot-id": "home-bot",
           "x-unibot-screen-id": "bot",
           "x-unibot-screen-lease-id": "run-1:1",
-          "x-rakazo-space-id": "workspace",
+          "x-unibot-space-id": "workspace",
         }),
       }),
     );

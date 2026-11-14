@@ -40,7 +40,7 @@ dbTests("billing checkout coordination", () => {
   const actor: Actor = {
     userId,
     spaceId,
-    email: `checkout-${stamp}@rakazo.test`,
+    email: `checkout-${stamp}@unibot.test`,
     isDeploymentOwner: false,
   };
   let prisma: PrismaClient, db: ReturnType<typeof createDb>;

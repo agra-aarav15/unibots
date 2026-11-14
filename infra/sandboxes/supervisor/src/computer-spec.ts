@@ -370,7 +370,7 @@ function computerMountSettings(mount: ComputerMount): Docker.MountSettings {
  * as its own VM path when the container also mounts a volume, as every Compose computer's home
  * does, so the inspected Source cannot be compared with the setting.
  */
-const MOUNT_SOURCES_LABEL = "rakazo.mountSources";
+const MOUNT_SOURCES_LABEL = "unibot.mountSources";
 
 function mountSourcesLabel(mounts: ComputerMount[]) {
   return JSON.stringify(Object.fromEntries(mounts.map((mount) => [mount.target, mount.source])));
@@ -445,7 +445,7 @@ export function computerNetworkCreateOptions(
     Name: computerNetworkNameFor(botId),
     Driver: "bridge",
     CheckDuplicate: true,
-    Labels: { "rakazo.computerOwner": owner, "rakazo.botId": botId },
+    Labels: { "unibot.computerOwner": owner, "unibot.botId": botId },
     ...(egress === "restricted"
       ? { Options: { "com.docker.network.bridge.name": computerBridgeNameFor(botId) } }
       : {}),
@@ -583,9 +583,9 @@ export function containerCreateOptions(input: ComputerCreateInput) {
       ...(input.controlToken ? [`UNIBOT_COMPUTER_CONTROL_TOKEN=${input.controlToken}`] : []),
     ],
     Labels: {
-      "rakazo.managed": "true",
-      "rakazo.botId": input.botId,
-      "rakazo.spaceId": input.spaceId,
+      "unibot.managed": "true",
+      "unibot.botId": input.botId,
+      "unibot.spaceId": input.spaceId,
       ...(input.mounts?.length ? { [MOUNT_SOURCES_LABEL]: mountSourcesLabel(input.mounts) } : {}),
     },
     ExposedPorts: ports.ExposedPorts,

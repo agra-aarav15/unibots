@@ -556,7 +556,7 @@ describe("LocalStackController", () => {
       args[7] === "up" ? { code: 1, stderr: "port is already allocated" } : ok(args),
     );
     expect((await stack.start()).phase).toBe("failed");
-    // A fresh process must stop the same desktop project without discovering or adopting rakazo.
+    // A fresh process must stop the same desktop project without discovering or adopting unibot.
     expect((await controller().stop()).phase).toBe("idle");
     const commands = calls.filter(
       (call) => call.args[0] === "compose" && call.args[1] !== "version",
