@@ -192,7 +192,7 @@ jobs:
           spctl --assess --type execute --verbose=2 "$app"
           grep -Fqx "provider: github" "$app/Contents/Resources/app-update.yml"
           grep -Fqx "owner: agra-aarav15" "$app/Contents/Resources/app-update.yml"
-          grep -Fqx "repo: unibot" "$app/Contents/Resources/app-update.yml"
+          grep -Fqx "repo: unibots" "$app/Contents/Resources/app-update.yml"
 
       - name: Verify packaged native dependencies
         if: runner.os == 'macOS'
@@ -285,7 +285,7 @@ jobs:
           if ($executables.Count -lt 2) { throw "Windows installer or application was not created." }
           $config = "apps/desktop/out/win-unpacked/resources/app-update.yml"
           $feed = Get-Content -Raw $config
-          foreach ($expected in @("provider: github", "owner: agra-aarav15", "repo: unibot")) {
+          foreach ($expected in @("provider: github", "owner: agra-aarav15", "repo: unibots")) {
             if ($feed -notmatch "(?m)^$([regex]::Escape($expected))\r?$") {
               throw "Windows update config missing '$expected'."
             }
@@ -329,7 +329,7 @@ jobs:
           test -f "$config"
           grep -Fqx "provider: github" "$config"
           grep -Fqx "owner: agra-aarav15" "$config"
-          grep -Fqx "repo: unibot" "$config"
+          grep -Fqx "repo: unibots" "$config"
           test -f apps/desktop/out/latest-linux.yml
           grep -Fqx "version: $RELEASE_VERSION" apps/desktop/out/latest-linux.yml
 

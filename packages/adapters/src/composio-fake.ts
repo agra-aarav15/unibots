@@ -159,7 +159,7 @@ const GITHUB_TOOLS: SessionTools = [
       type: "object",
       properties: {
         owner: { type: "string", description: "Repository owner, e.g. agra-aarav15" },
-        repo: { type: "string", description: "Repository name, e.g. unibot" },
+        repo: { type: "string", description: "Repository name, e.g. unibots" },
       },
       required: ["owner", "repo"],
     },
@@ -423,7 +423,7 @@ export class FakeComposioClient implements ComposioClient {
 
   private runGithub(tool: string, args: Record<string, unknown>): Record<string, unknown> {
     const owner = String(args.owner ?? args.owner_name ?? "agra-aarav15");
-    const repo = String(args.repo ?? args.repository ?? "unibot");
+    const repo = String(args.repo ?? args.repository ?? "unibots");
     const matched = this.githubReleases.filter(
       (release) =>
         release.owner.toLowerCase() === owner.toLowerCase() &&

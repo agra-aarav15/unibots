@@ -34,7 +34,7 @@ export type EmulatedGithubRelease = {
 export const DEFAULT_UNIBOT_EMULATED_RELEASES: readonly EmulatedGithubRelease[] = [
   {
     owner: "agra-aarav15",
-    repo: "unibot",
+    repo: "unibots",
     tag: "v0.4.2",
     name: "v0.4.2 — routine tools + connector emulators",
     body: "Routines can bind connector tools. Composio emulator covers GitHub releases offline.",
@@ -43,7 +43,7 @@ export const DEFAULT_UNIBOT_EMULATED_RELEASES: readonly EmulatedGithubRelease[] 
   },
   {
     owner: "agra-aarav15",
-    repo: "unibot",
+    repo: "unibots",
     tag: "v0.4.1",
     name: "v0.4.1 — computer + plugin guidance",
     body: "Prefer connected plugins over browsing when reading app data.",
