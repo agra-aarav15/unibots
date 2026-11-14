@@ -618,6 +618,7 @@ msgstr "追加中…"
 
 #: src/pages/AccountSettingsOverlay.tsx
 #: src/pages/McpServersOverlay.tsx
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/compatible-model-fields.tsx
 #: src/pages/ModelSettingsOverlay.tsx
 #: src/pages/Onboarding.tsx
@@ -1459,12 +1460,17 @@ msgid "Coming soon"
 msgstr "近日公開"
 
 #: src/pages/McpServersOverlay.tsx
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/RoutineEditor.tsx
 msgid "Command"
 msgstr "コマンド"
 
 #: src/pages/shell/command-palette.tsx
 msgid "Command menu"
+msgstr ""
+
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Command to run"
 msgstr ""
 
 #: src/components/AskCard.tsx
@@ -1565,6 +1571,7 @@ msgstr "このブラウザセッションからURLにアクセスできること
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
 #: src/pages/memory-providers/SupermemorySettingsForm.tsx
 #: src/pages/MessagingSettingsPanel.tsx
+#: src/pages/model-settings/connection-controls.tsx
 #: src/pages/model-settings/role-model-picker.tsx
 #: src/pages/PaymentWalletSettingsPanel.tsx
 #: src/pages/VoiceSettingsOverlay.tsx
@@ -1671,6 +1678,7 @@ msgstr ""
 msgid "Contains code to run"
 msgstr "実行するコードを含みます"
 
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/compatible-model-fields.tsx
 #: src/pages/Onboarding.tsx
 msgid "Context limit"
@@ -3011,6 +3019,10 @@ msgstr "完了しました。"
 msgid "Finishing MCP connection…"
 msgstr "MCP接続を完了しています…"
 
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Folder"
+msgstr ""
+
 #: src/pages/Auth.tsx
 msgid "Forgot password?"
 msgstr "パスワードをお忘れですか？"
@@ -3071,6 +3083,10 @@ msgstr "準備中"
 #: src/pages/RoutineEditor.tsx
 msgid "Git event"
 msgstr "Gitイベント"
+
+#: src/App.tsx
+msgid "Go home"
+msgstr ""
 
 #: src/lib/identity-display.ts
 #: src/pages/MessagingSettingsPanel.tsx
@@ -3644,6 +3660,7 @@ msgstr "最大化"
 msgid "Maximum images per request"
 msgstr "リクエストあたりの最大画像数"
 
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/compatible-model-fields.tsx
 #: src/pages/ModelSettingsOverlay.tsx
 #: src/pages/Onboarding.tsx
@@ -3831,6 +3848,10 @@ msgstr "モデル接続"
 #: src/pages/Onboarding.tsx
 msgid "Model id"
 msgstr "モデルID"
+
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Model name"
+msgstr ""
 
 #: src/pages/model-settings/model-picker.tsx
 #: src/pages/model-settings/role-model-picker.tsx
@@ -4335,6 +4356,7 @@ msgid "OpenClaw or Hermes"
 msgstr "OpenClawまたはHermes"
 
 #: src/components/SignupSurvey.tsx
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/VoiceSettingsOverlay.tsx
@@ -4613,10 +4635,6 @@ msgstr "プルリクエスト"
 #: src/pages/ActivityList.tsx
 msgid "Queued"
 msgstr "待機中"
-
-#: src/pages/memory-providers/HonchoSettingsForm.tsx
-msgid "unibot-shared and IDs starting with bot- are reserved for UniBot."
-msgstr "unibot-sharedおよびbot-で始まるIDはUniBot用に予約されています。"
 
 #: src/pages/shell/message-hover-actions.tsx
 msgid "React"
@@ -5155,6 +5173,7 @@ msgid "Saving your workspace"
 msgstr "ワークスペースを保存中"
 
 #: src/pages/ExternalConversationSettings.tsx
+#: src/pages/model-settings/connection-controls.tsx
 msgid "Saving..."
 msgstr "保存中..."
 
@@ -5352,6 +5371,7 @@ msgstr "設定: 使用量"
 msgid "Setup complete"
 msgstr "セットアップ完了"
 
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/compatible-model-fields.tsx
 msgid "Setup help"
 msgstr "設定ヘルプ"
@@ -5957,6 +5977,10 @@ msgstr "このモデルのコンテキストウィンドウは小さすぎます
 msgid "This month"
 msgstr "今月"
 
+#: src/App.tsx
+msgid "This page does not exist."
+msgstr ""
+
 #: src/components/AccountAccess.tsx
 msgid "This permanently deletes your account and data."
 msgstr "アカウントとデータが完全に削除されます。"
@@ -6165,6 +6189,10 @@ msgstr "UniBot"
 msgid "UniBot credits"
 msgstr "UniBotクレジット"
 
+#: src/pages/memory-providers/HonchoSettingsForm.tsx
+msgid "unibot-shared and IDs starting with bot- are reserved for UniBot."
+msgstr "unibot-sharedおよびbot-で始まるIDはUniBot用に予約されています。"
+
 #: src/pages/PluginsOverlay.tsx
 msgid "Uninstall"
 msgstr "アンインストール"
@@ -6265,6 +6293,10 @@ msgstr "使用量"
 #: src/pages/AccountSettingsOverlay.tsx
 msgid "Use {0}"
 msgstr "{0}を使用"
+
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Use {CLI_PROMPT_PLACEHOLDER} for the message and {CLI_MODEL_PLACEHOLDER} for the model name. Without {CLI_PROMPT_PLACEHOLDER}, the message is written to the command's input."
+msgstr ""
 
 #: src/pages/HostComputerPrompt.tsx
 msgid "Use {hostLabel}"
@@ -6511,6 +6543,10 @@ msgstr "対応しない"
 #: src/components/SignupSurvey.tsx
 msgid "Work"
 msgstr "仕事"
+
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Working folder"
+msgstr ""
 
 #: src/pages/shell/agent-import.tsx
 msgid "Working instructions"

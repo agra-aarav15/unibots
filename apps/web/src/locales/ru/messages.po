@@ -618,6 +618,7 @@ msgstr "Добавление…"
 
 #: src/pages/AccountSettingsOverlay.tsx
 #: src/pages/McpServersOverlay.tsx
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/compatible-model-fields.tsx
 #: src/pages/ModelSettingsOverlay.tsx
 #: src/pages/Onboarding.tsx
@@ -1459,12 +1460,17 @@ msgid "Coming soon"
 msgstr "Скоро"
 
 #: src/pages/McpServersOverlay.tsx
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/RoutineEditor.tsx
 msgid "Command"
 msgstr "Команда"
 
 #: src/pages/shell/command-palette.tsx
 msgid "Command menu"
+msgstr ""
+
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Command to run"
 msgstr ""
 
 #: src/components/AskCard.tsx
@@ -1565,6 +1571,7 @@ msgstr "Убедитесь, что URL доступен из этого сеан
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
 #: src/pages/memory-providers/SupermemorySettingsForm.tsx
 #: src/pages/MessagingSettingsPanel.tsx
+#: src/pages/model-settings/connection-controls.tsx
 #: src/pages/model-settings/role-model-picker.tsx
 #: src/pages/PaymentWalletSettingsPanel.tsx
 #: src/pages/VoiceSettingsOverlay.tsx
@@ -1671,6 +1678,7 @@ msgstr ""
 msgid "Contains code to run"
 msgstr "Содержит исполняемый код"
 
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/compatible-model-fields.tsx
 #: src/pages/Onboarding.tsx
 msgid "Context limit"
@@ -3011,6 +3019,10 @@ msgstr "Завершено."
 msgid "Finishing MCP connection…"
 msgstr "Завершение подключения MCP…"
 
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Folder"
+msgstr ""
+
 #: src/pages/Auth.tsx
 msgid "Forgot password?"
 msgstr "Забыли пароль?"
@@ -3071,6 +3083,10 @@ msgstr "Подготовка"
 #: src/pages/RoutineEditor.tsx
 msgid "Git event"
 msgstr "Git-событие"
+
+#: src/App.tsx
+msgid "Go home"
+msgstr ""
 
 #: src/lib/identity-display.ts
 #: src/pages/MessagingSettingsPanel.tsx
@@ -3644,6 +3660,7 @@ msgstr ""
 msgid "Maximum images per request"
 msgstr ""
 
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/compatible-model-fields.tsx
 #: src/pages/ModelSettingsOverlay.tsx
 #: src/pages/Onboarding.tsx
@@ -3831,6 +3848,10 @@ msgstr "Подключения моделей"
 #: src/pages/Onboarding.tsx
 msgid "Model id"
 msgstr "Идентификатор модели"
+
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Model name"
+msgstr ""
 
 #: src/pages/model-settings/model-picker.tsx
 #: src/pages/model-settings/role-model-picker.tsx
@@ -4335,6 +4356,7 @@ msgid "OpenClaw or Hermes"
 msgstr "OpenClaw или Hermes"
 
 #: src/components/SignupSurvey.tsx
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/VoiceSettingsOverlay.tsx
@@ -4613,10 +4635,6 @@ msgstr "Запрос на слияние"
 #: src/pages/ActivityList.tsx
 msgid "Queued"
 msgstr "В очереди"
-
-#: src/pages/memory-providers/HonchoSettingsForm.tsx
-msgid "unibot-shared and IDs starting with bot- are reserved for UniBot."
-msgstr ""
 
 #: src/pages/shell/message-hover-actions.tsx
 msgid "React"
@@ -5155,6 +5173,7 @@ msgid "Saving your workspace"
 msgstr "Сохранение вашего рабочего пространства"
 
 #: src/pages/ExternalConversationSettings.tsx
+#: src/pages/model-settings/connection-controls.tsx
 msgid "Saving..."
 msgstr "Сохранение..."
 
@@ -5352,6 +5371,7 @@ msgstr "Настройки: Использование"
 msgid "Setup complete"
 msgstr "Настройка завершена"
 
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/compatible-model-fields.tsx
 msgid "Setup help"
 msgstr "Помощь по настройке"
@@ -5957,6 +5977,10 @@ msgstr "Контекстное окно этой модели слишком м�
 msgid "This month"
 msgstr ""
 
+#: src/App.tsx
+msgid "This page does not exist."
+msgstr ""
+
 #: src/components/AccountAccess.tsx
 msgid "This permanently deletes your account and data."
 msgstr "Это навсегда удалит ваш аккаунт и данные."
@@ -6165,6 +6189,10 @@ msgstr "UniBot"
 msgid "UniBot credits"
 msgstr ""
 
+#: src/pages/memory-providers/HonchoSettingsForm.tsx
+msgid "unibot-shared and IDs starting with bot- are reserved for UniBot."
+msgstr ""
+
 #: src/pages/PluginsOverlay.tsx
 msgid "Uninstall"
 msgstr "Удалить"
@@ -6264,6 +6292,10 @@ msgstr "Использование"
 #. placeholder {0}: deviceTimezone.replaceAll("_", " ")
 #: src/pages/AccountSettingsOverlay.tsx
 msgid "Use {0}"
+msgstr ""
+
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Use {CLI_PROMPT_PLACEHOLDER} for the message and {CLI_MODEL_PLACEHOLDER} for the model name. Without {CLI_PROMPT_PLACEHOLDER}, the message is written to the command's input."
 msgstr ""
 
 #: src/pages/HostComputerPrompt.tsx
@@ -6510,6 +6542,10 @@ msgstr ""
 
 #: src/components/SignupSurvey.tsx
 msgid "Work"
+msgstr ""
+
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Working folder"
 msgstr ""
 
 #: src/pages/shell/agent-import.tsx

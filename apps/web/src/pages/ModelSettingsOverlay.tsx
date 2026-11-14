@@ -33,7 +33,7 @@ import type { ModelRoleConnectIntent } from "./ModelRoleSettings";
 import { ModelRoleSettings } from "./ModelRoleSettings";
 import { CliModelFields } from "./model-settings/cli-model-fields";
 import { CompatibleModelFields } from "./model-settings/compatible-model-fields";
-import { CompatibleKeyControls, ConnectionControls } from "./model-settings/connection-controls";
+import { CliKeyControls, CompatibleKeyControls, ConnectionControls } from "./model-settings/connection-controls";
 import { ConnectionNameField, ProvidersSection } from "./model-settings/providers-section";
 import type { ConnectableProvider } from "./model-settings/role-model-picker";
 import { SpaceBotsModelNotice } from "./model-settings/space-bots-model";
@@ -189,18 +189,7 @@ export function ModelSettingsOverlay({
     ) : isCli ? (
       <>
         <CliModelFields {...model} />
-        {settingsDirty ? (
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            className="mt-4"
-            disabled={busy}
-            onClick={() => void connectKey({ settingsOnly: true })}
-          >
-            {pending === "settings" ? <Trans>Saving...</Trans> : <Trans>Save</Trans>}
-          </Button>
-        ) : null}
+        <CliKeyControls {...model} />
         {disconnectButton}
       </>
     ) : credential ? (

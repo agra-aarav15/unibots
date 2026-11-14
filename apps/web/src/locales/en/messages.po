@@ -618,6 +618,7 @@ msgstr "Adding…"
 
 #: src/pages/AccountSettingsOverlay.tsx
 #: src/pages/McpServersOverlay.tsx
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/compatible-model-fields.tsx
 #: src/pages/ModelSettingsOverlay.tsx
 #: src/pages/Onboarding.tsx
@@ -1459,6 +1460,7 @@ msgid "Coming soon"
 msgstr "Coming soon"
 
 #: src/pages/McpServersOverlay.tsx
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/RoutineEditor.tsx
 msgid "Command"
 msgstr "Command"
@@ -1466,6 +1468,10 @@ msgstr "Command"
 #: src/pages/shell/command-palette.tsx
 msgid "Command menu"
 msgstr "Command menu"
+
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Command to run"
+msgstr "Command to run"
 
 #: src/components/AskCard.tsx
 #: src/components/VaultSettings.tsx
@@ -1565,6 +1571,7 @@ msgstr "Confirm the URL is reachable from this browser session, then test again.
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
 #: src/pages/memory-providers/SupermemorySettingsForm.tsx
 #: src/pages/MessagingSettingsPanel.tsx
+#: src/pages/model-settings/connection-controls.tsx
 #: src/pages/model-settings/role-model-picker.tsx
 #: src/pages/PaymentWalletSettingsPanel.tsx
 #: src/pages/VoiceSettingsOverlay.tsx
@@ -1671,6 +1678,7 @@ msgstr "Connector"
 msgid "Contains code to run"
 msgstr "Contains code to run"
 
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/compatible-model-fields.tsx
 #: src/pages/Onboarding.tsx
 msgid "Context limit"
@@ -3011,6 +3019,10 @@ msgstr "Finished."
 msgid "Finishing MCP connection…"
 msgstr "Finishing MCP connection…"
 
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Folder"
+msgstr "Folder"
+
 #: src/pages/Auth.tsx
 msgid "Forgot password?"
 msgstr "Forgot password?"
@@ -3071,6 +3083,10 @@ msgstr "Getting ready"
 #: src/pages/RoutineEditor.tsx
 msgid "Git event"
 msgstr "Git event"
+
+#: src/App.tsx
+msgid "Go home"
+msgstr "Go home"
 
 #: src/lib/identity-display.ts
 #: src/pages/MessagingSettingsPanel.tsx
@@ -3644,6 +3660,7 @@ msgstr "Maximize"
 msgid "Maximum images per request"
 msgstr "Maximum images per request"
 
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/compatible-model-fields.tsx
 #: src/pages/ModelSettingsOverlay.tsx
 #: src/pages/Onboarding.tsx
@@ -3831,6 +3848,10 @@ msgstr "Model connections"
 #: src/pages/Onboarding.tsx
 msgid "Model id"
 msgstr "Model id"
+
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Model name"
+msgstr "Model name"
 
 #: src/pages/model-settings/model-picker.tsx
 #: src/pages/model-settings/role-model-picker.tsx
@@ -4335,6 +4356,7 @@ msgid "OpenClaw or Hermes"
 msgstr "OpenClaw or Hermes"
 
 #: src/components/SignupSurvey.tsx
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/VoiceSettingsOverlay.tsx
@@ -4613,10 +4635,6 @@ msgstr "Pull request"
 #: src/pages/ActivityList.tsx
 msgid "Queued"
 msgstr "Queued"
-
-#: src/pages/memory-providers/HonchoSettingsForm.tsx
-msgid "unibot-shared and IDs starting with bot- are reserved for UniBot."
-msgstr "unibot-shared and IDs starting with bot- are reserved for UniBot."
 
 #: src/pages/shell/message-hover-actions.tsx
 msgid "React"
@@ -5155,6 +5173,7 @@ msgid "Saving your workspace"
 msgstr "Saving your workspace"
 
 #: src/pages/ExternalConversationSettings.tsx
+#: src/pages/model-settings/connection-controls.tsx
 msgid "Saving..."
 msgstr "Saving..."
 
@@ -5352,6 +5371,7 @@ msgstr "Settings: Usage"
 msgid "Setup complete"
 msgstr "Setup complete"
 
+#: src/pages/model-settings/cli-model-fields.tsx
 #: src/pages/model-settings/compatible-model-fields.tsx
 msgid "Setup help"
 msgstr "Setup help"
@@ -5957,6 +5977,10 @@ msgstr "This model's context window is too small. Choose another model."
 msgid "This month"
 msgstr "This month"
 
+#: src/App.tsx
+msgid "This page does not exist."
+msgstr "This page does not exist."
+
 #: src/components/AccountAccess.tsx
 msgid "This permanently deletes your account and data."
 msgstr "This permanently deletes your account and data."
@@ -6165,6 +6189,10 @@ msgstr "UniBot"
 msgid "UniBot credits"
 msgstr "UniBot credits"
 
+#: src/pages/memory-providers/HonchoSettingsForm.tsx
+msgid "unibot-shared and IDs starting with bot- are reserved for UniBot."
+msgstr "unibot-shared and IDs starting with bot- are reserved for UniBot."
+
 #: src/pages/PluginsOverlay.tsx
 msgid "Uninstall"
 msgstr "Uninstall"
@@ -6265,6 +6293,10 @@ msgstr "Usage"
 #: src/pages/AccountSettingsOverlay.tsx
 msgid "Use {0}"
 msgstr "Use {0}"
+
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Use {CLI_PROMPT_PLACEHOLDER} for the message and {CLI_MODEL_PLACEHOLDER} for the model name. Without {CLI_PROMPT_PLACEHOLDER}, the message is written to the command's input."
+msgstr "Use {CLI_PROMPT_PLACEHOLDER} for the message and {CLI_MODEL_PLACEHOLDER} for the model name. Without {CLI_PROMPT_PLACEHOLDER}, the message is written to the command's input."
 
 #: src/pages/HostComputerPrompt.tsx
 msgid "Use {hostLabel}"
@@ -6511,6 +6543,10 @@ msgstr "Won't do"
 #: src/components/SignupSurvey.tsx
 msgid "Work"
 msgstr "Work"
+
+#: src/pages/model-settings/cli-model-fields.tsx
+msgid "Working folder"
+msgstr "Working folder"
 
 #: src/pages/shell/agent-import.tsx
 msgid "Working instructions"

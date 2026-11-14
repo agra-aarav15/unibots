@@ -1,7 +1,9 @@
+import { CLI_PROVIDER_ID } from "@unibot/contracts";
 import type { ModelCredential } from "@unibot/contracts";
 import { describe, expect, it } from "vitest";
 import type { ConnectionFormDraft } from "./model-connection-form.js";
 import {
+  cliConnectionReady,
   compatibleConnectionReady,
   connectionFormFields,
   connectionFormModelId,
@@ -347,6 +349,62 @@ describe("modelConnectRequest", () => {
         label: "OpenAI-compatible",
         credentialId: "credential-fixture",
       },
+    });
+  });
+});
+
+describe("command-line connections", () => {
+  const cli = { provider: CLI_PROVIDER_ID, providerName: "Command line", id: "" };
+
+  it("is ready only once a command and a model are both there", () => {
+    expect(cliConnectionReady({ command: "pi --print", modelId: "gpt" })).toBe(true);
+    expect(cliConnectionReady({ command: " pi --print ", modelId: "gpt" })).toBe(true);
+    expect(cliConnectionReady({ command: "   ", modelId: "gpt" })).toBe(false);
+    expect(cliConnectionReady({ command: "pi --print", modelId: "" })).toBe(false);
+  });
+
+  it("connects without a key, carrying the command and the working directory", () => {
+    expect(
+      modelConnectRequest({
+        form: draft({
+          command: " pi --print ",
+          cwd: " C:\\work ",
+          modelId: "gpt",
+          maxTokens: "2048",
+        }),
+        selected: cli,
+        credentialId: null,
+      }),
+    ).toEqual({
+      status: "ready",
+      savingLimitOnly: false,
+      activeModelId: "gpt",
+      input: {
+        provider: CLI_PROVIDER_ID,
+        command: "pi --print",
+        cwd: "C:\\work",
+        modelId: "gpt",
+        maxTokens: 2048,
+        contextWindow: 262_144,
+        label: "Command line",
+        credentialId: null,
+      },
+    });
+  });
+
+  it("keeps the command when an already-saved connection saves its limits", () => {
+    const saved = credential({ provider: CLI_PROVIDER_ID, modelId: "gpt" });
+    const request = modelConnectRequest({
+      form: draft({ command: "pi --print", modelId: "gpt", maxTokens: "1024" }),
+      selected: cli,
+      credential: saved,
+      credentialId: saved.id,
+      settingsOnly: true,
+    });
+    expect(request.status === "ready" && request.input).toMatchObject({
+      command: "pi --print",
+      modelId: "gpt",
+      maxTokens: 1024,
     });
   });
 });

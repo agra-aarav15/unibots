@@ -20,6 +20,7 @@ import type { ThinkingLevel } from "@unibot/contracts";
 import {
   backupChoiceKey,
   canonicalPiProviderId,
+  CLI_PROVIDER_ID,
   isOllamaCloudBaseUrl,
   OPENAI_COMPATIBLE_PROVIDER_ID,
   usableModelId,
@@ -194,7 +195,11 @@ export function modelsRoutes(ctx: RouterContext) {
         return { ok: true as const };
       }),
       connect: authed.models.connect.handler(async ({ context, input }) => {
-        const record = await firstModelConnectAnalytics(deps, context.actor, "api_key");
+        // A command-line connection stores a command instead of a key, so it gets its own method.
+        // A compatible endpoint already reports itself in `modelConnectProperties`, which also keeps
+        // its address off the event.
+        const method = input.provider === CLI_PROVIDER_ID ? ("cli" as const) : ("api_key" as const);
+        const record = await firstModelConnectAnalytics(deps, context.actor, method);
         record(input.provider, { name: "model_connect_started" });
         try {
           const saved = await connectModelCredential(context.actor, input, context.signal);

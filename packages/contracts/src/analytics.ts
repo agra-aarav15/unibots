@@ -44,7 +44,13 @@ export const AnalyticsBotSetting = z.enum([
 export const AnalyticsTrigger = RunTriggerSchema;
 /** A coarse failure class; "other" covers everything without a known kind. Never the error text. */
 export const AnalyticsErrorKind = z.enum([...RUN_ERROR_KINDS, "other"]);
-export const AnalyticsModelConnectMethod = z.enum(["api_key", "oauth", "credits", "compatible"]);
+export const AnalyticsModelConnectMethod = z.enum([
+  "api_key",
+  "oauth",
+  "credits",
+  "compatible",
+  "cli",
+]);
 const modelConnect = {
   method: AnalyticsModelConnectMethod,
   // A model catalog provider id, checked against the fixed catalog by the caller.

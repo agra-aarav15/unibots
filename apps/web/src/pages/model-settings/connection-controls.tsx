@@ -407,7 +407,7 @@ export function CompatibleKeyControls({
           className="mt-2 h-10 text-foreground"
         />
       </CompatibleKeyField>
-      <Button
+<Button
         type="button"
         variant="secondary"
         className="mt-3"
@@ -415,8 +415,48 @@ export function CompatibleKeyControls({
         disabled={busy || !openAiCompatibleReady}
         onClick={() => void connectKey()}
       >
-        {pending === "connect" ? <Trans>Saving…</Trans> : <Trans>Save</Trans>}
+        {pending === "connect" ? <Trans>Saving...</Trans> : <Trans>Save</Trans>}
       </Button>
     </div>
   ) : null;
+}
+
+/**
+ * The only way to save a command-line model. There is no key to paste, so unlike every other
+ * provider this button has to exist before the connection does: `cliReady` says the command and
+ * the model are both filled in. The button used to be gated on `settingsDirty`, which requires a
+ * saved credential, so a new command-line connection had nothing to press. A saved one keeps the
+ * limits-only save it had.
+ */
+export function CliKeyControls({
+  busy,
+  cliReady,
+  connectKey,
+  credential,
+  isCli,
+  pending,
+}: Pick<
+  ModelSettingsState,
+  "busy" | "cliReady" | "connectKey" | "credential" | "isCli" | "pending"
+>) {
+  if (!isCli) return null;
+  return (
+    <div className="mt-4">
+      <Button
+        type="button"
+        variant="secondary"
+        size="sm"
+        disabled={busy || !cliReady}
+        onClick={() => void connectKey(credential ? { settingsOnly: true } : {})}
+      >
+        {pending === "connect" || pending === "settings" ? (
+          <Trans>Saving...</Trans>
+        ) : credential ? (
+          <Trans>Save</Trans>
+        ) : (
+          <Trans>Connect</Trans>
+        )}
+      </Button>
+    </div>
+  );
 }
