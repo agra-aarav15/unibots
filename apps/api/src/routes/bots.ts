@@ -26,7 +26,7 @@ import type {
   VaultPutInput,
 } from "@unibot/contracts";
 import { BotSecretAuth, resolveBotAvatarSet } from "@unibot/contracts";
-import { ACTIVE_RUN_STATUSES, defaultBotInstructions, displayName } from "@unibot/core";
+import { ACTIVE_RUN_STATUSES, displayName } from "@unibot/core";
 import type { Prisma } from "@unibot/db";
 import {
   BotSectionNameConflictError,
@@ -257,10 +257,7 @@ export function botsRoutes(ctx: RouterContext) {
       create: authed.bots.create.handler(async ({ context, input }) => {
         let bot: Bot;
         try {
-          bot = await repos.createBot(context.actor, {
-            ...input,
-            instructions: defaultBotInstructions(input.instructions),
-          });
+          bot = await repos.createBot(context.actor, input);
         } catch (error) {
           throw mapSpaceLifecycleError(error);
         }
