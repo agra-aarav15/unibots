@@ -27,6 +27,7 @@ import net from "node:net";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { runPnpm, spawnPnpm } from "./pnpm.mjs";
+import { webBuildId, webBuildStale } from "./web-build-stale.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dbPackage = path.join(root, "packages/db");
@@ -429,29 +430,6 @@ function generateClientIfStale(env) {
   });
 }
 
-/** Whether the shipped web bundle predates any of its sources, so `pnpm app` builds only then. */
-function webBuildStale() {
-  const webDir = path.join(root, "apps/web");
-  const indexHtml = path.join(webDir, "dist/index.html");
-  const built = statSync(indexHtml, { throwIfNoEntry: false })?.mtimeMs;
-  if (!built) return true;
-  const newestIn = (target) => {
-    const stats = statSync(target, { throwIfNoEntry: false });
-    if (!stats) return 0;
-    if (!stats.isDirectory()) return stats.mtimeMs;
-    let newest = 0;
-    for (const entry of readdirSync(target, { withFileTypes: true })) {
-      if (entry.name === "node_modules") continue;
-      const child = path.join(target, entry.name);
-      newest = Math.max(newest, entry.isDirectory() ? newestIn(child) : (statSync(child, { throwIfNoEntry: false })?.mtimeMs ?? 0));
-    }
-    return newest;
-  };
-  return ["src", "index.html", "vite.config.ts", "package.json"]
-    .map((entry) => path.join(webDir, entry))
-    .some((target) => newestIn(target) > built);
-}
-
 const env = { ...process.env, COREPACK_ENABLE_DOWNLOAD_PROMPT: "0" };
 
 let ports = null;
@@ -501,11 +479,12 @@ const previewWeb = process.argv.includes("--preview") || setting("WEB_MODE") ===
 env.WEB_PORT = String(setting("WEB_PORT") ?? ports?.web ?? DEFAULT_PORTS.web);
 let previewServer = null;
 if (previewWeb) {
-  if (webBuildStale()) {
+  if (webBuildStale(root)) {
     log("Building the web app (skipped when dist is newer than its sources)");
     runPnpm(["--filter", "@unibot/web", "build"], { cwd: root, env, stdio: "inherit" });
   } else {
-    log("Serving the existing web build");
+    // Naming the build makes a bundle from before the last edit visible instead of silent.
+    log(`Serving the web build ${webBuildId(root)}`);
   }
 }
 
