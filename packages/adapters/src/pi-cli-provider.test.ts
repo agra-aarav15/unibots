@@ -92,6 +92,24 @@ describe("command template", () => {
   });
 });
 
+/**
+ * A real npm `.cmd` shim body. `%dp0%` is the folder holding the script, so the embedded path is
+ * built with the host separator: the shim syntax the parser cares about (`%_prog%`, `%dp0%`, `%*`,
+ * `&`) is identical on every platform, and the script path resolves on whichever one runs the test.
+ */
+function npmWindowsShim(relativeScript: string): string {
+  const script = relativeScript.split("/").join(path.sep);
+  return [
+    "@ECHO off",
+    "GOTO start",
+    ":start",
+    "SETLOCAL",
+    "CALL :find_dp0",
+    `endLocal & goto #_undefined_# 2>NUL || title %COMSPEC% & "%_prog%"  "%dp0%${path.sep}${script}" %*`,
+    "",
+  ].join("\r\n");
+}
+
 describe("resolveCliProgram", () => {
   it("runs a real executable directly", () => {
     const script = answerScript();
@@ -101,15 +119,7 @@ describe("resolveCliProgram", () => {
 
   it("reads the program and script out of an npm Windows shim", () => {
     const directory = fixture({
-      "tool.cmd": [
-        "@ECHO off",
-        "GOTO start",
-        ":start",
-        "SETLOCAL",
-        "CALL :find_dp0",
-        'endLocal & goto #_undefined_# 2>NUL || title %COMSPEC% & "%_prog%"  "%dp0%\\node_modules\\tool\\index.js" %*',
-        "",
-      ].join("\r\n"),
+      "tool.cmd": npmWindowsShim("node_modules/tool/index.js"),
       "node_modules/tool/index.js": "process.exit(0)",
     });
     const resolved = resolveCliProgram(
@@ -118,18 +128,13 @@ describe("resolveCliProgram", () => {
       "win32",
     );
     expect(resolved.file).toBe(process.execPath);
-    expect(resolved.prefix).toEqual([path.join(directory, "node_modules/tool/index.js")]);
+    expect(resolved.prefix).toEqual([path.join(directory, "node_modules", "tool", "index.js")]);
   });
 
   it("prefers the Windows shim over the POSIX script npm writes beside it", () => {
     const directory = fixture({
-      tool: "#!/bin/sh\nexec node \"$0.js\" \"$@\"\n",
-      "tool.cmd": [
-        "@ECHO off",
-        "SETLOCAL",
-        'endLocal & goto #_undefined_# 2>NUL || title %COMSPEC% & "%_prog%"  "%dp0%\\node_modules\\tool\\index.js" %*',
-        "",
-      ].join("\r\n"),
+      tool: '#!/bin/sh\nexec node "$0.js" "$@"\n',
+      "tool.cmd": npmWindowsShim("node_modules/tool/index.js"),
       "node_modules/tool/index.js": "process.exit(0)",
     });
     const resolved = resolveCliProgram(
