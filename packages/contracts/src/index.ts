@@ -31,6 +31,7 @@ export * from "./nav-links.js";
 export * from "./network-host.js";
 export * from "./openai-compatible-ui.js";
 export * from "./pairing.js";
+export * from "./payment-requests.js";
 export * from "./payments.js";
 export * from "./reactions.js";
 export * from "./routine-watch.js";

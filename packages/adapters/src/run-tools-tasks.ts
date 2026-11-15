@@ -2,6 +2,13 @@ import {
   desktopProtectionGuardMessage,
   protectedComputerLifecycleRefusal,
 } from "./desktop-command-guard.js";
+import {
+  createPaymentRequest,
+  formatAmountMinor,
+  listPaymentRequests,
+  PAYMENT_PAYEE_MISSING,
+  PAYMENT_UNKNOWN_TICKET,
+} from "./payment-requests.js";
 import type { ToolHandlers } from "./run-tool-gate.js";
 import {
   cancelScheduleFromTool,
@@ -170,6 +177,64 @@ export const taskTools: ToolHandlers = {
         body: String(args.body ?? ""),
       }),
     );
+  },
+  async request_payment(ctx, call) {
+    const { deps, run, bot } = ctx;
+    const { args } = call;
+    const amount = Number(args.amount);
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return call.finish({ error: "Enter a positive amount." });
+    }
+    const currency =
+      args.currency !== undefined ? String(args.currency).trim().toUpperCase() : undefined;
+    const request = await createPaymentRequest(deps, {
+      spaceId: run.spaceId,
+      botId: bot.id,
+      amountMinor: Math.round(amount * 100),
+      ...(currency ? { currency } : {}),
+      ...(args.description !== undefined ? { description: String(args.description) } : {}),
+      ...(args.customer !== undefined ? { customer: String(args.customer) } : {}),
+      ...(args.ticketId !== undefined ? { ticketId: String(args.ticketId) } : {}),
+    }).catch((error: unknown) => {
+      if (
+        error instanceof Error &&
+        (error.message === PAYMENT_PAYEE_MISSING || error.message === PAYMENT_UNKNOWN_TICKET)
+      ) {
+        return { error: error.message };
+      }
+      throw error;
+    });
+    if ("error" in request) return call.finish(request);
+    const shown = formatAmountMinor(request.amountMinor, request.currency);
+    return call.finish({
+      reference: request.reference,
+      payeeId: request.payeeId,
+      amount: shown,
+      amountMinor: request.amountMinor,
+      currency: request.currency,
+      status: request.status,
+      tellTheCustomer: `Ask them to pay ${shown} to ${request.payeeId}, quoting ${request.reference}.`,
+    });
+  },
+  async payment_status(ctx, call) {
+    const { deps, run } = ctx;
+    const { args } = call;
+    const reference = args.reference !== undefined ? String(args.reference) : undefined;
+    const ticketId = args.ticketId !== undefined ? String(args.ticketId) : undefined;
+    const requests = await listPaymentRequests(deps, {
+      spaceId: run.spaceId,
+      ...(reference ? { reference } : {}),
+      ...(ticketId ? { ticketId } : {}),
+    });
+    return call.finish({
+      payments: requests.map((request) => ({
+        reference: request.reference,
+        status: request.status,
+        amount: formatAmountMinor(request.amountMinor, request.currency),
+        payeeId: request.payeeId,
+        verifiedAt: request.verifiedAt,
+      })),
+    });
   },
   async schedule_create(ctx, call) {
     const { deps, run, bot, thread } = ctx;

@@ -593,6 +593,10 @@ msgstr ""
 msgid "Add skills"
 msgstr ""
 
+#: src/components/PaymentsPanel.tsx
+msgid "Add the UPI ID bots give customers. You confirm each payment before a bot delivers."
+msgstr ""
+
 #: src/components/teach/SkillDraftCard.tsx
 msgid "Add to routine"
 msgstr "자동 실행에 추가"
@@ -4227,6 +4231,10 @@ msgstr "UniBot 카탈로그에 없음"
 msgid "Not now"
 msgstr "나중에"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Not received"
+msgstr ""
+
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/import-status.ts
 msgid "Not supported in UniBot"
@@ -4503,6 +4511,14 @@ msgstr "API 키를 붙여넣은 뒤 다시 테스트하세요."
 msgid "Paused"
 msgstr "일시 중지됨"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Payment UPI ID"
+msgstr ""
+
+#: src/components/PaymentsPanel.tsx
+msgid "Payments to confirm"
+msgstr ""
+
 #: src/pages/MessagingSettingsPanel.tsx
 #: src/pages/PluginSubmissionsPanel.tsx
 msgid "Pending"
@@ -4695,6 +4711,10 @@ msgstr ""
 
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
 msgid "Recall only"
+msgstr ""
+
+#: src/components/PaymentsPanel.tsx
+msgid "Received"
 msgstr ""
 
 #: src/pages/ActivityList.tsx
@@ -5146,6 +5166,7 @@ msgstr "토요일"
 
 #: src/components/AskCard.tsx
 #: src/components/PasskeySettings.tsx
+#: src/components/PaymentsPanel.tsx
 #: src/components/teach/SkillDraftCard.tsx
 #: src/pages/AccountSettingsOverlay.tsx
 #: src/pages/Board.tsx
@@ -6564,6 +6585,10 @@ msgstr "언제 사용할지"
 msgid "Where should bots run?"
 msgstr "Bot을 어디에서 실행할까요?"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Where should customers pay?"
+msgstr ""
+
 #: src/lib/ticket-status.ts
 msgid "Won't do"
 msgstr ""
@@ -6631,6 +6656,10 @@ msgstr ""
 #: src/pages/shell/computer-overlay.tsx
 msgid "You have control"
 msgstr "직접 조작 중"
+
+#: src/components/PaymentsPanel.tsx
+msgid "you@bank"
+msgstr ""
 
 #. js-lingui-explicit-id
 #: src/lib/run-error.ts

@@ -163,6 +163,14 @@ import {
   PairDeviceOutputSchema,
 } from "./pairing.js";
 import { PaymentWalletStatusSchema } from "./payments.js";
+import {
+  ListPaymentRequestsInput,
+  ListPaymentRequestsOutput,
+  PaymentPayeeSchema,
+  PaymentRequestSchema,
+  SetPaymentPayeeInput,
+  VerifyPaymentRequestInput,
+} from "./payment-requests.js";
 import { MessageReactionSchema } from "./reactions.js";
 import { RoutineWatchSchema } from "./routine-watch.js";
 import {
@@ -1288,6 +1296,16 @@ export const appContract = {
   },
   runs: {
     list: oc.input(z.object({ filter: z.enum(["active", "recent"]) })).output(RunsListOutputSchema),
+  },
+  /** Money a bot asked a customer for, and the owner's own confirmation that it arrived. */
+  payments: {
+    list: oc.input(ListPaymentRequestsInput).output(ListPaymentRequestsOutput),
+    /** The owner confirms the money arrived; verifying wakes the bot that owns the deal. */
+    verify: oc.input(VerifyPaymentRequestInput).output(PaymentRequestSchema),
+    reject: oc.input(VerifyPaymentRequestInput).output(PaymentRequestSchema),
+    cancel: oc.input(z.object({ id: Id })).output(PaymentRequestSchema),
+    payee: oc.output(PaymentPayeeSchema),
+    setPayee: oc.input(SetPaymentPayeeInput).output(PaymentPayeeSchema),
   },
   /** The signed-in user's wallet; absent when the deployment offers none. */
   paymentWallet: {

@@ -9,6 +9,9 @@ import {
   HISTORY_QUERIES_MAX_BYTES,
   LOGIN_FIELD_LIMIT,
   PAID_REQUEST_METHODS,
+  PAYMENT_AMOUNT_MAX_MINOR,
+  PAYMENT_CUSTOMER_MAX_LENGTH,
+  PAYMENT_DESCRIPTION_MAX_LENGTH,
   PURCHASE_CARD_FIELDS,
   SecretAskPurpose,
   SecretHttpRequest,
@@ -1164,6 +1167,50 @@ export const builtinAgentTools: ConnectorTool[] = [
       },
       required: ["id", "body"],
     },
+  },
+  {
+    name: "request_payment",
+    description:
+      "Ask a customer to pay before you deliver. Returns the address to give them and a reference. The owner confirms the money arrived and wakes you when they do.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        amount: {
+          type: "number",
+          minimum: 0.01,
+          maximum: PAYMENT_AMOUNT_MAX_MINOR / 100,
+          description: "Amount in the currency's main unit, e.g. 4999 for 4,999.",
+        },
+        currency: { type: "string", description: "Currency code. Defaults to INR." },
+        description: {
+          type: "string",
+          maxLength: PAYMENT_DESCRIPTION_MAX_LENGTH,
+          description: "What the payment is for.",
+        },
+        customer: {
+          type: "string",
+          maxLength: PAYMENT_CUSTOMER_MAX_LENGTH,
+          description: "Who is paying, so the owner knows whose money to expect.",
+        },
+        ticketId: {
+          type: "string",
+          description: "The deal ticket to link, so confirming the payment wakes you.",
+        },
+      },
+      required: ["amount"],
+    },
+  },
+  {
+    name: "payment_status",
+    description: "Check whether the owner has confirmed a payment. Call it before promising delivery.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        reference: { type: "string", description: "The payment reference (PAY-XXXX) to look up." },
+        ticketId: { type: "string", description: "Or every payment linked to a ticket." },
+      },
+    },
+    readOnly: true,
   },
   {
     name: "schedule_create",

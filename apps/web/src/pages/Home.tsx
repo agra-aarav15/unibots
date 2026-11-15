@@ -12,6 +12,7 @@ import {
 import { useQueries, useQuery } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
+import { PaymentsPanel } from "../components/PaymentsPanel";
 import { activityPreview } from "../lib/activity-list-filters";
 import { blockedTickets, summarizeBoard, splitRuns, type BoardSummary } from "../lib/company-overview";
 import { useSpaceQueries } from "../lib/query";
@@ -71,6 +72,8 @@ export function HomePage() {
             <Trans>Could not load the company overview.</Trans>
           </p>
         ) : null}
+
+        <PaymentsPanel />
 
         {needsYou.length > 0 || blocked.length > 0 ? (
           <Section title={<Trans>Needs you</Trans>}>

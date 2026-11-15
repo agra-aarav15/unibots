@@ -121,6 +121,7 @@ export * from "./openai-voice.js";
 export * from "./openrouter-usage.js";
 export * from "./page-browser-session.js";
 export * from "./parallel-web.js";
+export * from "./payment-requests.js";
 export * from "./payment-wallet-factory.js";
 export * from "./payment-wallets.js";
 export * from "./pi-catalog-availability.js";

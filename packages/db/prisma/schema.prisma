@@ -377,6 +377,8 @@ model Space {
   organization                Organization                 @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   name                        String
   isDefault                   Boolean                      @default(false)
+  /// The UPI ID customers pay to. Per space, so each company in a deployment sets its own.
+  paymentsUpiId               String?
   createdByUserId             String?
   createdByUser               User?                        @relation("SpaceCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
   createdAt                   DateTime                     @default(now())
@@ -422,6 +424,7 @@ model Space {
   agentSecrets                AgentSecret[]
   boards                      Board[]
   tickets                     Ticket[]
+  paymentRequests             PaymentRequest[]
   ticketComments              TicketComment[]
   invitations                 Invitation[]
   agentSkillSpaces            AgentSkillSpace[]
@@ -682,6 +685,7 @@ model Bot {
   agentImports      AgentImport[]
   groupMembers      ChatGroupMember[]
   botSecrets BotSecret[]
+  paymentRequests PaymentRequest[]
   assignedTickets   Ticket[]          @relation("TicketAssigneeBot")
   createdTickets    Ticket[]          @relation("TicketCreatorBot")
   ticketComments    TicketComment[]   @relation("TicketCommentAuthorBot")
@@ -1932,6 +1936,7 @@ model Ticket {
 completedAt       DateTime?
     comments        TicketComment[]
     runs            Run[]         @relation("TicketRuns")
+    paymentRequests PaymentRequest[]
 
   @@unique([boardId, number])
   @@index([spaceId, status])
@@ -2222,4 +2227,42 @@ model CapabilityInstallSpace {
   @@id([installId, spaceId])
   @@index([spaceId, userId])
   @@map("capability_install_spaces")
+}
+
+/// A payment a bot asked a customer for, so the owner can confirm the money arrived before the bot
+/// promises delivery. The owner records the verification; nothing here talks to a bank or a PSP.
+model PaymentRequest {
+  id          String    @id @default(cuid())
+  spaceId     String
+  space       Space     @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  botId       String
+  bot         Bot       @relation(fields: [botId], references: [id], onDelete: Cascade)
+  /// The deal ticket this belongs to, when the work runs on the board; wakes the bot on verification.
+  ticketId    String?
+  ticket      Ticket?   @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+  /// Short code the payer sees, unique per space, e.g. PAY-7K2F9X.
+  reference   String
+  method      String    @default("upi")
+  /// The payment address shown to the payer, snapshotted from the space when the request was made.
+  payeeId     String
+  /// Amount in the currency's smallest unit (paise for INR), so no floating point is involved.
+  amountMinor Int
+  currency    String    @default("INR")
+  description String    @default("")
+  /// Who is paying, for the owner's list: a name or a handle.
+  customer    String    @default("")
+  /// pending | verified | rejected | cancelled
+  status      String    @default("pending")
+  /// The owner's note when verifying or rejecting.
+  note        String    @default("")
+  verifiedAt  DateTime?
+  verifiedById String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([spaceId, reference])
+  @@index([spaceId, status])
+  @@index([botId])
+  @@index([ticketId])
+  @@map("payment_requests")
 }

@@ -63,6 +63,11 @@ export const AUDITED_PROCEDURES: Record<string, AuditedProcedure> = {
   // Starting a sign-in replaces any wallet already connected.
   "paymentWallet.connect": { type: "credential.changed", kind: "payment_wallet" },
   "paymentWallet.disconnect": { type: "credential.deleted", kind: "payment_wallet" },
+  // The payment address is a setting the owner sets once; its value is never copied into the log.
+  "payments.setPayee": { type: "credential.changed", kind: "payment_payee" },
+  "payments.verify": { type: "approval.decided", kind: "payment", fields: ["id"] },
+  "payments.reject": { type: "approval.decided", kind: "payment", fields: ["id"] },
+  "payments.cancel": { type: "approval.decided", kind: "payment", fields: ["id"] },
   "deployment.update": {
     type: "deployment.settings.changed",
     fields: ["signupsEnabled", "computerHost"],

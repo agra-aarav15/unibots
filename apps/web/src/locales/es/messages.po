@@ -593,6 +593,10 @@ msgstr "Agregar URL del servidor"
 msgid "Add skills"
 msgstr "Agregar habilidades"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Add the UPI ID bots give customers. You confirm each payment before a bot delivers."
+msgstr ""
+
 #: src/components/teach/SkillDraftCard.tsx
 msgid "Add to routine"
 msgstr "Agregar a la rutina"
@@ -4227,6 +4231,10 @@ msgstr "No está en el catálogo de UniBot"
 msgid "Not now"
 msgstr "Ahora no"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Not received"
+msgstr ""
+
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/import-status.ts
 msgid "Not supported in UniBot"
@@ -4503,6 +4511,14 @@ msgstr "Pega tu clave de API y vuelve a probar."
 msgid "Paused"
 msgstr "En pausa"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Payment UPI ID"
+msgstr ""
+
+#: src/components/PaymentsPanel.tsx
+msgid "Payments to confirm"
+msgstr ""
+
 #: src/pages/MessagingSettingsPanel.tsx
 #: src/pages/PluginSubmissionsPanel.tsx
 msgid "Pending"
@@ -4696,6 +4712,10 @@ msgstr "Recordar y escribir"
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
 msgid "Recall only"
 msgstr "Solo recordar"
+
+#: src/components/PaymentsPanel.tsx
+msgid "Received"
+msgstr ""
 
 #: src/pages/ActivityList.tsx
 msgid "Recent"
@@ -5146,6 +5166,7 @@ msgstr "sábado"
 
 #: src/components/AskCard.tsx
 #: src/components/PasskeySettings.tsx
+#: src/components/PaymentsPanel.tsx
 #: src/components/teach/SkillDraftCard.tsx
 #: src/pages/AccountSettingsOverlay.tsx
 #: src/pages/Board.tsx
@@ -6564,6 +6585,10 @@ msgstr "Cuándo usar"
 msgid "Where should bots run?"
 msgstr "¿Dónde deben ejecutarse los bots?"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Where should customers pay?"
+msgstr ""
+
 #: src/lib/ticket-status.ts
 msgid "Won't do"
 msgstr "No se hará"
@@ -6631,6 +6656,10 @@ msgstr "Has rechazado la llamada"
 #: src/pages/shell/computer-overlay.tsx
 msgid "You have control"
 msgstr "Tienes el control"
+
+#: src/components/PaymentsPanel.tsx
+msgid "you@bank"
+msgstr ""
 
 #. js-lingui-explicit-id
 #: src/lib/run-error.ts

@@ -47,6 +47,7 @@ import { messagingRoutes } from "./routes/messaging.js";
 import { modelsRoutes } from "./routes/models.js";
 import { pairingRoutes } from "./routes/pairing.js";
 import { paymentWalletRoutes } from "./routes/payment-wallet.js";
+import { paymentRoutes } from "./routes/payments.js";
 import { routinesRoutes } from "./routes/routines.js";
 import { spacesRoutes } from "./routes/spaces.js";
 import { threadsRoutes } from "./routes/threads.js";
@@ -165,6 +166,7 @@ export function createRouter(deps: RouterDeps) {
     ...messagingRoutes(ctx),
     ...contentRoutes(ctx),
     ...paymentWalletRoutes(ctx),
+    ...paymentRoutes(ctx),
     ...pairingRoutes(ctx),
   });
 }

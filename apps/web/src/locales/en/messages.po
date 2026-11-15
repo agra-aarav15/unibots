@@ -593,6 +593,10 @@ msgstr "Add server URL"
 msgid "Add skills"
 msgstr "Add skills"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Add the UPI ID bots give customers. You confirm each payment before a bot delivers."
+msgstr "Add the UPI ID bots give customers. You confirm each payment before a bot delivers."
+
 #: src/components/teach/SkillDraftCard.tsx
 msgid "Add to routine"
 msgstr "Add to routine"
@@ -4227,6 +4231,10 @@ msgstr "Not in UniBot's catalog"
 msgid "Not now"
 msgstr "Not now"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Not received"
+msgstr "Not received"
+
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/import-status.ts
 msgid "Not supported in UniBot"
@@ -4503,6 +4511,14 @@ msgstr "Paste your API key, then test again."
 msgid "Paused"
 msgstr "Paused"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Payment UPI ID"
+msgstr "Payment UPI ID"
+
+#: src/components/PaymentsPanel.tsx
+msgid "Payments to confirm"
+msgstr "Payments to confirm"
+
 #: src/pages/MessagingSettingsPanel.tsx
 #: src/pages/PluginSubmissionsPanel.tsx
 msgid "Pending"
@@ -4696,6 +4712,10 @@ msgstr "Recall and write"
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
 msgid "Recall only"
 msgstr "Recall only"
+
+#: src/components/PaymentsPanel.tsx
+msgid "Received"
+msgstr "Received"
 
 #: src/pages/ActivityList.tsx
 msgid "Recent"
@@ -5146,6 +5166,7 @@ msgstr "Saturday"
 
 #: src/components/AskCard.tsx
 #: src/components/PasskeySettings.tsx
+#: src/components/PaymentsPanel.tsx
 #: src/components/teach/SkillDraftCard.tsx
 #: src/pages/AccountSettingsOverlay.tsx
 #: src/pages/Board.tsx
@@ -6564,6 +6585,10 @@ msgstr "When to use"
 msgid "Where should bots run?"
 msgstr "Where should bots run?"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Where should customers pay?"
+msgstr "Where should customers pay?"
+
 #: src/lib/ticket-status.ts
 msgid "Won't do"
 msgstr "Won't do"
@@ -6631,6 +6656,10 @@ msgstr "You declined"
 #: src/pages/shell/computer-overlay.tsx
 msgid "You have control"
 msgstr "You have control"
+
+#: src/components/PaymentsPanel.tsx
+msgid "you@bank"
+msgstr "you@bank"
 
 #. js-lingui-explicit-id
 #: src/lib/run-error.ts

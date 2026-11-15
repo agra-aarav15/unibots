@@ -593,6 +593,10 @@ msgstr "Добавьте URL сервера"
 msgid "Add skills"
 msgstr ""
 
+#: src/components/PaymentsPanel.tsx
+msgid "Add the UPI ID bots give customers. You confirm each payment before a bot delivers."
+msgstr ""
+
 #: src/components/teach/SkillDraftCard.tsx
 msgid "Add to routine"
 msgstr "Добавить в задачу"
@@ -4227,6 +4231,10 @@ msgstr "Нет в каталоге UniBot"
 msgid "Not now"
 msgstr "Не сейчас"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Not received"
+msgstr ""
+
 #: src/pages/shell/agent-import.tsx
 #: src/pages/shell/import-status.ts
 msgid "Not supported in UniBot"
@@ -4503,6 +4511,14 @@ msgstr "Вставьте API-ключ и повторите тест."
 msgid "Paused"
 msgstr "Приостановлено"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Payment UPI ID"
+msgstr ""
+
+#: src/components/PaymentsPanel.tsx
+msgid "Payments to confirm"
+msgstr ""
+
 #: src/pages/MessagingSettingsPanel.tsx
 #: src/pages/PluginSubmissionsPanel.tsx
 msgid "Pending"
@@ -4695,6 +4711,10 @@ msgstr ""
 
 #: src/pages/memory-providers/SerenitySettingsForm.tsx
 msgid "Recall only"
+msgstr ""
+
+#: src/components/PaymentsPanel.tsx
+msgid "Received"
 msgstr ""
 
 #: src/pages/ActivityList.tsx
@@ -5146,6 +5166,7 @@ msgstr "суббота"
 
 #: src/components/AskCard.tsx
 #: src/components/PasskeySettings.tsx
+#: src/components/PaymentsPanel.tsx
 #: src/components/teach/SkillDraftCard.tsx
 #: src/pages/AccountSettingsOverlay.tsx
 #: src/pages/Board.tsx
@@ -6564,6 +6585,10 @@ msgstr "Когда использовать"
 msgid "Where should bots run?"
 msgstr "Где должны работать боты?"
 
+#: src/components/PaymentsPanel.tsx
+msgid "Where should customers pay?"
+msgstr ""
+
 #: src/lib/ticket-status.ts
 msgid "Won't do"
 msgstr ""
@@ -6631,6 +6656,10 @@ msgstr "Вы отклонили"
 #: src/pages/shell/computer-overlay.tsx
 msgid "You have control"
 msgstr "Вы управляете"
+
+#: src/components/PaymentsPanel.tsx
+msgid "you@bank"
+msgstr ""
 
 #. js-lingui-explicit-id
 #: src/lib/run-error.ts
