@@ -342,6 +342,15 @@ function ShellSidebarFooter({
           setMenuOpen(false);
           openSkills();
         }}
+        onHome={
+          ticketBoardEnabled
+            ? () => {
+                setMenuOpen(false);
+                closeMobileSidebar();
+                navigate("/app/home");
+              }
+            : undefined
+        }
         onBoard={
           ticketBoardEnabled
             ? () => {

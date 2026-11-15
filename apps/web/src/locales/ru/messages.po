@@ -1014,12 +1014,17 @@ msgid "Block rule"
 msgstr "Правило блокировки"
 
 #: src/lib/ticket-status.ts
+#: src/pages/Home.tsx
 msgid "Blocked"
 msgstr ""
 
 #: src/components/SidebarFooter.tsx
 #: src/pages/Board.tsx
 msgid "Board"
+msgstr ""
+
+#: src/pages/Home.tsx
+msgid "Boards"
 msgstr ""
 
 #: src/pages/shell/computer-view.tsx
@@ -1488,6 +1493,11 @@ msgstr ""
 
 #: src/pages/AccountSettingsOverlay.tsx
 msgid "Compact"
+msgstr ""
+
+#: src/components/SidebarFooter.tsx
+#: src/pages/Home.tsx
+msgid "Company"
 msgstr ""
 
 #: src/pages/ScratchpadSection.tsx
@@ -2009,6 +2019,10 @@ msgstr "Не удалось загрузить способы входа"
 #: src/pages/KnowledgeSection.tsx
 msgid "Could not load skill"
 msgstr "Не удалось загрузить навык"
+
+#: src/pages/Home.tsx
+msgid "Could not load the company overview."
+msgstr ""
 
 #: src/pages/Artifacts.tsx
 msgid "Could not load this artifact."
@@ -3986,6 +4000,7 @@ msgid "Needs takeover"
 msgstr "Требуется передача управления"
 
 #: src/lib/roster-status.ts
+#: src/pages/Home.tsx
 #: src/pages/shell/computer-overlay.tsx
 #: src/pages/shell/message-view.tsx
 msgid "Needs you"
@@ -4081,6 +4096,10 @@ msgstr "Нет авторизации"
 msgid "No authentication"
 msgstr "Нет аутентификации"
 
+#: src/pages/Home.tsx
+msgid "No boards yet."
+msgstr ""
+
 #: src/pages/GroupPanel.tsx
 #: src/pages/shell/bot-picker.tsx
 msgid "No bots match"
@@ -4165,6 +4184,10 @@ msgstr ""
 
 #: src/pages/Board.tsx
 msgid "No tickets yet"
+msgstr ""
+
+#: src/pages/Home.tsx
+msgid "No tickets yet."
 msgstr ""
 
 #: src/pages/RoutineEditor.tsx
@@ -4291,6 +4314,7 @@ msgid "One-time purchase. Credits do not expire."
 msgstr ""
 
 #: src/components/markdown-link-prompt.tsx
+#: src/pages/Home.tsx
 #: src/pages/PaymentWalletSettingsPanel.tsx
 #: src/pages/shell/computer-panel.tsx
 #: src/pages/shell/import-setup-card.tsx
@@ -4311,6 +4335,10 @@ msgstr "Открыть {name}"
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 msgid "Open <0>{0}</0> and enter this code:"
+msgstr ""
+
+#: src/pages/Home.tsx
+msgid "Open board"
 msgstr ""
 
 #: src/pages/shell/chat-header.tsx
@@ -6551,6 +6579,10 @@ msgstr ""
 #: src/pages/shell/agent-import.tsx
 msgid "Working instructions"
 msgstr "Рабочие инструкции"
+
+#: src/pages/Home.tsx
+msgid "Working now"
+msgstr ""
 
 #: src/components/ToolActivityDisclosure.tsx
 #: src/lib/roster-status.ts

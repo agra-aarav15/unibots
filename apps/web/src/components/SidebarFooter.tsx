@@ -12,6 +12,7 @@ import {
 import {
   BookOpen,
   Briefcase,
+  Building2,
   Download,
   FolderOpen,
   Gauge,
@@ -41,6 +42,7 @@ type Props = {
   onIntegrations: () => void;
   onSkills: () => void;
   onBoard?: () => void;
+  onHome?: () => void;
   links?: NavLink[];
   onLink?: (link: NavLink) => void;
   onArtifacts: () => void;
@@ -69,6 +71,7 @@ export function SidebarFooter({
   onIntegrations,
   onSkills,
   onBoard,
+  onHome,
   links = [],
   onLink,
   onArtifacts,
@@ -180,6 +183,16 @@ export function SidebarFooter({
               <FolderOpen className="text-muted-foreground" strokeWidth={1.75} />
               <Trans>Artifacts</Trans>
             </Button>
+            {onHome ? (
+              <Button
+                variant="ghost"
+                className="h-9 w-full justify-start gap-2.5 font-normal"
+                onClick={onHome}
+              >
+                <Building2 className="text-muted-foreground" strokeWidth={1.75} />
+                <Trans>Company</Trans>
+              </Button>
+            ) : null}
             {onBoard ? (
               <Button
                 variant="ghost"

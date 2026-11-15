@@ -26,7 +26,7 @@ import {
 import { skipToken, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useSpaceQueries } from "../lib/query";
 import { formatRelativeTime } from "../lib/relative-time";
 import { rpc } from "../lib/rpc";
@@ -49,9 +49,15 @@ export function BoardPage() {
   const queryClient = useQueryClient();
   const boardsQuery = useQuery(queries.boards.list.queryOptions());
   const boards = boardsQuery.data ?? [];
-  const [chosenBoardId, setChosenBoardId] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  // The company home links here with the board it showed, so the right one opens.
+  const requestedBoardId = searchParams.get("board");
+  const [chosenBoardId, setChosenBoardId] = useState<string | null>(requestedBoardId);
   // The first board is the workspace's default, which is what older screens mean by "the board".
   const board = boards.find((candidate) => candidate.id === chosenBoardId) ?? boards[0];
+  useEffect(() => {
+    if (requestedBoardId) setChosenBoardId(requestedBoardId);
+  }, [requestedBoardId]);
   const ticketsOptions = queries.tickets.list.queryOptions({
     input: board ? { boardId: board.id } : {},
   });
@@ -217,7 +223,7 @@ export function BoardPage() {
   );
 }
 
-function TicketCard({
+export function TicketCard({
   ticket,
   bot,
   onOpen,
