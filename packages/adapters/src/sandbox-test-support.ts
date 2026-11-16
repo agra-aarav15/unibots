@@ -40,19 +40,22 @@ export async function assertSandboxWorkspaceContract(
   expect(await provider.listFiles(computer, "bin", ctx)).toEqual([
     { path: "bin/tool", kind: "file", size: 4, executable: true },
   ]);
-  const acted = await provider.act(
-    computer,
-    {
-      actions: [
-        { kind: "clipboard", text: "visible" },
-        { kind: "focus", application: "xterm" },
-      ],
-      observe: true,
-    },
-    ctx,
-  );
-  expect(acted.completed).toBe(2);
-  expect(acted.observation?.image.byteLength).toBeGreaterThan(0);
+  // A provider that reports no display has no screen behaviour to hold to the same contract.
+  if (provider.describe().capabilities.graphical) {
+    const acted = await provider.act(
+      computer,
+      {
+        actions: [
+          { kind: "clipboard", text: "visible" },
+          { kind: "focus", application: "xterm" },
+        ],
+        observe: true,
+      },
+      ctx,
+    );
+    expect(acted.completed).toBe(2);
+    expect(acted.observation?.image.byteLength).toBeGreaterThan(0);
+  }
   const exported = [];
   for await (const file of provider.exportWorkspace(computer, ctx)) exported.push(file);
   expect(exported.map((file) => file.path)).toContain("notes/result.txt");
