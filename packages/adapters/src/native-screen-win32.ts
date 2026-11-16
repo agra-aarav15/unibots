@@ -3,6 +3,7 @@ import type { ComputerAction } from "@unibot/adapter-kit";
 import koffi from "koffi";
 import type { NativeScreen, NativeScreenFrame } from "./native-screen.js";
 import { windowsKeyStrokes } from "./native-screen-keys.js";
+import { encodePng, halveBgrx } from "./png-encode.js";
 
 const SRCCOPY = 0x00cc0020;
 const DIB_RGB_COLORS = 0;
@@ -293,25 +294,27 @@ function delay(ms: number) {
   });
 }
 
-async function encode(
-  bits: Buffer,
-  width: number,
-  height: number,
-): Promise<Pick<NativeScreenFrame, "image" | "mimeType">> {
-  const { default: sharp } = await import("sharp");
-  // A screen DC hands back BGRA whose alpha byte is zero, so make it opaque and swap red with blue.
-  for (let index = 3; index < bits.length; index += 4) bits[index] = 255;
-  const opaque = sharp(bits, { raw: { width, height, channels: 4 } }).recomb([
-    [0, 0, 1, 0],
-    [0, 1, 0, 0],
-    [1, 0, 0, 0],
-    [0, 0, 0, 1],
-  ]);
-  const png = await opaque.clone().removeAlpha().png({ compressionLevel: 6 }).toBuffer();
-  if (png.byteLength <= MAX_OBSERVATION_BYTES)
-    return { image: new Uint8Array(png), mimeType: "image/png" };
-  const jpeg = await opaque.removeAlpha().jpeg({ quality: 80 }).toBuffer();
-  return { image: new Uint8Array(jpeg), mimeType: "image/jpeg" };
+/**
+ * Encodes one frame, halving it while it would not fit the transport. The encode is local and
+ * dependency-free on purpose: this runs inside the desktop app too, where a native image library
+ * would have to be shipped and could fail to load.
+ */
+function encode(bits: Buffer, width: number, height: number) {
+  let frame = { width, height, pixels: bits };
+  let scale = 1;
+  let image = encodePng(frame.width, frame.height, frame.pixels);
+  while (image.byteLength > MAX_OBSERVATION_BYTES && frame.width > 1 && frame.height > 1) {
+    frame = halveBgrx(frame.width, frame.height, frame.pixels);
+    image = encodePng(frame.width, frame.height, frame.pixels);
+    scale *= 2;
+  }
+  return {
+    image,
+    mimeType: "image/png" as const,
+    width: frame.width,
+    height: frame.height,
+    scale,
+  };
 }
 
 async function captureScreen(): Promise<NativeScreenFrame> {
@@ -358,14 +361,23 @@ async function captureScreen(): Promise<NativeScreenFrame> {
     DeleteDC(memoryDc);
     DeleteDC(screenDc);
   }
-  const encoded = await encode(bits, screen.width, screen.height);
+  // A screen DC hands back BGRA whose alpha byte is zero; the encoder ignores alpha and swaps B/R.
+  const encoded = encode(bits, screen.width, screen.height);
   const cursor = cursorPosition();
   const window = activeWindow();
   return {
-    ...encoded,
-    width: screen.width,
-    height: screen.height,
-    ...(cursor ? { cursor: { x: cursor.x - screen.x, y: cursor.y - screen.y } } : {}),
+    image: encoded.image,
+    mimeType: encoded.mimeType,
+    width: encoded.width,
+    height: encoded.height,
+    ...(cursor
+      ? {
+          cursor: {
+            x: Math.round((cursor.x - screen.x) / encoded.scale),
+            y: Math.round((cursor.y - screen.y) / encoded.scale),
+          },
+        }
+      : {}),
     ...(window ? { activeWindow: window } : {}),
   };
 }

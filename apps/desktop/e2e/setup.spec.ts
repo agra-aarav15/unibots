@@ -74,17 +74,26 @@ test.afterEach(async () => {
   await rm(userData, { recursive: true, force: true });
 });
 
-function launch(extraEnv: Record<string, string> = {}) {
+async function launch(extraEnv: Record<string, string> = {}) {
   const env = { ...process.env, UNIBOT_PERFORMANCE_USER_DATA: userData };
   // A stale UNIBOT_WEB_URL from the developer's shell would bypass setup entirely.
   delete env.UNIBOT_WEB_URL;
   const executablePath = process.env.UNIBOT_E2E_EXECUTABLE;
-  return electron.launch({
+  const launched = await electron.launch({
     ...(executablePath ? { executablePath: path.resolve(executablePath) } : {}),
     args: executablePath ? [] : ["."],
     cwd: path.resolve(import.meta.dirname, ".."),
     env: { ...env, ...extraEnv },
   });
+  // A packaged app whose main script fails to load shows an "Error" dialog and never opens its
+  // window, which reads as a timeout with no cause. Its own output is the only clue there is.
+  if (executablePath) {
+    const child = launched.process();
+    const relay = (chunk: Buffer) => process.stderr.write(`[app] ${chunk.toString()}`);
+    child.stdout?.on("data", relay);
+    child.stderr?.on("data", relay);
+  }
+  return launched;
 }
 
 test("first run offers this computer by default, with an existing instance option", async () => {
@@ -157,10 +166,16 @@ test("a saved existing instance reopens with its address and headers", async () 
   const setup = await app.firstWindow();
   const headers = { "CF-Access-Client-Id": "id.access", "CF-Access-Client-Secret": "secret" };
 
-  await app.evaluate(({ ipcMain }, saved) => {
-    ipcMain.removeHandler("desktop.setup.state");
-    ipcMain.handle("desktop.setup.state", () => ({ defaultLocalUrl: "http://127.0.0.1:45173", saved }));
-  }, { mode: "existing", serverUrl, headers });
+  await app.evaluate(
+    ({ ipcMain }, saved) => {
+      ipcMain.removeHandler("desktop.setup.state");
+      ipcMain.handle("desktop.setup.state", () => ({
+        defaultLocalUrl: "http://127.0.0.1:45173",
+        saved,
+      }));
+    },
+    { mode: "existing", serverUrl, headers },
+  );
   await setup.reload();
 
   await expect(setup.getByRole("radio", { name: /Existing instance/ })).toBeChecked();
