@@ -50,8 +50,9 @@ Native file reads and workspace exports are limited to 8 MiB per file. A larger 
   line; macOS and Linux stay commands-only for now. Portable file tools and checkpoints remain
   scoped to bot workspaces; use commands for other local folders. Permission is remembered locally
   and can be revoked from the app menu. Only enable this for a trusted personal instance: every bot
-  on that instance can use your account’s permissions. The live screen viewer in the app is not
-  wired to this display yet, so a bot can see and act on the screen that you cannot watch there.
+  on that instance can use your account’s permissions. The app shows that display live while its
+  computer pane is open, one frame at a time; two bots never act on it at once, and a bot that stops
+  acting releases the display after two minutes at the latest.
 - **Desktop provider** (`SANDBOX_PROVIDER=desktop`) runs commands directly on the API/worker host,
   with only a minimal shell environment (no server secrets), and on Windows also lets bots read and
   drive that host's display. The API and worker refuse it unless

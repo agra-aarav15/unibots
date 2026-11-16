@@ -17,7 +17,7 @@ import { TeachRecordingChrome, TeachStopButton } from "../../components/teach/Te
 import { screenIframeSandbox } from "../../lib/computer-screen";
 import { computerTakeoverBlocked } from "../../lib/thread-events";
 import { ComputerReleaseActions } from "./computer-release-actions";
-import { computerLabel, DesktopKindEmptyState } from "./computer-view";
+import { computerLabel, DesktopKindEmptyState, LocalScreen } from "./computer-view";
 
 type ComputerOverlayProps = {
   bot: Bot;
@@ -190,7 +190,9 @@ export function ComputerOverlay({
           </div>
         ) : null}
         <div className="relative min-h-0 flex-1 bg-background">
-          {computer?.kind === "desktop" ? (
+          {computer?.kind === "desktop" && computer.state === "running" ? (
+            <LocalScreen botId={bot.id} alt={t`Bot screen`} />
+          ) : computer?.kind === "desktop" ? (
             <DesktopKindEmptyState className="grid h-full place-items-center px-8 text-center text-sm text-muted-foreground/80" />
           ) : computer?.state === "running" && embeddedScreenUrl && !computerScreenError ? (
             <>

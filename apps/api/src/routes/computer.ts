@@ -784,6 +784,46 @@ export function computerRoutes(ctx: RouterContext) {
           ),
         };
       }),
+      /**
+       * One frame of a computer's own screen, for the app to show it live. A computer with no
+       * display to offer answers null, so the viewer falls back to its own message.
+       */
+      screenFrame: authed.computer.screenFrame.handler(async ({ context, input }) => {
+        const bot = await repos.getBot(context.actor, input.botId);
+        const computer = bot.computer;
+        if (
+          !computer?.providerRef ||
+          (computer.state !== "running" && computer.state !== "booting") ||
+          !deps.sandbox.describe().capabilities.graphical
+        ) {
+          return null;
+        }
+        const frame = await deps.sandbox
+          .observe(
+            toComputerRef(computer),
+            await computerScreenContext(
+              deps.prisma,
+              context.actor,
+              computer.id,
+              bot.id,
+              "screen-frame",
+            ),
+          )
+          .catch((error: unknown) => {
+            // Watching is not the bot's run: a busy or gone screen is a blank frame, not an error.
+            if (isComputerScreenUnavailable(error) || isSandboxGoneError(error)) return null;
+            throw error;
+          });
+        if (!frame) return null;
+        scheduleComputerSleep(deps.jobs, computer.id);
+        return {
+          image: Buffer.from(frame.image).toString("base64"),
+          mimeType: frame.mimeType,
+          width: frame.width,
+          height: frame.height,
+          capturedAt: frame.capturedAt,
+        };
+      }),
       heartbeat: authed.computer.heartbeat.handler(async ({ context, input }) => {
         const bot = await repos.getBot(context.actor, input.botId);
         if (bot.computer?.state === "running" && bot.computer.providerRef) {

@@ -30,6 +30,7 @@ import type {
   WorkspaceDirectoryRequest,
 } from "@unibot/adapter-kit";
 import { boundedSandboxCommandTimeoutMs } from "@unibot/core";
+import { ComputerScreenUnavailableError, screenSessionKey } from "./computer-screens.js";
 import {
   boundedComputerActions,
   computerObservation,
@@ -47,6 +48,7 @@ import {
   type Win32FileHandle,
   win32NtRelativeAvailable,
 } from "./desktop-sandbox-win32-path.js";
+import { DesktopScreenTurn } from "./desktop-screen-turn.js";
 import { removeOwnedWorkspaceChildren } from "./desktop-workspace-cleanup.js";
 import type { NativeScreen } from "./native-screen.js";
 import {
@@ -58,6 +60,12 @@ import { hostCommandEnvironment } from "./sandbox-command-environment.js";
 import { shouldSkipPortableWorkspaceFile } from "./workspace-save-policy.js";
 
 const O_NOFOLLOW = constants.O_NOFOLLOW ?? 0;
+
+/**
+ * How long one bot keeps the local display after its last action. Long enough to cover thinking
+ * between clicks, short enough that a run that died cannot leave the screen unusable.
+ */
+export const SCREEN_TURN_HOLD_MS = 120_000;
 
 /**
  * Bot commands run directly as this OS user, so a backend may select SANDBOX_PROVIDER=desktop
@@ -113,6 +121,7 @@ async function markStopped(home: string) {
 export class DesktopSandboxProvider implements SandboxProvider {
   readonly boxes = new Map<string, DesktopBox>();
   private readonly processTrees = new Map<NativeProcessTree, { home: string; runId?: string }>();
+  private readonly screenTurn = new DesktopScreenTurn(SCREEN_TURN_HOLD_MS);
   private nativeScreen?: Promise<NativeScreen | null>;
   private processSweep?: NodeJS.Timeout;
 
@@ -377,9 +386,20 @@ export class DesktopSandboxProvider implements SandboxProvider {
     });
   }
 
+  /** One bot acts on this display at a time, so two runs cannot interleave clicks and typing. */
+  private takeScreenTurn(context: AdapterContext) {
+    if (!this.screenTurn.claim(screenSessionKey(context)))
+      throw new ComputerScreenUnavailableError();
+  }
+
+  async releaseScreen(_computer: ComputerRef, context: AdapterContext): Promise<void> {
+    this.screenTurn.release(screenSessionKey(context));
+  }
+
   async act(computer: ComputerRef, request: ComputerActionRequest, context: AdapterContext) {
     this.requiredBox(computer);
     const actions = boundedComputerActions(request.actions);
+    this.takeScreenTurn(context);
     const screen = await this.requiredScreen();
     let completed = 0;
     for (const action of actions) {

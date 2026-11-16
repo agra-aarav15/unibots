@@ -169,10 +169,7 @@ describeWithDatabase("API authorization and resource isolation", () => {
       ["spaces/remove", { spaceId: "missing-space" }],
       ["spaces/invite", { spaceId: "missing-space" }],
       ["spaces/invitations", { spaceId: "missing-space" }],
-      [
-        "spaces/revokeInvitation",
-        { spaceId: "missing-space", invitationId: "missing-invitation" },
-      ],
+      ["spaces/revokeInvitation", { spaceId: "missing-space", invitationId: "missing-invitation" }],
       ["spaces/acceptInvite", { token: "not-a-real-token" }],
       ["spaces/members", { spaceId: "missing-space" }],
       [
@@ -252,6 +249,7 @@ describeWithDatabase("API authorization and resource isolation", () => {
       ["computer/files", { botId: "missing-bot", path: "/" }],
       ["computer/readFile", { botId: "missing-bot", path: "MEMORY.md" }],
       ["computer/screenUrl", { botId: "missing-bot" }],
+      ["computer/screenFrame", { botId: "missing-bot" }],
       ["computer/heartbeat", { botId: "missing-bot" }],
       ["computer/recover"],
       ["computer/reset"],

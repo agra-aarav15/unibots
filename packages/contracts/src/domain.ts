@@ -1223,6 +1223,16 @@ export const ComputerStatusSchema = z.object({
 });
 export type ComputerStatus = z.infer<typeof ComputerStatusSchema>;
 
+/** One frame of a computer's screen, for the app's own live view of it. */
+export const ComputerScreenFrameSchema = z.object({
+  image: z.string(),
+  mimeType: z.enum(["image/png", "image/jpeg"]),
+  width: z.number().int().positive(),
+  height: z.number().int().positive(),
+  capturedAt: z.string(),
+});
+export type ComputerScreenFrame = z.infer<typeof ComputerScreenFrameSchema>;
+
 export const ComputerReleaseReasonSchema = z.enum(["done", "skipped"]);
 export type ComputerReleaseReason = z.infer<typeof ComputerReleaseReasonSchema>;
 

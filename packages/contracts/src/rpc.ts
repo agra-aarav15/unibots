@@ -69,6 +69,7 @@ import {
   CONNECTION_LABEL_MAX_LENGTH,
   ComputerModeSchema,
   ComputerReleaseReasonSchema,
+  ComputerScreenFrameSchema,
   ComputerStatusSchema,
   ComputerUpdateSchema,
   ConnectionCatalogItemSchema,
@@ -162,7 +163,6 @@ import {
   PairDeviceInputSchema,
   PairDeviceOutputSchema,
 } from "./pairing.js";
-import { PaymentWalletStatusSchema } from "./payments.js";
 import {
   ListPaymentRequestsInput,
   ListPaymentRequestsOutput,
@@ -171,6 +171,7 @@ import {
   SetPaymentPayeeInput,
   VerifyPaymentRequestInput,
 } from "./payment-requests.js";
+import { PaymentWalletStatusSchema } from "./payments.js";
 import { MessageReactionSchema } from "./reactions.js";
 import { RoutineWatchSchema } from "./routine-watch.js";
 import {
@@ -716,6 +717,7 @@ export const appContract = {
       .input(botId)
       .output(z.array(ComputerCommandSchema.extend({ createdAt: z.string() }))),
     screenUrl: oc.input(botId).output(z.object({ url: z.string().nullable() })),
+    screenFrame: oc.input(botId).output(ComputerScreenFrameSchema.nullable()),
     heartbeat: oc.input(botId).output(z.object({ ok: z.literal(true) })),
   },
   memory: {

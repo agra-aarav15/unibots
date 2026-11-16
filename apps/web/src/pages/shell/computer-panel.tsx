@@ -5,7 +5,12 @@ import { Maximize2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { ComputersUnavailableHint } from "../../components/ComputersUnavailableHint";
 import { screenIframeSandbox } from "../../lib/computer-screen";
-import { computerLabel, computerPlaceholder, DesktopKindEmptyState } from "./computer-view";
+import {
+  computerLabel,
+  computerPlaceholder,
+  DesktopKindEmptyState,
+  LocalScreen,
+} from "./computer-view";
 
 type ComputerPanelProps = {
   bot: Bot;
@@ -64,6 +69,8 @@ export function ComputerPanel({
           >
             <Trans>Open in full window</Trans>
           </div>
+        ) : computer?.kind === "desktop" && computer.state === "running" ? (
+          <LocalScreen botId={bot.id} alt={t`Bot screen preview`} />
         ) : computer?.kind === "desktop" ? (
           <DesktopKindEmptyState
             className={`grid h-full place-items-center px-6 text-center text-sm text-muted-foreground/80 ${hideOnHover}`}
