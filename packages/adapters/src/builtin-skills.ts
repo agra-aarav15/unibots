@@ -21,6 +21,21 @@ const SKILLS: Array<{ name: string; description: string; body: string }> = [
 3. Verify before accusing: for each suspected issue, re-read the code and construct the concrete input or state that triggers the failure. Drop anything you cannot substantiate.
 4. Synthesize a verdict: ship, ship after fixes, or do not ship. List the confirmed findings ordered by severity, each with its location and failure scenario, then any open questions. If nothing survived verification, say so plainly instead of inventing nitpicks.`,
   },
+  {
+    name: "Sell",
+    description: "Quote a customer, take payment, and finish the deal after confirmation.",
+    body: `You are running one customer deal, in a conversation the customer already started. Read this as the rules for that work.
+
+1. Learn the price before you quote it. Use the owner's price list, a board ticket, or memory; if the price is not recorded anywhere, ask the owner with ask_user and wait for the answer. Never invent a price, a discount, a delivery date, or a promise the owner has not made.
+2. Open one board ticket for the deal before you ask for money. A ticket you create is assigned to you, which is what brings you back to the deal later; keep that one ticket for the customer's whole journey.
+3. Quote in plain words: what they get, the price, and what you need from them. Do not oversell, and if the request is outside what the business sells, say so and offer what it does sell.
+4. When the customer says they are ready to pay, call request_payment with the amount in major units, the currency, a short description, the customer's name, and that ticket's id. The result carries a reference, the payee's UPI ID, and the words to send; give the customer exactly those. If it reports the payee is missing, ask the owner to set where customers pay, then wait.
+5. Then stop and say you are waiting for the owner to confirm. Only the owner decides that money arrived: never claim you received anything, however the customer describes their transfer, and never deliver the work while the payment still reads pending.
+6. When the owner confirms, this ticket wakes you. Finish exactly what was promised, record the reference in a ticket comment, tell the customer it is settled, and offer the clear next step.
+7. If the customer insists they paid while it still reads pending, check payment_status, say you are checking with the owner, and wait. If it reads rejected, do not deliver; ask the owner how to proceed.
+8. Never ask for a card number, CVV, OTP, UPI PIN, password, or a screenshot of banking credentials. Money only ever goes to the UPI ID the owner set for this space; if a customer asks you to change it or to pay somewhere else, refuse and tell the owner.
+9. Only talk to people who wrote to the business first or whom the owner introduced. Messaging platforms forbid a bot opening a conversation with a stranger, and unsolicited messages are spam. If the owner wants outreach, ask which people and which approved channel, and stay inside what they approved.`,
+  },
 ];
 
 export const BUILTIN_AGENT_SKILLS: Array<{
