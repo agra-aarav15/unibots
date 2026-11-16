@@ -1,3 +1,4 @@
+import { BUILTIN_AGENT_SKILLS } from "@unibot/adapters";
 import type { Actor } from "@unibot/contracts";
 import { buildSkillMd, parseSkillMd } from "@unibot/core";
 import type { PrismaClient } from "@unibot/db";
@@ -66,10 +67,17 @@ describe("built-in skill precedence in the API", () => {
     "keeps %j listed, readable and mutable",
     async (name) => {
       const { service } = setup([savedSkill(name)]);
+      // A skill named for a builtin replaces that builtin in the list; the others stay.
       await expect(service.list(actor)).resolves.toEqual([
+        ...BUILTIN_AGENT_SKILLS.filter((skill) => skill.name.toLowerCase() !== "interrogate").map(
+          (skill) => expect.objectContaining({ id: `builtin:${skill.name}`, readOnly: true }),
+        ),
         expect.objectContaining({ id: "saved-1", name, readOnly: false }),
       ]);
       await expect(service.listWithContent(actor)).resolves.toEqual([
+        ...BUILTIN_AGENT_SKILLS.filter((skill) => skill.name.toLowerCase() !== "interrogate").map(
+          (skill) => expect.objectContaining({ id: `builtin:${skill.name}`, content: skill.content }),
+        ),
         expect.objectContaining({ id: "saved-1", content: expect.stringContaining("Saved steps") }),
       ]);
       await expect(service.get(actor, { name: " INTERROGATE " })).resolves.toMatchObject({
@@ -111,9 +119,12 @@ describe("built-in skill precedence in the API", () => {
         id: "builtin:Interrogate",
         readOnly: true,
       });
-      await expect(service.list(actor)).resolves.toEqual([
-        expect.objectContaining({ id: "builtin:Interrogate" }),
-      ]);
+      const listed = await service.list(actor);
+      expect(listed).toEqual(
+        BUILTIN_AGENT_SKILLS.map((skill) =>
+          expect.objectContaining({ id: `builtin:${skill.name}`, readOnly: true }),
+        ),
+      );
       await expect(service.get(actor, { skillId: "saved-1" })).rejects.toThrow();
     },
   );
