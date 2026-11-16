@@ -47,6 +47,7 @@ export async function prepareHostComputer(userDataDir: string) {
   return {
     connection: { url: `http://host.docker.internal:${server.port}`, token },
     isEnabled: server.isEnabled,
+    screenControl: server.screenControl,
     activate(value: boolean) {
       active = value;
       server.setEnabled(active && allowed);

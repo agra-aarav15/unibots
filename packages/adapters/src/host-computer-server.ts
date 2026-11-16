@@ -3,6 +3,7 @@ import { once } from "node:events";
 import { createServer } from "node:http";
 import { HOST_COMPUTER_MAX_BYTES } from "./host-computer-protocol.js";
 import { createHostComputerRunner } from "./host-computer-runner.js";
+import { nativeScreenSupported } from "./native-screen.js";
 
 /** No renderer receives the credential. Docker reaches this listener through its host gateway. */
 export async function startHostComputerServer(options: {
@@ -100,6 +101,8 @@ export async function startHostComputerServer(options: {
     port: address.port,
     isEnabled: runner.isEnabled,
     setEnabled: runner.setEnabled,
+    /** True when bots can also see and drive this machine's screen, not just its files. */
+    screenControl: nativeScreenSupported(),
     async close() {
       runner.close();
       server.closeAllConnections();

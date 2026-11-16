@@ -24,11 +24,7 @@ import type { AppDocumentState } from "./app-document-state.js";
 import { waitForMountedAppDocument } from "./app-document-state.js";
 import { createAppOpener } from "./app-opener.js";
 import type { ElectronAutoUpdater } from "./auto-update.js";
-import {
-  backgroundUpdateChecks,
-  DesktopUpdateController,
-  updaterSupport,
-} from "./auto-update.js";
+import { backgroundUpdateChecks, DesktopUpdateController, updaterSupport } from "./auto-update.js";
 import { createBadgeHandler } from "./badge.js";
 import { openBrowserAuth } from "./browser-auth.js";
 import { DOCKER_INSTALL_LINKS, isDesktopSetupLink, runDocker } from "./docker-cli.js";
@@ -50,8 +46,8 @@ import {
   refreshDesktopMonitoringUser,
   reportDesktopError,
 } from "./monitoring.js";
-import { lanIpv4, lanUrl } from "./phone-access.js";
 import { oauthCallbackFrom } from "./oauth-callback.js";
+import { lanIpv4, lanUrl } from "./phone-access.js";
 import {
   bundledRendererCandidates,
   bundledRendererHeaders,
@@ -1074,11 +1070,14 @@ function remoteServerOrigin() {
 
 /** The trust boundary: only a click on Allow here lets bots use this computer. */
 async function confirmComputerAccess(where: string, revokeWhere: string) {
+  const capabilities = hostComputer?.screenControl
+    ? "run commands, read and change files, launch apps, and see and control your screen"
+    : "run commands, read and change files, and launch apps";
   const options: Electron.MessageBoxOptions = {
     type: "warning",
     title: "Allow local computer access?",
     message: "Allow bots to use this computer?",
-    detail: `Bots on ${where} can run commands, read and change files, and launch apps with your account’s permissions. You can revoke access ${revokeWhere}.`,
+    detail: `Bots on ${where} can ${capabilities} with your account’s permissions. You can revoke access ${revokeWhere}.`,
     buttons: ["Cancel", "Allow"],
     defaultId: 0,
     cancelId: 0,
@@ -1500,7 +1499,9 @@ app.whenReady().then(async () => {
     fromMainWindow(event) ? { url: phoneAccessUrl } : { url: null },
   );
   ipcMain.handle("desktop.phoneAccess.enable", (event) =>
-    fromMainWindow(event) ? enablePhoneAccess() : { ok: false, error: "Phone access is unavailable." },
+    fromMainWindow(event)
+      ? enablePhoneAccess()
+      : { ok: false, error: "Phone access is unavailable." },
   );
   ipcMain.handle("desktop.phoneAccess.disable", async (event) => {
     if (!fromMainWindow(event)) return { ok: false };

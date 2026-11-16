@@ -31,10 +31,9 @@ import type {
 } from "@unibot/adapter-kit";
 import { boundedSandboxCommandTimeoutMs } from "@unibot/core";
 import {
-  applyPlaceholderAction,
   boundedComputerActions,
+  computerObservation,
   normalizeWorkspacePath,
-  placeholderObservation,
 } from "./computer-support.js";
 import type { NativeProcessTree } from "./desktop-process-tree.js";
 import { spawnOwnedCommand } from "./desktop-process-tree.js";
@@ -49,6 +48,12 @@ import {
   win32NtRelativeAvailable,
 } from "./desktop-sandbox-win32-path.js";
 import { removeOwnedWorkspaceChildren } from "./desktop-workspace-cleanup.js";
+import type { NativeScreen } from "./native-screen.js";
+import {
+  NATIVE_SCREEN_UNAVAILABLE,
+  nativeScreenSupported,
+  openNativeScreen,
+} from "./native-screen.js";
 import { hostCommandEnvironment } from "./sandbox-command-environment.js";
 import { shouldSkipPortableWorkspaceFile } from "./workspace-save-policy.js";
 
@@ -69,13 +74,13 @@ export function assertHostCommandsAllowed(
   );
 }
 
-export function describeDesktopSandbox() {
+export function describeDesktopSandbox(screenControl = nativeScreenSupported()) {
   return {
     id: "desktop",
     contractVersion: "1",
     adapterVersion: "0.1.0",
     capabilities: {
-      graphical: false,
+      graphical: screenControl,
       pty: true,
       snapshots: true,
       takeover: false,
@@ -91,7 +96,6 @@ type ContainedHandle = Awaited<ReturnType<typeof open>> | Win32FileHandle;
 interface DesktopBox {
   ref: ComputerRef;
   home: string;
-  screen: string;
 }
 
 /** Beside the home, not in it, so workspace listings, checkpoints and restores never carry it. */
@@ -109,6 +113,7 @@ async function markStopped(home: string) {
 export class DesktopSandboxProvider implements SandboxProvider {
   readonly boxes = new Map<string, DesktopBox>();
   private readonly processTrees = new Map<NativeProcessTree, { home: string; runId?: string }>();
+  private nativeScreen?: Promise<NativeScreen | null>;
   private processSweep?: NodeJS.Timeout;
 
   private sweepProcesses() {
@@ -157,11 +162,22 @@ export class DesktopSandboxProvider implements SandboxProvider {
   }
 
   constructor(
-    private readonly opts: { root?: string; hostRoots?: string[]; maxFileBytes?: number } = {},
+    private readonly opts: {
+      root?: string;
+      hostRoots?: string[];
+      maxFileBytes?: number;
+      /** Opt in to reading and driving the display this process runs on. */
+      screenControl?: boolean;
+    } = {},
   ) {}
 
+  /** Only the composition root that means to work on this machine's own screen asks for one. */
+  private screenControl() {
+    return this.opts.screenControl === true && nativeScreenSupported();
+  }
+
   describe() {
-    return describeDesktopSandbox();
+    return describeDesktopSandbox(this.screenControl());
   }
 
   async provision(
@@ -189,7 +205,6 @@ export class DesktopSandboxProvider implements SandboxProvider {
     this.boxes.set(id, {
       ref,
       home,
-      screen: "ready",
     });
     return ref;
   }
@@ -327,27 +342,56 @@ export class DesktopSandboxProvider implements SandboxProvider {
     };
   }
 
+  /** The display this process runs on, opened once. A machine without one keeps every other tool. */
+  private screen(): Promise<NativeScreen | null> {
+    if (!this.screenControl()) return Promise.resolve(null);
+    this.nativeScreen ??= openNativeScreen().catch(() => null);
+    return this.nativeScreen;
+  }
+
+  private async requiredScreen(): Promise<NativeScreen> {
+    const screen = await this.screen();
+    if (!screen) throw new Error(NATIVE_SCREEN_UNAVAILABLE);
+    return screen;
+  }
+
   async sendInput(
     computer: ComputerRef,
     input: ComputerInput,
     _lease: ControlLeaseRef,
     _context: AdapterContext,
   ): Promise<void> {
-    const box = this.boxFor(computer);
-    if (box) applyPlaceholderAction(box, input);
+    this.requiredBox(computer);
+    await (await this.requiredScreen()).perform(input);
   }
 
-  async observe(computer: ComputerRef) {
-    return placeholderObservation(this.requiredBox(computer).screen);
+  async observe(computer: ComputerRef, _context?: AdapterContext) {
+    this.requiredBox(computer);
+    const frame = await (await this.requiredScreen()).capture();
+    return computerObservation(frame.image, {
+      mimeType: frame.mimeType,
+      width: frame.width,
+      height: frame.height,
+      ...(frame.cursor ? { cursor: frame.cursor } : {}),
+      ...(frame.activeWindow ? { activeWindow: frame.activeWindow } : {}),
+    });
   }
 
-  async act(computer: ComputerRef, request: ComputerActionRequest, _context: AdapterContext) {
-    const box = this.requiredBox(computer);
+  async act(computer: ComputerRef, request: ComputerActionRequest, context: AdapterContext) {
+    this.requiredBox(computer);
     const actions = boundedComputerActions(request.actions);
-    for (const action of actions) applyPlaceholderAction(box, action);
+    const screen = await this.requiredScreen();
+    let completed = 0;
+    for (const action of actions) {
+      context.signal.throwIfAborted();
+      await screen.perform(action);
+      completed += 1;
+    }
+    const settleMs = Math.min(Math.max(Math.round(request.settleMs ?? 0), 0), 5_000);
+    if (settleMs) await new Promise((resolve) => setTimeout(resolve, settleMs).unref());
     return {
-      completed: actions.length,
-      ...(request.observe === false ? {} : { observation: await this.observe(computer) }),
+      completed,
+      ...(request.observe === false ? {} : { observation: await this.observe(computer, context) }),
     };
   }
 
@@ -475,7 +519,6 @@ export class DesktopSandboxProvider implements SandboxProvider {
     const box: DesktopBox = {
       ref: computer,
       home: path.resolve(computer.providerRef),
-      screen: "ready",
     };
     this.boxes.set(computer.id, box);
     return box;

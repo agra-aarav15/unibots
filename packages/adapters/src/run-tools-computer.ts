@@ -274,7 +274,7 @@ export const computerTools: ToolHandlers = {
     const { name, args, executionId, observer } = call;
     const command = String(args.command ?? args.cmd ?? "");
     const refusal = protectedComputerLifecycleRefusal(command);
-    if (ctx.computer.graphical && refusal) {
+    if (ctx.computer.lifecycleGuarded && refusal) {
       return call.finish({ error: desktopProtectionGuardMessage(refusal) });
     }
     const cwd = resolveBotWorkspaceCwd(

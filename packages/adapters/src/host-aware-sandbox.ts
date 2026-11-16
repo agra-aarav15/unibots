@@ -36,6 +36,8 @@ export async function createRunSandbox(
     return new DesktopSandboxProvider({
       root: opts.dataDir,
       hostRoots: [homedir()],
+      // Choosing this provider means the bots work on this machine, screen included.
+      screenControl: true,
     });
   }
   const primary = await createSandboxProvider(kind, {

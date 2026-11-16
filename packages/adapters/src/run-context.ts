@@ -177,6 +177,11 @@ export interface RunComputerContext {
   checkpoint: ReturnType<typeof createRunWorkspaceCheckpoint>;
   hostEnvironment: Awaited<ReturnType<NonNullable<SandboxProvider["environment"]>>> | undefined;
   graphical: boolean;
+  /**
+   * A graphical computer no one is sitting at, where the desktop-protection guard applies. The
+   * machine's own desktop is excluded: its user is right there and manages it themselves.
+   */
+  lifecycleGuarded: boolean;
   graphicalToolsAllowed: boolean;
   pageBrowserAllowed: boolean;
   acceptsImages: boolean;

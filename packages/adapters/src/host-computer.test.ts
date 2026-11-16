@@ -22,6 +22,7 @@ import { LocalAgentHomeStore } from "./home.js";
 import { hostComputerDeadlineMs } from "./host-computer-protocol.js";
 import { HostComputerSandbox } from "./host-computer-sandbox.js";
 import { startHostComputerServer } from "./host-computer-server.js";
+import { nativeScreenSupported } from "./native-screen.js";
 import { nativeShellCommandArgv } from "./native-shell.js";
 
 const context = {
@@ -452,7 +453,7 @@ describe("native host computer transport", () => {
     },
   );
 
-  it("cancels the host process on client abort and rejects graphical operations", async () => {
+  it("cancels the host process on client abort and leaves the live viewer unavailable", async () => {
     const controller = new AbortController();
     let pid = 0;
     let ready!: () => void;
@@ -480,7 +481,8 @@ describe("native host computer transport", () => {
     await rejected;
     await expect.poll(() => processExists(pid)).toBe(false);
     await expect(client.connectScreen()).rejects.toThrow("unavailable");
-    expect(client.describe().capabilities.graphical).toBe(false);
+    // Observe and act reach the host's own display; there is still no stream to watch it through.
+    expect(client.describe().capabilities.graphical).toBe(nativeScreenSupported());
   });
 });
 

@@ -1,7 +1,10 @@
 import type {
   AdapterContext,
   CommandRequest,
+  ComputerActionRequest,
+  ComputerActionResult,
   ComputerFileEntry,
+  ComputerObservation,
   ComputerRef,
   PortableFile,
   ProcessEvent,
@@ -9,10 +12,12 @@ import type {
   WorkspaceDirectoryRequest,
 } from "@unibot/adapter-kit";
 import { boundedSandboxCommandTimeoutMs } from "@unibot/core";
+import { boundedComputerActions } from "./computer-support.js";
 import { describeDesktopSandbox } from "./desktop-sandbox.js";
 import type {
   HostComputerEnvironment,
   HostComputerFrame,
+  HostComputerObservation,
   HostComputerRequest,
 } from "./host-computer-protocol.js";
 import {
@@ -225,10 +230,43 @@ export class HostComputerSandbox implements SandboxProvider {
   async sendInput(): Promise<never> {
     throw new Error("Local screen control is unavailable");
   }
-  async observe(): Promise<never> {
-    throw new Error("Local screen control is unavailable");
+  async observe(computer: ComputerRef, context: AdapterContext): Promise<ComputerObservation> {
+    const frame = await this.one<HostComputerObservation>(
+      { method: "observe", botId: computer.botId },
+      context,
+    );
+    return { ...frame, image: new Uint8Array(Buffer.from(frame.image, "base64")) };
   }
-  async act(): Promise<never> {
-    throw new Error("Local screen control is unavailable");
+  async act(
+    computer: ComputerRef,
+    request: ComputerActionRequest,
+    context: AdapterContext,
+  ): Promise<ComputerActionResult> {
+    // Bound the batch before it crosses the bridge, so an oversized one fails the same way here.
+    const actions = boundedComputerActions(request.actions);
+    const result = await this.one<{
+      completed: number;
+      observation?: HostComputerObservation;
+    }>(
+      {
+        method: "act",
+        botId: computer.botId,
+        actions,
+        observe: request.observe,
+        settleMs: request.settleMs,
+      },
+      context,
+    );
+    return {
+      completed: result.completed,
+      ...(result.observation
+        ? {
+            observation: {
+              ...result.observation,
+              image: new Uint8Array(Buffer.from(result.observation.image, "base64")),
+            },
+          }
+        : {}),
+    };
   }
 }

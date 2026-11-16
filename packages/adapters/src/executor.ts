@@ -1000,8 +1000,8 @@ export function createRunExecutor(executorDeps: ExecutorDeps) {
         ]
           .filter(Boolean)
           .join("\n\n");
-        const graphical =
-          computerKind !== "desktop" && deps.sandbox.describe().capabilities.graphical;
+        const graphical = deps.sandbox.describe().capabilities.graphical;
+        const lifecycleGuarded = computerKind !== "desktop" && graphical;
         // Gate on the pair written to the run row above; re-deriving it would drop the
         // deployment fallback and gate a vision-capable default as text-only.
         const modelSeesImages = modelAcceptsImageInput(
@@ -1281,6 +1281,7 @@ export function createRunExecutor(executorDeps: ExecutorDeps) {
             checkpoint: workspaceCheckpoint,
             hostEnvironment,
             graphical,
+            lifecycleGuarded,
             graphicalToolsAllowed,
             pageBrowserAllowed,
             acceptsImages,

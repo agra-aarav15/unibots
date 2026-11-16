@@ -162,6 +162,8 @@ export async function createSandboxProvider(
       assertHostCommandsAllowed();
       return new DesktopSandboxProvider({
         root: opts.dataDir,
+        // Choosing this provider means the bots work on this machine, screen included.
+        screenControl: true,
       });
     case "fake":
       return new FakeSandboxProvider();

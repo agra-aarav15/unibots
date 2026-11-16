@@ -241,7 +241,7 @@ export const taskTools: ToolHandlers = {
     const { args } = call;
     const command = commandWatchFromTool(args.watch);
     const refusal = command === undefined ? undefined : protectedComputerLifecycleRefusal(command);
-    if (ctx.computer.graphical && refusal)
+    if (ctx.computer.lifecycleGuarded && refusal)
       return call.finish({ error: desktopProtectionGuardMessage(refusal) });
     const created = await createScheduleFromTool(deps, {
       spaceId: run.spaceId,

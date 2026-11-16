@@ -45,13 +45,16 @@ Native file reads and workspace exports are limited to 8 MiB per file. A larger 
   persistent Chrome profile; logins are not shared between bots.
 - **Local computer access** in the app-managed Electron instance runs commands on Windows, macOS,
   or Linux through the native bridge. Bots can read/change local files and launch installed apps
-  through OS commands, subject to your account and OS permissions. Portable file tools and
-  checkpoints remain scoped to bot workspaces; use commands for other local folders. Graphical
-  screen control is unavailable. Permission is remembered locally and can be revoked from the
-  app menu. Only enable this for a trusted personal instance: every bot on that instance can use
-  your account’s permissions.
+  through OS commands, subject to your account and OS permissions. On Windows they can also see the
+  screen, move the pointer, and type, which is how a bot works an application that has no command
+  line; macOS and Linux stay commands-only for now. Portable file tools and checkpoints remain
+  scoped to bot workspaces; use commands for other local folders. Permission is remembered locally
+  and can be revoked from the app menu. Only enable this for a trusted personal instance: every bot
+  on that instance can use your account’s permissions. The live screen viewer in the app is not
+  wired to this display yet, so a bot can see and act on the screen that you cannot watch there.
 - **Desktop provider** (`SANDBOX_PROVIDER=desktop`) runs commands directly on the API/worker host,
-  with only a minimal shell environment (no server secrets). The API and worker refuse it unless
+  with only a minimal shell environment (no server secrets), and on Windows also lets bots read and
+  drive that host's display. The API and worker refuse it unless
   `NODE_ENV` is `development` or `test`, so a production server never runs bot commands on itself.
   Setting this inside a container does not grant access to the physical computer. Docker deployments
   use the authenticated native bridge when local computer access is selected; they never silently

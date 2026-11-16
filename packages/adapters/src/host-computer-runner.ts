@@ -1,14 +1,19 @@
 import { createHash } from "node:crypto";
 import { homedir } from "node:os";
 import path from "node:path";
-import type { AdapterContext, ComputerRef } from "@unibot/adapter-kit";
+import type { AdapterContext, ComputerObservation, ComputerRef } from "@unibot/adapter-kit";
 import { DesktopSandboxProvider } from "./desktop-sandbox.js";
-import type { HostComputerFrame, HostComputerRequest } from "./host-computer-protocol.js";
+import type {
+  HostComputerFrame,
+  HostComputerObservation,
+  HostComputerRequest,
+} from "./host-computer-protocol.js";
 import {
   HOST_COMPUTER_MAX_FILE_BYTES,
   hostComputerDeadlineMs,
   hostComputerRequest,
 } from "./host-computer-protocol.js";
+import { NATIVE_SCREEN_UNAVAILABLE } from "./native-screen.js";
 
 /** Where one request's frames go. A write may wait for the transport to drain. */
 export interface HostComputerSink {
@@ -42,6 +47,8 @@ export function createHostComputerRunner(options: { root: string }) {
     root: options.root,
     hostRoots: [homedir()],
     maxFileBytes: HOST_COMPUTER_MAX_FILE_BYTES,
+    // Local computer access is the user's own toggle, and this runner only exists while it is on.
+    screenControl: true,
   });
 
   // Reconstruct only our own workspace path. Never trust a caller's providerRef or filesystem root.
@@ -99,6 +106,31 @@ export function createHostComputerRunner(options: { root: string }) {
       case "listFiles":
         yield await provider.listFiles(computer, input.path, context);
         break;
+      case "observe":
+        if (!(await provider.isRunning(computer, context)))
+          throw new Error("Local computer stopped");
+        yield hostComputerObservation(await provider.observe(computer, context));
+        break;
+      case "act": {
+        if (!(await provider.isRunning(computer, context)))
+          throw new Error("Local computer stopped");
+        const result = await provider.act(
+          computer,
+          {
+            actions: input.actions,
+            observe: input.observe,
+            settleMs: input.settleMs,
+          },
+          context,
+        );
+        yield {
+          completed: result.completed,
+          ...(result.observation
+            ? { observation: hostComputerObservation(result.observation) }
+            : {}),
+        };
+        break;
+      }
       case "readFile":
         yield Buffer.from(
           await provider.readFile(computer, input.path, context, {
@@ -215,11 +247,17 @@ export function createHostComputerRunner(options: { root: string }) {
   };
 }
 
+/** A screen frame crosses the transport as base64, like every other file in this protocol. */
+function hostComputerObservation(observation: ComputerObservation): HostComputerObservation {
+  return { ...observation, image: Buffer.from(observation.image).toString("base64") };
+}
+
 /** Only messages that reveal nothing beyond the caller's own request leave this computer. */
 function hostComputerErrorMessage(error: unknown) {
   if (
     error instanceof Error &&
     (error.message === "Path escapes the computer workspace" ||
+      error.message === NATIVE_SCREEN_UNAVAILABLE ||
       /^computer file exceeds \d+ bytes$/.test(error.message))
   ) {
     return error.message;

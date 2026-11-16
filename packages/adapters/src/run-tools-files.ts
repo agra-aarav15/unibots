@@ -117,7 +117,7 @@ export const fileTools: ToolHandlers = {
     const { deps, bot, context } = ctx;
     const { name, args } = call;
     const filePath = String(args.path ?? "notes/result.txt");
-    if (ctx.computer.graphical) {
+    if (ctx.computer.lifecycleGuarded) {
       const activateRefusal = protectedActivateScriptWriteRefusal(filePath);
       if (activateRefusal) {
         return call.finish({ error: desktopProtectionGuardMessage(activateRefusal) });

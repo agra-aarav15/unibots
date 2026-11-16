@@ -130,26 +130,34 @@ describe.each([
       },
       context,
     );
+    const oversized = {
+      actions: Array.from({ length: 25 }, (_, index) => ({
+        kind: "clipboard" as const,
+        text: `action-${index}`,
+      })),
+      observe: true,
+    };
     if (provider instanceof HostComputerSandbox) {
-      await expect(provider.observe()).rejects.toThrow("Local screen control is unavailable");
-      await expect(provider.act()).rejects.toThrow("Local screen control is unavailable");
+      // The host bridge drives the machine's own display, which no test may capture or click.
+      // The batch limit still holds before anything crosses the bridge.
+      await expect(provider.act(computer, oversized, context)).rejects.toThrow(
+        "computer action batch exceeds 24 actions",
+      );
+      return;
+    }
+    if (provider instanceof DesktopSandboxProvider) {
+      // No test opts a local computer into screen control, so this is the refusal a user sees.
+      await expect(provider.act(computer, oversized, context)).rejects.toThrow(
+        "computer action batch exceeds 24 actions",
+      );
+      await expect(provider.observe(computer, context)).rejects.toThrow("no screen to control");
       return;
     }
     const before = await provider.observe(computer, context);
 
-    await expect(
-      provider.act(
-        computer,
-        {
-          actions: Array.from({ length: 25 }, (_, index) => ({
-            kind: "clipboard" as const,
-            text: `action-${index}`,
-          })),
-          observe: true,
-        },
-        context,
-      ),
-    ).rejects.toThrow("computer action batch exceeds 24 actions");
+    await expect(provider.act(computer, oversized, context)).rejects.toThrow(
+      "computer action batch exceeds 24 actions",
+    );
     expect((await provider.observe(computer, context)).activeWindow).toEqual(before.activeWindow);
   });
 
