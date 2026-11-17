@@ -7,6 +7,7 @@ import {
   sendCustomerChatMessage,
 } from "@unibot/adapters";
 import type { PrismaClient, ThreadEvents } from "@unibot/db";
+import { runAsSystem } from "@unibot/db";
 import { getLogger } from "@unibot/logging";
 import { Hono } from "hono";
 
@@ -47,10 +48,12 @@ export function customerChatRoutes(deps: CustomerChatRouteDeps) {
   app.get("/api/v1/customer-chat/:token", async (c) => {
     const link = await linkForCustomerChatToken({ prisma: deps.prisma }, c.req.param("token"));
     if (!link) return c.body(null, 404);
-    const bot = await deps.prisma.bot.findUnique({
-      where: { id: link.botId },
-      select: { name: true },
-    });
+    const bot = await runAsSystem("serve a public customer chat page", () =>
+      deps.prisma.bot.findUnique({
+        where: { id: link.botId },
+        select: { name: true },
+      }),
+    );
     const visitorId = visitorIdFrom(c.req.header("cookie")) ?? newVisitorId();
     c.header("set-cookie", cookie(visitorId));
     c.header("content-type", "text/html; charset=utf-8");
@@ -63,11 +66,12 @@ export function customerChatRoutes(deps: CustomerChatRouteDeps) {
   app.get("/api/v1/customer-chat/:token/messages", async (c) => {
     const visitorId = visitorIdFrom(c.req.header("cookie"));
     if (!visitorId) return c.json({ error: "Open the chat page first." }, 400, noStore);
-    const after = Number(c.req.query("after") ?? 0);
+    // -1 means the page has shown nothing yet; a thread's first message is sequence 0.
+    const after = Number(c.req.query("after") ?? -1);
     const result = await listCustomerChatMessages(chat, {
       token: c.req.param("token"),
       visitorId,
-      after: Number.isFinite(after) ? after : 0,
+      after: Number.isFinite(after) ? after : -1,
     });
     if ("error" in result) return c.json(result, 404, noStore);
     return c.json(result, 200, noStore);

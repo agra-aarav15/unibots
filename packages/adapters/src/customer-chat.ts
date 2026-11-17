@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import type { MessageBlock } from "@unibot/contracts";
 import type { PrismaClient, ThreadEvents } from "@unibot/db";
+import { runAsSystem } from "@unibot/db";
 
 /** External conversations from a public chat link are labelled with this provider. */
 export const CUSTOMER_CHAT_PROVIDER = "customer-page";
@@ -39,14 +40,24 @@ export function newVisitorId(): string {
 
 export type CustomerChatError = { error: string };
 
+/**
+ * A visitor has no account and no session, so nothing here runs under a person's context. Every
+ * read and write goes through an explicit system context, named for what is being done.
+ */
+function asSystem<T>(work: () => Promise<T>): Promise<T> {
+  return runAsSystem("serve a public customer chat page", work);
+}
+
 /** The link row for a bot, or null. The token is what a shareable link carries. */
 export async function getCustomerChatLink(
   deps: Pick<CustomerChatDeps, "prisma">,
   input: { spaceId: string; botId: string },
 ) {
-  return deps.prisma.customerChatLink.findFirst({
-    where: { spaceId: input.spaceId, botId: input.botId },
-  });
+  return asSystem(() =>
+    deps.prisma.customerChatLink.findFirst({
+      where: { spaceId: input.spaceId, botId: input.botId },
+    }),
+  );
 }
 
 /**
@@ -58,27 +69,31 @@ export async function setCustomerChatLink(
   input: { spaceId: string; botId: string; userId: string; name?: string | null },
 ) {
   const token = newCustomerChatToken();
-  return deps.prisma.customerChatLink.upsert({
-    where: { botId: input.botId },
-    create: {
-      spaceId: input.spaceId,
-      botId: input.botId,
-      userId: input.userId,
-      token,
-      ...(input.name ? { name: input.name } : {}),
-    },
-    update: { token, revokedAt: null, ...(input.name ? { name: input.name } : {}) },
-  });
+  return asSystem(() =>
+    deps.prisma.customerChatLink.upsert({
+      where: { botId: input.botId },
+      create: {
+        spaceId: input.spaceId,
+        botId: input.botId,
+        userId: input.userId,
+        token,
+        ...(input.name ? { name: input.name } : {}),
+      },
+      update: { token, revokedAt: null, ...(input.name ? { name: input.name } : {}) },
+    }),
+  );
 }
 
 export async function revokeCustomerChatLink(
   deps: Pick<CustomerChatDeps, "prisma">,
   input: { spaceId: string; botId: string },
 ) {
-  await deps.prisma.customerChatLink.updateMany({
-    where: { spaceId: input.spaceId, botId: input.botId },
-    data: { revokedAt: new Date() },
-  });
+  await asSystem(() =>
+    deps.prisma.customerChatLink.updateMany({
+      where: { spaceId: input.spaceId, botId: input.botId },
+      data: { revokedAt: new Date() },
+    }),
+  );
 }
 
 /** The live link a token names. A revoked or unknown token is refused the same way. */
@@ -86,7 +101,7 @@ export async function linkForCustomerChatToken(
   deps: Pick<CustomerChatDeps, "prisma">,
   token: string,
 ) {
-  const link = await deps.prisma.customerChatLink.findUnique({ where: { token } });
+  const link = await asSystem(() => deps.prisma.customerChatLink.findUnique({ where: { token } }));
   return link && !link.revokedAt ? link : null;
 }
 
@@ -135,6 +150,14 @@ export async function sendCustomerChatMessage(
   const text = input.text.trim();
   if (!text) return { error: CUSTOMER_CHAT_EMPTY_MESSAGE };
   if (text.length > CUSTOMER_CHAT_MESSAGE_MAX_CHARS) return { error: CUSTOMER_CHAT_TOO_LONG };
+  return asSystem(() => sendWithin(deps, { ...input, text }));
+}
+
+async function sendWithin(
+  deps: CustomerChatDeps,
+  input: { token: string; visitorId: string; text: string },
+): Promise<{ visitorId: string; seq: number | null } | CustomerChatError> {
+  const text = input.text;
   const link = await linkForCustomerChatToken(deps, input.token);
   if (!link) return { error: CUSTOMER_CHAT_LINK_UNKNOWN };
 
@@ -186,44 +209,48 @@ function blocksText(blocks: unknown): string {
     .trim();
 }
 
-/** What this visitor has said and what the bot answered, in order, from a sequence number on. */
+/** What this visitor has said and what the bot answered, in order, after a sequence number. */
 export async function listCustomerChatMessages(
   deps: Pick<CustomerChatDeps, "prisma">,
   input: { token: string; visitorId: string; after?: number },
 ): Promise<{ messages: CustomerChatMessage[] } | CustomerChatError> {
-  const link = await linkForCustomerChatToken(deps, input.token);
-  if (!link) return { error: CUSTOMER_CHAT_LINK_UNKNOWN };
-  const conversation = await deps.prisma.externalConversation.findUnique({
-    where: {
-      provider_workspaceId_externalKey: {
-        provider: CUSTOMER_CHAT_PROVIDER,
-        workspaceId: link.id,
-        externalKey: input.visitorId,
-      },
-    },
-    include: { thread: { select: { id: true } } },
-  });
-  const threadId = conversation?.thread?.id;
-  if (!threadId) return { messages: [] };
-  const rows = await deps.prisma.message.findMany({
-    where: { threadId, seq: { gt: Math.max(Math.trunc(input.after ?? 0), 0) } },
-    orderBy: { seq: "asc" },
-    take: CUSTOMER_CHAT_PAGE_MESSAGES,
-    select: { seq: true, role: true, blocks: true, createdAt: true },
-  });
-  // Reads through the client come back decrypted; a ciphertext blob could never reach the page.
-  return {
-    messages: rows.flatMap((row) => {
-      const text = blocksText(row.blocks);
-      if (!text) return [];
-      return [
-        {
-          seq: row.seq,
-          role: row.role === "user" ? ("customer" as const) : ("bot" as const),
-          text,
-          at: row.createdAt.toISOString(),
+  return asSystem(async () => {
+    const link = await linkForCustomerChatToken(deps, input.token);
+    if (!link) return { error: CUSTOMER_CHAT_LINK_UNKNOWN };
+    const conversation = await deps.prisma.externalConversation.findUnique({
+      where: {
+        provider_workspaceId_externalKey: {
+          provider: CUSTOMER_CHAT_PROVIDER,
+          workspaceId: link.id,
+          externalKey: input.visitorId,
         },
-      ];
-    }),
-  };
+      },
+      include: { thread: { select: { id: true } } },
+    });
+    const threadId = conversation?.thread?.id;
+    if (!threadId) return { messages: [] };
+    // A thread's first message is sequence 0, so a page that has shown nothing asks from -1.
+    const after = Number.isFinite(input.after) ? Math.trunc(input.after as number) : -1;
+    const rows = await deps.prisma.message.findMany({
+      where: { threadId, seq: { gt: Math.max(after, -1) } },
+      orderBy: { seq: "asc" },
+      take: CUSTOMER_CHAT_PAGE_MESSAGES,
+      select: { seq: true, role: true, blocks: true, createdAt: true },
+    });
+    // Reads through the client come back decrypted; a ciphertext blob could never reach the page.
+    return {
+      messages: rows.flatMap((row) => {
+        const text = blocksText(row.blocks);
+        if (!text) return [];
+        return [
+          {
+            seq: row.seq,
+            role: row.role === "user" ? ("customer" as const) : ("bot" as const),
+            text,
+            at: row.createdAt.toISOString(),
+          },
+        ];
+      }),
+    };
+  });
 }

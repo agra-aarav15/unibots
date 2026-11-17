@@ -10,6 +10,7 @@ import {
   FakeComposioClient,
   FakeSandboxProvider,
   handoffToGroupBot,
+  listCustomerChatMessages,
   listPiCatalog,
   organizeBot,
   toComputerRef,
@@ -3974,6 +3975,85 @@ describeJourneys("required product journeys", () => {
       expect(await prisma.routine.count({ where: { botId: scout.id } })).toBe(0);
     });
   });
+
+  it("9: a customer talks to a bot on its own page, and the owner can switch it off", async () => {
+    const cookie = await signup(app, `link-j-${stamp}@unibot.test`, "Link");
+    const bot = await rpc<Bot>(app, cookie, "bots/create", {
+      name: "Shop",
+      title: "",
+      description: "",
+      instructions: "",
+      notifyOnFinish: false,
+    });
+
+    // Nothing is public until the owner makes the link.
+    expect(
+      await rpc<{ path: string | null }>(app, cookie, "customerChat/status", { botId: bot.id }),
+    ).toMatchObject({ path: null });
+    const { path: linkPath } = await rpc<{ path: string }>(app, cookie, "customerChat/rotate", {
+      botId: bot.id,
+    });
+    expect(linkPath).toMatch(/^\/api\/v1\/customer-chat\/[A-Za-z0-9_-]{20,}$/);
+
+    // A customer opens it with no session at all, and the page hands them their own cookie.
+    const page = await app.request(linkPath);
+    expect(page.status).toBe(200);
+    expect(await page.text()).toContain("Shop");
+    const visitorCookie = (page.headers.get("set-cookie") ?? "").split(";")[0] ?? "";
+    expect(visitorCookie).toContain("unibot_customer_chat=");
+
+    // They write, the bot answers, and the whole exchange comes back through the page's own read.
+    const posted = await app.request(`${linkPath}/messages`, {
+      method: "POST",
+      headers: { "content-type": "application/json", cookie: visitorCookie },
+      body: JSON.stringify({ text: "Do you deliver on Sundays?" }),
+    });
+    expect(posted.status).toBe(200);
+    const conversation = await waitForDatabaseValue(() =>
+      prisma.externalConversation.findFirst({
+        where: { provider: "customer-page", botId: bot.id },
+        select: { thread: { select: { id: true } }, spaceId: true },
+      }),
+    );
+    expect(conversation.thread?.id).toBeTruthy();
+    // The visitor's words are in the bot's conversation, as a user turn the bot can answer.
+    const stored = await prisma.message.findFirst({
+      where: { threadId: conversation.thread!.id },
+      orderBy: { seq: "asc" },
+      select: { role: true, blocks: true },
+    });
+    expect(stored?.role).toBe("user");
+    expect(stored?.blocks).toEqual([{ kind: "text", text: "Do you deliver on Sundays?" }]);
+    // Writing woke the bot: a run exists for this conversation. Whether it can finish is the
+    // deployment's model's business, and the other journeys cover a completed reply.
+    const wake = await waitForDatabaseValue(() =>
+      prisma.run.findFirst({ where: { threadId: conversation.thread!.id }, select: { id: true } }),
+    );
+    expect(wake.id).toBeTruthy();
+
+    // And the page's own read shows the visitor what they wrote.
+    type PageMessages = { messages: Array<{ seq: number; role: string; text: string }> };
+    const messages = await waitForDatabaseValue(async () => {
+      const response = await app.request(`${linkPath}/messages`, {
+        headers: { cookie: visitorCookie },
+      });
+      const body = (await response.json()) as PageMessages;
+      return body.messages.length > 0 ? body : null;
+    });
+    expect(messages.messages).toEqual([
+      expect.objectContaining({ role: "customer", text: "Do you deliver on Sundays?" }),
+    ]);
+
+    // Revoking closes the page and refuses anything already open.
+    await rpc(app, cookie, "customerChat/revoke", { botId: bot.id });
+    expect((await app.request(linkPath)).status).toBe(404);
+    const refused = await app.request(`${linkPath}/messages`, {
+      method: "POST",
+      headers: { "content-type": "application/json", cookie: visitorCookie },
+      body: JSON.stringify({ text: "still there?" }),
+    });
+    expect(refused.status).toBe(404);
+  });
 });
 
 type Me = { spaceId: string; userId: string; canChooseHostComputer: boolean };
@@ -4106,4 +4186,15 @@ async function waitForDatabase(pred: () => Promise<boolean>) {
     await new Promise((resolve) => setTimeout(resolve, 25));
   }
   throw new Error("timeout waiting for database state");
+}
+
+/** The same wait, for a row that a background step creates rather than a condition. */
+async function waitForDatabaseValue<T>(read: () => Promise<T | null>): Promise<T> {
+  const start = Date.now();
+  while (Date.now() - start < 20_000) {
+    const value = await read();
+    if (value) return value;
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
+  throw new Error("timeout waiting for a database row");
 }
