@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
-import type { Bot } from "@unibot/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { Bot } from "@unibot/contracts";
 import type { ComponentProps, ReactNode } from "react";
 import { act } from "react";
 import type { Root } from "react-dom/client";
@@ -16,6 +16,11 @@ vi.mock("../../lib/rpc", () => {
       list: vi.fn(async () => []),
     },
     me: vi.fn(async () => ({})),
+    customerChat: {
+      status: vi.fn(async () => ({ path: null, createdAt: null, revokedAt: null, chats: 0 })),
+      rotate: vi.fn(),
+      revoke: vi.fn(),
+    },
   };
   return {
     rpc,
