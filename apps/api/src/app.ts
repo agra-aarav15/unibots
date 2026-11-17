@@ -160,6 +160,7 @@ import { cspReportRoutes } from "./csp-report.js";
 import { mountDiagramScript } from "./diagram-script.js";
 import { configuredEmailProvider } from "./email.js";
 import type { AppEnv } from "./env.js";
+import { customerChatRoutes } from "./customer-chat.js";
 import { loadEnv } from "./env.js";
 import { healthRoutes } from "./health.js";
 import { createLocalOwnerLookup } from "./local-owner.js";
@@ -883,6 +884,16 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
     }),
   );
   app.route("/", marketingEmailRoutes(prisma, env.authSecret));
+  // The page a customer talks to a bot on. No session: the link token is the credential, and a
+  // visitor only ever sees their own conversation.
+  app.route(
+    "/",
+    customerChatRoutes({
+      prisma,
+      events,
+      secureCookies: env.apiUrl.startsWith("https://"),
+    }),
+  );
   mountApiRequestBodyLimits(app, env.maxUploadSizeBytes);
   mountScreenTarget(app, prisma, env.screenProxySecret);
   mountDiagramScript(app);

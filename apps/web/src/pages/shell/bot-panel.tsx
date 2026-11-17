@@ -1,9 +1,11 @@
 import { Trans, useLingui } from "@lingui/react/macro";
+import { useQuery } from "@tanstack/react-query";
 import type {
   AgentSkillCatalogEntry,
   Bot,
   BotAvatarSet,
   ComputerMode,
+  CustomerChatLink,
   ModelCatalogEntry,
   ThinkingLevel,
 } from "@unibot/contracts";
@@ -36,7 +38,6 @@ import {
   Textarea,
   Toggle,
 } from "@unibot/ui-web";
-import { useQuery } from "@tanstack/react-query";
 import { Download, Settings, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { Suspense, useEffect, useId, useRef, useState } from "react";
@@ -46,6 +47,7 @@ import { botProfilePatch } from "../../lib/bot-profile-patch";
 import { thinkingLevelLabel } from "../../lib/model-catalog";
 import { lazyComponent } from "../../lib/preload-recovery";
 import { useSpaceQueries } from "../../lib/query";
+import { rpc } from "../../lib/rpc";
 import { errorText } from "../../lib/user-error";
 import { AvatarStudioPopover } from "./avatar-studio-popover";
 import { ChatModelPicker } from "./chat-model-picker";
@@ -680,6 +682,9 @@ export function BotSettings({
                 </div>
               ) : null}
             </SettingsGroup>
+            <SettingsGroup label={t`Customer link`} plain>
+              <CustomerChatLinkSettings botId={bot.id} />
+            </SettingsGroup>
             <SettingsGroup label={t`Voice`}>
               <label
                 htmlFor={`${ids}-auto-speak`}
@@ -926,6 +931,118 @@ function InlineProfileField({
 }
 
 /** `plain` drops the card for a section whose single control already draws its own frame. */
+/**
+ * The page a customer talks to this bot on. Nothing here is public until the owner makes the link
+ * and sends it to someone, and revoking it switches the page off.
+ */
+function CustomerChatLinkSettings({ botId }: { botId: string }) {
+  const { t } = useLingui();
+  const [link, setLink] = useState<CustomerChatLink | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const url = link?.path ? new URL(link.path, window.location.origin).href : null;
+
+  useEffect(() => {
+    let alive = true;
+    void rpc.customerChat
+      .status({ botId })
+      .then((next) => {
+        if (alive) setLink(next);
+      })
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, [botId]);
+
+  async function run(action: () => Promise<CustomerChatLink>) {
+    setBusy(true);
+    try {
+      setLink(await action());
+      setCopied(false);
+    } catch {
+      // A failed change leaves the link that is actually live on screen.
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (!url)
+    return (
+      <div className="text-sm text-foreground">
+        <p className="text-[12.5px] text-muted-foreground">
+          <Trans>
+            No page yet. Make one and send it to a customer: they write in a browser and this bot
+            answers.
+          </Trans>
+        </p>
+        <Button
+          variant="outline"
+          size="sm"
+          className="mt-3"
+          disabled={busy}
+          data-testid="customer-chat-create"
+          onClick={() => void run(() => rpc.customerChat.rotate({ botId }))}
+        >
+          <Trans>Create the link</Trans>
+        </Button>
+      </div>
+    );
+
+  return (
+    <div className="text-sm text-foreground">
+      <div className="flex items-center gap-2">
+        <Input
+          readOnly
+          value={url}
+          data-testid="customer-chat-url"
+          className="font-mono text-[12.5px]"
+        />
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={busy}
+          onClick={() => {
+            void navigator.clipboard?.writeText(url).then(() => setCopied(true));
+          }}
+        >
+          {copied ? t`Copied` : t`Copy`}
+        </Button>
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={busy}
+          onClick={() => void run(() => rpc.customerChat.rotate({ botId }))}
+        >
+          <Trans>New link</Trans>
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          disabled={busy}
+          data-testid="customer-chat-revoke"
+          onClick={() => void run(() => rpc.customerChat.revoke({ botId }))}
+        >
+          <Trans>Revoke</Trans>
+        </Button>
+        {link && link.chats > 0 ? (
+          <span className="text-[12.5px] text-muted-foreground">
+            {link.chats} <Trans>conversations so far</Trans>
+          </span>
+        ) : null}
+      </div>
+      <p className="mt-2 text-[12.5px] text-muted-foreground">
+        <Trans>
+          Anyone with this link can chat with this bot in their browser. It answers on your model,
+          each visitor gets their own conversation, and revoking the link switches the page off.
+        </Trans>
+      </p>
+    </div>
+  );
+}
+
 function SettingsGroup({
   label,
   plain = false,

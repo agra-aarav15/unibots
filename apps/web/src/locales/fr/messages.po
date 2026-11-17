@@ -787,6 +787,10 @@ msgstr ""
 msgid "Anyone with the link"
 msgstr ""
 
+#: src/pages/shell/bot-panel.tsx
+msgid "Anyone with this link can chat with this bot in their browser. It answers on your model, each visitor gets their own conversation, and revoking the link switches the page off."
+msgstr ""
+
 #: src/components/AskCard.tsx
 #: src/lib/localized-provider-hint.ts
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
@@ -1727,6 +1731,10 @@ msgstr "Continuer avec {0}"
 msgid "Conversations"
 msgstr ""
 
+#: src/pages/shell/bot-panel.tsx
+msgid "conversations so far"
+msgstr ""
+
 #: src/components/ComputersUnavailableHint.tsx
 #: src/components/InviteDialog.tsx
 #: src/components/markdown-copy.tsx
@@ -1734,6 +1742,7 @@ msgstr ""
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/agent-import.tsx
+#: src/pages/shell/bot-panel.tsx
 #: src/pages/SpaceMembersPanel.tsx
 msgid "Copied"
 msgstr "Copié"
@@ -1742,6 +1751,7 @@ msgstr "Copié"
 #: src/components/VaultSettings.tsx
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
+#: src/pages/shell/bot-panel.tsx
 #: src/pages/shell/message-hover-actions.tsx
 #: src/pages/SpaceMembersPanel.tsx
 msgid "Copy"
@@ -2354,6 +2364,10 @@ msgstr "Créer une routine"
 msgid "Create space"
 msgstr "Créer un espace"
 
+#: src/pages/shell/bot-panel.tsx
+msgid "Create the link"
+msgstr ""
+
 #: src/pages/Auth.tsx
 msgid "Create your UniBot"
 msgstr "Créez votre UniBot"
@@ -2408,6 +2422,10 @@ msgstr "Mot de passe actuel"
 
 #: src/components/VaultSettings.tsx
 msgid "Custom header"
+msgstr ""
+
+#: src/pages/shell/bot-panel.tsx
+msgid "Customer link"
 msgstr ""
 
 #: src/pages/shell/dialogs.tsx
@@ -4041,6 +4059,10 @@ msgstr "Nouveau groupe"
 msgid "New group chat"
 msgstr "Nouvelle discussion de groupe"
 
+#: src/pages/shell/bot-panel.tsx
+msgid "New link"
+msgstr ""
+
 #: src/pages/shell/chat-context.tsx
 msgid "New messages"
 msgstr ""
@@ -4154,6 +4176,10 @@ msgstr "Aucun modèle listé."
 #: src/pages/shell/agent-import.tsx
 msgid "No OpenClaw, Hermes or agent document found."
 msgstr "Aucun fichier OpenClaw, Hermes ou document d'agent trouvé."
+
+#: src/pages/shell/bot-panel.tsx
+msgid "No page yet. Make one and send it to a customer: they write in a browser and this bot answers."
+msgstr ""
 
 #: src/components/integrations/IntegrationSetup.tsx
 msgid "No remote MCP servers found"
@@ -5089,6 +5115,7 @@ msgid "Review provider settings and test again."
 msgstr "Vérifiez les paramètres du fournisseur et testez à nouveau."
 
 #: src/pages/MessagingSettingsPanel.tsx
+#: src/pages/shell/bot-panel.tsx
 #: src/pages/SpaceMembersPanel.tsx
 msgid "Revoke"
 msgstr "Révoquer"

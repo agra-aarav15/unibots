@@ -149,6 +149,22 @@ instead gives unknown senders their own chat-only accounts, whose runs use the d
 In rooms, a bot decides whether to answer ambient messages with its own model. To use a separate
 model for that decision, set both `TEAM_CHAT_JUDGE_PROVIDER` and `TEAM_CHAT_JUDGE_MODEL`.
 
+### A page customers can chat on
+
+A bot can answer a page of its own, so someone can talk to it in a browser without installing a chat
+app, an account, or a phone number: **bot settings → Customer link → Create the link**, then send that
+address to the customer. The page is served by the deployment, so share it through whatever address
+reaches it — the LAN, a tailnet, or a tunnel; nothing about it is hosted elsewhere.
+
+- The visitor gets a conversation of their own. It appears with the bot's other external
+  conversations, so the owner watches the sale, and the bot's ordinary tools — tickets,
+  `request_payment`, and the `Sell` skill — work there unchanged.
+- Every message makes the bot run on this deployment's model connection, so a visitor is rate-limited
+  to 30 messages an hour. The link is the only credential: **Revoke** switches the page off, and
+  **New link** replaces one that leaked.
+- Text only: the page sends and shows text, not files or images.
+- `MESSAGING_OPEN_SIGNUP` is unrelated to it: that setting is for unknown senders on a chat platform.
+
 ### Slack
 
 For Slack workspace installations, set `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, and

@@ -787,6 +787,10 @@ msgstr "כל מודל, עם מפתח משלך"
 msgid "Anyone with the link"
 msgstr ""
 
+#: src/pages/shell/bot-panel.tsx
+msgid "Anyone with this link can chat with this bot in their browser. It answers on your model, each visitor gets their own conversation, and revoking the link switches the page off."
+msgstr ""
+
 #: src/components/AskCard.tsx
 #: src/lib/localized-provider-hint.ts
 #: src/pages/memory-providers/HonchoSettingsForm.tsx
@@ -1727,6 +1731,10 @@ msgstr "המשך עם {0}"
 msgid "Conversations"
 msgstr ""
 
+#: src/pages/shell/bot-panel.tsx
+msgid "conversations so far"
+msgstr ""
+
 #: src/components/ComputersUnavailableHint.tsx
 #: src/components/InviteDialog.tsx
 #: src/components/markdown-copy.tsx
@@ -1734,6 +1742,7 @@ msgstr ""
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
 #: src/pages/shell/agent-import.tsx
+#: src/pages/shell/bot-panel.tsx
 #: src/pages/SpaceMembersPanel.tsx
 msgid "Copied"
 msgstr "הועתק"
@@ -1742,6 +1751,7 @@ msgstr "הועתק"
 #: src/components/VaultSettings.tsx
 #: src/pages/model-settings/connection-controls.tsx
 #: src/pages/Onboarding.tsx
+#: src/pages/shell/bot-panel.tsx
 #: src/pages/shell/message-hover-actions.tsx
 #: src/pages/SpaceMembersPanel.tsx
 msgid "Copy"
@@ -2354,6 +2364,10 @@ msgstr "יצירת רוטינה"
 msgid "Create space"
 msgstr "יצירת מרחב"
 
+#: src/pages/shell/bot-panel.tsx
+msgid "Create the link"
+msgstr ""
+
 #: src/pages/Auth.tsx
 msgid "Create your UniBot"
 msgstr "יצירת UniBot משלך"
@@ -2409,6 +2423,10 @@ msgstr "סיסמה נוכחית"
 #: src/components/VaultSettings.tsx
 msgid "Custom header"
 msgstr "כותרת מותאמת אישית"
+
+#: src/pages/shell/bot-panel.tsx
+msgid "Customer link"
+msgstr ""
 
 #: src/pages/shell/dialogs.tsx
 msgid "Customer support"
@@ -4041,6 +4059,10 @@ msgstr "קבוצה חדשה"
 msgid "New group chat"
 msgstr "צ'אט קבוצתי חדש"
 
+#: src/pages/shell/bot-panel.tsx
+msgid "New link"
+msgstr ""
+
 #: src/pages/shell/chat-context.tsx
 msgid "New messages"
 msgstr ""
@@ -4154,6 +4176,10 @@ msgstr "לא נמצאו מודלים ברשימה."
 #: src/pages/shell/agent-import.tsx
 msgid "No OpenClaw, Hermes or agent document found."
 msgstr "לא נמצאו קבצי OpenClaw, Hermes או מסמך סוכן."
+
+#: src/pages/shell/bot-panel.tsx
+msgid "No page yet. Make one and send it to a customer: they write in a browser and this bot answers."
+msgstr ""
 
 #: src/components/integrations/IntegrationSetup.tsx
 msgid "No remote MCP servers found"
@@ -5089,6 +5115,7 @@ msgid "Review provider settings and test again."
 msgstr "יש לבדוק את הגדרות הספק ולבדוק שוב."
 
 #: src/pages/MessagingSettingsPanel.tsx
+#: src/pages/shell/bot-panel.tsx
 #: src/pages/SpaceMembersPanel.tsx
 msgid "Revoke"
 msgstr "ביטול הרשאה"

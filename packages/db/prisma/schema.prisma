@@ -425,6 +425,7 @@ model Space {
   boards                      Board[]
   tickets                     Ticket[]
   paymentRequests             PaymentRequest[]
+  customerChatLinks           CustomerChatLink[]
   ticketComments              TicketComment[]
   invitations                 Invitation[]
   agentSkillSpaces            AgentSkillSpace[]
@@ -686,6 +687,7 @@ model Bot {
   groupMembers      ChatGroupMember[]
   botSecrets BotSecret[]
   paymentRequests PaymentRequest[]
+  customerChatLink CustomerChatLink?
   assignedTickets   Ticket[]          @relation("TicketAssigneeBot")
   createdTickets    Ticket[]          @relation("TicketCreatorBot")
   ticketComments    TicketComment[]   @relation("TicketCommentAuthorBot")
@@ -1738,8 +1740,7 @@ model MessagingLinkCode {
 model MessagingOutbound {
   id              String    @id @default(cuid())
   idempotencyKey  String    @unique
-  kind            String
-  /// DM rows resolve their thread through the identity at drain time.
+  kind            String  /// DM rows resolve their thread through the identity at drain time.
   identityId      String?
   /// Group/intro rows post straight to this provider thread id.
   threadId        String?
@@ -1754,6 +1755,46 @@ model MessagingOutbound {
 
   @@index([status, nextAttemptAt])
   @@map("messaging_outbound")
+}
+
+/// A public page a bot answers, so a customer can start and continue a chat in a browser.
+/// The owner mints one per bot, can copy it again later, and can revoke it.
+model CustomerChatLink {
+  id        String    @id @default(cuid())
+  spaceId   String
+  space     Space     @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  botId     String    @unique
+  bot       Bot       @relation(fields: [botId], references: [id], onDelete: Cascade)
+  /// The person who minted it: their messages are attributed to them, as a linked chat is.
+  userId    String
+  /// A label for the owner, so several links can be told apart.
+  name      String?
+  /// The unguessable cookie-style token in the link itself.
+  token     String    @unique
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  chats     CustomerChat[]
+
+  @@index([spaceId])
+  @@map("customer_chat_links")
+}
+
+/// One visitor's conversation through a link, kept so their browser continues it and no one else can.
+model CustomerChat {
+  id              String           @id @default(cuid())
+  linkId          String
+  link            CustomerChatLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  visitorId       String
+  /// Messages in the current window, which bounds how fast one visitor can make a bot run.
+  messageCount    Int              @default(0)
+  windowStartedAt DateTime         @default(now())
+  lastMessageAt   DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@unique([linkId, visitorId])
+  @@map("customer_chats")
 }
 
 model AgentConnection {

@@ -80,6 +80,7 @@ import {
   CreateRoutineInput,
   CreateScratchpadItemInput,
   CreateSpaceInvitationInput,
+  CustomerChatLinkSchema,
   DeploymentSettingsSchema,
   ExportManifestSchema,
   ExternalConversationPolicySchema,
@@ -719,6 +720,12 @@ export const appContract = {
     screenUrl: oc.input(botId).output(z.object({ url: z.string().nullable() })),
     screenFrame: oc.input(botId).output(ComputerScreenFrameSchema.nullable()),
     heartbeat: oc.input(botId).output(z.object({ ok: z.literal(true) })),
+  },
+  customerChat: {
+    status: oc.input(botId).output(CustomerChatLinkSchema),
+    /** Mints the link, replacing any previous one, so a leaked link can be rotated away. */
+    rotate: oc.input(botId).output(CustomerChatLinkSchema),
+    revoke: oc.input(botId).output(CustomerChatLinkSchema),
   },
   memory: {
     list: oc

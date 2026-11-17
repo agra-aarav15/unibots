@@ -1233,6 +1233,19 @@ export const ComputerScreenFrameSchema = z.object({
 });
 export type ComputerScreenFrame = z.infer<typeof ComputerScreenFrameSchema>;
 
+/**
+ * The public page this bot answers. `path` is on the deployment's own origin, so the owner shares
+ * whichever address they reached the app by; null means the bot has no live link.
+ */
+export const CustomerChatLinkSchema = z.object({
+  path: z.string().nullable(),
+  createdAt: z.string().nullable(),
+  revokedAt: z.string().nullable(),
+  /** How many visitors have written in through the live or last link. */
+  chats: z.number().int().nonnegative(),
+});
+export type CustomerChatLink = z.infer<typeof CustomerChatLinkSchema>;
+
 export const ComputerReleaseReasonSchema = z.enum(["done", "skipped"]);
 export type ComputerReleaseReason = z.infer<typeof ComputerReleaseReasonSchema>;
 

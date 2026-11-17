@@ -2,8 +2,8 @@
 
 import { i18n } from "@lingui/core";
 import { ORPCError } from "@orpc/client";
-import type { Bot, BotAvatarSet } from "@unibot/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { Bot, BotAvatarSet } from "@unibot/contracts";
 import type { ComponentProps, ReactNode } from "react";
 import { act } from "react";
 import type { Root } from "react-dom/client";
@@ -19,6 +19,11 @@ vi.mock("../../lib/rpc", () => {
       list: vi.fn().mockResolvedValue([]),
     },
     me: vi.fn().mockResolvedValue(null),
+    customerChat: {
+      status: vi.fn().mockResolvedValue({ path: null, createdAt: null, revokedAt: null, chats: 0 }),
+      rotate: vi.fn(),
+      revoke: vi.fn(),
+    },
   };
   return {
     rpc,
@@ -758,5 +763,41 @@ describe("BotSettings cached data", () => {
     const patch = onSave.mock.lastCall?.[0];
     expect(patch).toMatchObject({ description: "Invoices", computerMode: "dedicated" });
     expect(patch).not.toHaveProperty("name");
+  });
+});
+
+describe("BotSettings customer link", () => {
+  it("mints the link on request, and takes the page away again on revoke", async () => {
+    vi.mocked(rpc.customerChat.rotate).mockResolvedValue({
+      path: "/api/v1/customer-chat/token-1",
+      createdAt: "2026-11-17T00:00:00.000Z",
+      revokedAt: null,
+      chats: 0,
+    });
+    vi.mocked(rpc.customerChat.revoke).mockResolvedValue({
+      path: null,
+      createdAt: "2026-11-17T00:00:00.000Z",
+      revokedAt: "2026-11-17T01:00:00.000Z",
+      chats: 0,
+    });
+    await render();
+
+    const create = container.querySelector('[data-testid="customer-chat-create"]');
+    expect(create?.textContent).toContain("Create the link");
+    await act(async () => {
+      create?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    expect(rpc.customerChat.rotate).toHaveBeenCalledWith({ botId: "bot-1" });
+    expect(
+      container.querySelector<HTMLInputElement>('[data-testid="customer-chat-url"]')?.value,
+    ).toBe(`${window.location.origin}/api/v1/customer-chat/token-1`);
+
+    const revoke = container.querySelector('[data-testid="customer-chat-revoke"]');
+    await act(async () => {
+      revoke?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    expect(rpc.customerChat.revoke).toHaveBeenCalledWith({ botId: "bot-1" });
+    expect(container.querySelector('[data-testid="customer-chat-url"]')).toBeNull();
+    expect(container.querySelector('[data-testid="customer-chat-create"]')).not.toBeNull();
   });
 });
